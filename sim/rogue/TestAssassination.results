@@ -636,8 +636,8 @@ dps_results: {
 dps_results: {
  key: "TestAssassination-Average-Default"
  value: {
-  dps: 522.52829
-  tps: 259.69656
+  dps: 522.52978
+  tps: 259.6973
  }
 }
 dps_results: {

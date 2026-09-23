@@ -95,7 +95,18 @@ func (paladin *Paladin) applySpiritualFocus() {
 		return
 	}
 
-	paladin.PseudoStats.PushbackChance -= spellData.SpiritualFocus.FractionAt(paladin.Talents.SpiritualFocus)
+	// 20205 names these by class mask; Holy Wrath, Exorcism and the rest are pushed back as usual.
+	resist := spellData.SpiritualFocus.FractionAt(paladin.Talents.SpiritualFocus)
+	paladin.AddStaticMod(core.SpellModConfig{
+		ClassMask: SpellMaskFlashOfLight | SpellMaskHolyLight | SpellMaskLightsVigil,
+		Kind:      core.SpellMod_Custom,
+		ApplyCustom: func(_ *core.SpellMod, spell *core.Spell) {
+			spell.PushbackResist += resist
+		},
+		RemoveCustom: func(_ *core.SpellMod, spell *core.Spell) {
+			spell.PushbackResist -= resist
+		},
+	})
 }
 
 // Improved Seals - Increases the damage done by your Seals and Judgements by 5/10/15%.
@@ -202,7 +213,13 @@ func (paladin *Paladin) applyDivinePrecision() {
 		return
 	}
 
-	paladin.PseudoStats.SchoolBonusHitChance[stats.SchoolIndexHoly] += spellData.DivinePrecision.ValueAt(paladin.Talents.DivinePrecision)
+	// 1310904 is a miss chance mod on a class mask, not school hit: the Holy Shield proc is left out and
+	// Holy Strike, a melee attack, is in.
+	paladin.AddStaticMod(core.SpellModConfig{
+		ClassMask:  SpellMaskDivinePrecision,
+		Kind:       core.SpellMod_BonusHit_Percent,
+		FloatValue: spellData.DivinePrecision.ValueAt(paladin.Talents.DivinePrecision),
+	})
 }
 
 // Consecrated Ground - Gives your Holy spells 5/10% increased damage against the first 4 enemies

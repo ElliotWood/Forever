@@ -358,7 +358,8 @@ func (rogue *Rogue) registerPremeditation() {
 	})
 }
 
-// Quietus, new in Forever: the rogue's strikes hit harder once the target is in execute range.
+// Quietus, new in Forever: Sinister Strike, Ghostly Strike and Hemorrhage hit harder once the target is
+// in execute range.
 func (rogue *Rogue) registerQuietus() {
 	if rogue.Talents.Quietus == 0 {
 		return
@@ -370,7 +371,7 @@ func (rogue *Rogue) registerQuietus() {
 		Duration: core.NeverExpires,
 	}).AttachSpellMod(core.SpellModConfig{
 		Kind:       core.SpellMod_DamageDone_Flat,
-		ClassMask:  RogueSpellStrikes,
+		ClassMask:  RogueSpellQuietus,
 		FloatValue: spellData.Quietus.EffectAt(1).FractionAt(rogue.Talents.Quietus),
 	})
 
@@ -412,32 +413,45 @@ func (rogue *Rogue) registerCutthroat() {
 }
 
 // Thousand Cuts, new in Forever: Rupture's ticks discount the next Hemorrhage or Backstab.
-// The client ships no ranked spell for it, so the numbers are our Forever sim's.
 func (rogue *Rogue) registerThousandCuts() {
 	if !rogue.Talents.ThousandCuts {
 		return
 	}
 
+	// 1310723 takes its energy off per stack, up to 5 stacks; the talent 1310721 has a 1.9 s proc ICD.
+	buff := spellData.ThousandCutsTriggered.Highest()
+	costPerStack := int32(buff.Effect(dbcenums.A_ADD_FLAT_MODIFIER, int32(dbcenums.SPELLMOD_COST)).Average(core.CharacterLevel))
+	costMod := rogue.AddDynamicMod(core.SpellModConfig{
+		Kind:      core.SpellMod_PowerCost_Flat,
+		ClassMask: RogueSpellBackstab | RogueSpellHemorrhage,
+	})
+
 	rogue.ThousandCutsAura = rogue.RegisterAura(core.Aura{
 		Label:     "Thousand Cuts",
-		ActionID:  core.ActionID{SpellID: 1310714},
-		Duration:  time.Second * 10,
-		MaxStacks: 5,
+		ActionID:  core.ActionID{SpellID: buff.ID},
+		Duration:  buff.Duration(),
+		MaxStacks: int32(buff.MaxStack),
+		OnGain: func(_ *core.Aura, _ *core.Simulation) {
+			costMod.Activate()
+		},
+		OnExpire: func(_ *core.Aura, _ *core.Simulation) {
+			costMod.Deactivate()
+		},
+		OnStacksChange: func(_ *core.Aura, _ *core.Simulation, _ int32, newStacks int32) {
+			costMod.UpdateIntValue(costPerStack * newStacks)
+		},
 		OnApplyEffects: func(aura *core.Aura, sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			if spell.Matches(RogueSpellBackstab | RogueSpellHemorrhage) {
 				aura.Deactivate(sim)
 			}
 		},
-	}).AttachSpellMod(core.SpellModConfig{
-		Kind:      core.SpellMod_PowerCost_Flat,
-		ClassMask: RogueSpellBackstab | RogueSpellHemorrhage,
-		IntValue:  -3,
 	})
 
 	rogue.MakeProcTriggerAura(core.ProcTrigger{
 		Name:           "Thousand Cuts Trigger",
 		Callback:       core.CallbackOnPeriodicDamageDealt,
 		ClassSpellMask: RogueSpellRupture,
+		ICD:            spellData.ThousandCuts.Highest().ICD(),
 		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 			rogue.ThousandCutsAura.Activate(sim)
 			rogue.ThousandCutsAura.AddStack(sim)

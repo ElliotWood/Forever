@@ -316,6 +316,8 @@ const (
 	RogueSpellLethality      = RogueSpellSinisterStrike | RogueSpellGouge | RogueSpellBackstab | RogueSpellGhostlyStrike | RogueSpellMutilate | RogueSpellMutilateHit | RogueSpellHemorrhage
 	RogueSpellDirectFinisher = RogueSpellEviscerate
 	RogueSpellFinisher       = RogueSpellDirectFinisher | RogueSpellSliceAndDice | RogueSpellRupture | RogueSpellExposeArmor | RogueSpellVenom
-	// Quietus reads as an execute bonus on the rogue's strikes, not on the finishers.
-	RogueSpellStrikes = RogueSpellSinisterStrike | RogueSpellBackstab | RogueSpellHemorrhage | RogueSpellGhostlyStrike | RogueSpellAmbush | RogueSpellMutilate | RogueSpellMutilateHit
+	// Quietus names only these three in its tooltip (1310728); its effects are dummies with no mask.
+	RogueSpellQuietus = RogueSpellSinisterStrike | RogueSpellGhostlyStrike | RogueSpellHemorrhage
+	// Cold Blood's class mask (14177): Mutilate's two hits, not the parent cast.
+	RogueSpellColdBlooded = RogueSpellSinisterStrike | RogueSpellBackstab | RogueSpellAmbush | RogueSpellEviscerate | RogueSpellMutilateHit
 )

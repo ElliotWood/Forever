@@ -73,12 +73,12 @@ func (rogue *Rogue) registerMurder() {
 		return
 	}
 
+	// 14158 is MOD_DAMAGE_DONE_VERSUS on creature mask 80, Humanoid and Giant, with no crit damage part.
 	multiplier := spellData.Murder.MultiplierAt(rogue.Talents.Murder)
 	rogue.Env.RegisterPostFinalizeEffect(func() {
 		for _, at := range rogue.AttackTables {
-			if slices.Contains([]proto.MobType{proto.MobType_MobTypeHumanoid, proto.MobType_MobTypeGiant, proto.MobType_MobTypeBeast, proto.MobType_MobTypeDragonkin}, at.Defender.MobType) {
+			if slices.Contains([]proto.MobType{proto.MobType_MobTypeHumanoid, proto.MobType_MobTypeGiant}, at.Defender.MobType) {
 				at.DamageDealtMultiplier *= multiplier
-				at.CritMultiplier *= multiplier
 			}
 		}
 	})
@@ -161,13 +161,13 @@ func (rogue *Rogue) registerColdBlood() {
 		Duration: core.NeverExpires,
 
 		OnSpellHitDealt: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			if spell.Matches(RogueSpellActives) {
+			if spell.Matches(RogueSpellColdBlooded) {
 				aura.Deactivate(sim)
 			}
 		},
 	}).AttachSpellMod(core.SpellModConfig{
 		Kind:       core.SpellMod_BonusCrit_Percent,
-		ClassMask:  RogueSpellActives,
+		ClassMask:  RogueSpellColdBlooded,
 		FloatValue: coldBloodRank.Effect(dbcenums.A_ADD_FLAT_MODIFIER, int32(dbcenums.SPELLMOD_CRITICAL_CHANCE)).Average(core.CharacterLevel),
 	})
 

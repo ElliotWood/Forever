@@ -17,6 +17,7 @@ type OnCastComplete func(aura *Aura, sim *Simulation, spell *Spell)
 type Hardcast struct {
 	Expires     time.Duration
 	ActionID    ActionID
+	Spell       *Spell
 	OnComplete  func(*Simulation, *Unit)
 	Target      *Unit
 	CanMove     bool
@@ -198,6 +199,7 @@ func (spell *Spell) makeCastFunc(config CastConfig) CastSuccessFunc {
 			spell.Unit.Hardcast = Hardcast{
 				Expires:  sim.CurrentTime + spell.CurCast.CastTime,
 				ActionID: spell.ActionID,
+				Spell:    spell,
 				OnComplete: func(sim *Simulation, target *Unit) {
 					if sim.Log != nil && !spell.Flags.Matches(SpellFlagNoLogs) {
 						spell.Unit.Log(sim, "Completed cast %s", spell.ActionID)
