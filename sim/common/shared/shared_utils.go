@@ -1051,12 +1051,12 @@ func applicationOutcome(spell *core.Spell) core.OutcomeApplier {
 	}
 }
 
-// The crit spelldata.TickOutcome rolls for the row, without its hit.
+// A tick crits only where the row states Periodic Can Crit, on the crit of the spell's defense type.
 func onUseTickOutcome(damage *spelldata.Spell, dot *core.Dot) core.OutcomeApplier {
 	switch {
 	case !damage.PeriodicCanCrit():
 		return dot.OutcomeTick
-	case damage.DefenseTypeCore() == core.DefenseTypeMagic:
+	case dot.Spell.DefenseType == core.DefenseTypeMagic:
 		return dot.Spell.OutcomeTickMagicCrit
 	default:
 		return dot.Spell.OutcomeTickPhysicalCrit
