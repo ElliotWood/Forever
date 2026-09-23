@@ -310,11 +310,12 @@ func RegisterAllEnchants() {
 	// 5% of your maximum health. Cannot occur more often than once every 10 sec.
 	// https://www.wowhead.com/forever/spell=1248760
 	// unsupported: the enchant's effect entry resolves no stats from 1248759 (E_HEAL_PCT)
-	// trigger 1248761 (every time, core.CallbackOnSpellHitDealt, core.ProcMaskMeleeMHAuto | core.ProcMaskMeleeOHAuto | core.ProcMaskMeleeMHSpecial | core.ProcMaskMeleeOHSpecial)
+	// trigger 1248761 (every time, core.CallbackOnSpellHitDealt, core.ProcMaskMeleeMHAuto | core.ProcMaskMeleeOHAuto | core.ProcMaskMeleeMHSpecial | core.ProcMaskMeleeOHSpecial); the enchant's tooltip restricts it to core.OutcomeDodge | core.OutcomeParry
 	// shared.NewSpellDataProc(shared.SpellDataProc{
 	//	Name:           "Enchant Weapon - Recovery",
 	//	EnchantID:      8721,
 	//	TriggerSpellID: 1248761,
+	//	ProcHint:       core.ProcHintAttackDodged | core.ProcHintAttackParried,
 	// }, nil)
 
 	// Enchants a weapon to have a 15% chance to inflict 11 Fire damage to all enemies within 3 yards.

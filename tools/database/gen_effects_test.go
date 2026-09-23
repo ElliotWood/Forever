@@ -42,3 +42,34 @@ func TestNamedAbilityWording(t *testing.T) {
 		}
 	}
 }
+
+// The wearer's own attack dodged or parried is a trigger only in a condition clause. The same words
+// state a magnitude on every expertise row, and "when you parry" is an attack the wearer takes.
+func TestAttackAvoidedWording(t *testing.T) {
+	const avoided = core.ProcHintAttackDodged | core.ProcHintAttackParried
+
+	for _, tc := range []struct {
+		want core.ProcHint
+		text string
+		why  string
+	}{
+		{avoided, "Permanently enchant a Melee Weapon to trigger Recovery when you are Parried or Dodged, healing you for 5% of your maximum health. Cannot occur more often than once every 10 sec.",
+			"Recovery's grant 1248760, rendered"},
+		{core.ProcHintAttackParried, "Whenever your melee attacks are parried, gain 10 rage.",
+			"one outcome named, one bit"},
+		{0, "Reduces the chance for your attacks to be dodged or parried by $s1%.",
+			"Increased Expertise 1213288, a magnitude"},
+		{0, "Your Taunt ability never misses, and your chance to be Dodged or Parried is reduced by $s1%.",
+			"the Naxxramas tank 2P 1219540, a magnitude"},
+		{0, "Instantly overpower the enemy, causing weapon damage plus $s1.  Only useable after the target dodges.  The Overpower cannot be blocked, dodged or parried.",
+			"Overpower 7384, which states what it cannot be"},
+		{0, "Your Shield Slam deals $s1% increased threat and its cooldown is reset if it is Dodged, Parried, or Blocked.",
+			"TAQ tank 4P 1214162, one named ability rather than the wearer's attacks"},
+		{0, "When you parry an attack, gain 10 rage.",
+			"the wearer parrying an attack it takes"},
+	} {
+		if got := procTooltipHints(tc.text) & avoided; got != tc.want {
+			t.Errorf("hint = %q, want %q for %s:\n  %s", formatProcHint(got), formatProcHint(tc.want), tc.why, tc.text)
+		}
+	}
+}

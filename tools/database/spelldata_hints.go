@@ -147,6 +147,8 @@ func formatProcHint(hint core.ProcHint) string {
 		{core.ProcHintPureHeal, "core.ProcHintPureHeal"},
 		{core.ProcHintNamedAbility, "core.ProcHintNamedAbility"},
 		{core.ProcHintOutcomeTaken, "core.ProcHintOutcomeTaken"},
+		{core.ProcHintAttackDodged, "core.ProcHintAttackDodged"},
+		{core.ProcHintAttackParried, "core.ProcHintAttackParried"},
 	}
 
 	var set []string

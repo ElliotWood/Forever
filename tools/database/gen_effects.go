@@ -107,6 +107,8 @@ type ProcRouting struct {
 	IsWeaponProc bool
 	// A combat enchant's chance, stated on the enchantment's row rather than the spell's.
 	ProcChancePct int
+	// The trigger's outcome where the enchant's grant states it rather than the aura's own row.
+	ProcHint core.ProcHint
 	// Set where the spell the proc applies deals damage instead of granting an aura, which is a
 	// constructor of its own: there is no buff to build.
 	Damage bool
@@ -258,6 +260,7 @@ func GenerateEffectsFile(groups []*Group, outFile string, templateString string)
 		"asCoreProcMask": asCoreProcMask,
 		"asCoreOutcome":  asCoreOutcome,
 		"formatStrings":  formatStrings,
+		"formatProcHint": formatProcHint,
 	}
 	tmpl := template.Must(template.New("effects").Funcs(funcMap).Parse(templateString))
 
@@ -272,9 +275,9 @@ func GenerateEffectsFile(groups []*Group, outFile string, templateString string)
 	}
 
 	hasStacking := false
-	// A registration resolved from the client's rows names no core constant, so a file whose live
-	// entries are all of that shape must not import core: gen_db links the sim, and an unused import
-	// in a file it just wrote breaks the build the next run needs.
+	// A registration resolved from the client's rows names no core constant unless it carries a hint,
+	// so a file whose live entries are all of that shape must not import core: gen_db links the sim,
+	// and an unused import in a file it just wrote breaks the build the next run needs.
 	usesCore := false
 	// And nothing at all is imported by a file whose every entry is commented out.
 	hasLive := false
@@ -287,7 +290,7 @@ func GenerateEffectsFile(groups []*Group, outFile string, templateString string)
 				continue
 			}
 			hasLive = true
-			if entry.Proc == nil {
+			if entry.Proc == nil || entry.Proc.ProcHint != 0 {
 				usesCore = true
 			}
 		}
@@ -1036,6 +1039,12 @@ func (r *ProcRouting) readEnchantTooltip(tooltip string) {
 		enchantTooltipStatesAnUnknownRate(tooltip) && !statesNoRate(r) {
 		r.Unsupported = append(r.Unsupported, spelldata.ReasonStatesNoRate)
 	}
+
+	r.ProcHint = hints & (core.ProcHintAttackDodged | core.ProcHintAttackParried) &^ trigger.ProcHint
+	if r.ProcHint != 0 {
+		decoded := core.DecodeProcTypeMask(trigger.ProcFlags, trigger.ProcHint|r.ProcHint)
+		r.Summary += fmt.Sprintf("; the enchant's tooltip restricts it to %s", asCoreOutcome(decoded.Outcome))
+	}
 }
 
 // "Often", "sometimes" and "occasionally" are how an enchant's tooltip says its proc has a rate the
@@ -1119,6 +1128,26 @@ var hasGenericMatcher = regexp.MustCompile(`a spell`)
 // proc. A miss is not in here either: the one row naming one, 456394, means its own attack missing
 // rather than an attack on it.
 var outcomeConditionMatcher = regexp.MustCompile(`(?i)when .{0,60}?(is|are) resisted|((each|every) time|when|whenever) you (block|dodge|parry)|after a (block|dodge|parry)`)
+
+// The wearer's own attack dodged or parried, named as the trigger: Recovery's "when you are Parried
+// or Dodged". The same words also state a magnitude - "reduces the chance for your attacks to be
+// dodged or parried" - so only the condition clause counts.
+var attackAvoidedMatcher = regexp.MustCompile(`(?i)((each|every) time|when|whenever) (you are|your (melee )?attacks? (is|are)) (dodged|parried)((,? or|,) (dodged|parried))*`)
+var attackDodgedMatcher = regexp.MustCompile(`(?i)dodged`)
+var attackParriedMatcher = regexp.MustCompile(`(?i)parried`)
+
+func attackAvoidedHints(tooltip string) core.ProcHint {
+	var hints core.ProcHint
+	for _, clause := range attackAvoidedMatcher.FindAllString(tooltip, -1) {
+		if attackDodgedMatcher.MatchString(clause) {
+			hints |= core.ProcHintAttackDodged
+		}
+		if attackParriedMatcher.MatchString(clause) {
+			hints |= core.ProcHintAttackParried
+		}
+	}
+	return hints
+}
 
 // A tooltip stating that the effect only happens sometimes. Where the data pairs that with a 100%
 // rate, the real rate is the one thing the data does not carry.
@@ -1209,6 +1238,8 @@ func procTooltipHints(tooltip string) core.ProcHint {
 	if outcomeConditionMatcher.MatchString(tooltip) {
 		hints |= core.ProcHintOutcomeTaken
 	}
+
+	hints |= attackAvoidedHints(tooltip)
 
 	return hints
 }
@@ -1447,6 +1478,17 @@ func asCoreOutcome(outcome core.HitOutcome) string {
 
 	if outcome.Matches(core.OutcomeLanded) {
 		return "core.OutcomeLanded"
+	}
+
+	var avoided []string
+	if outcome.Matches(core.OutcomeDodge) {
+		avoided = append(avoided, "core.OutcomeDodge")
+	}
+	if outcome.Matches(core.OutcomeParry) {
+		avoided = append(avoided, "core.OutcomeParry")
+	}
+	if len(avoided) > 0 {
+		return strings.Join(avoided, " | ")
 	}
 
 	return "core.OutcomeEmpty"
