@@ -1,5 +1,281 @@
 [
 	{
+		"number": 425,
+		"title": "locales: schema matches Forever's four phases and the consumables Buffs row",
+		"mergedAt": "2026-09-23",
+		"url": "https://github.com/ElliotWood/Forever/pull/425"
+	},
+	{
+		"number": 424,
+		"title": "Wowhead Forever data changed (2026-09-23, master)",
+		"mergedAt": "2026-09-23",
+		"url": "https://github.com/ElliotWood/Forever/pull/424"
+	},
+	{
+		"number": 409,
+		"title": "paladin: Iron Creed only from a Holy Strike that lands (client proc type, as upstream)",
+		"mergedAt": "2026-09-23",
+		"url": "https://github.com/ElliotWood/Forever/pull/409"
+	},
+	{
+		"number": 408,
+		"title": "warrior: Conqueror's 5 piece makes Thunder Clap's slow 30% (client)",
+		"mergedAt": "2026-09-23",
+		"url": "https://github.com/ElliotWood/Forever/pull/408"
+	},
+	{
+		"number": 401,
+		"title": "core: Forever bosses scale attack power like upstream (0.00052)",
+		"mergedAt": "2026-09-23",
+		"url": "https://github.com/ElliotWood/Forever/pull/401"
+	},
+	{
+		"number": 399,
+		"title": "core: parry haste measured from now (upstream's rule); Templar's Bulwark off the GCD",
+		"mergedAt": "2026-09-23",
+		"url": "https://github.com/ElliotWood/Forever/pull/399"
+	},
+	{
+		"number": 397,
+		"title": "hunter: Mortal Shots on the client's class mask, Aspect of the Hawk costs mana",
+		"mergedAt": "2026-09-23",
+		"url": "https://github.com/ElliotWood/Forever/pull/397"
+	},
+	{
+		"number": 394,
+		"title": "core: dot ticks crit on their defense type's table (Serpent Sting uses ranged crit)",
+		"mergedAt": "2026-09-23",
+		"url": "https://github.com/ElliotWood/Forever/pull/394"
+	},
+	{
+		"number": 391,
+		"title": "Forever client build 1.60.1.69977 (master)",
+		"mergedAt": "2026-09-23",
+		"url": "https://github.com/ElliotWood/Forever/pull/391"
+	},
+	{
+		"number": 388,
+		"title": "core/hunter: ranged autos blocked while moving, no Auto Shot wind-up, melee resets ranged timer",
+		"mergedAt": "2026-09-23",
+		"url": "https://github.com/ElliotWood/Forever/pull/388"
+	},
+	{
+		"number": 387,
+		"title": "core: rage the Forever way (off-hand half, 3.46, damage taken / max health)",
+		"mergedAt": "2026-09-23",
+		"url": "https://github.com/ElliotWood/Forever/pull/387"
+	},
+	{
+		"number": 386,
+		"title": "core: attack-speed slows read their live priority",
+		"mergedAt": "2026-09-23",
+		"url": "https://github.com/ElliotWood/Forever/pull/386"
+	},
+	{
+		"number": 385,
+		"title": "core: Retribution Aura scales with Holy spell power (0.1357), rank 5 base 30",
+		"mergedAt": "2026-09-23",
+		"url": "https://github.com/ElliotWood/Forever/pull/385"
+	},
+	{
+		"number": 384,
+		"title": "warrior: Rend and Deep Wounds tick without a snapshot",
+		"mergedAt": "2026-09-23",
+		"url": "https://github.com/ElliotWood/Forever/pull/384"
+	},
+	{
+		"number": 382,
+		"title": "automerge: use --merge for upstream-merge/* PRs, not --squash",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/382"
+	},
+	{
+		"number": 376,
+		"title": "paladin: judgements roll on the melee table, as the client says",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/376"
+	},
+	{
+		"number": 375,
+		"title": "druid: Moonglow on damaging spells only (client mask)",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/375"
+	},
+	{
+		"number": 374,
+		"title": "shaman: Elemental Focus proc no longer also frees an instant cast in the same moment",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/374"
+	},
+	{
+		"number": 368,
+		"title": "warlock: Improved Bane of Agony scales the whole tick",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/368"
+	},
+	{
+		"number": 360,
+		"title": "paladin: Holy Shield damage can't crit; the PvP shields' Electrostatic Charge",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/360"
+	},
+	{
+		"number": 354,
+		"title": "data: old Classic PvP pieces are in no set on Forever",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/354"
+	},
+	{
+		"number": 351,
+		"title": "core: let an off-GCD evaluation cast GCD spells during the 50ms idle wait",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/351"
+	},
+	{
+		"number": 348,
+		"title": "shaman: own totems give the client's 89 Agi / 53 Str, instant Lightning Bolt keeps the swing timer",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/348"
+	},
+	{
+		"number": 337,
+		"title": "db: items keep their school spell power (84 items); parse raceMask -1",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/337"
+	},
+	{
+		"number": 332,
+		"title": "priest: Shadowform's half cost multiplies after the spell mods",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/332"
+	},
+	{
+		"number": 330,
+		"title": "paladin: Echo of Command rolls the seal's chance; weapon specs stay Physical",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/330"
+	},
+	{
+		"number": 327,
+		"title": "Wowhead Forever data changed (2026-09-22, master)",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/327"
+	},
+	{
+		"number": 325,
+		"title": "core: Forever gear hit and crit count once, not once per pool",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/325"
+	},
+	{
+		"number": 322,
+		"title": "ops: forever-next preview at /next/, automerge + data watch for forever-next, upstream merge workflow (G4, G7)",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/322"
+	},
+	{
+		"number": 319,
+		"title": "shaman: elemental arena spec at Flame Shock's 20 yd",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/319"
+	},
+	{
+		"number": 318,
+		"title": "priest: Devouring Plague ticks can't crit; shadow sits at Mind Flay's 20 yd",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/318"
+	},
+	{
+		"number": 317,
+		"title": "warrior: Deep Wounds ticks can't crit",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/317"
+	},
+	{
+		"number": 315,
+		"title": "druid: Moonfury boosts the whole hit; cat and bear cast Faerie Fire 9907",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/315"
+	},
+	{
+		"number": 313,
+		"title": "warlock: Siphon Life ticks can't crit",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/313"
+	},
+	{
+		"number": 312,
+		"title": "paladin: Holy Shield needs a shield equipped",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/312"
+	},
+	{
+		"number": 311,
+		"title": "hunter: Trueshot Aura from the talent, no extra Aimed/Sniper wind-up, Lacerating Strikes can't crit",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/311"
+	},
+	{
+		"number": 310,
+		"title": "core: Touch of the Grave at the client's ids; rage from damage taken at the character's level",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/310"
+	},
+	{
+		"number": 302,
+		"title": "converge(data): client batch: Blizzard level scaling, Feint threat, JoR melee crits, Might of the Scourge RAP, SS/Shield Block/trap client values",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/302"
+	},
+	{
+		"number": 300,
+		"title": "converge(data): client-verified fixes: pet Bite r8, Starshards cd, finisher refunds, missile speeds, Rain of Fire ticks",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/300"
+	},
+	{
+		"number": 299,
+		"title": "Enchants and the Thunder Clap debuff follow the Forever client",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/299"
+	},
+	{
+		"number": 298,
+		"title": "converge(data): the paladin's spells read from the client tables",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/298"
+	},
+	{
+		"number": 297,
+		"title": "converge(data): the warrior's abilities read from the client tables",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/297"
+	},
+	{
+		"number": 296,
+		"title": "converge(core): take upstream's runtime fixes (Track A step 3)",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/296"
+	},
+	{
+		"number": 295,
+		"title": "converge(data): the druid's spells read from the client tables",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/295"
+	},
+	{
+		"number": 294,
+		"title": "converge(data): the hunter's spells read from the client tables",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/294"
+	},
+	{
+		"number": 293,
+		"title": "converge(data): the shaman's spells read from the client tables",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/293"
+	},
+	{
 		"number": 292,
 		"title": "converge(data): the rogue's abilities read from the client tables",
 		"mergedAt": "2026-09-21",
