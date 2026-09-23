@@ -1,4 +1,5 @@
 import { Combobox } from '@base-ui/react/combobox';
+import { Chip } from '@ui-kit/Chip';
 import type { EnumValueConfig } from '@ui-kit/EnumPicker/types';
 import { useInput } from '@ui-kit/hooks/useInput';
 import { usePortalContainer } from '@ui-kit/hooks/usePortalContainer';
@@ -41,14 +42,19 @@ export const MultiComboBox = <ModObject,>({ modObject, config, className, testId
 								{picks.map(entry => (
 									<Combobox.Chip
 										key={entry.value}
-										className="ui-multi-combo-box-chip"
 										aria-label={entry.name}
-										data-testid="multi-combo-box-chip">
-										{entry.name}
-										<Combobox.ChipRemove className="ui-multi-combo-box-chip-remove" aria-label={config.removeLabel}>
-											<Icon name="times" />
-										</Combobox.ChipRemove>
-									</Combobox.Chip>
+										render={props => (
+											<Chip
+												label={entry.name}
+												nameAs="span"
+												rootProps={{ ...props }}
+												confirmDelete={false}
+												deleteLabel={config.removeLabel}
+												onDelete={() => setValue((value ?? []).filter(picked => picked !== entry.value))}
+												testId="multi-combo-box-chip"
+											/>
+										)}
+									/>
 								))}
 								<Combobox.Input
 									id={config.id}
