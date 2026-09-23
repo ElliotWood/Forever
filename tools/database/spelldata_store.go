@@ -75,10 +75,12 @@ type storeSpell struct {
 	RefIDs []int32
 
 	// Read off Spell.Description_lang by spelldata_hints.go rather than out of a column: the
-	// tooltip's wording is what says whether ProcChance is a roll at all, and which effect holds it.
+	// tooltip's wording is what says whether ProcChance is a roll at all, which effect holds it, and
+	// whether the damage is split among the targets.
 	ProcChanceSource storeProcChanceSource
 	ProcChanceEffect int8
 	ProcHint         core.ProcHint
+	SplitsDamage     bool
 
 	Effects []storeEffect
 	Powers  []storePower

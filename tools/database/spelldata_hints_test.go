@@ -107,6 +107,42 @@ func TestProcShapeOfNamedSpells(t *testing.T) {
 	}
 }
 
+func TestSplitDamageOfNamedSpells(t *testing.T) {
+	DatabasePath = "wowsims.db"
+	if _, err := os.Stat(DatabasePath); err != nil {
+		t.Skipf("no client database at %s - run `make db` from a local WoW install to enable this gate", DatabasePath)
+	}
+
+	helper, err := NewDBHelper()
+	if err != nil {
+		t.Fatalf("opening %s: %v", DatabasePath, err)
+	}
+	defer helper.Close()
+
+	tables, err := loadSpellTables(helper.db)
+	if err != nil {
+		t.Fatalf("loading the spell tables: %v", err)
+	}
+
+	for _, want := range []struct {
+		id     int32
+		name   string
+		splits bool
+	}{
+		{1295270, "Prototype Pathcarver", true},
+		{26789, "Shard of the Fallen Star", true},
+		{24340, "Meteor", true},
+		{6297, "Fiery Blaze", false},
+		{21179, "Chain Lightning", false},
+	} {
+		row := tables.row(want.id)
+		applyTooltipHints(tables, &row)
+		if row.SplitsDamage != want.splits {
+			t.Errorf("%s %d reads SplitsDamage %v, want %v", want.name, want.id, row.SplitsDamage, want.splits)
+		}
+	}
+}
+
 func overridesOf(id int32) []overrides.Override {
 	var mine []overrides.Override
 	for _, o := range overrides.Spells {

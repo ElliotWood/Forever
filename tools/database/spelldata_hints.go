@@ -28,12 +28,19 @@ var tooltipOwnChance = regexp.MustCompile(`\$h`)
 // client's EffectIndex plus one.
 var tooltipEffectChance = regexp.MustCompile(`\$[ms]([123])%\s+chance`)
 
-// Reads the proc shape off the tooltip and the aura columns and writes it onto the row.
+// Damage divided among the targets hit, which the server knows per spell and no column states:
+// Everlook Pathcarver's "split between up to $s3 nearby enemies", the Meteors' "divided up evenly
+// among all affected targets" and Shard of the Fallen Star's "$s1 total Fire damage".
+var tooltipSplitsDamage = regexp.MustCompile(`split between|divided up evenly|\$s\d total \w+ damage`)
+
+// Reads the proc shape and the damage split off the tooltip and the aura columns and writes them
+// onto the row.
 func applyTooltipHints(t *spellTables, s *storeSpell) {
 	description := t.Descriptions[s.ID]
 
 	ownChance := tooltipOwnChance.MatchString(description)
 
+	s.SplitsDamage = tooltipSplitsDamage.MatchString(description)
 	s.ProcHint = procTooltipHints(description)
 	s.ProcChanceSource, s.ProcChanceEffect = procChanceSource(description, ownChance, s)
 	s.tooltipStatesChance = ownChance || s.ProcChanceSource == procChanceEffectN

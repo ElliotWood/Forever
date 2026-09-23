@@ -124,6 +124,8 @@ func storeValue(v reflect.Value, store reflect.Type, namer *rankEnumNamer) strin
 	switch x := v.Interface().(type) {
 	case string:
 		return strconv.Quote(x)
+	case bool:
+		return strconv.FormatBool(x)
 	case dbcenums.SpellEffectType:
 		return namer.storeEffect(x)
 	case dbcenums.EffectAuraType:

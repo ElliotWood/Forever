@@ -137,6 +137,11 @@ type Spell struct {
 	// What the tooltip states about the trigger that the proc mask cannot, baked in at generation.
 	ProcHint core.ProcHint
 
+	// Whether one roll of the damage is divided evenly among the targets hit, baked in at generation.
+	// No column states it; the tooltip reads "split between", "divided up evenly" or "$s1 total ...
+	// damage".
+	SplitsDamage bool
+
 	Effects []Effect
 	Powers  []Power
 }
