@@ -1,15 +1,18 @@
 package spelldata
 
 import (
+	"slices"
+
 	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
-// The haste pseudo stats each attack or cast speed aura adds its percent to. Unlike ranged hit and
-// crit, ranged haste is not a total including melee: the sim applies melee, ranged and cast speed each
-// on its own.
+// The haste pseudo stats each attack or cast speed aura adds its percent to: a raise of the caster's
+// speeds, or a slow of an enemy's where the percent is negative. Unlike ranged hit and crit, ranged
+// haste is not a total including melee: the sim applies melee, ranged and cast speed each on its own.
 var SpeedAuraPseudoStats = map[dbcenums.EffectAuraType][]proto.PseudoStat{
+	dbcenums.A_MOD_ATTACKSPEED:             {proto.PseudoStat_PseudoStatMeleeHastePercent},
 	dbcenums.A_MOD_MELEE_HASTE_3:           {proto.PseudoStat_PseudoStatMeleeHastePercent},
 	dbcenums.A_MOD_RANGED_HASTE:            {proto.PseudoStat_PseudoStatRangedHastePercent},
 	dbcenums.A_MOD_MELEE_RANGED_HASTE_2:    {proto.PseudoStat_PseudoStatMeleeHastePercent, proto.PseudoStat_PseudoStatRangedHastePercent},
@@ -39,4 +42,14 @@ func (s *Spell) SpeedPseudoStats() []float64 {
 		}
 	}
 	return pseudoStats
+}
+
+// Whether the effect's speed aura changes the time between melee attacks.
+func (e *Effect) ChangesAttackSpeed() bool {
+	return slices.Contains(SpeedAuraPseudoStats[e.Aura], proto.PseudoStat_PseudoStatMeleeHastePercent)
+}
+
+// Whether the effect's speed aura changes cast times.
+func (e *Effect) ChangesCastSpeed() bool {
+	return slices.Contains(SpeedAuraPseudoStats[e.Aura], proto.PseudoStat_PseudoStatSpellHastePercent)
 }

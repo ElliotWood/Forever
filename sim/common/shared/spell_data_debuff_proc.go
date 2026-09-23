@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/wowsims/forever/sim/core"
-	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/spelldata"
 )
 
@@ -73,7 +72,7 @@ func debuffAuras(character *core.Character, row *spelldata.Spell) core.AuraArray
 		for _, i := range row.SlowEffects() {
 			effect := row.EffectN(int(i))
 			slowedTime := core.SlowedTimeMultiplier(effect.Average(character.Level))
-			if effect.Aura == dbcenums.A_MOD_CASTING_SPEED_NOT_STACK {
+			if effect.ChangesCastSpeed() {
 				core.CastSpeedReductionEffect(aura, slowedTime)
 			} else {
 				core.AtkSpeedReductionEffect(aura, slowedTime)
