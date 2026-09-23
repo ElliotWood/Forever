@@ -9,10 +9,10 @@ import (
 // 0.8 is ours. Improved Life Tap rides on the talent as a SpellMod, Demonic Energies hands the pet
 // a share of the restore (the talent's second effect, 50% per point).
 func (warlock *Warlock) registerLifeTap() {
-	rank := spellData.LifeTap.HighestRank()
-	actionID := core.ActionID{SpellID: rank.SpellID}
-	baseDamage := spellData.LifeTap.EffectAt(0).ValueAt(rank.Rank)
-	petManaShare := spellData.DemonicEnergies.EffectAt(1).FractionAt(warlock.Talents.DemonicEnergies)
+	rank := spellData.LifeTap.Highest()
+	actionID := core.ActionID{SpellID: rank.ID}
+	baseDamage := rank.EffectN(1).Average(core.CharacterLevel)
+	petManaShare := spellData.DemonicEnergies.EffectAt(2).FractionAt(warlock.Talents.DemonicEnergies)
 
 	manaMetrics := warlock.NewManaMetrics(actionID)
 	petManaMetrics := make(map[*WarlockPet]*core.ResourceMetrics, len(warlock.BasePets))
@@ -22,7 +22,7 @@ func (warlock *Warlock) registerLifeTap() {
 
 	warlock.LifeTap = warlock.RegisterSpell(core.SpellConfig{
 		ActionID:       actionID,
-		SpellSchool:    rank.SpellSchool,
+		SpellSchool:    rank.SpellSchool(),
 		DefenseType:    core.DefenseTypeMagic,
 		ProcMask:       core.ProcMaskSpellDamage,
 		Flags:          core.SpellFlagAPL | core.SpellFlagBinary,

@@ -172,8 +172,8 @@ dps_results: {
 dps_results: {
  key: "TestRetribution-AllItems-BlazefuryMedallion-17111"
  value: {
-  dps: 568.65221
-  tps: 338.70538
+  dps: 568.75056
+  tps: 338.76045
  }
 }
 dps_results: {
@@ -296,13 +296,6 @@ dps_results: {
  }
 }
 dps_results: {
- key: "TestRetribution-AllItems-DormantHeartoftheMountain-249473"
- value: {
-  dps: 564.34091
-  tps: 336.31713
- }
-}
-dps_results: {
  key: "TestRetribution-AllItems-DraconicInfusedEmblem-22268"
  value: {
   dps: 569.56901
@@ -347,22 +340,8 @@ dps_results: {
 dps_results: {
  key: "TestRetribution-AllItems-EnchantWeapon-Crusader-1900"
  value: {
-  dps: 579.11404
-  tps: 344.59008
- }
-}
-dps_results: {
- key: "TestRetribution-AllItems-EnchantWeapon-IcyChill-1894"
- value: {
-  dps: 495.65205
-  tps: 296.60298
- }
-}
-dps_results: {
- key: "TestRetribution-AllItems-EnchantWeapon-UnholyWeapon-1899"
- value: {
-  dps: 559.16284
-  tps: 333.41741
+  dps: 583.03473
+  tps: 346.78567
  }
 }
 dps_results: {
@@ -396,15 +375,15 @@ dps_results: {
 dps_results: {
  key: "TestRetribution-AllItems-FieryPlateGauntlets-12631"
  value: {
-  dps: 567.02268
-  tps: 337.79284
+  dps: 567.10644
+  tps: 337.83975
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-ForceImbuedGauntlets-18383"
  value: {
-  dps: 565.3223
-  tps: 336.84063
+  dps: 565.40606
+  tps: 336.88753
  }
 }
 dps_results: {
@@ -433,6 +412,13 @@ dps_results: {
  value: {
   dps: 568.93876
   tps: 338.89193
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-GoldenBanana-270226"
+ value: {
+  dps: 567.10008
+  tps: 337.86007
  }
 }
 dps_results: {
@@ -480,8 +466,8 @@ dps_results: {
 dps_results: {
  key: "TestRetribution-AllItems-HighborneResearchTablet-260205"
  value: {
-  dps: 622.03512
-  tps: 368.56553
+  dps: 622.04161
+  tps: 368.56916
  }
 }
 dps_results: {
@@ -788,8 +774,8 @@ dps_results: {
 dps_results: {
  key: "TestRetribution-AllItems-StormGauntlets-12632"
  value: {
-  dps: 581.01449
-  tps: 345.66698
+  dps: 581.04172
+  tps: 345.68223
  }
 }
 dps_results: {

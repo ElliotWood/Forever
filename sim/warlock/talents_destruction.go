@@ -3,8 +3,8 @@ package warlock
 import (
 	"time"
 
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
@@ -48,14 +48,14 @@ func (warlock *Warlock) applyImprovedShadowBolt() {
 		return
 	}
 
-	triggered := spellData.ImprovedShadowBoltTriggered.HighestRank()
+	triggered := spellData.ImprovedShadowBoltTriggered.Highest()
 	multiplier := 1 + spellData.ImprovedShadowBolt.FractionAt(warlock.Talents.ImprovedShadowBolt)
 
 	warlock.ImprovedShadowBoltAuras = warlock.NewEnemyAuraArray(func(unit *core.Unit) *core.Aura {
 		return unit.RegisterAura(core.Aura{
 			Label:    "Improved Shadow Bolt-" + warlock.Label,
-			ActionID: core.ActionID{SpellID: triggered.SpellID},
-			Duration: triggered.Duration,
+			ActionID: core.ActionID{SpellID: triggered.ID},
+			Duration: triggered.Duration(),
 		})
 	})
 
@@ -102,13 +102,13 @@ func (warlock *Warlock) applyBane() {
 
 	warlock.AddStaticMod(core.SpellModConfig{
 		Kind:      core.SpellMod_CastTime_Flat,
-		TimeValue: time.Millisecond * time.Duration(spellData.Bane.EffectAt(0).ValueAt(points)),
+		TimeValue: time.Millisecond * time.Duration(spellData.Bane.EffectAt(1).ValueAt(points)),
 		ClassMask: WarlockSpellShadowBolt | WarlockSpellImmolate | WarlockSpellIncinerate,
 	})
 
 	warlock.AddStaticMod(core.SpellModConfig{
 		Kind:      core.SpellMod_CastTime_Flat,
-		TimeValue: time.Millisecond * time.Duration(spellData.Bane.EffectAt(1).ValueAt(points)),
+		TimeValue: time.Millisecond * time.Duration(spellData.Bane.EffectAt(2).ValueAt(points)),
 		ClassMask: WarlockSpellSoulFire,
 	})
 }
@@ -156,20 +156,20 @@ func (warlock *Warlock) applyShadowAndFlame() {
 		return
 	}
 
-	fireRow := spellData.ShadowAndFlameTriggered.BySpellID(426311)
-	shadowRow := spellData.ShadowAndFlameTriggered.BySpellID(1293816)
-	multiplier := 1 + spellData.ShadowAndFlame.EffectAt(2).FractionAt(warlock.Talents.ShadowAndFlame)
+	fireRow := spellData.ShadowAndFlameTriggered.ByID(426311)
+	shadowRow := spellData.ShadowAndFlameTriggered.ByID(1293816)
+	multiplier := 1 + spellData.ShadowAndFlame.EffectAt(3).FractionAt(warlock.Talents.ShadowAndFlame)
 
 	shadowAura := warlock.RegisterAura(core.Aura{
 		Label:    "Shadow and Flame (Shadow)",
-		ActionID: core.ActionID{SpellID: shadowRow.SpellID},
-		Duration: shadowRow.Duration,
+		ActionID: core.ActionID{SpellID: shadowRow.ID},
+		Duration: shadowRow.Duration(),
 	}).AttachMultiplicativePseudoStatBuff(&warlock.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexShadow], multiplier)
 
 	fireAura := warlock.RegisterAura(core.Aura{
 		Label:    "Shadow and Flame (Fire)",
-		ActionID: core.ActionID{SpellID: fireRow.SpellID},
-		Duration: fireRow.Duration,
+		ActionID: core.ActionID{SpellID: fireRow.ID},
+		Duration: fireRow.Duration(),
 	}).AttachMultiplicativePseudoStatBuff(&warlock.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexFire], multiplier)
 
 	warlock.MakeProcTriggerAura(core.ProcTrigger{
@@ -206,7 +206,7 @@ func (warlock *Warlock) applyAftermath() {
 
 	warlock.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: spellData.Aftermath.EffectAt(1).FractionAt(warlock.Talents.Aftermath),
+		FloatValue: spellData.Aftermath.EffectAt(2).FractionAt(warlock.Talents.Aftermath),
 		ClassMask:  WarlockSpellImmolate,
 	})
 }
@@ -221,17 +221,17 @@ func (warlock *Warlock) applyAgonizingFlames() {
 
 	warlock.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: spellData.AgonizingFlames.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DAMAGE).FractionAt(points),
+		FloatValue: spellData.AgonizingFlames.Effect(dbcenums.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_DAMAGE)).FractionAt(points),
 		ClassMask:  WarlockDestructionSpells,
 	})
 	warlock.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_DotDamageDone_Pct,
-		FloatValue: spellData.AgonizingFlames.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DOT).FractionAt(points),
+		FloatValue: spellData.AgonizingFlames.Effect(dbcenums.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_DOT)).FractionAt(points),
 		ClassMask:  WarlockDestructionSpells,
 	})
 	warlock.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_BonusCrit_Percent,
-		FloatValue: spellData.AgonizingFlames.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_CRITICAL_CHANCE).ValueAt(points),
+		FloatValue: spellData.AgonizingFlames.Effect(dbcenums.A_ADD_FLAT_MODIFIER, int32(dbcenums.SPELLMOD_CRITICAL_CHANCE)).ValueAt(points),
 		ClassMask:  WarlockSpellSearingPain,
 	})
 }
@@ -244,7 +244,7 @@ func (warlock *Warlock) applyFireAndBrimstone() {
 
 	warlock.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_BonusCrit_Percent,
-		FloatValue: spellData.FireAndBrimstone.EffectAt(1).ValueAt(warlock.Talents.FireAndBrimstone),
+		FloatValue: spellData.FireAndBrimstone.EffectAt(2).ValueAt(warlock.Talents.FireAndBrimstone),
 		ClassMask:  WarlockSpellConflagrate,
 	})
 }

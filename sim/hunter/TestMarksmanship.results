@@ -263,13 +263,6 @@ dps_results: {
  }
 }
 dps_results: {
- key: "TestMarksmanship-AllItems-DormantHeartoftheMountain-249473"
- value: {
-  dps: 575.86127
-  tps: 297.53586
- }
-}
-dps_results: {
  key: "TestMarksmanship-AllItems-DraconicInfusedEmblem-22268"
  value: {
   dps: 575.86127
@@ -330,20 +323,6 @@ dps_results: {
  value: {
   dps: 575.86127
   tps: 297.53586
- }
-}
-dps_results: {
- key: "TestMarksmanship-AllItems-EnchantWeapon-IcyChill-1894"
- value: {
-  dps: 511.16668
-  tps: 249.5538
- }
-}
-dps_results: {
- key: "TestMarksmanship-AllItems-EnchantWeapon-UnholyWeapon-1899"
- value: {
-  dps: 565.62773
-  tps: 290.37238
  }
 }
 dps_results: {
@@ -410,6 +389,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestMarksmanship-AllItems-GoldenBanana-270226"
+ value: {
+  dps: 576.59751
+  tps: 298.05123
+ }
+}
+dps_results: {
  key: "TestMarksmanship-AllItems-GreenDragonMail"
  value: {
   dps: 586.76259
@@ -461,15 +447,15 @@ dps_results: {
 dps_results: {
  key: "TestMarksmanship-AllItems-HighborneResearchTablet-260205"
  value: {
-  dps: 630.63612
-  tps: 335.95403
+  dps: 630.58786
+  tps: 335.92025
  }
 }
 dps_results: {
  key: "TestMarksmanship-AllItems-Hurricane-2824"
  value: {
-  dps: 555.49385
-  tps: 286.28626
+  dps: 555.47769
+  tps: 286.27495
  }
 }
 dps_results: {

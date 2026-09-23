@@ -158,13 +158,6 @@ dps_results: {
  }
 }
 dps_results: {
- key: "TestDestruction-AllItems-DormantHeartoftheMountain-249473"
- value: {
-  dps: 422.72334
-  tps: 293.07416
- }
-}
-dps_results: {
  key: "TestDestruction-AllItems-DraconicInfusedEmblem-22268"
  value: {
   dps: 447.74682
@@ -228,20 +221,6 @@ dps_results: {
  }
 }
 dps_results: {
- key: "TestDestruction-AllItems-EnchantWeapon-IcyChill-1894"
- value: {
-  dps: 422.72334
-  tps: 293.07416
- }
-}
-dps_results: {
- key: "TestDestruction-AllItems-EnchantWeapon-UnholyWeapon-1899"
- value: {
-  dps: 422.72334
-  tps: 293.07416
- }
-}
-dps_results: {
  key: "TestDestruction-AllItems-EssenceofthePureFlame-18815"
  value: {
   dps: 422.72334
@@ -274,6 +253,13 @@ dps_results: {
  value: {
   dps: 429.57906
   tps: 297.29857
+ }
+}
+dps_results: {
+ key: "TestDestruction-AllItems-GoldenBanana-270226"
+ value: {
+  dps: 423.48882
+  tps: 293.50283
  }
 }
 dps_results: {
@@ -335,8 +321,8 @@ dps_results: {
 dps_results: {
  key: "TestDestruction-AllItems-HighborneResearchTablet-260205"
  value: {
-  dps: 459.16757
-  tps: 318.99725
+  dps: 459.1723
+  tps: 319.00056
  }
 }
 dps_results: {

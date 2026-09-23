@@ -1,8 +1,8 @@
 package hunter
 
 import (
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/stats"
 )
@@ -82,18 +82,18 @@ func (hunter *Hunter) registerResourcefulness() {
 	hunter.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_PowerCost_Pct_Add,
 		ClassMask:  HunterSpellsTraps | HunterSpellsMelee,
-		FloatValue: spellData.Resourcefulness.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_COST).FractionAt(hunter.Talents.Resourcefulness),
+		FloatValue: spellData.Resourcefulness.Effect(dbcenums.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_COST)).FractionAt(hunter.Talents.Resourcefulness),
 	})
 
 	// The buff (1242688) is 50% mana regen while casting for 30 sec at both ranks; the points buy
 	// the proc chance, 50/100%.
-	buff := spellData.ResourcefulnessTriggered.HighestRank()
-	regen := buff.Effect(shared.A_MOD_MANA_REGEN_INTERRUPT, 0).Value / 100
+	buff := spellData.ResourcefulnessTriggered.Highest()
+	regen := buff.Effect(dbcenums.A_MOD_MANA_REGEN_INTERRUPT, 0).Average(core.CharacterLevel) / 100
 
 	procAura := hunter.RegisterAura(core.Aura{
 		Label:    "Resourcefulness",
-		ActionID: core.ActionID{SpellID: buff.SpellID},
-		Duration: buff.Duration,
+		ActionID: core.ActionID{SpellID: buff.ID},
+		Duration: buff.Duration(),
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
 			hunter.PseudoStats.SpiritRegenRateCasting += regen
 		},
@@ -159,7 +159,7 @@ func (hunter *Hunter) registerCleverTraps() {
 	hunter.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_DamageDone_Pct,
 		ClassMask:  HunterSpellsTraps,
-		FloatValue: spellData.CleverTraps.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_ALL_EFFECTS).FractionAt(hunter.Talents.CleverTraps),
+		FloatValue: spellData.CleverTraps.Effect(dbcenums.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_ALL_EFFECTS)).FractionAt(hunter.Talents.CleverTraps),
 	})
 }
 
@@ -183,13 +183,13 @@ func (hunter *Hunter) registerPredatorsEdge() {
 	hunter.AddStaticMod(core.SpellModConfig{
 		Kind:        core.SpellMod_CritMultiplier_Flat,
 		DefenseType: core.DefenseTypeMelee,
-		FloatValue:  spellData.PredatorsEdge.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_CRIT_DAMAGE_BONUS).FractionAt(hunter.Talents.PredatorsEdge),
+		FloatValue:  spellData.PredatorsEdge.Effect(dbcenums.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_CRIT_DAMAGE_BONUS)).FractionAt(hunter.Talents.PredatorsEdge),
 	})
 
 	hunter.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_DamageDone_Pct,
 		ProcMask:   core.ProcMaskMeleeOH,
-		FloatValue: spellData.PredatorsEdge.Effect(shared.A_MOD_OFFHAND_DAMAGE_PCT, 0).FractionAt(hunter.Talents.PredatorsEdge),
+		FloatValue: spellData.PredatorsEdge.Effect(dbcenums.A_MOD_OFFHAND_DAMAGE_PCT, 0).FractionAt(hunter.Talents.PredatorsEdge),
 	})
 }
 
@@ -201,7 +201,7 @@ func (hunter *Hunter) registerSurvivalistsDiscipline() {
 	hunter.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_Cooldown_Multiplier,
 		ClassMask:  HunterSpellsTraps,
-		FloatValue: spellData.SurvivalistsDiscipline.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_COOLDOWN).MultiplierAt(hunter.Talents.SurvivalistsDiscipline),
+		FloatValue: spellData.SurvivalistsDiscipline.Effect(dbcenums.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_COOLDOWN)).MultiplierAt(hunter.Talents.SurvivalistsDiscipline),
 	})
 }
 

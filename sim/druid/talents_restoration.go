@@ -1,8 +1,8 @@
 package druid
 
 import (
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
@@ -47,7 +47,7 @@ func (druid *Druid) applyNaturalShapeshifter() {
 	druid.AddStaticMod(core.SpellModConfig{
 		ClassMask:  DruidSpellCatForm | DruidSpellBearForm | DruidSpellMoonkinForm,
 		Kind:       core.SpellMod_PowerCost_Pct_Add,
-		FloatValue: spellData.NaturalShapeshifter.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_COST).FractionAt(druid.Talents.NaturalShapeshifter),
+		FloatValue: spellData.NaturalShapeshifter.Effect(dbcenums.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_COST)).FractionAt(druid.Talents.NaturalShapeshifter),
 	})
 }
 
@@ -57,7 +57,7 @@ func (druid *Druid) applyNaturalist() {
 	}
 
 	// Forever states the damage bonus against every school (mask 127), not physical only.
-	druid.PseudoStats.DamageDealtMultiplier *= spellData.Naturalist.Effect(shared.A_MOD_DAMAGE_PERCENT_DONE, 127).MultiplierAt(druid.Talents.Naturalist)
+	druid.PseudoStats.DamageDealtMultiplier *= spellData.Naturalist.Effect(dbcenums.A_MOD_DAMAGE_PERCENT_DONE, 127).MultiplierAt(druid.Talents.Naturalist)
 }
 
 func (druid *Druid) applySubtlety() {
@@ -69,7 +69,7 @@ func (druid *Druid) applySubtlety() {
 	druid.AddStaticMod(core.SpellModConfig{
 		ClassMask:  DruidHealingSpells | DruidDamagingSpells,
 		Kind:       core.SpellMod_ThreatMultiplier_Pct,
-		FloatValue: spellData.Subtlety.Effect(shared.A_MOD_THREAT, 72).FractionAt(druid.Talents.Subtlety),
+		FloatValue: spellData.Subtlety.Effect(dbcenums.A_MOD_THREAT, 72).FractionAt(druid.Talents.Subtlety),
 	})
 }
 
@@ -78,7 +78,7 @@ func (druid *Druid) applyLivingSpirit() {
 		return
 	}
 
-	druid.MultiplyStat(stats.Spirit, spellData.LivingSpirit.Effect(shared.A_MOD_TOTAL_STAT_PERCENTAGE, 0).MultiplierAt(druid.Talents.LivingSpirit))
+	druid.MultiplyStat(stats.Spirit, spellData.LivingSpirit.Effect(dbcenums.A_MOD_TOTAL_STAT_PERCENTAGE, 0).MultiplierAt(druid.Talents.LivingSpirit))
 }
 
 // applyNaturesFocus implements Nature's Focus, new in Forever.
@@ -98,12 +98,12 @@ func (druid *Druid) applyFuror() {
 	}
 
 	// Both dummy effects carry the same ladder, one per form, so either answers the chance.
-	druid.FurorProcChance = spellData.Furor.EffectAt(0).FractionAt(druid.Talents.Furor)
+	druid.FurorProcChance = spellData.Furor.EffectAt(1).FractionAt(druid.Talents.Furor)
 
 	// A permanent aura so an APL can check for Furor before powershifting (auraIsKnown 17056).
 	core.MakePermanent(druid.RegisterAura(core.Aura{
 		Label:    "Furor",
-		ActionID: core.ActionID{SpellID: spellData.Furor.HighestRank().SpellID},
+		ActionID: core.ActionID{SpellID: spellData.Furor.Highest().ID},
 	}))
 }
 
@@ -113,7 +113,7 @@ func (druid *Druid) applyReflection() {
 		return
 	}
 
-	druid.PseudoStats.SpiritRegenRateCasting += spellData.Reflection.Effect(shared.A_MOD_MANA_REGEN_INTERRUPT, 0).FractionAt(druid.Talents.Reflection)
+	druid.PseudoStats.SpiritRegenRateCasting += spellData.Reflection.Effect(dbcenums.A_MOD_MANA_REGEN_INTERRUPT, 0).FractionAt(druid.Talents.Reflection)
 }
 
 // applyGiftOfNature implements Gift of Nature, new in Forever.

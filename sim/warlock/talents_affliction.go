@@ -3,8 +3,8 @@ package warlock
 import (
 	"time"
 
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
@@ -61,10 +61,10 @@ func (warlock *Warlock) applySuppression() {
 	}
 
 	points := warlock.Talents.Suppression
-	warlock.AddStat(stats.SpellHitPercent, spellData.Suppression.Effect(shared.A_MOD_SPELL_HIT_CHANCE, 0).ValueAt(points))
+	warlock.AddStat(stats.SpellHitPercent, spellData.Suppression.Effect(dbcenums.A_MOD_SPELL_HIT_CHANCE, 0).ValueAt(points))
 	warlock.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_ThreatMultiplier_Pct,
-		FloatValue: spellData.Suppression.Effect(shared.A_MOD_THREAT, 127).FractionAt(points),
+		FloatValue: spellData.Suppression.Effect(dbcenums.A_MOD_THREAT, 127).FractionAt(points),
 		ClassMask:  WarlockSpellAll,
 	})
 }
@@ -78,12 +78,12 @@ func (warlock *Warlock) applyImprovedCorruption() {
 	points := warlock.Talents.ImprovedCorruption
 	warlock.AddStaticMod(core.SpellModConfig{
 		Kind:      core.SpellMod_CastTime_Flat,
-		TimeValue: time.Millisecond * time.Duration(spellData.ImprovedCorruption.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_CASTING_TIME).ValueAt(points)),
+		TimeValue: time.Millisecond * time.Duration(spellData.ImprovedCorruption.Effect(dbcenums.A_ADD_FLAT_MODIFIER, int32(dbcenums.SPELLMOD_CASTING_TIME)).ValueAt(points)),
 		ClassMask: WarlockSpellCorruption,
 	})
 	warlock.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_DotDamageDone_Pct,
-		FloatValue: spellData.ImprovedCorruption.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DOT).FractionAt(points),
+		FloatValue: spellData.ImprovedCorruption.Effect(dbcenums.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_DOT)).FractionAt(points),
 		ClassMask:  WarlockSpellCorruption,
 	})
 }
@@ -100,7 +100,7 @@ func (warlock *Warlock) applyMalediction() {
 	points := warlock.Talents.Malediction
 	warlock.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_DotDamageDone_Pct,
-		FloatValue: spellData.Malediction.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DOT).FractionAt(points),
+		FloatValue: spellData.Malediction.Effect(dbcenums.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_DOT)).FractionAt(points),
 		ClassMask:  WarlockSpellAll,
 	})
 }
@@ -165,8 +165,8 @@ func (warlock *Warlock) applyNightfall() {
 
 	warlock.NightfallProcAura = warlock.MakeProcTriggerAura(core.ProcTrigger{
 		Name:            "Shadow Trance",
-		MetricsActionID: core.ActionID{SpellID: spellData.NightfallTriggered.HighestRank().SpellID},
-		Duration:        spellData.NightfallTriggered.HighestRank().Duration,
+		MetricsActionID: core.ActionID{SpellID: spellData.NightfallTriggered.Highest().ID},
+		Duration:        spellData.NightfallTriggered.Highest().Duration(),
 		ClassSpellMask:  WarlockSpellShadowBolt,
 		Callback:        core.CallbackOnCastComplete,
 		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
@@ -203,7 +203,7 @@ func (warlock *Warlock) applyShadowMastery() {
 	points := warlock.Talents.ShadowMastery
 	warlock.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: spellData.ShadowMastery.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DAMAGE).FractionAt(points),
+		FloatValue: spellData.ShadowMastery.Effect(dbcenums.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_DAMAGE)).FractionAt(points),
 		ClassMask:  WarlockShadowDamage,
 	})
 	// The row's op 22 (dot) modifier carries the same value as op 0: one bonus stated for both
@@ -215,24 +215,24 @@ func (warlock *Warlock) registerAmplifyCurse() {
 		return
 	}
 
-	rank := spellData.AmplifyCurse.HighestRank()
-	actionID := core.ActionID{SpellID: rank.SpellID}
+	rank := spellData.AmplifyCurse.Highest()
+	actionID := core.ActionID{SpellID: rank.ID}
 
 	// Spent by the bane that takes it; see agony.go and doom.go.
 	warlock.AmplifyCurseAura = warlock.GetOrRegisterAura(core.Aura{
 		Label:    "Amplify Curse",
 		ActionID: actionID,
-		Duration: rank.Duration,
+		Duration: rank.Duration(),
 	})
 
 	warlock.AmplifyCurse = warlock.RegisterSpell(core.SpellConfig{
 		ActionID:    actionID,
-		SpellSchool: rank.SpellSchool,
+		SpellSchool: rank.SpellSchool(),
 		Flags:       core.SpellFlagAPL,
 		Cast: core.CastConfig{
 			CD: core.Cooldown{
 				Timer:    warlock.NewTimer(),
-				Duration: rank.Cooldown,
+				Duration: max(rank.Cooldown(), rank.CategoryCooldown()),
 			},
 		},
 		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {

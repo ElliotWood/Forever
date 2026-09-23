@@ -193,13 +193,6 @@ dps_results: {
  }
 }
 dps_results: {
- key: "TestBalance-AllItems-DormantHeartoftheMountain-249473"
- value: {
-  dps: 271.80083
-  tps: 140.5516
- }
-}
-dps_results: {
  key: "TestBalance-AllItems-DraconicInfusedEmblem-22268"
  value: {
   dps: 287.52611
@@ -243,20 +236,6 @@ dps_results: {
 }
 dps_results: {
  key: "TestBalance-AllItems-EnchantWeapon-Crusader-1900"
- value: {
-  dps: 271.80083
-  tps: 140.5516
- }
-}
-dps_results: {
- key: "TestBalance-AllItems-EnchantWeapon-IcyChill-1894"
- value: {
-  dps: 271.80083
-  tps: 140.5516
- }
-}
-dps_results: {
- key: "TestBalance-AllItems-EnchantWeapon-UnholyWeapon-1899"
  value: {
   dps: 271.80083
   tps: 140.5516
@@ -312,6 +291,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBalance-AllItems-GoldenBanana-270226"
+ value: {
+  dps: 272.1849
+  tps: 140.78896
+ }
+}
+dps_results: {
  key: "TestBalance-AllItems-Gri'lek'sCharmofValor-19952"
  value: {
   dps: 273.15126
@@ -356,8 +342,8 @@ dps_results: {
 dps_results: {
  key: "TestBalance-AllItems-HighborneResearchTablet-260205"
  value: {
-  dps: 300.96158
-  tps: 161.35895
+  dps: 300.9956
+  tps: 161.38276
  }
 }
 dps_results: {

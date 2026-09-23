@@ -1,8 +1,8 @@
 package mage
 
 import (
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/dbcenums"
 )
 
 // Each fire hit adds a stack of crit until the row's charges of fire crits (4 in Forever, 3 in
@@ -12,14 +12,14 @@ func (mage *Mage) registerCombustionSpell() {
 		return
 	}
 
-	combustionRank := spellData.Combustion.HighestRank()
-	critPerStack := spellData.CombustionTriggered.HighestRank().Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_CRITICAL_CHANCE).Value
-	maxCrits := combustionRank.ProcCharges
+	combustionRank := spellData.Combustion.Highest()
+	critPerStack := spellData.CombustionTriggered.Highest().Effect(dbcenums.A_ADD_FLAT_MODIFIER, int32(dbcenums.SPELLMOD_CRITICAL_CHANCE)).Average(core.CharacterLevel)
+	maxCrits := int32(combustionRank.ProcCharges)
 
-	actionID := core.ActionID{SpellID: combustionRank.SpellID}
+	actionID := core.ActionID{SpellID: combustionRank.ID}
 	cd := core.Cooldown{
 		Timer:    mage.NewTimer(),
-		Duration: combustionRank.Cooldown,
+		Duration: max(combustionRank.Cooldown(), combustionRank.CategoryCooldown()),
 	}
 
 	critMod := mage.AddDynamicMod(core.SpellModConfig{

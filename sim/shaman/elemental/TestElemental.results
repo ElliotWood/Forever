@@ -228,13 +228,6 @@ dps_results: {
  }
 }
 dps_results: {
- key: "TestElemental-AllItems-DormantHeartoftheMountain-249473"
- value: {
-  dps: 261.27073
-  tps: 162.71635
- }
-}
-dps_results: {
  key: "TestElemental-AllItems-DraconicInfusedEmblem-22268"
  value: {
   dps: 280.23937
@@ -285,20 +278,6 @@ dps_results: {
 }
 dps_results: {
  key: "TestElemental-AllItems-EnchantWeapon-Crusader-1900"
- value: {
-  dps: 261.27073
-  tps: 162.71635
- }
-}
-dps_results: {
- key: "TestElemental-AllItems-EnchantWeapon-IcyChill-1894"
- value: {
-  dps: 261.27073
-  tps: 162.71635
- }
-}
-dps_results: {
- key: "TestElemental-AllItems-EnchantWeapon-UnholyWeapon-1899"
  value: {
   dps: 261.27073
   tps: 162.71635
@@ -358,6 +337,13 @@ dps_results: {
  value: {
   dps: 281.7693
   tps: 174.93644
+ }
+}
+dps_results: {
+ key: "TestElemental-AllItems-GoldenBanana-270226"
+ value: {
+  dps: 260.63001
+  tps: 162.28857
  }
 }
 dps_results: {
@@ -440,8 +426,8 @@ dps_results: {
 dps_results: {
  key: "TestElemental-AllItems-HighborneResearchTablet-260205"
  value: {
-  dps: 306.27381
-  tps: 194.12998
+  dps: 306.28762
+  tps: 194.13965
  }
 }
 dps_results: {
@@ -789,6 +775,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestElemental-AllItems-VolcanicArmor"
+ value: {
+  dps: 261.27073
+  tps: 162.71635
+ }
+}
+dps_results: {
+ key: "TestElemental-AllItems-WalloftheDead-1979"
  value: {
   dps: 261.27073
   tps: 162.71635

@@ -146,7 +146,7 @@ func (rogue *Rogue) Initialize() {
 
 	rogue.ruthlessnessMetrics = rogue.NewComboPointMetrics(core.ActionID{SpellID: 14161})
 	// Forever states a flat SpellAuraOptions.ProcChance of 100 on the talent spell and puts the
-	// real per-rank chance on the effect, so ProcChanceAt would read 100% at every rank.
+	// real per-rank chance on the effect, so the row's ProcChance would read 100% at every rank.
 	rogue.ruthlessnessChance = spellData.Ruthlessness.FractionAt(rogue.Talents.Ruthlessness)
 	rogue.relentlessStrikesMetrics = rogue.NewEnergyMetrics(core.ActionID{SpellID: 14179})
 }

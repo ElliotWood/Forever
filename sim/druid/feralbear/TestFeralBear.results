@@ -157,9 +157,9 @@ dps_results: {
 dps_results: {
  key: "TestFeralBear-AllItems-BlazefuryMedallion-17111"
  value: {
-  dps: 120.17773
-  tps: 132.46937
-  dtps: 1235.15694
+  dps: 119.63125
+  tps: 131.75894
+  dtps: 1235.64856
  }
 }
 dps_results: {
@@ -259,14 +259,6 @@ dps_results: {
  }
 }
 dps_results: {
- key: "TestFeralBear-AllItems-DormantHeartoftheMountain-249473"
- value: {
-  dps: 117.16756
-  tps: 129.45441
-  dtps: 1231.43414
- }
-}
-dps_results: {
  key: "TestFeralBear-AllItems-DraconicInfusedEmblem-22268"
  value: {
   dps: 117.16756
@@ -316,22 +308,6 @@ dps_results: {
 }
 dps_results: {
  key: "TestFeralBear-AllItems-EnchantWeapon-Crusader-1900"
- value: {
-  dps: 117.16756
-  tps: 129.45441
-  dtps: 1231.5233
- }
-}
-dps_results: {
- key: "TestFeralBear-AllItems-EnchantWeapon-IcyChill-1894"
- value: {
-  dps: 117.16756
-  tps: 129.45441
-  dtps: 1231.5233
- }
-}
-dps_results: {
- key: "TestFeralBear-AllItems-EnchantWeapon-UnholyWeapon-1899"
  value: {
   dps: 117.16756
   tps: 129.45441
@@ -395,6 +371,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralBear-AllItems-GoldenBanana-270226"
+ value: {
+  dps: 117.46629
+  tps: 130.14606
+  dtps: 1231.2993
+ }
+}
+dps_results: {
  key: "TestFeralBear-AllItems-Gri'lek'sCharmofValor-19952"
  value: {
   dps: 118.00215
@@ -445,8 +429,8 @@ dps_results: {
 dps_results: {
  key: "TestFeralBear-AllItems-HighborneResearchTablet-260205"
  value: {
-  dps: 186.09494
-  tps: 198.5283
+  dps: 186.59804
+  tps: 199.19128
   dtps: 1231.44684
  }
 }
