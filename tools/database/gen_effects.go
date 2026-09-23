@@ -130,6 +130,8 @@ type ProcRouting struct {
 	Energize bool
 	// The same for a spell that puts a debuff on the enemy it lands on.
 	Debuff bool
+	// The same for a spell whose effects are auras on the wearer, its pets or an enemy.
+	Aura bool
 	// Empty when the rows state enough to build the listener.
 	Unsupported []string
 	// What the rows resolve to, for the reader of the generated file.
@@ -1106,6 +1108,8 @@ func parseOnUseSpell(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instanc
 		groupName = "Speed"
 	case routing.Energize:
 		groupName = "Resources"
+	case routing.Aura:
+		groupName = "Auras"
 	}
 	grp := groupMap[groupName]
 	grp.Name = groupName
@@ -1172,6 +1176,10 @@ func routeOnUse(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instance *db
 		if s.DurationMs <= 0 {
 			routing.Unsupported = append(routing.Unsupported, "the speed buff states no duration")
 		}
+	case appliesAnItemAura(s):
+		routing.Aura = true
+		routing.Summary = onUseSummary(s, allEffects(s)...)
+		routing.Unsupported = append(routing.Unsupported, spelldata.ItemAuraUnsupported(s, false)...)
 	default:
 		routing.Unsupported = append(routing.Unsupported,
 			fmt.Sprintf("%d deals no damage and heals no one (%s)", spellID, spellEffectKinds(instance, spellID)))
@@ -1234,6 +1242,8 @@ func (r *ProcRouting) OnUseConstructor() string {
 		return "NewSpellDataSpeedOnUse"
 	case r.Energize:
 		return "NewSpellDataEnergizeOnUse"
+	case r.Aura:
+		return "NewSpellDataAuraOnUse"
 	default:
 		return "NewSimpleStatActive"
 	}
@@ -1253,6 +1263,31 @@ func (r *ProcRouting) ProcConstructor() string {
 	default:
 		return "NewSpellDataProc"
 	}
+}
+
+// The auras the item aura shape is emitted for: the damage, healing, cost and armor multipliers and
+// the flat damage taken, none of which an item states as a stat.
+var itemAuraKinds = []dbcenums.EffectAuraType{
+	dbcenums.A_MOD_DAMAGE_PERCENT_DONE,
+	dbcenums.A_MOD_DAMAGE_PERCENT_TAKEN,
+	dbcenums.A_MOD_HEALING_DONE_PERCENT,
+	dbcenums.A_MOD_POWER_COST_SCHOOL_PCT,
+	dbcenums.A_MOD_DAMAGE_TAKEN,
+	dbcenums.A_MOD_BASE_RESISTANCE_PCT,
+}
+
+func appliesAnItemAura(s *spelldata.Spell) bool {
+	return slices.ContainsFunc(s.Effects, func(e spelldata.Effect) bool {
+		return e.Type == dbcenums.E_APPLY_AURA && slices.Contains(itemAuraKinds, e.Aura)
+	})
+}
+
+func allEffects(s *spelldata.Spell) []*spelldata.Effect {
+	effects := make([]*spelldata.Effect, len(s.Effects))
+	for i := range s.Effects {
+		effects[i] = &s.Effects[i]
+	}
+	return effects
 }
 
 func TryParseEnchantEffect(enchant *proto.UIEnchant, slots []dbc.EnchantProcSlot, groupMapProc map[string]Group, instance *dbc.DBC, enchantSpellEffects map[int]*dbc.SpellEffect) EffectParseResult {
