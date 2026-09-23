@@ -8,6 +8,8 @@ import (
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/simsignals"
+	"github.com/wowsims/forever/sim/core/spelldata"
+	"github.com/wowsims/forever/sim/core/stats"
 )
 
 const (
@@ -19,6 +21,17 @@ const (
 	// healing and +20% mana cost (A_MOD_POWER_COST_SCHOOL_PCT, misc 126) on the wearer for 20 s. The
 	// item's own row puts it on a 5 min cooldown in category 1141 for 20 s.
 	natureAligned int32 = 23734
+
+	// Obsidian Mail Tunic 22191's equip spell: A_MOD_DAMAGE_TAKEN -10, misc 126, on the wearer.
+	spellDamageReduction int32 = 27518
+
+	// Beastmaster's Boots 22061 and Treads 226881: 27206 casts 27205, A_MOD_DAMAGE_PERCENT_DONE +3%
+	// misc 127 on the pet for 4 s, every 3 s. Beastmaster's Tunic 22060 and 226886: 27225 casts
+	// 27208, A_MOD_BASE_RESISTANCE_PCT +10% misc 1 on the pet, the same way.
+	increasedPetDamage int32 = 27206
+	increasedPetArmor  int32 = 27225
+
+	petClawID int32 = 992004
 )
 
 func init() {
@@ -32,13 +45,47 @@ func init() {
 			player.Spec = spec.(*proto.Player_RestorationShaman)
 		},
 	)
+	core.RegisterAgentFactory(
+		proto.Player_Hunter{},
+		proto.Spec_SpecHunter,
+		func(character *core.Character, _ *proto.Player, _ *proto.Raid) core.Agent {
+			owner := &auraTester{Character: *character}
+			owner.pet = &testPet{Pet: core.NewPet(core.PetConfig{
+				Name: "Test Pet", Owner: &owner.Character, EnabledOnStart: true,
+				StatInheritance: func(stats.Stats) stats.Stats { return stats.Stats{} },
+			})}
+			owner.AddPet(owner.pet)
+			return owner
+		},
+		func(player *proto.Player, spec interface{}) {
+			player.Spec = spec.(*proto.Player_Hunter)
+		},
+	)
 }
 
 // A wearer with an arcane bolt, a physical strike and an arcane bolt costing 100 mana, each dealing
-// 100 that no resistance or armor reduces.
+// 100 that no resistance or armor reduces, and a pet where the class has one.
 type auraTester struct {
 	core.Character
 	bolt, strike, manaBolt *core.Spell
+	pet                    *testPet
+}
+
+// A pet whose claw deals 100 physical damage that armor does not reduce.
+type testPet struct {
+	core.Pet
+	claw *core.Spell
+}
+
+func (p *testPet) GetPet() *core.Pet                        { return &p.Pet }
+func (p *testPet) ApplyTalents()                            {}
+func (p *testPet) Reset(_ *core.Simulation)                 {}
+func (p *testPet) OnEncounterStart(_ *core.Simulation)      {}
+func (p *testPet) ExecuteCustomRotation(_ *core.Simulation) {}
+
+func (p *testPet) Initialize() {
+	p.Pet.Initialize()
+	p.claw = p.RegisterSpell(testHit(petClawID, core.SpellSchoolPhysical, core.ProcMaskMeleeMHSpecial))
 }
 
 func (c *auraTester) GetCharacter() *core.Character       { return &c.Character }
@@ -110,6 +157,10 @@ func shaman(name string, slotted map[proto.ItemSlot]int32) *proto.Player {
 }
 
 func newAuraSim(players ...*proto.Player) *core.Simulation {
+	return newAuraSimIn(nil, players...)
+}
+
+func newAuraSimIn(areas []proto.AreaType, players ...*proto.Player) *core.Simulation {
 	sim := core.NewSim(&proto.RaidSimRequest{
 		SimOptions: &proto.SimOptions{RandomSeed: 1},
 		Raid: &proto.Raid{Parties: []*proto.Party{{
@@ -117,8 +168,9 @@ func newAuraSim(players ...*proto.Player) *core.Simulation {
 			Buffs:   &proto.PartyBuffs{},
 		}}},
 		Encounter: &proto.Encounter{
-			Targets:  []*proto.Target{{Name: "target", Level: 60, MobType: proto.MobType_MobTypeDemon}},
-			Duration: 180,
+			Targets:   []*proto.Target{{Name: "target", Level: 60, MobType: proto.MobType_MobTypeDemon}},
+			Duration:  180,
+			AreaTypes: areas,
 		},
 	}, simsignals.CreateSignals())
 	sim.Reset()
@@ -184,4 +236,91 @@ func TestNaturalAlignmentCrystal(t *testing.T) {
 
 	stepPast(t, sim, start+20*time.Second+time.Millisecond)
 	check("after its 20 s", 100, 1, 100)
+}
+
+func hunter(name string, slotted map[proto.ItemSlot]int32) *proto.Player {
+	return auraPlayer(name, proto.Class_ClassHunter, &proto.Player_Hunter{}, slotted)
+}
+
+// Obsidian Mail Tunic takes 10 off every magic hit its wearer takes, and nothing off a physical one or
+// off a hit on anyone else.
+func TestObsidianMailTunicReducesAMagicHitByTen(t *testing.T) {
+	const itemID int32 = 992201
+	withAuraItem(itemID, proto.ItemType_ItemTypeChest)
+	NewSpellDataEquipAura(SpellDataProc{TriggerSpellID: spellDamageReduction},
+		[]ItemVariant{{ItemID: itemID, ItemName: "Test Obsidian Mail"}})
+
+	sim := newAuraSim(
+		shaman("Wearer", map[proto.ItemSlot]int32{proto.ItemSlot_ItemSlotChest: itemID}),
+		shaman("Attacker", nil),
+	)
+	wearer, attacker := auraTesterAt(sim, 0), auraTesterAt(sim, 1)
+
+	if got := dealt(sim, attacker.bolt, &wearer.Unit); !near(got, 90) {
+		t.Errorf("an arcane bolt on the wearer dealt %v, want 90", got)
+	}
+	if got := dealt(sim, attacker.strike, &wearer.Unit); !near(got, 100) {
+		t.Errorf("a physical strike on the wearer dealt %v, want 100", got)
+	}
+	if got := dealt(sim, wearer.bolt, &attacker.Unit); !near(got, 100) {
+		t.Errorf("the wearer's arcane bolt on someone else dealt %v, want 100", got)
+	}
+}
+
+// A row restricted to an area applies in an encounter there and nowhere else. 27518 states no area,
+// so a copy requiring Forest and Grassland (group 9161) stands in for the rows that do.
+func TestEquipAuraAppliesOnlyInItsArea(t *testing.T) {
+	const itemID int32 = 992204
+	editRow(t, spellDamageReduction, func(s *spelldata.Spell) { s.RequiredAreas = 9161 })
+	withAuraItem(itemID, proto.ItemType_ItemTypeChest)
+	NewSpellDataEquipAura(SpellDataProc{TriggerSpellID: spellDamageReduction},
+		[]ItemVariant{{ItemID: itemID, ItemName: "Test Forest Mail"}})
+
+	for _, c := range []struct {
+		areas []proto.AreaType
+		want  float64
+	}{
+		{nil, 100},
+		{[]proto.AreaType{proto.AreaType_AreaTypeForestGrassland}, 90},
+	} {
+		sim := newAuraSimIn(c.areas,
+			shaman("Wearer", map[proto.ItemSlot]int32{proto.ItemSlot_ItemSlotChest: itemID}),
+			shaman("Attacker", nil),
+		)
+		wearer, attacker := auraTesterAt(sim, 0), auraTesterAt(sim, 1)
+		if got := dealt(sim, attacker.bolt, &wearer.Unit); !near(got, c.want) {
+			t.Errorf("in %v an arcane bolt on the wearer dealt %v, want %v", c.areas, got, c.want)
+		}
+	}
+}
+
+// Beastmaster's Boots raise the pet's damage by 3%, and do nothing for a wearer with no pet. The
+// Tunic's +10% pet armor has no equipment share on a pet to scale, so it registers nothing.
+func TestBeastmastersBootsRaiseThePetsDamage(t *testing.T) {
+	const bootsID, tunicID int32 = 992202, 992203
+	withAuraItem(bootsID, proto.ItemType_ItemTypeFeet)
+	withAuraItem(tunicID, proto.ItemType_ItemTypeChest)
+	NewSpellDataEquipAura(SpellDataProc{TriggerSpellID: increasedPetDamage},
+		[]ItemVariant{{ItemID: bootsID, ItemName: "Test Beastmaster's Boots"}})
+	NewSpellDataEquipAura(SpellDataProc{TriggerSpellID: increasedPetArmor},
+		[]ItemVariant{{ItemID: tunicID, ItemName: "Test Beastmaster's Tunic"}})
+
+	gear := map[proto.ItemSlot]int32{proto.ItemSlot_ItemSlotFeet: bootsID, proto.ItemSlot_ItemSlotChest: tunicID}
+	sim := newAuraSim(hunter("Owner", gear), hunter("Bare Owner", nil), shaman("Petless", gear))
+	target := sim.Encounter.ActiveTargetUnits[0]
+	owner, bare, petless := auraTesterAt(sim, 0), auraTesterAt(sim, 1), auraTesterAt(sim, 2)
+
+	bareClaw := dealt(sim, bare.pet.claw, target)
+	if got := dealt(sim, owner.pet.claw, target); !near(got, 1.03*bareClaw) {
+		t.Errorf("the pet of the wearer clawed for %v, want 3%% over the %v of a pet without", got, bareClaw)
+	}
+	if got := dealt(sim, owner.strike, target); !near(got, 100) {
+		t.Errorf("the wearer's own strike dealt %v, want the 100 a pet aura leaves alone", got)
+	}
+	if got := dealt(sim, petless.strike, target); !near(got, 100) {
+		t.Errorf("a wearer with no pet struck for %v, want 100", got)
+	}
+	if got := owner.pet.GetStat(stats.Armor); got != bare.pet.GetStat(stats.Armor) {
+		t.Errorf("the tunic changed the pet's armor to %v", got)
+	}
 }

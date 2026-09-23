@@ -39,6 +39,12 @@ func itemAuraRows() []Spell {
 			{Index: 1, Type: dbcenums.E_SCHOOL_DAMAGE, BasePoints: 100, Target: [2]dbcenums.ImplicitTarget{dbcenums.TARGET_UNIT_TARGET_ENEMY}},
 			auraEffect(2, dbcenums.A_MOD_DAMAGE_PERCENT_DONE, miscAllSchools, 5, dbcenums.TARGET_UNIT_NEARBY_ALLY),
 		}},
+		Spell{ID: 7600, Name: "Forest Aura", DurationMs: -1, RequiredAreas: 9161, Effects: []Effect{
+			auraEffect(0, dbcenums.A_MOD_DAMAGE_TAKEN, miscMagicSchool, -10, dbcenums.TARGET_UNIT_CASTER),
+		}},
+		Spell{ID: 7700, Name: "Arena Aura", DurationMs: -1, RequiredAreas: 9337, Effects: []Effect{
+			auraEffect(0, dbcenums.A_MOD_DAMAGE_PERCENT_TAKEN, miscAllSchools, -6, dbcenums.TARGET_UNIT_CASTER),
+		}},
 	)
 }
 
@@ -83,6 +89,8 @@ func TestItemAuraUnsupported(t *testing.T) {
 		{"pet armor", 7200, true, []string{"effect 1 A_MOD_BASE_RESISTANCE_PCT misc 1 is not parsed on a pet"}},
 		{"damage and an ally", 7500, false, []string{"effect 2 is E_SCHOOL_DAMAGE", "effect 3 lands on implicit target 3"}},
 		{"no duration", 7300, false, []string{"the row states no duration", "effect 1 lands on implicit target 0"}},
+		{"a terrain area", 7600, true, nil},
+		{"a single zone", 7700, true, []string{"the row applies only in area group 9337, which names no area type"}},
 	} {
 		t.Run(c.name, func(t *testing.T) {
 			if got := ItemAuraUnsupported(Find(c.id), c.equipped); !slices.Equal(got, c.want) {

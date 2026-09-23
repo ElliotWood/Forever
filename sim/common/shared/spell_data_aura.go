@@ -8,7 +8,8 @@ import (
 // The auras a row puts on the wearer, on each of its pets and on an enemy, each carrying the effects
 // that land on that unit. The wearer's and the pets' are registered from the config handed in; the
 // enemy's is the row's own aura, one per enemy, shared by every character that applies it, so the
-// first to register it parses it and the multiplier reaches every attacker's hits once.
+// first to register it parses it and the multiplier reaches every attacker's hits once. A row
+// restricted to an area puts nothing on anyone in an encounter outside it.
 type spellDataAuras struct {
 	wearer  *core.Aura
 	pets    []*core.Aura
@@ -17,6 +18,9 @@ type spellDataAuras struct {
 
 func newSpellDataAuras(character *core.Character, row *spelldata.Spell, config core.Aura) *spellDataAuras {
 	auras := &spellDataAuras{}
+	if row.RequiredAreas != 0 && !character.Env.Encounter.InArea(row.AreaType()) {
+		return auras
+	}
 
 	if effects := spelldata.EffectsOn(row, spelldata.AuraOnWearer); len(effects) > 0 {
 		auras.wearer = character.RegisterAura(config)
@@ -58,6 +62,46 @@ func (auras *spellDataAuras) activate(sim *core.Simulation, target *core.Unit) {
 		}
 	}
 	auras.enemies.Get(target).Activate(sim)
+}
+
+// An item whose equip spell applies auras: the row's auras on the wearer and on each summoned pet for
+// as long as the item is worn. An equip spell that only re-applies another aura on a period is read as
+// that aura.
+func NewSpellDataEquipAura(cfg SpellDataProc, variants []ItemVariant) {
+	forEachSpellDataVariant(cfg, variants, registerSpellDataEquipAura)
+}
+
+func registerSpellDataEquipAura(cfg SpellDataProc) {
+	source := cfg.effectSource()
+
+	// Soft fail to allow for overrides for bad effects
+	if source.isAlreadyImplemented() {
+		return
+	}
+
+	row := spelldata.EquipAuraRow(spelldata.MustFind(cfg.TriggerSpellID))
+
+	source.registerEffect(func(agent core.Agent) {
+		character := agent.GetCharacter()
+		slots := source.eligibleSlots(character)
+
+		// Checked on reset rather than made permanent: a pet resets after its owner's item swap has
+		// settled, and would otherwise put the aura back on for an item only in the swap set.
+		config := spelldata.AuraConfig(row, spelldata.Label(cfg.Name))
+		config.Duration = core.NeverExpires
+		config.OnReset = func(aura *core.Aura, sim *core.Simulation) {
+			if character.HasItemEquipped(source.id, slots) {
+				aura.Activate(sim)
+			}
+		}
+
+		auras := newSpellDataAuras(character, row, config)
+		for _, aura := range append([]*core.Aura{auras.wearer}, auras.pets...) {
+			if aura != nil {
+				source.registerProc(character, aura, slots)
+			}
+		}
+	})
 }
 
 // An on-use item whose spell applies auras: the wearer's buff, its pets' and the debuff on the enemy

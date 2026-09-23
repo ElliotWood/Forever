@@ -61,7 +61,8 @@ func EquipAuraRow(s *Spell) *Spell {
 
 // What an item's aura shape leaves out of a row, one reason per effect: an effect that is not an
 // aura, one landing on a unit the shape does not reach, and one the parser skips on the unit it lands
-// on. Empty means every effect of the row is attached. An equipped row is parsed the way ParseStatic
+// on; and a row restricted to an area group that names no area type. Empty means every effect of the
+// row is attached. An equipped row is parsed the way ParseStatic
 // parses it, onto the wearer and its pets; any other is an aura applied for the row's duration.
 //
 // The parser answers by parsing: each target's effects are parsed onto a character of its own that
@@ -74,6 +75,9 @@ func ItemAuraUnsupported(s *Spell, equipped bool) []string {
 	var unsupported []string
 	if !equipped && s.DurationMs == 0 {
 		unsupported = append(unsupported, "the row states no duration")
+	}
+	if s.RequiredAreas != 0 && s.AreaType() == proto.AreaType_AreaTypeUnknown {
+		unsupported = append(unsupported, fmt.Sprintf("the row applies only in area group %d, which names no area type", s.RequiredAreas))
 	}
 
 	for i := range s.Effects {

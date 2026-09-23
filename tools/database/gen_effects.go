@@ -132,6 +132,8 @@ type ProcRouting struct {
 	Debuff bool
 	// The same for a spell whose effects are auras on the wearer, its pets or an enemy.
 	Aura bool
+	// An equip spell's auras, kept up for as long as the item is worn rather than applied by a proc.
+	Equip bool
 	// Empty when the rows state enough to build the listener.
 	Unsupported []string
 	// What the rows resolve to, for the reader of the generated file.
@@ -733,6 +735,11 @@ func GenerateItemEffects(instance *dbc.DBC, db *WowDatabase, itemSources map[int
 				continue
 			}
 
+			switch TryParseEquipAuraEffect(parsed, itemEffect, instance, groupMapProc) {
+			case EffectParseResultSuccess, EffectParseResultRefused:
+				continue
+			}
+
 			switch TryParseProcEffect(parsed, itemEffect, instance, groupMapProc) {
 			case EffectParseResultSuccess, EffectParseResultRefused:
 			default:
@@ -1015,6 +1022,56 @@ func routeItemProc(parsed *proto.UIItem, itemEffect *proto.ItemEffect, tooltip s
 	return routing
 }
 
+// An equip spell with no stats that applies an aura the stat path cannot state, read from the row it
+// keeps up. One the rows cannot build is refused in an entry of its own, with the reasons.
+func TryParseEquipAuraEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instance *dbc.DBC, groupMapProc map[string]Group) EffectParseResult {
+	if parsed.ScalingOptions[0].Ilvl < MIN_EFFECT_ILVL || core.HasItemEffect(parsed.Id) || len(dbc.EffectStats(itemEffect)) > 0 {
+		return EffectParseResultInvalid
+	}
+
+	effect := dbc.GetItemEffectForBuffID(int(parsed.Id), int(itemEffect.BuffId))
+	if effect == nil || effect.TriggerType != dbc.ITEM_SPELLTRIGGER_ON_EQUIP {
+		return EffectParseResultInvalid
+	}
+
+	equip := spelldata.Find(itemEffect.BuffId)
+	row := spelldata.EquipAuraRow(equip)
+	if !appliesAnItemAura(row) {
+		return EffectParseResultInvalid
+	}
+
+	routing := &ProcRouting{
+		TriggerSpellID: int(itemEffect.BuffId),
+		Equip:          true,
+		Unsupported:    spelldata.ItemAuraUnsupported(row, true),
+		Summary:        fmt.Sprintf("equip: %d", equip.ID),
+	}
+	if row != equip {
+		routing.Summary += fmt.Sprintf(" keeps %d up", row.ID)
+	}
+	routing.Summary += fmt.Sprintf(" (%s)", spellEffectKinds(instance, int(row.ID)))
+
+	rendered := itemEffectTooltip(parsed, itemEffect, instance)
+	entry := &Entry{
+		Tooltip:   strings.Split(rendered, "\n"),
+		Variants:  []*Variant{{ID: int(parsed.Id), Name: parsed.Name, SpellID: int(itemEffect.BuffId)}},
+		Proc:      routing,
+		Supported: routing.Supported(),
+	}
+
+	grp := groupMapProc["Equip"]
+	grp.Name = "Equip"
+	grp.Entries = append(grp.Entries, entry)
+	groupMapProc["Equip"] = grp
+
+	if entry.Supported {
+		return EffectParseResultSuccess
+	}
+
+	StoreMissingEffect("ItemEffects", parsed.Name, Variant{ID: int(parsed.Id), Name: rendered, SpellID: int(itemEffect.BuffId)})
+	return EffectParseResultRefused
+}
+
 func TryParseOnUseEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instance *dbc.DBC, groupMap map[string]Group) EffectParseResult {
 	// Effect was already manually implemented
 	if core.HasItemEffect(parsed.Id) {
@@ -1260,6 +1317,10 @@ func (r *ProcRouting) ProcConstructor() string {
 		return "NewSpellDataAbsorbProc"
 	case r.Debuff:
 		return "NewSpellDataDebuffProc"
+	case r.Equip:
+		return "NewSpellDataEquipAura"
+	case r.Aura:
+		return "NewSpellDataAuraProc"
 	default:
 		return "NewSpellDataProc"
 	}
