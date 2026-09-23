@@ -37,7 +37,7 @@ func newEmeraldDragonWhelp(character *core.Character) *EmeraldDragonWhelp {
 				stats.Health:          1500,
 				stats.Intellect:       20,
 				stats.Mana:            500,
-				stats.SpellDamage:     220,
+				stats.SpellDamage:     155, // master tuned 220 on its flat 374 to hit the log (~594 a spit); 438.5 + 155 keeps that
 				stats.MeleeCritRating: 4.5 * core.PhysicalCritRatingPerCritPercent,
 				stats.SpellCritRating: 13 * core.SpellCritRatingPerCritPercent,
 			},
