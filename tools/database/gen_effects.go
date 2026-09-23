@@ -90,8 +90,8 @@ type Entry struct {
 	Heals bool
 	// The same for an effect that shields the wearer with an absorb.
 	Absorbs bool
-	// The same for an effect that slows the enemy it lands on.
-	Slows bool
+	// The same for an effect that puts a debuff on the enemy it lands on.
+	Debuffs bool
 	// What a registered on-use leaves out, stated beside its call.
 	NotSimulated string
 }
@@ -128,8 +128,8 @@ type ProcRouting struct {
 	Speed bool
 	// The same for a spell that restores the wearer's mana, rage or energy.
 	Energize bool
-	// The same for a spell that slows the enemy it lands on.
-	Slow bool
+	// The same for a spell that puts a debuff on the enemy it lands on.
+	Debuff bool
 	// Empty when the rows state enough to build the listener.
 	Unsupported []string
 	// What the rows resolve to, for the reader of the generated file.
@@ -184,21 +184,22 @@ func (r *ProcRouting) asHeal(healSpellID int32) {
 	r.Summary = procSummary(r.TriggerSpellID, spelldata.Find(int32(r.TriggerSpellID)), r.BuffSpellID)
 }
 
-// A proc whose spell slows the enemy it lands on, for as long as its row states.
-func (r *ProcRouting) asSlow(slowSpellID int32) {
-	r.Slow = true
-	if int(slowSpellID) != r.TriggerSpellID {
-		r.BuffSpellID = int(slowSpellID)
+// A proc whose spell puts a debuff on the enemy it lands on, for as long as its row states.
+func (r *ProcRouting) asDebuff(debuffSpellID int32) {
+	r.Debuff = true
+	r.BuffSpellID = 0
+	if int(debuffSpellID) != r.TriggerSpellID {
+		r.BuffSpellID = int(debuffSpellID)
 	}
 
-	if spelldata.Find(slowSpellID).DurationMs <= 0 {
-		r.Unsupported = append(r.Unsupported, "the slow states no duration")
+	if spelldata.Find(debuffSpellID).DurationMs <= 0 {
+		r.Unsupported = append(r.Unsupported, "the debuff states no duration")
 	}
-	r.Summary = procSummary(r.TriggerSpellID, spelldata.Find(int32(r.TriggerSpellID)), int(slowSpellID))
+	r.Summary = procSummary(r.TriggerSpellID, spelldata.Find(int32(r.TriggerSpellID)), int(debuffSpellID))
 }
 
-func slowsTheTarget(spellID int32) bool {
-	return len(spelldata.Find(spellID).SlowEffects()) > 0
+func debuffsTheTarget(spellID int32) bool {
+	return spelldata.Find(spellID).DebuffsTheTarget()
 }
 
 func healUnsupported(heal *spelldata.Spell) []string {
@@ -894,7 +895,11 @@ func TryParseProcEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, inst
 			// reads here - and that decision is the whole of it, rather than the tooltip reading
 			// BuildProcInfo does for the shapes below. The two that need more than the rows state
 			// stay where they are: a window accumulating a second aura, and an effect with no stats.
-			if itemEffect.StackingAura == nil && len(dbc.EffectStats(itemEffect)) > 0 {
+			// The stats of an aura the row applies to an enemy are the enemy's to lose, never a buff on
+			// the wearer: Annihilator's Armor Shatter 16928 resolves Armor -165.
+			onAnEnemy := spelldata.Find(itemEffect.BuffId).AppliesAnAuraToAnEnemy()
+			grantsStats := len(dbc.EffectStats(itemEffect)) > 0 && !onAnEnemy
+			if itemEffect.StackingAura == nil && grantsStats {
 				entry.Proc = routeItemProc(parsed, itemEffect, renderedTooltip)
 				if entry.Proc != nil {
 					entry.Proc.requireABuffDuration()
@@ -905,7 +910,7 @@ func TryParseProcEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, inst
 			// An effect that resolves no stats may still deal flat damage, which is a shape of its
 			// own rather than a reason to refuse: there is no buff, so the proc casts the spell the
 			// client hangs below its trigger, read from that spell's own row.
-			if len(dbc.EffectStats(itemEffect)) == 0 {
+			if !grantsStats {
 				if damage := dbc.ResolveDamageEffect(int(itemEffect.BuffId)); damage != nil {
 					entry.Proc = routeItemProc(parsed, itemEffect, renderedTooltip)
 					if entry.Proc != nil {
@@ -917,7 +922,7 @@ func TryParseProcEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, inst
 			}
 
 			// The same for an effect that heals the wearer.
-			if len(dbc.EffectStats(itemEffect)) == 0 && !entry.DealsDamage {
+			if !grantsStats && !entry.DealsDamage {
 				if heal := procHealSpell(itemEffect.BuffId); heal != 0 {
 					entry.Proc = routeItemProc(parsed, itemEffect, renderedTooltip)
 					if entry.Proc != nil {
@@ -929,7 +934,7 @@ func TryParseProcEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, inst
 			}
 
 			// The same for an effect that shields the wearer.
-			if len(dbc.EffectStats(itemEffect)) == 0 && !entry.DealsDamage && !entry.Heals {
+			if !grantsStats && !entry.DealsDamage && !entry.Heals {
 				if absorb := procAbsorbSpell(itemEffect.BuffId); absorb != 0 {
 					entry.Proc = routeItemProc(parsed, itemEffect, renderedTooltip)
 					if entry.Proc != nil {
@@ -940,17 +945,17 @@ func TryParseProcEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, inst
 				}
 			}
 
-			// The same for an effect that slows the enemy it lands on.
-			if len(dbc.EffectStats(itemEffect)) == 0 && !entry.DealsDamage && !entry.Heals && !entry.Absorbs && slowsTheTarget(itemEffect.BuffId) {
+			// The same for an effect that puts a debuff on the enemy it lands on.
+			if !grantsStats && !entry.DealsDamage && !entry.Heals && !entry.Absorbs && debuffsTheTarget(itemEffect.BuffId) {
 				entry.Proc = routeItemProc(parsed, itemEffect, renderedTooltip)
 				if entry.Proc != nil {
-					entry.Proc.asSlow(itemEffect.BuffId)
+					entry.Proc.asDebuff(itemEffect.BuffId)
 					entry.Supported = entry.Proc.Supported()
-					entry.Slows = true
+					entry.Debuffs = true
 				}
 			}
 
-			if (len(dbc.EffectStats(itemEffect)) == 0 && !entry.DealsDamage && !entry.Heals && !entry.Absorbs && !entry.Slows) || !entry.Supported {
+			if (!grantsStats && !entry.DealsDamage && !entry.Heals && !entry.Absorbs && !entry.Debuffs) || !entry.Supported {
 				StoreMissingEffect("ItemEffects", parsed.Name, Variant{
 					ID:      int(parsed.Id),
 					Name:    renderedTooltip,
@@ -1243,8 +1248,8 @@ func (r *ProcRouting) ProcConstructor() string {
 		return "NewSpellDataHealProc"
 	case r.Absorb:
 		return "NewSpellDataAbsorbProc"
-	case r.Slow:
-		return "NewSpellDataSlowProc"
+	case r.Debuff:
+		return "NewSpellDataDebuffProc"
 	default:
 		return "NewSpellDataProc"
 	}
@@ -1361,7 +1366,11 @@ func routeEnchantSlot(slot dbc.EnchantProcSlot, instance *dbc.DBC, grantTooltip 
 	// A buff stated as a percentage of a stat resolves no flat stats: the sim reads the multipliers
 	// off the buff's own row.
 	effect, hasStats := dbc.EnchantSlotEffect(slot.SpellID)
-	multipliesStats := !hasStats && len(spelldata.PercentStats(spelldata.Find(int32(applied)), 0)) > 0
+	if hasStats && spelldata.Find(effect.BuffId).AppliesAnAuraToAnEnemy() {
+		hasStats = false
+	}
+	appliedRow := spelldata.Find(int32(applied))
+	multipliesStats := !hasStats && !appliedRow.AppliesAnAuraToAnEnemy() && len(spelldata.PercentStats(appliedRow, 0)) > 0
 
 	buffSpellID := slot.SpellID
 	switch {
@@ -1396,8 +1405,8 @@ func routeEnchantSlot(slot dbc.EnchantProcSlot, instance *dbc.DBC, grantTooltip 
 		routing.asHeal(heal)
 	case absorb != 0:
 		routing.asAbsorb(absorb)
-	case slowsTheTarget(int32(applied)):
-		routing.asSlow(int32(applied))
+	case debuffsTheTarget(int32(applied)):
+		routing.asDebuff(int32(applied))
 	default:
 		routing.Unsupported = append(routing.Unsupported,
 			fmt.Sprintf("the enchant's effect entry resolves no stats from %d (%s)", applied, spellEffectKinds(instance, applied)))
