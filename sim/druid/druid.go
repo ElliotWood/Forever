@@ -300,10 +300,10 @@ func New(char *core.Character, form DruidForm, selfBuffs SelfBuffs, talents stri
 	druid.AddStatDependency(stats.Strength, stats.AttackPower, 2)
 	druid.AddStatDependency(stats.BonusArmor, stats.Armor, 1)
 	druid.AddStatDependency(stats.Agility, stats.PhysicalCritPercent, core.CritPerAgiMaxLevel[char.Class])
-	druid.AddStatDependency(stats.Agility, stats.DodgeRating, 1.0/14.7059*core.DodgeRatingPerDodgePercent)
-
-	// TBC: Druids have a -1.87% base dodge correction to match in-game values.
-	druid.PseudoStats.BaseDodgeChance -= 0.0187
+	// Dodge is Classic's at level 60, as on master: 0.9% base and 20 Agility a percent (the same rate
+	// as crit). The 14.7 Agility and -1.87% were TBC's level 70 fit.
+	druid.AddStatDependency(stats.Agility, stats.DodgeRating, core.CritPerAgiMaxLevel[char.Class]*core.DodgeRatingPerDodgePercent)
+	druid.PseudoStats.BaseDodgeChance += 0.009
 
 	return druid
 }

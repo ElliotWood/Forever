@@ -49,5 +49,8 @@ func (druid *Druid) registerBarkskin() {
 	druid.AddMajorCooldown(core.MajorCooldown{
 		Spell: druid.Barkskin.Spell,
 		Type:  core.CooldownTypeSurvival,
+		// Manual only, as upstream's Barkskin: on cooldown it spends what a tank keeps for real damage
+		// (master never auto-uses survival cooldowns either).
+		ShouldActivate: func(_ *core.Simulation, _ *core.Character) bool { return false },
 	})
 }

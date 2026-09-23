@@ -19,7 +19,8 @@ func (druid *Druid) registerEnrageSpell() {
 
 	const armorMultiplier = 1 - 0.27
 
-	instantRage := shared.SpellDataMin(enrageRank.Energize) / 10
+	// Energize is the periodic half; the instant 10 is effect 1 (E_ENERGIZE 100).
+	instantRage := enrageRank.Effect(shared.A_NONE, 1).Tenths()
 	ragePerTick := enrageRank.Effect(shared.A_PERIODIC_ENERGIZE, 1).Value / 10
 	numTicks := int(enrageRank.Duration / time.Second)
 
