@@ -3,6 +3,7 @@ import { APLRotation } from '@generated/proto/apl';
 import { ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
+import { masterEpWeights } from '@sim/proto/master_ep_weights';
 import { DEFAULT_HYBRID_CASTER_GEM_STATS, Stats, UnitStat } from '@sim/proto/stats';
 import { defineSpec } from '@sim/spec_config';
 
@@ -59,7 +60,20 @@ export default defineSpec<Spec.SpecElementalShaman>({
 		// Default equipped gear.
 		gear: Presets.DEFAULT_GEAR.gear,
 		// Default EP weights for sorting gear in the gear picker.
-		epWeights: new Stats(),
+		// Master's weights (percent stats per 1%), in our ratings.
+		epWeights: masterEpWeights({
+			Intellect: 0.14,
+			SpellPower: 1,
+			FirePower: 0.1,
+			NaturePower: 1.0,
+			SpellHit: 12.37,
+			SpellCrit: 7.57,
+			SpellHaste: 1.49,
+			MP5: 0.02,
+			Strength: 0.01,
+			AttackPower: 0.01,
+			FireResistance: 0.01,
+		}),
 		statCaps: (() => {
 			return new Stats().withPseudoStat(PseudoStat.PseudoStatSchoolHitPercentNature, 16);
 		})(),

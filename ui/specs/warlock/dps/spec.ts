@@ -3,6 +3,7 @@ import { APLRotation } from '@generated/proto/apl';
 import { ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
+import { masterEpWeights } from '@sim/proto/master_ep_weights';
 import { DEFAULT_CASTER_GEM_STATS, Stats, UnitStat } from '@sim/proto/stats';
 import { defineSpec } from '@sim/spec_config';
 
@@ -59,7 +60,19 @@ export default defineSpec<Spec.SpecWarlock>({
 		gear: Presets.DEFAULT_GEAR.gear,
 
 		// Default EP weights for sorting gear in the gear picker.
-		epWeights: new Stats(),
+		// Master's weights (percent stats per 1%), in our ratings.
+		epWeights: masterEpWeights({
+			Mana: 0.01,
+			Intellect: 0.23,
+			MP5: 0.14,
+			SpellPower: 1,
+			FirePower: 0.1,
+			ShadowPower: 0.9,
+			SpellHit: 12.79,
+			SpellCrit: 7.92,
+			SpellHaste: 7.83,
+			Stamina: 0.01,
+		}),
 		statCaps: (() => {
 			return new Stats().withPseudoStat(PseudoStat.PseudoStatSpellHitPercent, 16);
 		})(),

@@ -4,7 +4,8 @@ import { APLRotation } from '@generated/proto/apl';
 import { PseudoStat, Spec, Stat } from '@generated/proto/common';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
-import { StatCap, Stats, UnitStat } from '@sim/proto/stats';
+import { masterEpWeights } from '@sim/proto/master_ep_weights';
+import { StatCap, UnitStat } from '@sim/proto/stats';
 import { defineSpec } from '@sim/spec_config';
 
 import * as Presets from './presets';
@@ -93,7 +94,25 @@ export default defineSpec<Spec.SpecProtectionPaladin>({
 		],
 		// Default EP weights for sorting gear in the gear picker.
 		// Values for now are pre-Cata initial WAG
-		epWeights: new Stats(),
+		// Master's weights (percent stats per 1%), in our ratings.
+		epWeights: masterEpWeights({
+			Strength: 3.23,
+			Agility: 18.57,
+			Intellect: 0.05,
+			SpellPower: 0.38,
+			HolyPower: 0.29,
+			SpellHit: 8.2,
+			SpellCrit: 3.35,
+			AttackPower: 1.0,
+			MeleeCrit: 39.75,
+			Armor: 1.0,
+			Defense: 29.97,
+			BlockValue: 17.72,
+			Dodge: 219.45,
+			Parry: 217.72,
+			BonusArmor: 0.96,
+			MainHandDps: 10.12,
+		}),
 		// Default consumes settings.
 		consumables: Presets.DefaultConsumables,
 		// Default talents.

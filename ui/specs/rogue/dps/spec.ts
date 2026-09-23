@@ -5,6 +5,7 @@ import { Debuffs, IndividualBuffs, ItemSlot, PartyBuffs, PseudoStat, RaidBuffs, 
 import * as Mechanics from '@sim/constants/mechanics';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
+import { masterEpWeights } from '@sim/proto/master_ep_weights';
 import { StatCap, Stats, UnitStat } from '@sim/proto/stats';
 import { defineSpec } from '@sim/spec_config';
 
@@ -60,7 +61,20 @@ export default defineSpec<Spec.SpecRogue>({
 		// Default equipped gear.
 		gear: Presets.DEFAULT_GEAR.gear,
 		// Default EP weights for sorting gear in the gear picker.
-		epWeights: new Stats(),
+		// Master's weights (percent stats per 1%), in our ratings.
+		epWeights: masterEpWeights({
+			Agility: 2.38,
+			Strength: 1.26,
+			AttackPower: 1.0,
+			SpellCrit: 0.41,
+			SpellHit: 0.94,
+			MeleeHit: 29.44,
+			MeleeCrit: 17.92,
+			FireResistance: 0.5,
+			MainHandDps: 10.49,
+			OffHandDps: 3.74,
+			MeleeSpeedMultiplier: 18.56,
+		}),
 		statCaps: (() => {
 			const expCap = new Stats().withStat(Stat.StatExpertiseRating, 6.5 * 4 * Mechanics.EXPERTISE_PER_QUARTER_PERCENT_REDUCTION);
 			return expCap;

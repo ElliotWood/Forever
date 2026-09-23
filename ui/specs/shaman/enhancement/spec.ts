@@ -5,6 +5,7 @@ import { ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
 import * as Mechanics from '@sim/constants/mechanics';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
+import { masterEpWeights } from '@sim/proto/master_ep_weights';
 import { StatCap, Stats, UnitStat } from '@sim/proto/stats';
 import { defineSpec } from '@sim/spec_config';
 
@@ -75,7 +76,25 @@ export default defineSpec<Spec.SpecEnhancementShaman>({
 		// Default equipped gear.
 		gear: Presets.DEFAULT_GEAR.gear,
 		// Default EP weights for sorting gear in the gear picker.
-		epWeights: new Stats(),
+		// Master's weights (percent stats per 1%), in our ratings.
+		epWeights: masterEpWeights({
+			Intellect: 0.02,
+			Agility: 1.12,
+			Strength: 2.29,
+			SpellPower: 1.15,
+			FirePower: 0.63,
+			NaturePower: 0.48,
+			SpellHit: 0.03,
+			SpellCrit: 1.94,
+			MP5: 0.01,
+			AttackPower: 1.0,
+			MeleeHit: 9.62,
+			MeleeCrit: 14.8,
+			FireResistance: 0.5,
+			MainHandDps: 8.15,
+			OffHandDps: 5.81,
+			MeleeSpeedMultiplier: 5.81,
+		}),
 		statCaps: (() => {
 			const expCap = new Stats().withStat(Stat.StatExpertiseRating, 6.5 * 4 * Mechanics.EXPERTISE_PER_QUARTER_PERCENT_REDUCTION);
 			return expCap;

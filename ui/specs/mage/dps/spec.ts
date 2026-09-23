@@ -4,6 +4,7 @@ import { Cooldowns, ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/co
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
 import * as AplUtils from '@sim/proto/apl_utils';
+import { masterEpWeights } from '@sim/proto/master_ep_weights';
 import { SpecRotation } from '@sim/proto/spec_types';
 import { DEFAULT_CASTER_GEM_STATS, Stats, UnitStat } from '@sim/proto/stats';
 import { defineSpec } from '@sim/spec_config';
@@ -93,7 +94,19 @@ export default defineSpec<Spec.SpecMage>({
 		// Default equipped gear.
 		gear: Presets.DEFAULT_GEAR.gear,
 		// Default EP weights for sorting gear in the gear picker.
-		epWeights: new Stats(),
+		// Master's weights (percent stats per 1%), in our ratings.
+		epWeights: masterEpWeights({
+			Intellect: 0.49,
+			SpellPower: 1,
+			ArcanePower: 1,
+			FirePower: 1,
+			FrostPower: 1,
+			SpellHit: 18.59,
+			SpellCrit: 13.91,
+			SpellHaste: 6.85,
+			MP5: 0.11,
+			FireResistance: 0.5,
+		}),
 		statCaps: (() => {
 			return new Stats().withPseudoStat(PseudoStat.PseudoStatSchoolHitPercentArcane, 16);
 		})(),

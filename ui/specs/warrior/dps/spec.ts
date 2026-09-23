@@ -5,6 +5,7 @@ import { HandType, ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/com
 import * as Mechanics from '@sim/constants/mechanics';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
+import { masterEpWeights } from '@sim/proto/master_ep_weights';
 import { DEFAULT_MELEE_GEM_STATS, StatCap, Stats, UnitStat } from '@sim/proto/stats';
 import { defineSpec } from '@sim/spec_config';
 
@@ -58,7 +59,18 @@ export default defineSpec<Spec.SpecDpsWarrior>({
 		// Default equipped gear.
 		gear: Presets.DEFAULT_GEAR.gear,
 		// Default EP weights for sorting gear in the gear picker.
-		epWeights: new Stats(),
+		// Master's weights (percent stats per 1%), in our ratings.
+		epWeights: masterEpWeights({
+			Strength: 2.51,
+			Agility: 1.86,
+			AttackPower: 1,
+			MeleeHit: 28.67,
+			MeleeCrit: 25.1,
+			FireResistance: 0.5,
+			MainHandDps: 11.92,
+			OffHandDps: 4.69,
+			MeleeSpeedMultiplier: 4.69,
+		}),
 		statCaps: (() => {
 			const expCap = new Stats().withStat(Stat.StatExpertiseRating, 6.5 * 4 * Mechanics.EXPERTISE_PER_QUARTER_PERCENT_REDUCTION);
 			return expCap;

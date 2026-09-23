@@ -5,6 +5,7 @@ import { FeralBearDruid_Rotation as DruidRotation } from '@generated/proto/druid
 import * as Mechanics from '@sim/constants/mechanics';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
+import { masterEpWeights } from '@sim/proto/master_ep_weights';
 import { Stats, UnitStat } from '@sim/proto/stats';
 import { defineSpec } from '@sim/spec_config';
 
@@ -73,7 +74,20 @@ export default defineSpec<Spec.SpecFeralBearDruid>({
 
 	defaults: {
 		gear: Presets.DEFAULT_GEAR.gear,
-		epWeights: new Stats(),
+		// Master's weights (percent stats per 1%), in our ratings.
+		epWeights: masterEpWeights({
+			Armor: 3.5665,
+			BonusArmor: 0.5187,
+			Stamina: 7.3021,
+			Strength: 2.3786,
+			Agility: 4.4974,
+			AttackPower: 1,
+			MeleeHit: 2.9282,
+			MeleeCrit: 1.5143,
+			Defense: 1.8171,
+			Dodge: 2.0196,
+			Health: 0.4465,
+		}),
 		statCaps: (() => {
 			const hitCap = new Stats().withPseudoStat(PseudoStat.PseudoStatMeleeHitPercent, 9);
 			const expCap = new Stats().withStat(Stat.StatExpertiseRating, 6.5 * 4 * Mechanics.EXPERTISE_PER_QUARTER_PERCENT_REDUCTION);

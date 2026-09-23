@@ -5,6 +5,7 @@ import { FeralCatDruid_Rotation as DruidRotation } from '@generated/proto/druid'
 import * as Mechanics from '@sim/constants/mechanics';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
+import { masterEpWeights } from '@sim/proto/master_ep_weights';
 import { Stats, UnitStat } from '@sim/proto/stats';
 import { defineSpec } from '@sim/spec_config';
 
@@ -66,7 +67,22 @@ export default defineSpec<Spec.SpecFeralCatDruid>({
 		// Default equipped gear.
 		gear: Presets.DEFAULT_GEAR.gear,
 		// Default EP weights for sorting gear in the gear picker.
-		epWeights: new Stats(),
+		// Master's weights (percent stats per 1%), in our ratings.
+		epWeights: masterEpWeights({
+			Strength: 2.4,
+			Agility: 2.43,
+			Intellect: 0.61,
+			Spirit: 0.38,
+			MP5: 0.79,
+			AttackPower: 1,
+			MeleeHit: 26.59,
+			MeleeCrit: 28.68,
+			Expertise: 26.59,
+			Mana: 0.03,
+			FeralAttackPower: 1,
+			BonusPhysicalDamage: 13.33,
+			MeleeSpeedMultiplier: 16.5,
+		}),
 		statCaps: (() => {
 			return new Stats()
 				.withPseudoStat(PseudoStat.PseudoStatMeleeHitPercent, 9)

@@ -4,7 +4,8 @@ import { APLRotation } from '@generated/proto/apl';
 import { ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
-import { StatCap, Stats, UnitStat } from '@sim/proto/stats';
+import { masterEpWeights } from '@sim/proto/master_ep_weights';
+import { StatCap, UnitStat } from '@sim/proto/stats';
 import { defineSpec } from '@sim/spec_config';
 
 import * as HunterInputs from './inputs';
@@ -72,7 +73,27 @@ export default defineSpec<Spec.SpecHunter>({
 		// Default equipped gear.
 		gear: Presets.DEFAULT_GEAR.gear,
 		// Default EP weights for sorting gear in the gear picker.
-		epWeights: new Stats(),
+		// Master's weights (percent stats per 1%), in our ratings.
+		epWeights: masterEpWeights({
+			Strength: 0.3,
+			Agility: 0.64,
+			Intellect: 0.02,
+			AttackPower: 1,
+			RangedAttackPower: 1.0,
+			MeleeHit: 3.29,
+			MeleeCrit: 4.45,
+			SpellPower: 0.03,
+			NaturePower: 0.01,
+			ArcanePower: 0.01,
+			SpellCrit: 0.01,
+			MP5: 0.05,
+			FireResistance: 0.5,
+			MainHandDps: 2.11,
+			OffHandDps: 1.39,
+			RangedDps: 6.32,
+			MeleeSpeedMultiplier: 1.39,
+			RangedSpeedMultiplier: 6.32,
+		}),
 		softCapBreakpoints: [
 			StatCap.fromPseudoStat(PseudoStat.PseudoStatRangedHitPercent, {
 				breakpoints: [9],
