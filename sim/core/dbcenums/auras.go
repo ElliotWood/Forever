@@ -3,8 +3,8 @@ package dbcenums
 // EffectAuraType defines the custom type for aura effects.
 type EffectAuraType int
 
-// Enum constants defined using the A_ naming convention. Every id is listed: one that neither code
-// reads nor SimC names is commented out, and one no name is known for is A_<id>.
+// Enum constants defined using the A_ naming convention. Every id is listed: one with no known name
+// is A_<id>, and one that is neither named nor read is commented out.
 const (
 	A_NONE                       EffectAuraType = 0
 	A_BIND_SIGHT                 EffectAuraType = 1

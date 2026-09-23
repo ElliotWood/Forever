@@ -1,7 +1,7 @@
 package dbcenums
 
-// ImplicitTarget_0/_1, under TrinityCore's Targets names. Every id is listed: one that neither code
-// reads nor SimC names is commented out, and one TrinityCore does not name is TARGET_<id>.
+// ImplicitTarget_0/_1, under TrinityCore's Targets names. Every id is listed: one with no known name
+// is TARGET_<id>, and one that is neither named nor read is commented out.
 type ImplicitTarget uint8
 
 const (

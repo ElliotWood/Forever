@@ -40,8 +40,7 @@ const (
 	ATTR_EX_12_ONLY_PROC_FROM_CLASS_ABILITIES uint32 = 0x80000000
 )
 
-// The other bits SimC names, under its names, placed by its bit index: index 105 is bit 9 of
-// Attributes[3].
+// The remaining named attribute bits.
 const (
 	ATTR_RANGED_ABILITY                     uint32 = 0x2
 	ATTR_ABILITY                            uint32 = 0x10

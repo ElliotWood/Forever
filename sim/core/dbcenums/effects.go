@@ -1,7 +1,7 @@
 package dbcenums
 
-// SpellEffect.Effect. Every id is listed: one that neither code reads nor SimC names is commented
-// out, and one no name is known for is E_<id>.
+// SpellEffect.Effect. Every id is listed: one with no known name is E_<id>, and one that is neither
+// named nor read is commented out.
 type SpellEffectType int
 
 const (
