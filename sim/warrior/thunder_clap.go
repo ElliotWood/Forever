@@ -40,10 +40,6 @@ func (warrior *Warrior) registerThunderClap() {
 	// TODO: In-game verification needed for threat multiplier / flat threat.
 	config.ThreatMultiplier = 1
 
-	config.ExtraCastCondition = func(sim *core.Simulation, target *core.Unit) bool {
-		return warrior.StanceMatches(BattleStance | DefensiveStance)
-	}
-
 	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 		results := spell.CalcCleaveDamage(sim, target, int32(thunderClapRank.MaxTargets), thunderClapBaseDamage, spell.OutcomeMagicHitAndCrit)
 		warrior.CastNormalizedSweepingStrikesAttack(results, sim)

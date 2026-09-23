@@ -9,13 +9,14 @@ func (druid *Druid) registerDemoralizingRoarSpell() {
 	// The TBC implementation, kept for the port:
 	// druid.registerDemoralizingRoarAura()
 	//
-	// druid.DemoralizingRoar = druid.RegisterSpell(Bear, core.SpellConfig{
-	// 	ActionID:       core.ActionID{SpellID: demoralizingRoarRank.ID},
-	// 	SpellSchool:    demoralizingRoarRank.SpellSchool(),
-	// 	DefenseType:    demoralizingRoarRank.DefenseTypeCore(),
-	// 	ProcMask:       core.ProcMaskEmpty,
-	// 	ClassSpellMask: DruidSpellDemoralizingRoar,
-	// 	Flags:          core.SpellFlagAPL,
+	// druid.DemoralizingRoar = druid.RegisterSpell(core.SpellConfig{
+	// 	ActionID:        core.ActionID{SpellID: demoralizingRoarRank.ID},
+	// 	CastRequirement: demoralizingRoarRank.CastRequirement(),
+	// 	SpellSchool:     demoralizingRoarRank.SpellSchool(),
+	// 	DefenseType:     demoralizingRoarRank.DefenseTypeCore(),
+	// 	ProcMask:        core.ProcMaskEmpty,
+	// 	ClassSpellMask:  DruidSpellDemoralizingRoar,
+	// 	Flags:           core.SpellFlagAPL,
 	//
 	// 	RageCost: core.RageCostOptions{
 	// 		Cost: int32(demoralizingRoarRank.Cost()),

@@ -16,14 +16,15 @@ func (druid *Druid) registerThornsSpell() {
 	// 	thornsAura = buffs.ThornsAura(&druid.Unit, true, 0)
 	// }
 	//
-	// druid.RegisterSpell(Humanoid, core.SpellConfig{
-	// 	ActionID:       core.ActionID{SpellID: thornsRank.ID},
-	// 	SpellSchool:    thornsRank.SpellSchool(),
-	// 	DefenseType:    thornsRank.DefenseTypeCore(),
-	// 	Flags:          core.SpellFlagAPL | core.SpellFlagHelpful,
-	// 	ClassSpellMask: DruidSpellThorns,
-	// 	ProcMask:       core.ProcMaskEmpty,
-	// 	MaxRange:       float64(thornsRank.MaxRange),
+	// druid.RegisterSpell(core.SpellConfig{
+	// 	ActionID:        core.ActionID{SpellID: thornsRank.ID},
+	// 	CastRequirement: thornsRank.CastRequirement(),
+	// 	SpellSchool:     thornsRank.SpellSchool(),
+	// 	DefenseType:     thornsRank.DefenseTypeCore(),
+	// 	Flags:           core.SpellFlagAPL | core.SpellFlagHelpful,
+	// 	ClassSpellMask:  DruidSpellThorns,
+	// 	ProcMask:        core.ProcMaskEmpty,
+	// 	MaxRange:        float64(thornsRank.MaxRange),
 	//
 	// 	ManaCost: core.ManaCostOptions{
 	// 		FlatCost: int32(thornsRank.Cost()),

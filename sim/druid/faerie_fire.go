@@ -16,13 +16,14 @@ func (druid *Druid) registerFaerieFireSpell() {
 	// 	return buffs.FaerieFireAura(target, true, 0)
 	// })
 	//
-	// druid.FaerieFire = druid.RegisterSpell(Humanoid|Moonkin, core.SpellConfig{
-	// 	ClassSpellMask: DruidSpellFaerieFire,
-	// 	ActionID:       core.ActionID{SpellID: faerieFireRank.ID},
-	// 	SpellSchool:    faerieFireRank.SpellSchool(),
-	// 	DefenseType:    faerieFireRank.DefenseTypeCore(),
-	// 	ProcMask:       core.ProcMaskSpellDamage,
-	// 	Flags:          core.SpellFlagAPL,
+	// druid.FaerieFire = druid.RegisterSpell(core.SpellConfig{
+	// 	ClassSpellMask:  DruidSpellFaerieFire,
+	// 	ActionID:        core.ActionID{SpellID: faerieFireRank.ID},
+	// 	CastRequirement: faerieFireRank.CastRequirement(),
+	// 	SpellSchool:     faerieFireRank.SpellSchool(),
+	// 	DefenseType:     faerieFireRank.DefenseTypeCore(),
+	// 	ProcMask:        core.ProcMaskSpellDamage,
+	// 	Flags:           core.SpellFlagAPL,
 	//
 	// 	ManaCost: core.ManaCostOptions{
 	// 		FlatCost: int32(faerieFireRank.Cost()),
@@ -63,13 +64,14 @@ func (druid *Druid) registerFaerieFireFeralSpell() {
 	// 	return buffs.FaerieFireAura(target, true, 0)
 	// })
 	//
-	// druid.FaerieFireFeral = druid.RegisterSpell(Cat|Bear, core.SpellConfig{
-	// 	ClassSpellMask: DruidSpellFaerieFireFeral,
-	// 	ActionID:       core.ActionID{SpellID: faerieFireFeralRank.ID},
-	// 	SpellSchool:    faerieFireFeralRank.SpellSchool(),
-	// 	DefenseType:    faerieFireFeralRank.DefenseTypeCore(),
-	// 	ProcMask:       core.ProcMaskSpellDamage,
-	// 	Flags:          core.SpellFlagAPL,
+	// druid.FaerieFireFeral = druid.RegisterSpell(core.SpellConfig{
+	// 	ClassSpellMask:  DruidSpellFaerieFireFeral,
+	// 	ActionID:        core.ActionID{SpellID: faerieFireFeralRank.ID},
+	// 	CastRequirement: faerieFireFeralRank.CastRequirement(),
+	// 	SpellSchool:     faerieFireFeralRank.SpellSchool(),
+	// 	DefenseType:     faerieFireFeralRank.DefenseTypeCore(),
+	// 	ProcMask:        core.ProcMaskSpellDamage,
+	// 	Flags:           core.SpellFlagAPL,
 	//
 	// 	Cast: core.CastConfig{
 	// 		DefaultCast: core.Cast{
