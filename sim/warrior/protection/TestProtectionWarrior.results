@@ -55,14 +55,6 @@ character_stats_results: {
  }
 }
 dps_results: {
- key: "TestProtectionWarrior-AllItems-AdaptiveCombatAssistant-272437"
- value: {
-  dps: 513.92991
-  tps: 788.81144
-  dtps: 3384.61195
- }
-}
-dps_results: {
  key: "TestProtectionWarrior-AllItems-AegisofPreservation-19345"
  value: {
   dps: 501.64811
@@ -588,7 +580,7 @@ dps_results: {
  value: {
   dps: 501.64811
   tps: 770.90621
-  dtps: 3479.93646
+  dtps: 3478.97646
  }
 }
 dps_results: {
