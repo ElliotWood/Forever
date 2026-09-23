@@ -16,7 +16,8 @@ const source = vi.hoisted(() => {
 		notify: () => Array.from(listeners).forEach(listener => listener()),
 	};
 });
-vi.mock('@sim/state/subscriptions', async () => (await import('@sim/testing')).mockSubscriptions(source.subscribe));
+vi.mock('@sim/hooks/useStoreField', () => ({ useStoreField: () => source.subscribe }));
+vi.mock('@ui-kit/hooks/usePortalContainer', () => ({ usePortalContainer: () => null }));
 vi.mock('@i18n/config', () => ({ default: { t: (key: string) => key } }));
 vi.mock('@i18n/localization', () => ({
 	translateAreaType: (value: number) => `area-${value}`,
@@ -29,15 +30,15 @@ class FakeEncounter {
 	getAreaTypes() {
 		return this.areaTypes;
 	}
-	setInArea(areaType: AreaType, inArea: boolean) {
-		this.areaTypes = inArea ? [...this.areaTypes, areaType].sort((a, b) => a - b) : this.areaTypes.filter(t => t !== areaType);
+	setAreaTypes(next: Array<AreaType>) {
+		this.areaTypes = [...next].sort((a, b) => a - b);
 		source.notify();
 	}
 }
 
 const mount = (encounter: FakeEncounter) => render(<AreaTypesPicker encounter={encounter as unknown as Encounter} />);
-const input = () => screen.getByTestId('encounter-area-types-input') as HTMLInputElement;
-const pills = () => within(screen.getByTestId('encounter-area-types-selected')).getAllByTestId('combo-box-selected-chip');
+const chips = () => screen.queryAllByTestId('multi-combo-box-chip').map(chip => chip.textContent);
+const options = () => within(screen.getByTestId('multi-combo-box-list')).getAllByRole('option');
 
 beforeEach(() => {
 	source.listeners.clear();
@@ -45,42 +46,42 @@ beforeEach(() => {
 });
 
 describe('AreaTypesPicker', () => {
-	it('labels the field, starts with no pills, and shows the encounter areas as pills', () => {
-		const encounter = new FakeEncounter();
-		mount(encounter);
+	it('labels the field with the area tooltip on the label, not inside the list', () => {
+		mount(new FakeEncounter());
 
-		expect(screen.getByText('settings_tab.encounter.area_types.label').closest('label')!.getAttribute('for')).toBe('encounter-area-types');
-		expect(screen.queryByTestId('encounter-area-types-selected')).toBeNull();
+		const label = screen.getByText('settings_tab.encounter.area_types.label');
+		expect(label.closest('label')!.getAttribute('for')).toBe('encounter-area-types');
+		expect(label.getAttribute('data-tooltip-id')).toBe('encounter-area-types-tooltip');
 
-		act(() => encounter.setInArea(AreaType.AreaTypeHaunted, true));
-		act(() => encounter.setInArea(AreaType.AreaTypeForestGrassland, true));
-		expect(pills().map(pill => pill.textContent)).toEqual([`area-${AreaType.AreaTypeForestGrassland}`, `area-${AreaType.AreaTypeHaunted}`]);
+		fireEvent.click(screen.getByTestId('multi-combo-box-trigger'));
+		expect(screen.queryByText('settings_tab.encounter.area_types.tooltip')).toBeNull();
 	});
 
-	it('lists the areas not yet picked that match the query, and picks one on selection', () => {
+	it('lists all ten kinds of area and shows the encounter set as chips', () => {
 		const encounter = new FakeEncounter();
-		encounter.areaTypes = [AreaType.AreaTypeForestGrassland];
 		mount(encounter);
 
-		fireEvent.change(input(), { target: { value: `area-${AreaType.AreaTypeMountainous}` } });
-		const list = screen.getByTestId('encounter-area-types-list');
-		const options = within(list).getAllByRole('option');
-		expect(options.map(option => option.textContent)).toEqual([`area-${AreaType.AreaTypeMountainous}`]);
+		fireEvent.click(screen.getByTestId('multi-combo-box-trigger'));
+		expect(options()).toHaveLength(10);
 
-		fireEvent.click(options[0]);
-		expect(encounter.areaTypes).toEqual([AreaType.AreaTypeForestGrassland, AreaType.AreaTypeMountainous]);
-		expect(input().value).toBe('');
+		act(() => encounter.setAreaTypes([AreaType.AreaTypeHaunted, AreaType.AreaTypeForestGrassland]));
+		expect(chips()).toEqual([`area-${AreaType.AreaTypeForestGrassland}`, `area-${AreaType.AreaTypeHaunted}`]);
+	});
+
+	it('adds and drops kinds of area, tracking each change', () => {
+		const encounter = new FakeEncounter();
+		encounter.areaTypes = [AreaType.AreaTypeSnowy];
+		mount(encounter);
+
+		fireEvent.click(screen.getByTestId('multi-combo-box-trigger'));
+		fireEvent.click(options().find(option => option.textContent === `area-${AreaType.AreaTypeMountainous}`)!);
+		expect(encounter.areaTypes).toEqual([AreaType.AreaTypeMountainous, AreaType.AreaTypeSnowy]);
 		expect(trackEvent).toHaveBeenCalledWith(expect.objectContaining({ category: 'area', label: 'mountainous', value: true }));
-	});
 
-	it('drops an area through its pill', () => {
-		const encounter = new FakeEncounter();
-		encounter.areaTypes = [AreaType.AreaTypeSnowy, AreaType.AreaTypeVolcanic];
-		mount(encounter);
-
-		fireEvent.click(screen.getAllByRole('button', { name: 'settings_tab.encounter.area_types.remove' })[0]);
-		expect(encounter.areaTypes).toEqual([AreaType.AreaTypeVolcanic]);
-		expect(pills()).toHaveLength(1);
+		const removes = [...document.querySelectorAll('[aria-label="settings_tab.encounter.area_types.remove"]')];
+		expect(removes).toHaveLength(2);
+		fireEvent.click(removes[1]);
+		expect(encounter.areaTypes).toEqual([AreaType.AreaTypeMountainous]);
 		expect(trackEvent).toHaveBeenCalledWith(expect.objectContaining({ category: 'area', label: 'snowy', value: false }));
 	});
 });

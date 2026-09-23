@@ -1,0 +1,73 @@
+@layer components {
+	.ui-multi-combo-box-field {
+		@apply relative flex w-full min-w-0 flex-wrap items-center gap-1 rounded-none border border-surface-border bg-surface py-1 pr-8 pl-1 text-ui leading-normal text-foreground transition-colors duration-150 ease-in-out;
+
+		&:focus-within {
+			@apply border-input-focus-border shadow-focus-input;
+		}
+	}
+
+	.ui-multi-combo-box-input {
+		@apply min-w-16 flex-1 border-none bg-transparent px-2 py-0.5 text-ui text-foreground outline-none;
+
+		&::placeholder {
+			@apply text-secondary;
+		}
+	}
+
+	.ui-multi-combo-box-chip {
+		@apply flex items-center gap-1 rounded-full border border-primary bg-primary px-2 py-0.5 text-ui leading-none whitespace-nowrap text-primary-foreground;
+
+		&[data-highlighted] {
+			@apply outline outline-1 outline-input-focus-border;
+		}
+	}
+
+	.ui-multi-combo-box-chip-remove {
+		@apply flex items-center border-none bg-transparent p-0 text-inherit;
+	}
+
+	.ui-multi-combo-box-trigger {
+		@apply absolute inset-y-0 right-0 flex w-8 items-center justify-center border-none bg-transparent text-secondary;
+
+		&:hover {
+			@apply text-foreground;
+		}
+	}
+
+	.ui-multi-combo-box-positioner {
+		@apply z-dropdown w-max max-w-(--available-width) min-w-(--anchor-width);
+	}
+
+	.ui-multi-combo-box-popup {
+		@apply flex max-h-(--available-height) w-full flex-col overflow-y-auto border border-surface-border bg-surface-raised bg-clip-padding py-1 text-left text-ui text-foreground shadow-popup;
+	}
+
+	.ui-multi-combo-box-list {
+		@apply m-0 list-none p-0;
+	}
+
+	.ui-multi-combo-box-item {
+		@apply grid cursor-default grid-cols-[1rem_1fr] items-center gap-2 px-2 py-1 outline-none select-none;
+
+		&[data-highlighted] {
+			@apply bg-surface-hover;
+		}
+	}
+
+	.ui-multi-combo-box-indicator {
+		@apply col-start-1 text-primary;
+	}
+
+	.ui-multi-combo-box-item > span {
+		@apply col-start-2;
+	}
+
+	.ui-multi-combo-box-empty {
+		@apply px-2 py-1 text-secondary;
+
+		&:empty {
+			@apply hidden;
+		}
+	}
+}

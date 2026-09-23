@@ -3,10 +3,6 @@
 		@apply z-dropdown w-(--anchor-width);
 	}
 
-	.ui-combo-box-selected {
-		@apply mt-1 flex flex-wrap gap-1;
-	}
-
 	.ui-combo-box-popup {
 		@apply flex max-h-(--available-height) w-full flex-col border border-surface-border bg-surface-raised bg-clip-padding text-left text-base text-white shadow-popup;
 	}

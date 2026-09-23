@@ -2803,6 +2803,12 @@
 								"label": {
 									"type": "string"
 								},
+								"empty": {
+									"type": "string"
+								},
+								"open": {
+									"type": "string"
+								},
 								"placeholder": {
 									"type": "string"
 								},
@@ -2814,7 +2820,7 @@
 								}
 							},
 							"additionalProperties": false,
-							"required": ["label", "placeholder", "remove", "tooltip"]
+							"required": ["label", "placeholder", "empty", "open", "remove", "tooltip"]
 						},
 						"advanced": {
 							"type": "string"
