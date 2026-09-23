@@ -345,7 +345,7 @@ func (character *Character) applyItemEffects(agent Agent) {
 		character.ItemSwap.unEquippedItems.applyItemEffects(agent, registeredItemEffects, registeredItemEnchantEffects, false)
 	}
 
-	character.registerEnchantSpeedAuras()
+	character.registerEquipSpeedAuras()
 }
 
 func (character *Character) AddPet(pet PetAgent) {

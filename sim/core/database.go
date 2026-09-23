@@ -155,7 +155,7 @@ type Item struct {
 
 	Name          string
 	Stats         stats.Stats // Stats applied to wearer
-	PseudoStats   []float64   // Indexed by proto.PseudoStat; applied through stats.FromPseudoStatsProto
+	PseudoStats   []float64   // Indexed by proto.PseudoStat; percents through stats.FromPseudoStatsProto, haste through registerEquipSpeedAuras
 	Quality       proto.ItemQuality
 	Unique        bool
 	LimitCategory int32
@@ -231,7 +231,7 @@ func RandomSuffixFromProto(pData *proto.ItemRandomSuffix) RandomSuffix {
 type Enchant struct {
 	EffectID       int32 // Used by UI to apply effect to tooltip
 	Stats          stats.Stats
-	PseudoStats    []float64 // Indexed by proto.PseudoStat; percents through stats.FromPseudoStatsProto, haste through registerEnchantSpeedAuras
+	PseudoStats    []float64 // Indexed by proto.PseudoStat; percents through stats.FromPseudoStatsProto, haste through registerEquipSpeedAuras
 	WeaponDamage   float64   // Applied by newWeaponFromItem
 	EnchantEffects []*proto.ItemEffect
 	Name           string         // Only needed for unit tests
