@@ -384,14 +384,6 @@ dps_results: {
  }
 }
 dps_results: {
- key: "TestProtectionWarrior-AllItems-HighborneResearchTablet-260205"
- value: {
-  dps: 604.97622
-  tps: 926.03226
-  dtps: 3600.17859
- }
-}
-dps_results: {
  key: "TestProtectionWarrior-AllItems-ImperialPlate"
  value: {
   dps: 539.58845
