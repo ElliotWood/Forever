@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/spelldata"
 )
 
@@ -49,7 +50,9 @@ func applySpellDataSlowProc(agent core.Agent, cfg SpellDataProc, source effectSo
 }
 
 // The row's slow on each enemy, for its duration. The aura is the row's rather than the wearer's, so
-// two wearers of one proc refresh a single slow on the target instead of multiplying two.
+// two wearers of one proc refresh a single slow on the target instead of multiplying two. Each slow
+// takes its exclusive category, attacks Thunder Clap's and casts Slow's, where only the strongest
+// applies.
 func slowAuras(character *core.Character, row *spelldata.Spell) core.AuraArray {
 	label := fmt.Sprintf("%s %d", row.Name, row.ID)
 	return character.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
@@ -58,7 +61,15 @@ func slowAuras(character *core.Character, row *spelldata.Spell) core.AuraArray {
 		}
 
 		aura := target.RegisterAura(spelldata.AuraConfig(row, spelldata.Label(label)))
-		spelldata.ParseEffects(character, aura, row, spelldata.Effects(row.SlowEffects()...))
+		for _, i := range row.SlowEffects() {
+			effect := row.EffectN(int(i))
+			slowedTime := core.SlowedTimeMultiplier(effect.Average(character.Level))
+			if effect.Aura == dbcenums.A_MOD_CASTING_SPEED_NOT_STACK {
+				core.CastSpeedReductionEffect(aura, slowedTime)
+			} else {
+				core.AtkSpeedReductionEffect(aura, slowedTime)
+			}
+		}
 		return aura
 	})
 }
