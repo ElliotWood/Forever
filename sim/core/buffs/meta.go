@@ -125,23 +125,79 @@ func (m *Meta) actionID(isPlayer bool) core.ActionID {
 // SchoolResistances, and where Category is set, Exclusive(Category, true) for a single-aura one or
 // ExclusivePerStat(Category) for any other. Only the player's own copy joins SharedCategory.
 func newBuff(unit *core.Unit, m *Meta, isPlayer bool, talentPoints int32) *core.Aura {
-	panic("not implemented")
+	return m.buff(unit, isPlayer, talentPoints, m.Options(talentPoints))
 }
 
 // A buff worth its amounts once per item in the party: newBuff with Count(count).
 func newItemCountBuff(unit *core.Unit, m *Meta, isPlayer bool, count float64) *core.Aura {
-	panic("not implemented")
+	return m.buff(unit, isPlayer, 0, append(m.Options(0), spelldata.Count(count)))
+}
+
+func (m *Meta) buff(unit *core.Unit, isPlayer bool, talentPoints int32, opts []spelldata.ParseOpt) *core.Aura {
+	aura := unit.GetOrRegisterAura(core.Aura{
+		Label:      m.label(isPlayer),
+		Tag:        m.Category,
+		ActionID:   m.actionID(isPlayer),
+		Duration:   m.Duration(talentPoints),
+		MaxStacks:  int32(m.Spell.MaxStack),
+		BuildPhase: core.Ternary(isPlayer, core.CharacterBuildPhaseNone, core.CharacterBuildPhaseBuffs),
+	})
+
+	opts = append(opts, spelldata.SchoolResistances())
+	if m.Category != "" {
+		if m.SingleAura {
+			opts = append(opts, spelldata.Exclusive(m.Category, true))
+		} else {
+			opts = append(opts, spelldata.ExclusivePerStat(m.Category))
+		}
+	}
+
+	// No row a raid buff states acts through a character rather than its unit.
+	spelldata.ParseEffects(nil, aura, m.Spell, opts...)
+	m.joinSharedCategory(aura, isPlayer)
+	return aura
 }
 
 // The aura a generated debuff registers on the target: labelled and tagged like newBuff, never in a
 // build phase, with Exclusive(Category, SingleAura) where it names a category and no school
 // resistance categories of its own.
 func newDebuff(target *core.Unit, m *Meta, isPlayer bool, talentPoints int32) *core.Aura {
-	panic("not implemented")
+	aura := target.GetOrRegisterAura(core.Aura{
+		Label:     m.label(isPlayer),
+		Tag:       m.Category,
+		ActionID:  m.actionID(isPlayer),
+		Duration:  m.Duration(talentPoints),
+		MaxStacks: int32(m.Spell.MaxStack),
+	})
+
+	opts := m.Options(talentPoints)
+	if m.Category != "" {
+		opts = append(opts, spelldata.Exclusive(m.Category, m.SingleAura))
+	}
+
+	spelldata.ParseEffects(nil, aura, m.Spell, opts...)
+	m.joinSharedCategory(aura, isPlayer)
+	return aura
 }
 
 // A damage shield, which the parse does not read: core.NewGeneratedDamageShield with the spell's
 // school and Value as its damage.
 func newDamageShield(unit *core.Unit, m *Meta, isPlayer bool, talentPoints int32) *core.Aura {
-	panic("not implemented")
+	return core.NewGeneratedDamageShield(unit, core.GeneratedBuff{
+		Label:          m.label(isPlayer),
+		ActionID:       m.actionID(isPlayer),
+		Duration:       m.Duration(talentPoints),
+		Category:       m.Category,
+		SharedCategory: m.SharedCategory,
+		SingleAura:     m.SingleAura,
+		IsPlayer:       isPlayer,
+	}, m.Spell.School, m.Value(talentPoints))
+}
+
+// The second category the player's own copy joins without an effect of its own. The external copy
+// stays out of it, so that it can sit next to the one the player casts.
+func (m *Meta) joinSharedCategory(aura *core.Aura, isPlayer bool) {
+	if isPlayer && m.SharedCategory != "" {
+		aura.NewExclusiveEffect(m.SharedCategory, true, core.ExclusiveEffect{})
+	}
 }
