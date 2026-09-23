@@ -50,7 +50,9 @@ func makePvPTrinketEffect(itemID int32) core.ApplyEffect {
 
 		character.AddMajorCooldown(core.MajorCooldown{
 			Spell: spell,
-			Type:  core.CooldownTypeSurvival,
+			// A CC break, not a health cooldown: it must not wait for the defensives' health threshold.
+			// Queueing keeps it off the GCD, as the survival type did.
+			AllowSpellQueueing: true,
 			ShouldActivate: func(_ *core.Simulation, character *core.Character) bool {
 				return character.PseudoStats.Incapacitated
 			},
