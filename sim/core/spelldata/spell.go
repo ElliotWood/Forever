@@ -44,10 +44,8 @@ func (s *Spell) ICD() time.Duration {
 	return millis(s.ICDMs)
 }
 
-// core.SpellSchool holds the client's own bit values - see the comment on SpellSchool in
-// sim/core/flags.go - so the mask converts without a translation table.
 func (s *Spell) SpellSchool() core.SpellSchool {
-	return core.SpellSchool(s.School)
+	return s.School
 }
 
 // SpellCategories.DefenseType counts none, magic, melee, ranged in that order, which is the order
