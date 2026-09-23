@@ -77,7 +77,6 @@ var DefaultOptions = &proto.Player_ProtectionWarrior{
 	ProtectionWarrior: &proto.ProtectionWarrior{
 		Options: &proto.ProtectionWarrior_Options{
 			ClassOptions: &proto.WarriorOptions{
-				QueueDelay:    250,
 				DefaultShout:  proto.WarriorShout_WarriorShoutBattle,
 				DefaultStance: proto.WarriorStance_WarriorStanceDefensive,
 			},

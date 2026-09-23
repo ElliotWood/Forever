@@ -1068,6 +1068,7 @@
 {"id":23323,"name":"Crown of the Fire Festival","icon":"inv_helmet_08","type":1,"armorType":1,"quality":1,"scalingOptions":{"0":{"ilvl":1}}},
 {"id":23324,"name":"Mantle of the Fire Festival","icon":"inv_shoulder_23","type":3,"quality":1,"scalingOptions":{"0":{"ilvl":1}}},
 {"id":23709,"name":"Tabard of Frost","icon":"inv_shirt_guildtabard_01","quality":1,"unique":true,"scalingOptions":{"0":{"ilvl":1}}},
+{"id":23710,"name":"Upperdeck Tabard #3","icon":"inv_shirt_guildtabard_01","quality":1,"unique":true,"scalingOptions":{"0":{"ilvl":1}}},
 {"id":23714,"name":"Perpetual Purple Firework","icon":"inv_misc_missilesmall_purple","type":12,"quality":1,"scalingOptions":{"0":{"ilvl":20}}},
 {"id":23716,"name":"Carved Ogre Idol","icon":"inv_misc_idol_01","type":12,"quality":1,"unique":true,"scalingOptions":{"0":{"ilvl":1}}},
 {"id":34085,"name":"Red Winter Clothes","icon":"inv_chest_christmas02","type":5,"quality":1,"expansion":2,"sources":[{"crafted":{"profession":11,"spellId":44958}},{"crafted":{"profession":11,"spellId":44958}}],"scalingOptions":{"0":{"ilvl":1}}},

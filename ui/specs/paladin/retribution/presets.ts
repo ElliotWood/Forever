@@ -43,20 +43,19 @@ export const DefaultPartyBuffs = PartyBuffs.create({
 	fireResistanceAura: true,
 	leaderOfThePack: TristateEffect.TristateEffectRegular,
 	moonkinAura: TristateEffect.TristateEffectRegular,
-	sanctityAura: TristateEffect.TristateEffectMissing,
 });
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
 	blessingOfKings: true,
-	blessingOfWisdom: TristateEffect.TristateEffectImproved,
-	blessingOfMight: TristateEffect.TristateEffectImproved,
+	blessingOfWisdom: true,
+	blessingOfMight: true,
 });
 
 export const DefaultDebuffs = Debuffs.create({
 	curseOfRecklessness: true,
 	faerieFire: TristateEffect.TristateEffectRegular,
 	giftOfArthas: true,
-	improvedSealOfTheCrusader: TristateEffect.TristateEffectImproved,
+	judgementOfTheCrusader: true,
 	judgementOfWisdom: true,
 	sunderArmor: true,
 });

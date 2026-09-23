@@ -23,7 +23,7 @@ func (paladin *Paladin) registerSealOfLight(row shared.SpellData) {
 	judgementID := int32(effectAt(row, 2).Value)
 	healRow := spellData.SealOfLightTriggered.BySpellID(judgementOfLightHealIDs[row.Rank])
 	judgementAuras := paladin.newJudgementAuras(func(target *core.Unit) *core.Aura {
-		return judgementOfLightAura(target, judgementRank{
+		return core.JudgementOfLightAura(target, core.JudgementRank{
 			SpellID: judgementID,
 			Rank:    row.Rank,
 			Value:   shared.SpellDataMin(healRow.Heal),

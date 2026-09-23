@@ -35,7 +35,6 @@ func (paladin *Paladin) registerRetributionTalents() {
 	// Tier 5
 	paladin.applyTwoHandedWeaponSpecialization()
 	paladin.applyVengeance()
-	// Repentance registered in registerTalentSpells
 
 	// Tier 6
 	paladin.applyChampionOfTheLight()
@@ -233,12 +232,10 @@ func (paladin *Paladin) applySacredArbiter() {
 		return
 	}
 
-	// forever-next's generator leaves out a talent effect with no rank curve, which drops Sacred
-	// Arbiter's row (1311087) whole; the client holds it at its base points, 10.
 	paladin.AddStaticMod(core.SpellModConfig{
 		ClassMask:  SpellMaskHolyStrike,
 		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: 0.10,
+		FloatValue: spellData.SacredArbiter.FractionAt(1),
 	})
 
 	paladin.MakeProcTriggerAura(core.ProcTrigger{
@@ -248,7 +245,7 @@ func (paladin *Paladin) applySacredArbiter() {
 		Outcome:            core.OutcomeLanded,
 		TriggerImmediately: true,
 		Handler: func(sim *core.Simulation, _ *core.Spell, result *core.SpellResult) {
-			for _, aura := range result.Target.GetAurasWithTag(judgementAuraTag) {
+			for _, aura := range result.Target.GetAurasWithTag(core.JudgementAuraTag) {
 				if aura.IsActive() {
 					aura.Refresh(sim)
 				}

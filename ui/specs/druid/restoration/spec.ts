@@ -74,13 +74,11 @@ export default defineSpec<Spec.SpecRestorationDruid>({
 	excludeBuffDebuffInputs: [
 		BuffDebuffInputs.Bloodlust,
 		BuffDebuffInputs.Thorns,
-		BuffDebuffInputs.BlessingOfSanctuary,
 		BuffDebuffInputs.Innervate,
 		BuffDebuffInputs.PowerInfusion,
 		BuffDebuffInputs.FerociousInspiration,
 		BuffDebuffInputs.ManaTideTotem,
 		BuffDebuffInputs.ShadowPriestDPS,
-		BuffDebuffInputs.SanctityAura,
 		BuffDebuffInputs.DrumsBuff,
 	],
 	// Inputs to include in the 'Other' section on the settings tab.

@@ -2,6 +2,7 @@ package paladin
 
 import (
 	"github.com/wowsims/forever/sim/common/shared"
+	"github.com/wowsims/forever/sim/core"
 )
 
 var ShadowResistanceAuraRankMap = spellData.ShadowResistanceAura
@@ -13,7 +14,7 @@ var ShadowResistanceAuraRankMap = spellData.ShadowResistanceAura
 // may only have one Aura on them per Paladin at any one time.
 func (paladin *Paladin) registerShadowResistanceAura() {
 	ShadowResistanceAuraRankMap.RegisterAll(func(row shared.SpellData) {
-		aura := shadowResistanceAura(&paladin.Character, auraRank(row))
+		aura := core.ShadowResistanceAura(&paladin.Character, true, auraRank(row))
 		paladin.registerAuraSpell(row, aura, SpellMaskShadowResistanceAura)
 	})
 }

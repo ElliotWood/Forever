@@ -27,7 +27,6 @@ export const DeepProtectionTalents = PresetUtils.makePresetTalents('Protection 1
 
 export const DefaultOptions = ProtectionWarriorOptions.create({
 	classOptions: {
-		queueDelay: 250,
 		startingRage: 0,
 		defaultShout: WarriorShout.WarriorShoutBattle,
 		defaultStance: WarriorStance.WarriorStanceDefensive,
@@ -50,7 +49,7 @@ export const DefaultRaidBuffs = RaidBuffs.create({
 
 export const DefaultPartyBuffs = PartyBuffs.create({
 	...WarriorPresets.DefaultPartyBuffs,
-	devotionAura: TristateEffect.TristateEffectRegular,
+	devotionAura: true,
 	fireResistanceAura: true,
 });
 

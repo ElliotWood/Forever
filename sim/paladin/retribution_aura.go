@@ -2,6 +2,7 @@ package paladin
 
 import (
 	"github.com/wowsims/forever/sim/common/shared"
+	"github.com/wowsims/forever/sim/core"
 )
 
 var RetributionAuraRankMap = spellData.RetributionAura
@@ -13,7 +14,7 @@ var RetributionAuraRankMap = spellData.RetributionAura
 // only have one Aura on them per Paladin at any one time.
 func (paladin *Paladin) registerRetributionAura() {
 	RetributionAuraRankMap.RegisterAll(func(row shared.SpellData) {
-		aura := retributionAuraBuff(&paladin.Character, auraRank(row))
+		aura := core.RetributionAuraBuff(&paladin.Character, true, auraRank(row), 0)
 		paladin.registerAuraSpell(row, aura, SpellMaskRetributionAura)
 	})
 }

@@ -78,7 +78,7 @@ export const DefaultPartyBuffs = PartyBuffs.create({
 });
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
-	blessingOfWisdom: TristateEffect.TristateEffectImproved,
+	blessingOfWisdom: true,
 });
 
 // Improved Scorch and Winter's Chill only help the mage that applied them in Forever. Master's

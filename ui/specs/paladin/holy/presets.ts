@@ -27,7 +27,7 @@ export const DefaultRaidBuffs = RaidBuffs.create({
 
 // Master's DevotionAura spec option is the party Devotion Aura here.
 export const DefaultPartyBuffs = PartyBuffs.create({
-	devotionAura: TristateEffect.TristateEffectImproved,
+	devotionAura: true,
 	manaSpringTotem: TristateEffect.TristateEffectRegular,
 	moonkinAura: TristateEffect.TristateEffectRegular,
 	strengthOfEarthTotem: TristateEffect.TristateEffectRegular,
@@ -35,9 +35,8 @@ export const DefaultPartyBuffs = PartyBuffs.create({
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
 	blessingOfKings: true,
-	blessingOfMight: TristateEffect.TristateEffectImproved,
-	blessingOfSanctuary: true,
-	blessingOfWisdom: TristateEffect.TristateEffectImproved,
+	blessingOfMight: true,
+	blessingOfWisdom: true,
 });
 
 export const DefaultDebuffs = Debuffs.create({

@@ -181,9 +181,7 @@ func (paladin *Paladin) applyIllumination() {
 	}
 
 	manaMetrics := paladin.NewManaMetrics(core.ActionID{SpellID: spellData.Illumination.HighestRank().SpellID})
-	// Effect 2 (50% of the base cost) has no rank curve, and forever-next's generator leaves such an
-	// effect out of the row; the client holds it at its base points at every rank.
-	const refund = 0.5
+	refund := spellData.Illumination.EffectAt(2).FractionAt(paladin.Talents.Illumination)
 
 	paladin.MakeProcTriggerAura(core.ProcTrigger{
 		Name:           "Illumination" + paladin.Label,

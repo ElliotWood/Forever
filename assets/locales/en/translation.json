@@ -525,6 +525,10 @@
 				"label": "Expose Weakness Hunter Agility",
 				"tooltip": "The amount of Agility provided by your Hunter. Used for calculating the value of Expose Weakness."
 			},
+			"retribution_aura_spell_power": {
+				"label": "Retribution Aura Spell Power",
+				"tooltip": "The Holy spell power of the paladin providing Retribution Aura. Each hit you take deals the aura's base damage plus about 13.6% of this."
+			},
 			"totem_twisting": {
 				"label": "Totem Twisting",
 				"tooltip": "If both Windfury and Grace of Air are active will alternate between them to keep up both buffs."
@@ -610,10 +614,6 @@
 			"has_bs_tier_2": {
 				"label": "Battle Shout: Battlegear of Wrath",
 				"tooltip": "Three pieces of Battlegear of Wrath add 30 attack power to Battle Shout. Set this when the pieces arrive through an item swap rather than the worn set."
-			},
-			"queue_delay": {
-				"label": "HS/Cleave Queue Delay (ms)",
-				"tooltip": "How long (in milliseconds) to delay re-queueing Heroic Strike/Cleave in order to simulate real reaction time and game delay."
 			},
 			"assume_bleed_active": {
 				"label": "Assume Bleed Always Active",

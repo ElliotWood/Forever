@@ -114,9 +114,7 @@ func rageFromAutoAttack(sim *Simulation, fw *FakeRageWarrior, spell *Spell, outc
 }
 
 func TestAutoAttackRageGeneration(t *testing.T) {
-	// Forever pays a flat amount per landed swing, set by the weapon's speed:
-	// a 2.6 speed one-hander gives 2.6 * 3.5 = 9.1, crit or not, whatever the damage.
-	// Dodges, parries and misses give nothing.
+	// A one-hand MH swing at 2.6 speed: 2.6 * 3.46 = 8.996, whatever it dealt.
 	const swingDamage = 500.0
 
 	tests := []struct {
@@ -124,11 +122,36 @@ func TestAutoAttackRageGeneration(t *testing.T) {
 		outcome  HitOutcome
 		wantRage float64
 	}{
-		{name: "hit", outcome: OutcomeHit, wantRage: 9.1},
-		{name: "crit", outcome: OutcomeCrit, wantRage: 9.1},
-		{name: "dodge", outcome: OutcomeDodge, wantRage: 0},
-		{name: "parry", outcome: OutcomeParry, wantRage: 0},
-		{name: "miss", outcome: OutcomeMiss, wantRage: 0},
+		{
+			name:     "hit",
+			outcome:  OutcomeHit,
+			wantRage: 8.996,
+		},
+		{
+			name:     "crit",
+			outcome:  OutcomeCrit,
+			wantRage: 8.996,
+		},
+		{
+			name:     "glance",
+			outcome:  OutcomeGlance,
+			wantRage: 8.996,
+		},
+		{
+			name:     "dodge",
+			outcome:  OutcomeDodge,
+			wantRage: 0,
+		},
+		{
+			name:     "parry",
+			outcome:  OutcomeParry,
+			wantRage: 0,
+		},
+		{
+			name:     "miss",
+			outcome:  OutcomeMiss,
+			wantRage: 0,
+		},
 	}
 
 	for _, test := range tests {
@@ -143,23 +166,24 @@ func TestAutoAttackRageGeneration(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestTwoHandAutoAttackRageGeneration(t *testing.T) {
+	// A two-hand MH swing at 2.6 speed: 2.6 * 4.5 = 11.7.
+	const swingDamage = 500.0
 
 	sim := SetupFakeRageSim()
 	fw := sim.Raid.Parties[0].Players[0].(*FakeRageWarrior)
-	if small, big := rageFromAutoAttack(sim, fw, fw.AutoAttacks.MHAuto(), OutcomeHit, 20),
-		rageFromAutoAttack(sim, fw, fw.AutoAttacks.MHAuto(), OutcomeHit, 2000); small != big {
-		t.Fatalf("Rage depends on damage: %0.3f for a 20 damage swing, %0.3f for 2000", small, big)
-	}
+	fw.AutoAttacks.MH().NormalizedSwingSpeed = TwoHandNormalizedSwingSpeed
 
-	// Stances and talents still scale it through MultiplyAutoAttackRageGen.
-	fw.MultiplyAutoAttackRageGen(1.5)
-	if gained := rageFromAutoAttack(sim, fw, fw.AutoAttacks.MHAuto(), OutcomeHit, swingDamage); !WithinToleranceFloat64(13.65, gained, 0.01) {
-		t.Fatalf("Multiplied MH hit: Expected: 13.650, Actual: %0.3f", gained)
+	hitRage := rageFromAutoAttack(sim, fw, fw.AutoAttacks.MHAuto(), OutcomeHit, swingDamage)
+	if !WithinToleranceFloat64(11.7, hitRage, 0.001) {
+		t.Fatalf("Incorrect Rage generated on 2H hit: Expected: %0.3f, Actual: %0.3f", 11.695, hitRage)
 	}
 }
 
 func TestOffHandAutoAttackRageGeneration(t *testing.T) {
-	// OH swings pay the same rate on their own speed: 1.8 * 3.5 = 6.3.
+	// An OH swing at 1.8 speed: 1.8 * 3.46 * 0.5 = 3.114.
 	const swingDamage = 500.0
 
 	sim := SetupFakeRageSim()
@@ -167,25 +191,36 @@ func TestOffHandAutoAttackRageGeneration(t *testing.T) {
 	ohAuto := fw.AutoAttacks.OHAuto()
 
 	hitRage := rageFromAutoAttack(sim, fw, ohAuto, OutcomeHit, swingDamage)
-	if !WithinToleranceFloat64(6.3, hitRage, 0.01) {
-		t.Fatalf("Incorrect Rage generated on OH hit: Expected: %0.3f, Actual: %0.3f", 6.3, hitRage)
+	if !WithinToleranceFloat64(3.114, hitRage, 0.01) {
+		t.Fatalf("Incorrect Rage generated on OH hit: Expected: %0.3f, Actual: %0.3f", 3.114, hitRage)
 	}
 
-	if dodgeRage := rageFromAutoAttack(sim, fw, ohAuto, OutcomeDodge, swingDamage); dodgeRage != 0 {
+	dodgeRage := rageFromAutoAttack(sim, fw, ohAuto, OutcomeDodge, swingDamage)
+	if dodgeRage != 0 {
 		t.Fatalf("Dodged OH swing generated %0.3f Rage, expected none", dodgeRage)
 	}
 }
 
 func TestOffHandRageMultiplier(t *testing.T) {
-	// Dual Wield Specialization scales only the OH swing's flat rage: 1.8 * 3.5 * 2 = 12.6.
+	const swingDamage = 500.0
+
 	sim := SetupFakeRageSim()
 	fw := sim.Raid.Parties[0].Players[0].(*FakeRageWarrior)
-	fw.SetOffHandRageMultiplier(2)
 
-	if gained := rageFromAutoAttack(sim, fw, fw.AutoAttacks.OHAuto(), OutcomeHit, 500); !WithinToleranceFloat64(12.6, gained, 0.01) {
-		t.Fatalf("Multiplied OH hit: Expected: 12.600, Actual: %0.3f", gained)
+	unmodified := rageFromAutoAttack(sim, fw, fw.AutoAttacks.OHAuto(), OutcomeHit, swingDamage)
+	if !WithinToleranceFloat64(3.114, unmodified, 0.01) {
+		t.Fatalf("Incorrect Rage generated on OH hit: Expected: %0.3f, Actual: %0.3f", 3.114, unmodified)
 	}
-	if gained := rageFromAutoAttack(sim, fw, fw.AutoAttacks.MHAuto(), OutcomeHit, 500); !WithinToleranceFloat64(9.1, gained, 0.01) {
-		t.Fatalf("MH hit changed with the OH multiplier: Expected: 9.100, Actual: %0.3f", gained)
+
+	fw.SetOffHandRageMultiplier(1.5)
+
+	modified := rageFromAutoAttack(sim, fw, fw.AutoAttacks.OHAuto(), OutcomeHit, swingDamage)
+	if !WithinToleranceFloat64(4.671, modified, 0.01) {
+		t.Fatalf("Incorrect Rage generated on multiplied OH hit: Expected: %0.3f, Actual: %0.3f", 4.671, modified)
+	}
+
+	mhRage := rageFromAutoAttack(sim, fw, fw.AutoAttacks.MHAuto(), OutcomeHit, swingDamage)
+	if !WithinToleranceFloat64(8.996, mhRage, 0.01) {
+		t.Fatalf("Incorrect Rage generated on MH hit: Expected: %0.3f, Actual: %0.3f", 8.996, mhRage)
 	}
 }

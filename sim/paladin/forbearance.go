@@ -15,6 +15,6 @@ func (paladin *Paladin) registerForbearance() {
 	paladin.Forbearance = paladin.RegisterAura(core.Aura{
 		Label:    "Forbearance",
 		ActionID: core.ActionID{SpellID: forbearanceRow.SpellID},
-		Duration: forbearanceRow.Duration,
+		Duration: forbearanceRow.Duration - paladin.forbearanceReduction,
 	})
 }

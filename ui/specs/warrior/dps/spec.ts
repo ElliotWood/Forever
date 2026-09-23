@@ -99,7 +99,6 @@ export default defineSpec<Spec.SpecDpsWarrior>({
 			OtherInputs.TotemTwisting,
 			WarriorInputs.StartingRage(),
 			WarriorInputs.StanceSnapshot(),
-			WarriorInputs.QueueDelay(),
 			OtherInputs.DistanceFromTarget,
 			OtherInputs.InputDelay,
 			OtherInputs.TankAssignment,

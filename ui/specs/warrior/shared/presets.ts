@@ -3,7 +3,7 @@ import { ConsumesSpec, Debuffs, IndividualBuffs, PartyBuffs, TristateEffect } fr
 // Defaults follow master's ui/warrior and ui/tank_warrior.
 export const DefaultIndividualBuffs = IndividualBuffs.create({
 	blessingOfKings: true,
-	blessingOfMight: TristateEffect.TristateEffectImproved,
+	blessingOfMight: true,
 });
 
 // Master's page (currentSettings on a fresh profile) has Battle Shout and Leader of the Pack as

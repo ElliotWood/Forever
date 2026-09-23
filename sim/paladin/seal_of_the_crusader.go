@@ -22,10 +22,10 @@ import (
 func (paladin *Paladin) registerSealOfTheCrusader(row shared.SpellData) {
 	judgementRow := spellData.SealOfTheCrusaderTriggered.BySpellID(int32(effectAt(row, 2).Value))
 	judgementAuras := paladin.newJudgementAuras(func(target *core.Unit) *core.Aura {
-		return judgementOfTheCrusaderAura(target, judgementRank{
+		return core.JudgementOfTheCrusaderAura(target, core.JudgementRank{
 			SpellID: judgementRow.SpellID,
 			Rank:    row.Rank,
-			Value:   shared.SpellDataMin(judgementRow.Direct),
+			Value:   shared.SpellDataMin(judgementRow.Direct) + paladin.judgementOfTheCrusaderBonus,
 		})
 	})
 
@@ -49,7 +49,7 @@ func (paladin *Paladin) registerSealOfTheCrusader(row shared.SpellData) {
 		RelatedAuraArrays: judgementAuras.ToMap(),
 	})
 
-	attackPower := row.Effect(shared.A_MOD_ATTACK_POWER, 0).High()
+	attackPower := row.Effect(shared.A_MOD_ATTACK_POWER, 0).High() + paladin.sealOfTheCrusaderBonusAttackPower
 	speed := 1 + row.Effect(shared.A_MOD_ATTACKSPEED, 0).Value/100
 
 	aura := paladin.makeSealExclusive(paladin.RegisterAura(core.Aura{

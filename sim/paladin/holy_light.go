@@ -41,7 +41,7 @@ func (paladin *Paladin) registerHolyLight(row shared.SpellData) {
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			heal := row.Heal.Damage(sim)
-			if target.HasActiveAura(blessingOfLightAuraLabel) {
+			if target.HasActiveAura(core.BlessingOfLightAuraLabel) {
 				heal += blessingOfLightHolyLightBonus
 			}
 			spell.CalcAndDealHealing(sim, target, heal, spell.OutcomeHealingCrit)

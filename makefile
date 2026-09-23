@@ -237,11 +237,14 @@ simdb: sim/core/items/all_items.go sim/core/proto/api.pb.go
 CLIENTDATA_SETTINGS := $(abspath ./tools/database/generator-settings.json)
 CLIENTDATAPTR_SETTINGS := $(abspath ./tools/database/ptr-generator-settings.json)
 CLIENTDATA_OUTPUT   := $(abspath ./tools/database/wowsims.db)
+# Extra db2tool flags. `make db DB2TOOL_FLAGS="--cdn --dbcache path/to/DBCache.bin"`
+# reads the build off Blizzard's CDN instead of BaseDir (no install needed).
+DB2TOOL_FLAGS ?=
 
 .PHONY: db
 db:
 	@echo "Extracting client data"
-	go run ./tools/db2tool -s $(CLIENTDATA_SETTINGS) --output $(CLIENTDATA_OUTPUT)
+	go run ./tools/db2tool -s $(CLIENTDATA_SETTINGS) --output $(CLIENTDATA_OUTPUT) $(DB2TOOL_FLAGS)
 	@echo "Running DBC generation tool"
 	go run tools/database/gen_db/*.go -outDir=./assets -gen=db
 
@@ -255,7 +258,7 @@ basestats:
 .PHONY: ptrdb
 ptrdb:
 	@echo "Extracting client data"
-	go run ./tools/db2tool -s $(CLIENTDATAPTR_SETTINGS) --output $(CLIENTDATA_OUTPUT)
+	go run ./tools/db2tool -s $(CLIENTDATAPTR_SETTINGS) --output $(CLIENTDATA_OUTPUT) $(DB2TOOL_FLAGS)
 	@echo "Running DBC generation tool"
 	go run tools/database/gen_db/*.go -outDir=./assets -gen=db
 

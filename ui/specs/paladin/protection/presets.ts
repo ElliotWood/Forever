@@ -47,12 +47,10 @@ export const DefaultRaidBuffs = RaidBuffs.create({
 
 export const DefaultPartyBuffs = PartyBuffs.create({
 	battleShout: TristateEffect.TristateEffectImproved,
-	sanctityAura: TristateEffect.TristateEffectMissing,
 });
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
-	blessingOfWisdom: TristateEffect.TristateEffectImproved,
-	blessingOfSanctuary: true,
+	blessingOfWisdom: true,
 });
 
 export const DefaultDebuffs = Debuffs.create({
@@ -60,7 +58,7 @@ export const DefaultDebuffs = Debuffs.create({
 	exposeArmor: TristateEffect.TristateEffectImproved,
 	faerieFire: TristateEffect.TristateEffectRegular,
 	giftOfArthas: true,
-	improvedSealOfTheCrusader: TristateEffect.TristateEffectImproved,
+	judgementOfTheCrusader: true,
 	judgementOfWisdom: true,
 });
 

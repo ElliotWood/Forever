@@ -114,7 +114,6 @@ export default defineSpec<Spec.SpecProtectionWarrior>({
 			OtherInputs.TotemTwisting,
 			WarriorInputs.StartingRage(),
 			WarriorInputs.StanceSnapshot(),
-			WarriorInputs.QueueDelay(),
 			OtherInputs.InputDelay,
 			OtherInputs.TankAssignment,
 			OtherInputs.InspirationUptime,
