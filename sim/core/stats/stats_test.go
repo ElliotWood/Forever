@@ -92,3 +92,14 @@ func TestStatsProtoInSync(t *testing.T) {
 		}
 	}
 }
+
+func TestFromUnitStatsProtoImportsDodgeAndParryPercent(t *testing.T) {
+	pseudoStats := make([]float64, len(proto.PseudoStat_name))
+	pseudoStats[proto.PseudoStat_PseudoStatDodgePercent] = 2
+	pseudoStats[proto.PseudoStat_PseudoStatParryPercent] = 3
+
+	got := FromUnitStatsProto(&proto.UnitStats{PseudoStats: pseudoStats})
+	if got[DodgePercent] != 2 || got[ParryPercent] != 3 {
+		t.Errorf("DodgePercent %v and ParryPercent %v, want 2 and 3", got[DodgePercent], got[ParryPercent])
+	}
+}

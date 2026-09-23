@@ -264,6 +264,9 @@ func FromUnitStatsProto(unitStatsMessage *proto.UnitStats) Stats {
 		simStats[BlockPercent] = pseudoStatsMessage[proto.PseudoStat_PseudoStatBlockPercent]
 		simStats[RangedHitPercent] = pseudoStatsMessage[proto.PseudoStat_PseudoStatRangedHitPercent] - pseudoStatsMessage[proto.PseudoStat_PseudoStatMeleeHitPercent]
 		simStats[RangedCritPercent] = pseudoStatsMessage[proto.PseudoStat_PseudoStatRangedCritPercent] - pseudoStatsMessage[proto.PseudoStat_PseudoStatMeleeCritPercent]
+		// Read as chance added to the base; GetPseudoStatsProto writes these two as the total chance.
+		simStats[DodgePercent] = pseudoStatsMessage[proto.PseudoStat_PseudoStatDodgePercent]
+		simStats[ParryPercent] = pseudoStatsMessage[proto.PseudoStat_PseudoStatParryPercent]
 	}
 
 	return simStats
