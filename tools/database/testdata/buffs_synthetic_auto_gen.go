@@ -6,7 +6,9 @@ import (
 	"time"
 
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/spelldata"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
@@ -14,19 +16,21 @@ import (
 // that a player's own copy of one of them shuts the others off.
 var SynthPaladinAuraCategory = "SynthPaladinAura"
 
-// Mana Spring Totem - https://www.wowhead.com/forever/spell=10494
+// Mana Spring Totem
 var SynthManaSpringCategory = "ManaSpringTotem"
+var synthManaSpringSpell = spelldata.MustFind(10494)
+var synthManaSpringTalent = spelldata.Talent(16187, 5)
 
 func SynthManaSpringValue(talentPoints int32) float64 {
-	return []float64{25.0, 26.0, 27.0, 28.0, 30.0, 31.0}[talentPoints]
+	return manaPerFive(synthManaSpringSpell.Effect(dbcenums.A_PERIODIC_ENERGIZE, 0), talentScaled(amount(synthManaSpringSpell.Effect(dbcenums.A_PERIODIC_ENERGIZE, 0)), synthManaSpringTalent.Rank(talentPoints).EffectN(1)))
 }
 func SynthManaSpringDuration(talentPoints int32) time.Duration {
-	return core.NeverExpires
+	return auraDuration(synthManaSpringSpell)
 }
 func SynthManaSpringAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
 	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
 		Label:    "Mana Spring Totem (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: 10494}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
+		ActionID: core.ActionID{SpellID: synthManaSpringSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
 		Duration: SynthManaSpringDuration(talentPoints),
 		Category: SynthManaSpringCategory,
 		IsPlayer: isPlayer,
@@ -36,39 +40,42 @@ func SynthManaSpringAura(unit *core.Unit, isPlayer bool, talentPoints int32) *co
 	})
 }
 
-// Blessing of Kings - https://www.wowhead.com/forever/spell=20217
+// Blessing of Kings
+var synthBlessingOfKingsSpell = spelldata.MustFind(20217)
+
 func SynthBlessingOfKingsValue(talentPoints int32) float64 {
-	return 1.1
+	return 1 + amount(synthBlessingOfKingsSpell.Effect(dbcenums.A_MOD_TOTAL_STAT_PERCENTAGE, 0))/100
 }
 func SynthBlessingOfKingsDuration(talentPoints int32) time.Duration {
-	return 3600000 * time.Millisecond
+	return auraDuration(synthBlessingOfKingsSpell)
 }
 func SynthBlessingOfKingsAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
 	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
 		Label:    "Blessing of Kings (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: 20217}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
+		ActionID: core.ActionID{SpellID: synthBlessingOfKingsSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
 		Duration: SynthBlessingOfKingsDuration(talentPoints),
 		IsPlayer: isPlayer,
 		Stats: []core.StatConfig{
 			{Stat: stats.Strength, Amount: SynthBlessingOfKingsValue(talentPoints), IsMultiplicative: true},
-			{Stat: stats.Agility, Amount: 1.1, IsMultiplicative: true},
+			{Stat: stats.Agility, Amount: 1 + amount(synthBlessingOfKingsSpell.Effect(dbcenums.A_MOD_TOTAL_STAT_PERCENTAGE, 1))/100, IsMultiplicative: true},
 		},
 	})
 }
 
-// Battle Shout - https://www.wowhead.com/forever/spell=25289
+// Battle Shout
 var SynthBattleShoutCategory = "SynthBattleShout"
+var synthBattleShoutSpell = spelldata.MustFind(25289)
 
 func SynthBattleShoutValue(talentPoints int32) float64 {
-	return 139.0
+	return amount(synthBattleShoutSpell.Effect(dbcenums.A_MOD_ATTACK_POWER, 0))
 }
 func SynthBattleShoutDuration(talentPoints int32) time.Duration {
-	return 180000 * time.Millisecond
+	return auraDuration(synthBattleShoutSpell)
 }
 func SynthBattleShoutAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
 	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
 		Label:      "Battle Shout (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:   core.ActionID{SpellID: 25289}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
+		ActionID:   core.ActionID{SpellID: synthBattleShoutSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
 		Duration:   SynthBattleShoutDuration(talentPoints),
 		Category:   SynthBattleShoutCategory,
 		SingleAura: true,
@@ -79,19 +86,21 @@ func SynthBattleShoutAura(unit *core.Unit, isPlayer bool, talentPoints int32) *c
 	})
 }
 
-// Devotion Aura - https://www.wowhead.com/forever/spell=10293
+// Devotion Aura
 var SynthDevotionAuraCategory = "DevotionAura"
+var synthDevotionAuraSpell = spelldata.MustFind(10293)
+var synthDevotionAuraTalent = spelldata.Talent(20140, 2)
 
 func SynthDevotionAuraValue(talentPoints int32) float64 {
-	return 735.0
+	return amount(synthDevotionAuraSpell.Effect(dbcenums.A_MOD_RESISTANCE, 1))
 }
 func SynthDevotionAuraDuration(talentPoints int32) time.Duration {
-	return []time.Duration{600000 * time.Millisecond, 900000 * time.Millisecond, 1200000 * time.Millisecond}[talentPoints]
+	return talentScaledDuration(synthDevotionAuraSpell, synthDevotionAuraTalent.Rank(talentPoints).EffectN(2))
 }
 func SynthDevotionAuraAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
 	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
 		Label:          "Devotion Aura (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:       core.ActionID{SpellID: 10293}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
+		ActionID:       core.ActionID{SpellID: synthDevotionAuraSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
 		Duration:       SynthDevotionAuraDuration(talentPoints),
 		Category:       SynthDevotionAuraCategory,
 		SharedCategory: SynthPaladinAuraCategory,
@@ -103,19 +112,20 @@ func SynthDevotionAuraAura(unit *core.Unit, isPlayer bool, talentPoints int32) *
 	})
 }
 
-// Frost Resistance Aura - https://www.wowhead.com/forever/spell=19898
+// Frost Resistance Aura
 var SynthFrostResistanceAuraCategory = "FrostResistanceAura"
+var synthFrostResistanceAuraSpell = spelldata.MustFind(19898)
 
 func SynthFrostResistanceAuraValue(talentPoints int32) float64 {
-	return 60.0
+	return amount(synthFrostResistanceAuraSpell.Effect(dbcenums.A_MOD_RESISTANCE, 16))
 }
 func SynthFrostResistanceAuraDuration(talentPoints int32) time.Duration {
-	return core.NeverExpires
+	return auraDuration(synthFrostResistanceAuraSpell)
 }
 func SynthFrostResistanceAuraAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
 	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
 		Label:          "Frost Resistance Aura (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:       core.ActionID{SpellID: 19898}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
+		ActionID:       core.ActionID{SpellID: synthFrostResistanceAuraSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
 		Duration:       SynthFrostResistanceAuraDuration(talentPoints),
 		Category:       SynthFrostResistanceAuraCategory,
 		SharedCategory: SynthPaladinAuraCategory,
@@ -127,47 +137,49 @@ func SynthFrostResistanceAuraAura(unit *core.Unit, isPlayer bool, talentPoints i
 	})
 }
 
-// Innervates - https://www.wowhead.com/forever/spell=29166
+// Innervates
 var SynthInnervatesCategory = "Innervate"
+var synthInnervatesSpell = spelldata.MustFind(29166)
 
 func SynthInnervatesDuration(talentPoints int32) time.Duration {
-	return 20000 * time.Millisecond
+	return auraDuration(synthInnervatesSpell)
 }
 func SynthInnervatesCooldown() time.Duration {
-	return 360000 * time.Millisecond
+	return cooldown(synthInnervatesSpell)
 }
 func SynthInnervatesAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
 	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
 		Label:    "Innervates (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: 29166}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
+		ActionID: core.ActionID{SpellID: synthInnervatesSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
 		Duration: SynthInnervatesDuration(talentPoints),
 		Category: SynthInnervatesCategory,
 		IsPlayer: isPlayer,
 	})
 }
 
-// Power Infusions - https://www.wowhead.com/forever/spell=10060
+// Power Infusions
 var SynthPowerInfusionsCategory = "PowerInfusion"
+var synthPowerInfusionsSpell = spelldata.MustFind(10060)
 
 func SynthPowerInfusionsValue(talentPoints int32) float64 {
-	return 1.2
+	return 1 + amount(synthPowerInfusionsSpell.Effect(dbcenums.A_MOD_DAMAGE_PERCENT_DONE, 126))/100
 }
 func SynthPowerInfusionsDuration(talentPoints int32) time.Duration {
-	return 15000 * time.Millisecond
+	return auraDuration(synthPowerInfusionsSpell)
 }
 func SynthPowerInfusionsCooldown() time.Duration {
-	return 180000 * time.Millisecond
+	return cooldown(synthPowerInfusionsSpell)
 }
 func SynthPowerInfusionsAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
 	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
 		Label:    "Power Infusions (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: 10060}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
+		ActionID: core.ActionID{SpellID: synthPowerInfusionsSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
 		Duration: SynthPowerInfusionsDuration(talentPoints),
 		Category: SynthPowerInfusionsCategory,
 		IsPlayer: isPlayer,
 		Pseudo: []core.PseudoConfig{
 			{Kind: core.PseudoStatSchoolDamageDealtMultiplier, Amount: SynthPowerInfusionsValue(talentPoints), IsMultiplicative: true, SchoolMask: 126},
-			{Kind: core.PseudoStatHealingDealtMultiplier, Amount: 1.2, IsMultiplicative: true, SchoolMask: 0},
+			{Kind: core.PseudoStatHealingDealtMultiplier, Amount: 1 + amount(synthPowerInfusionsSpell.Effect(dbcenums.A_MOD_HEALING_DONE_PERCENT, 0))/100, IsMultiplicative: true, SchoolMask: 0},
 		},
 	})
 }
@@ -178,17 +190,19 @@ var SynthInheritedNeckAuraLabel = "Inherited Neck"
 
 // func SynthInheritedNeckAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura // totem_twisting, KindAbsent: the neck has no Item row
 
-// Atiesh - Mage - https://www.wowhead.com/forever/spell=28142
+// Atiesh - Mage
+var synthAtieshMageSpell = spelldata.MustFind(28142)
+
 func SynthAtieshMageValue(talentPoints int32) float64 {
-	return 2.0
+	return amount(synthAtieshMageSpell.Effect(dbcenums.A_MOD_SPELL_CRIT_CHANCE, 0))
 }
 func SynthAtieshMageDuration(talentPoints int32) time.Duration {
-	return core.NeverExpires
+	return auraDuration(synthAtieshMageSpell)
 }
 func SynthAtieshMageAura(unit *core.Unit, isPlayer bool, talentPoints int32, count float64) *core.Aura {
 	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
 		Label:    "Atiesh - Mage (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: 28142}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
+		ActionID: core.ActionID{SpellID: synthAtieshMageSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
 		Duration: SynthAtieshMageDuration(talentPoints),
 		IsPlayer: isPlayer,
 		Stats: []core.StatConfig{
@@ -197,19 +211,21 @@ func SynthAtieshMageAura(unit *core.Unit, isPlayer bool, talentPoints int32, cou
 	})
 }
 
-// Thorns - https://www.wowhead.com/forever/spell=9910
+// Thorns
 var SynthThornsCategory = "Thorns"
+var synthThornsSpell = spelldata.MustFind(9910)
+var synthThornsTalent = spelldata.Talent(16836, 2)
 
 func SynthThornsValue(talentPoints int32) float64 {
-	return []float64{22.0, 27.0, 33.0}[talentPoints]
+	return talentScaled(amount(synthThornsSpell.Effect(dbcenums.A_DAMAGE_SHIELD, 0)), synthThornsTalent.Rank(talentPoints).EffectN(1))
 }
 func SynthThornsDuration(talentPoints int32) time.Duration {
-	return 600000 * time.Millisecond
+	return auraDuration(synthThornsSpell)
 }
 func SynthThornsAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
 	return core.NewGeneratedDamageShield(unit, core.GeneratedBuff{
 		Label:    "Thorns (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: 9910}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
+		ActionID: core.ActionID{SpellID: synthThornsSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
 		Duration: SynthThornsDuration(talentPoints),
 		Category: SynthThornsCategory,
 		IsPlayer: isPlayer,

@@ -5,8 +5,9 @@ package database
 // the result.
 //
 // The manifest names which spell each proto field is; everything else - anchor
-// rank, values at level 60, duration, stacks, talent scaling, owner class - is
-// read here. A row the generator cannot express in the support API renders as a
+// rank, which effects are which stats, stacks, the improving talent, owner class -
+// is read here, and the generated constructors read the values themselves off the
+// spell store at runtime. A row the generator cannot express in the support API renders as a
 // commented shell carrying the reason, which is also how a row whose hand-written
 // constructor is still in sim/core/buffs renders: deleting that constructor and its
 // apply block is what switches the row over to generated code.
@@ -50,10 +51,12 @@ const skillLineRunes = 2853
 // with.
 const maxComboPoints = 5
 
-// StatAmount is one stat the aura grants, at level 60.
+// StatAmount is one stat the aura grants: its amount at level 60, and Expr, the
+// Go expression the generated file reads that amount from the store with.
 type StatAmount struct {
 	Stat           stats.Stat
 	Amount         float64
+	Expr           string
 	Multiplicative bool
 }
 
@@ -61,12 +64,15 @@ type StatAmount struct {
 type PseudoMod struct {
 	Kind           string // PseudoStats field name, e.g. "ThreatMultiplier"
 	Amount         float64
+	Expr           string
 	Multiplicative bool
 	SchoolMask     int32 // client school bits, 0 = every school
 }
 
 // ResolvedEffect is one SpellEffect row of the anchor spell, with its value
-// already derived for level 60 and truncated toward zero.
+// already derived for level 60 and truncated toward zero. Ref is the Go
+// expression that reaches the effect in the store, and Amount the one that reads
+// its value in the client's units.
 type ResolvedEffect struct {
 	Index          int32
 	Effect         dbc.SpellEffectType
@@ -76,6 +82,8 @@ type ResolvedEffect struct {
 	PerResource    float64
 	PeriodMs       int32
 	ImplicitTarget dbc.ImplicitTarget
+	Ref            string
+	Amount         string
 }
 
 // ResolvedBuff is one manifest row plus everything the database states about it.
@@ -106,8 +114,14 @@ type ResolvedBuff struct {
 	// TalentOnPseudo says the curve prices Pseudo[0] rather than Stats[0].
 	TalentOnPseudo bool
 	// TalentSpellID is the spell of the trait node that prices the improvement,
-	// which is the icon the UI shows for the improved state.
-	TalentSpellID int32
+	// which is the icon the UI shows for the improved state. TalentPosition is
+	// the effect of that spell the improvement is read from, counted the way
+	// EffectN counts.
+	TalentSpellID  int32
+	TalentPosition int32
+
+	// DurationFromCast says the aura states no duration and the cast times it.
+	DurationFromCast bool
 
 	OwnerClassMask int32
 	ScopeFromDB    buffmanifest.BuffScope
@@ -545,6 +559,7 @@ func (res *buffResolver) loadExternalTiming(row *ResolvedBuff) error {
 	}
 
 	if row.DurationMs <= 0 && row.CastSpellID != row.SpellID {
+		row.DurationFromCast = true
 		if err := scanOptional(res.db, `
 			SELECT COALESCE(d.Duration, 0)
 			FROM SpellMisc m LEFT JOIN SpellDuration d ON d.ID = m.DurationIndex
@@ -884,7 +899,45 @@ func (res *buffResolver) loadSpellData(row *ResolvedBuff) error {
 		}
 		row.Effects = append(row.Effects, resolved)
 	}
+	setEffectRefs(row)
 	return nil
+}
+
+// How the generated file reaches each effect: by its aura and misc value where
+// no other effect of the spell shares them, and by position where one does.
+func setEffectRefs(row *ResolvedBuff) {
+	for i := range row.Effects {
+		e := &row.Effects[i]
+		shared := 0
+		for _, other := range row.Effects {
+			if other.Aura == e.Aura && other.Misc == e.Misc {
+				shared++
+			}
+		}
+		name, named := dbcenums.Named(e.Aura)
+		if shared == 1 && e.Aura != 0 && named {
+			e.Ref = fmt.Sprintf("%s.Effect(dbcenums.%s, %d)", spellVar(row.Go), name, e.Misc)
+		} else {
+			e.Ref = fmt.Sprintf("%s.EffectN(%d)", spellVar(row.Go), i+1)
+		}
+		e.Amount = "amount(" + e.Ref + ")"
+	}
+}
+
+func spellVar(stem string) string {
+	return lowerFirst(stem) + "Spell"
+}
+
+func castVar(stem string) string {
+	return lowerFirst(stem) + "Cast"
+}
+
+func talentVar(stem string) string {
+	return lowerFirst(stem) + "Talent"
+}
+
+func lowerFirst(s string) string {
+	return strings.ToLower(s[:1]) + s[1:]
 }
 
 type effectTarget struct {
@@ -939,6 +992,7 @@ func (res *buffResolver) mapEffects(row *ResolvedBuff) {
 				return
 			}
 			row.Effects[i].Value = e.PerResource * maxComboPoints
+			row.Effects[i].Amount = "fullComboPoints(" + e.Ref + ")"
 			e = row.Effects[i]
 			row.Note = fmt.Sprintf("Effect %d is worth %s per combo point; this is the %d-point finisher.",
 				e.Index, formatFloat(e.PerResource), maxComboPoints)
@@ -1011,7 +1065,7 @@ func (row ResolvedBuff) statAmounts(e ResolvedEffect) ([]StatAmount, bool) {
 	}
 	out := make([]StatAmount, 0, len(row.OverrideStats))
 	for _, stat := range row.OverrideStats {
-		out = append(out, StatAmount{Stat: stat, Amount: e.Value})
+		out = append(out, StatAmount{Stat: stat, Amount: e.Value, Expr: e.Amount})
 	}
 	return out, true
 }
@@ -1056,17 +1110,22 @@ func statByName(name string) (stats.Stat, bool) {
 
 func statAmountsOf(e ResolvedEffect) ([]StatAmount, bool) {
 	flat := func(stat stats.Stat, amount float64) ([]StatAmount, bool) {
-		return []StatAmount{{Stat: stat, Amount: amount}}, true
+		return []StatAmount{{Stat: stat, Amount: amount, Expr: e.Amount}}, true
 	}
+	each := func(sts []stats.Stat, amount float64, expr string, multiplicative bool) ([]StatAmount, bool) {
+		var out []StatAmount
+		for _, stat := range sts {
+			out = append(out, StatAmount{Stat: stat, Amount: amount, Expr: expr, Multiplicative: multiplicative})
+		}
+		return out, true
+	}
+	mainStats := []stats.Stat{stats.Strength, stats.Agility, stats.Stamina, stats.Intellect, stats.Spirit}
+	multiplier, multiplierExpr := 1+e.Value/100, "1 + "+e.Amount+"/100"
 
 	switch e.Aura {
 	case dbcenums.A_MOD_STAT:
 		if e.Misc == -1 {
-			var out []StatAmount
-			for _, stat := range []stats.Stat{stats.Strength, stats.Agility, stats.Stamina, stats.Intellect, stats.Spirit} {
-				out = append(out, StatAmount{Stat: stat, Amount: e.Value})
-			}
-			return out, true
+			return each(mainStats, e.Value, e.Amount, false)
 		}
 		stat, ok := dbc.MapMainStatToStat(int(e.Misc))
 		if !ok {
@@ -1091,7 +1150,8 @@ func statAmountsOf(e ResolvedEffect) ([]StatAmount, bool) {
 		if e.PeriodMs <= 0 {
 			return nil, false
 		}
-		return flat(stats.MP5, e.Value*5000/float64(e.PeriodMs))
+		return []StatAmount{{Stat: stats.MP5, Amount: e.Value * 5000 / float64(e.PeriodMs),
+			Expr: fmt.Sprintf("manaPerFive(%s, %s)", e.Ref, e.Amount)}}, true
 	case dbcenums.A_MOD_SPELL_CRIT_CHANCE:
 		return flat(stats.SpellCritPercent, e.Value)
 	case dbcenums.A_MOD_HIT_CHANCE:
@@ -1099,44 +1159,36 @@ func statAmountsOf(e ResolvedEffect) ([]StatAmount, bool) {
 	case dbcenums.A_MOD_EXPERTISE:
 		return flat(stats.ExpertisePercent, e.Value)
 	case dbcenums.A_MOD_RESISTANCE:
-		var out []StatAmount
+		var sts []stats.Stat
 		for bit, stat := range resistanceBits {
 			if e.Misc&bit != 0 {
-				out = append(out, StatAmount{Stat: stat, Amount: e.Value})
+				sts = append(sts, stat)
 			}
 		}
-		sort.Slice(out, func(i, j int) bool { return out[i].Stat < out[j].Stat })
+		slices.Sort(sts)
 		// Bit 2 is Holy, which has no resistance stat in the sim; a mask of only
 		// that bit resolves to nothing rather than to a wrong stat.
-		return out, len(out) > 0
-	case dbcenums.A_MOD_DAMAGE_DONE:
-		stat := dbc.ConvertEffectAuraToStatIndex(e.Aura, int(e.Misc))
-		if stat < 0 {
+		if len(sts) == 0 {
 			return nil, false
 		}
-		return flat(stats.Stat(stat), e.Value)
-	case dbcenums.A_MOD_RATING:
+		return each(sts, e.Value, e.Amount, false)
+	case dbcenums.A_MOD_DAMAGE_DONE, dbcenums.A_MOD_RATING:
 		stat := dbc.ConvertEffectAuraToStatIndex(e.Aura, int(e.Misc))
 		if stat < 0 {
 			return nil, false
 		}
 		return flat(stats.Stat(stat), e.Value)
 	case dbcenums.A_MOD_TOTAL_STAT_PERCENTAGE:
-		multiplier := 1 + e.Value/100
 		if e.Misc == -1 {
-			var out []StatAmount
-			for _, stat := range []stats.Stat{stats.Strength, stats.Agility, stats.Stamina, stats.Intellect, stats.Spirit} {
-				out = append(out, StatAmount{Stat: stat, Amount: multiplier, Multiplicative: true})
-			}
-			return out, true
+			return each(mainStats, multiplier, multiplierExpr, true)
 		}
 		stat, ok := dbc.MapMainStatToStat(int(e.Misc))
 		if !ok {
 			return nil, false
 		}
-		return []StatAmount{{Stat: stats.Stat(stat), Amount: multiplier, Multiplicative: true}}, true
+		return each([]stats.Stat{stats.Stat(stat)}, multiplier, multiplierExpr, true)
 	case dbcenums.A_MOD_ATTACK_POWER_PCT:
-		return []StatAmount{{Stat: stats.AttackPower, Amount: 1 + e.Value/100, Multiplicative: true}}, true
+		return each([]stats.Stat{stats.AttackPower}, multiplier, multiplierExpr, true)
 	}
 	return nil, false
 }
@@ -1169,50 +1221,52 @@ var resistanceBits = map[int32]stats.Stat{
 }
 
 func pseudoModsOf(e ResolvedEffect) ([]PseudoMod, bool) {
+	multiplier, multiplierExpr := 1+e.Value/100, "1 + "+e.Amount+"/100"
+	multiply := func(kind string, schoolMask int32) ([]PseudoMod, bool) {
+		return []PseudoMod{{Kind: kind, Amount: multiplier, Expr: multiplierExpr, Multiplicative: true, SchoolMask: schoolMask}}, true
+	}
+	add := func(kind string) ([]PseudoMod, bool) {
+		return []PseudoMod{{Kind: kind, Amount: e.Value, Expr: e.Amount}}, true
+	}
+
 	switch e.Aura {
 	case dbcenums.A_MOD_THREAT:
-		return []PseudoMod{{Kind: "ThreatMultiplier", Amount: 1 + e.Value/100, Multiplicative: true}}, true
+		return multiply("ThreatMultiplier", 0)
 	case dbcenums.A_MOD_DAMAGE_PERCENT_DONE:
 		// A mask of every school, physical included, raises everything the unit
 		// deals; anything narrower is per school, so a buff the client states
 		// for the magic schools does not raise a melee swing.
 		if e.Misc == everySchoolMask {
-			return []PseudoMod{{Kind: "DamageDealtMultiplier", Amount: 1 + e.Value/100, Multiplicative: true}}, true
+			return multiply("DamageDealtMultiplier", 0)
 		}
 		// A mask of 0 names no school, so the effect raises nothing: emitting it
 		// would be a no-op the reader of the generated file has to work out.
 		if e.Misc == 0 {
 			return nil, false
 		}
-		return []PseudoMod{{
-			Kind: "SchoolDamageDealtMultiplier", Amount: 1 + e.Value/100,
-			Multiplicative: true, SchoolMask: e.Misc,
-		}}, true
+		return multiply("SchoolDamageDealtMultiplier", e.Misc)
 	case dbcenums.A_MOD_HEALING_DONE_PERCENT:
-		return []PseudoMod{{Kind: "HealingDealtMultiplier", Amount: 1 + e.Value/100, Multiplicative: true}}, true
+		return multiply("HealingDealtMultiplier", 0)
 	case dbcenums.A_REDUCE_PUSHBACK:
 		// PseudoStats.PushbackChance is the chance of being pushed back and
 		// starts at 1, so the client's "35% less pushback" is -0.35 there.
-		return []PseudoMod{{Kind: "PushbackChance", Amount: -e.Value / 100}}, true
+		return []PseudoMod{{Kind: "PushbackChance", Amount: -e.Value / 100, Expr: "-" + e.Amount + "/100"}}, true
 	case dbcenums.A_MOD_MELEE_HASTE_3, dbcenums.A_MOD_ATTACKSPEED:
-		return []PseudoMod{{Kind: "MeleeSpeedMultiplier", Amount: 1 + e.Value/100, Multiplicative: true}}, true
+		return multiply("MeleeSpeedMultiplier", 0)
 	case dbcenums.A_MOD_DAMAGE_PERCENT_TAKEN:
-		return []PseudoMod{{
-			Kind: "SchoolDamageTakenMultiplier", Amount: 1 + e.Value/100,
-			Multiplicative: true, SchoolMask: e.Misc,
-		}}, true
+		return multiply("SchoolDamageTakenMultiplier", e.Misc)
 	case dbcenums.A_RANGED_ATTACK_POWER_ATTACKER_BONUS:
-		return []PseudoMod{{Kind: "BonusRangedAttackPower", Amount: e.Value}}, true
+		return add("BonusRangedAttackPower")
 	case dbcenums.A_MOD_DAMAGE_TAKEN:
 		// The sim splits flat damage taken into a physical and a spell field,
 		// so the school mask picks which one the effect is. A mask that names
 		// some spell schools and not others has neither: the spell field would
 		// raise what every school does to the target.
 		if e.Misc&1 != 0 {
-			return []PseudoMod{{Kind: "BonusPhysicalDamageTaken", Amount: e.Value}}, true
+			return add("BonusPhysicalDamageTaken")
 		}
 		if e.Misc&everySpellSchoolMask == everySpellSchoolMask {
-			return []PseudoMod{{Kind: "BonusSpellDamageTaken", Amount: e.Value}}, true
+			return add("BonusSpellDamageTaken")
 		}
 		return nil, false
 	}
@@ -1291,6 +1345,11 @@ func (res *buffResolver) resolveTalent(row *ResolvedBuff) error {
 	}
 
 	row.TalentSpellID = chosen.SpellID
+	indices, err := effectIndicesOf(res.db, chosen.SpellID)
+	if err != nil {
+		return err
+	}
+	row.TalentPosition = int32(slices.Index(indices, chosen.EffectIndex) + 1)
 	row.TalentApplies = row.Talent.Applies
 	if chosen.Misc == 1 {
 		row.TalentApplies = buffmanifest.TalentScalesDuration
@@ -1654,7 +1713,13 @@ type buffRow struct {
 	Reason        string
 	Note          string
 	Supported     bool
-	HasWowhead    bool
+	HasSpell      bool
+	SpellVar      string
+	CastVar       string
+	CastID        int32
+	TalentVar     string
+	TalentID      int32
+	TalentRanks   int32
 	Category      string
 	CategoryVar   string
 	ValueExpr     string
@@ -1696,7 +1761,7 @@ func renderBuffFiles(rows []ResolvedBuff) (map[string][]byte, error) {
 func renderBuffFile(resolved []ResolvedBuff, debuffs bool) ([]byte, error) {
 	var rows []buffRow
 	var shared []sharedCategoryRow
-	needsTime, needsStats := false, false
+	needsTime, needsStats, needsEnums := false, false, false
 	for _, row := range resolved {
 		if (row.Scope == buffmanifest.ScopeDebuff) != debuffs {
 			continue
@@ -1705,6 +1770,7 @@ func renderBuffFile(resolved []ResolvedBuff, debuffs bool) ([]byte, error) {
 		if rendered.Supported {
 			needsTime = true
 			needsStats = needsStats || len(row.Stats) > 0
+			needsEnums = needsEnums || strings.Contains(rendered.ValueExpr+rendered.Constructor, "dbcenums.")
 			if row.SharedCategory != "" && !slices.ContainsFunc(shared, func(c sharedCategoryRow) bool { return c.Name == row.SharedCategory }) {
 				shared = append(shared, sharedCategoryRow{Var: sharedCategoryVar(row.SharedCategory), Name: row.SharedCategory})
 			}
@@ -1726,7 +1792,7 @@ func renderBuffFile(resolved []ResolvedBuff, debuffs bool) ([]byte, error) {
 
 	var rendered bytes.Buffer
 	if err := tmpl.Execute(&rendered, map[string]any{
-		"Rows": rows, "NeedsTime": needsTime, "NeedsStats": needsStats,
+		"Rows": rows, "NeedsTime": needsTime, "NeedsStats": needsStats, "NeedsEnums": needsEnums,
 		"SharedCategories": shared, "PetRows": petBuffRows(resolved),
 	}); err != nil {
 		return nil, fmt.Errorf("rendering %s: %w", name, err)
@@ -1832,7 +1898,7 @@ func renderRow(row ResolvedBuff) buffRow {
 	out := buffRow{
 		Go: row.Go, Field: row.Field, Label: buffLabel(row),
 		SpellID: row.SpellID, Kind: row.Kind.String(), Reason: row.Reason, Note: row.Note,
-		Supported: row.Supported, HasWowhead: row.SpellID != 0,
+		Supported: row.Supported, HasSpell: row.SpellID != 0,
 	}
 	if row.Pet == buffmanifest.PetInheritOwnerAura {
 		out.OwnerAura, out.OwnerAuraVar = strconv.Quote(petOwnerAura(row)), petOwnerAuraVar(row)
@@ -1855,10 +1921,22 @@ func renderRow(row ResolvedBuff) buffRow {
 		out.Category = row.Category
 		out.CategoryVar = row.Go + "Category"
 	}
-	out.ValueExpr, out.ValueOnPseudo, out.HasValue = buffValueExpr(row)
-	out.Duration = buffDurationExpr(row)
+	out.SpellVar = spellVar(row.Go)
+	timing := out.SpellVar
+	if row.CastSpellID != row.SpellID && (row.DurationFromCast || row.CooldownMs > 0) {
+		out.CastVar, out.CastID = castVar(row.Go), row.CastSpellID
+		timing = out.CastVar
+	}
+	if row.TalentPosition > 0 && len(row.TalentCurve) > 0 {
+		out.TalentVar, out.TalentID, out.TalentRanks = talentVar(row.Go), row.TalentSpellID, row.MaxTalentPoints()
+	}
+	out.ValueExpr, out.ValueOnPseudo, out.HasValue = buffValueExpr(row, out)
+	out.Duration = buffDurationExpr(row, out)
+	if row.DurationFromCast {
+		out.Duration = "auraDuration(" + out.CastVar + ")"
+	}
 	if row.CooldownMs > 0 {
-		out.Cooldown, out.HasCooldown = fmt.Sprintf("%d * time.Millisecond", row.CooldownMs), true
+		out.Cooldown, out.HasCooldown = "cooldown("+timing+")", true
 	}
 	out.Constructor = buffConstructor(row, out)
 	out.ApplyIf, out.ApplyBody, out.HasApply = buffApply(row)
@@ -1877,33 +1955,53 @@ func buffLabel(row ResolvedBuff) string {
 	return row.DBName
 }
 
-// The first stat amount, talent-scaled when the tree prices the talent.
-func buffValueExpr(row ResolvedBuff) (string, bool, bool) {
-	if len(row.TalentCurve) > 0 && row.TalentApplies != buffmanifest.TalentScalesDuration {
-		return floatSliceLiteral(row.TalentCurve) + "[talentPoints]", row.TalentOnPseudo, true
+// The first stat amount, talent-scaled when the tree prices the talent: the
+// talent's rank reads its modifier off the ladder the store keeps for it.
+func buffValueExpr(row ResolvedBuff, rendered buffRow) (string, bool, bool) {
+	if rendered.TalentVar != "" && row.TalentApplies != buffmanifest.TalentScalesDuration {
+		if target, onPseudo, ok := row.talentTarget(); ok {
+			target.Amount = fmt.Sprintf("talentScaled(%s, %s)", target.Amount, talentModifier(row, rendered))
+			return row.convertedExpr(target, onPseudo), onPseudo, true
+		}
 	}
 	if len(row.Stats) > 0 {
-		return formatFloat(row.Stats[0].Amount), false, true
+		return row.Stats[0].Expr, false, true
 	}
 	if len(row.Pseudo) > 0 {
-		return formatFloat(row.Pseudo[0].Amount), true, true
+		return row.Pseudo[0].Expr, true, true
 	}
 	for _, e := range row.Effects {
 		if e.Aura == dbcenums.A_DAMAGE_SHIELD {
-			return formatFloat(e.Value), false, true
+			return e.Amount, false, true
 		}
 	}
 	return "", false, false
 }
 
-func buffDurationExpr(row ResolvedBuff) string {
-	if len(row.TalentCurve) > 0 && row.TalentApplies == buffmanifest.TalentScalesDuration {
-		return durationSliceLiteral(row.TalentCurve) + "[talentPoints]"
+func talentModifier(row ResolvedBuff, rendered buffRow) string {
+	return fmt.Sprintf("%s.Rank(talentPoints).EffectN(%d)", rendered.TalentVar, row.TalentPosition)
+}
+
+// What the effect is worth once the kind mapping has converted it, as the
+// expression the generated file reads it with.
+func (row ResolvedBuff) convertedExpr(e ResolvedEffect, onPseudo bool) string {
+	if onPseudo {
+		if mods, ok := pseudoModsOf(e); ok {
+			return mods[0].Expr
+		}
+		return e.Amount
 	}
-	if row.DurationMs <= 0 {
-		return "core.NeverExpires"
+	if amounts, ok := row.statAmounts(e); ok {
+		return amounts[0].Expr
 	}
-	return fmt.Sprintf("%d * time.Millisecond", row.DurationMs)
+	return e.Amount
+}
+
+func buffDurationExpr(row ResolvedBuff, rendered buffRow) string {
+	if rendered.TalentVar != "" && row.TalentApplies == buffmanifest.TalentScalesDuration {
+		return fmt.Sprintf("talentScaledDuration(%s, %s)", rendered.SpellVar, talentModifier(row, rendered))
+	}
+	return "auraDuration(" + rendered.SpellVar + ")"
 }
 
 // The call the constructor makes into the hand-written support API.
@@ -1930,7 +2028,7 @@ func buffConfigLiteral(row ResolvedBuff, rendered buffRow) string {
 	var b strings.Builder
 	b.WriteString("core.GeneratedBuff{\n")
 	fmt.Fprintf(&b, "Label: %q + core.Ternary(isPlayer, \"Player\", \"External\") + \")\",\n", rendered.Label+" (")
-	fmt.Fprintf(&b, "ActionID: core.ActionID{SpellID: %d}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),\n", row.SpellID)
+	fmt.Fprintf(&b, "ActionID: core.ActionID{SpellID: %s.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),\n", rendered.SpellVar)
 	fmt.Fprintf(&b, "Duration: %sDuration(talentPoints),\n", row.Go)
 	if row.MaxStacks > 0 {
 		fmt.Fprintf(&b, "MaxStacks: %d,\n", row.MaxStacks)
@@ -1946,8 +2044,8 @@ func buffConfigLiteral(row ResolvedBuff, rendered buffRow) string {
 	}
 	b.WriteString("IsPlayer: isPlayer,\n")
 
-	// The talent curve prices one amount, so the call to <Go>Value goes where
-	// that amount sits and every other amount is a literal.
+	// The talent prices one amount, so the call to <Go>Value goes where that
+	// amount sits and every other amount is read off its own effect.
 	value := row.Go + "Value(talentPoints)"
 	// Every amount of an item-count row is per item.
 	scale := ""
@@ -1958,7 +2056,7 @@ func buffConfigLiteral(row ResolvedBuff, rendered buffRow) string {
 	if len(row.Stats) > 0 {
 		b.WriteString("Stats: []core.StatConfig{\n")
 		for i, stat := range row.Stats {
-			amount := formatFloat(stat.Amount)
+			amount := stat.Expr
 			if i == 0 && rendered.HasValue && !rendered.ValueOnPseudo {
 				amount = value
 			}
@@ -1969,7 +2067,7 @@ func buffConfigLiteral(row ResolvedBuff, rendered buffRow) string {
 	if len(row.Pseudo) > 0 {
 		b.WriteString("Pseudo: []core.PseudoConfig{\n")
 		for i, mod := range row.Pseudo {
-			amount := formatFloat(mod.Amount)
+			amount := mod.Expr
 			if i == 0 && rendered.HasValue && rendered.ValueOnPseudo {
 				amount = value
 			}

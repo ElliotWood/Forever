@@ -19,25 +19,30 @@ import (
 	"testing"
 
 	"github.com/wowsims/forever/sim/core/dbcenums"
-	"github.com/wowsims/forever/sim/core/stats"
 	"github.com/wowsims/forever/tools/database/buffmanifest"
+	"github.com/wowsims/forever/tools/database/dbc"
 )
 
 // One row per shape the templates have a branch for. The proto field of each row
 // is a real one whose compiled type matches the row's declared type, so the
-// rendered apply blocks type-check against the sim.
+// rendered apply blocks type-check against the sim. Each row states its effects
+// and goes through the same mapping a resolved row does.
 func syntheticBuffRows() []ResolvedBuff {
-	return []ResolvedBuff{
+	aura := func(a dbc.EffectAuraType, misc int32, value float64) ResolvedEffect {
+		return ResolvedEffect{Effect: dbcenums.E_APPLY_AURA, Aura: a, Misc: misc, Value: value}
+	}
+	rows := []ResolvedBuff{
 		{
 			BuffSpec: buffmanifest.BuffSpec{
 				Field: "mana_spring_totem", Scope: buffmanifest.ScopeParty,
 				Proto: buffmanifest.ProtoTristate, Kind: buffmanifest.KindStatFlat,
 				Go: "SynthManaSpring", Name: "Mana Spring Totem", Category: "ManaSpringTotem",
 			},
-			SpellID: 10494, Supported: true,
-			Stats:         []StatAmount{{Stat: stats.MP5, Amount: 25}},
+			SpellID: 10494, CastSpellID: 10494, Supported: true,
+			Effects: []ResolvedEffect{{Effect: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PERIODIC_ENERGIZE, Value: 10, PeriodMs: 2000}},
 			TalentCurve:   []float64{25, 26, 27, 28, 30, 31},
 			TalentApplies: buffmanifest.TalentScalesValue,
+			TalentSpellID: 16187, TalentPosition: 1,
 		},
 		{
 			BuffSpec: buffmanifest.BuffSpec{
@@ -46,10 +51,10 @@ func syntheticBuffRows() []ResolvedBuff {
 				Go: "SynthBlessingOfKings", Name: "Blessing of Kings",
 				Pet: buffmanifest.PetStripWhenSummonedLate,
 			},
-			SpellID: 20217, DurationMs: 3600000, Supported: true,
-			Stats: []StatAmount{
-				{Stat: stats.Strength, Amount: 1.1, Multiplicative: true},
-				{Stat: stats.Agility, Amount: 1.1, Multiplicative: true},
+			SpellID: 20217, CastSpellID: 20217, DurationMs: 3600000, Supported: true,
+			Effects: []ResolvedEffect{
+				aura(dbcenums.A_MOD_TOTAL_STAT_PERCENTAGE, 0, 10),
+				aura(dbcenums.A_MOD_TOTAL_STAT_PERCENTAGE, 1, 10),
 			},
 		},
 		{
@@ -59,8 +64,8 @@ func syntheticBuffRows() []ResolvedBuff {
 				Go: "SynthBattleShout", Name: "Battle Shout", Category: "SynthBattleShout",
 				SingleAura: true, Driver: true,
 			},
-			SpellID: 25289, DurationMs: 180000, Supported: true,
-			Stats: []StatAmount{{Stat: stats.AttackPower, Amount: 139}},
+			SpellID: 25289, CastSpellID: 25289, DurationMs: 180000, Supported: true,
+			Effects: []ResolvedEffect{aura(dbcenums.A_MOD_ATTACK_POWER, 0, 139)},
 		},
 		{
 			BuffSpec: buffmanifest.BuffSpec{
@@ -69,10 +74,11 @@ func syntheticBuffRows() []ResolvedBuff {
 				Go: "SynthDevotionAura", Name: "Devotion Aura", Category: "DevotionAura",
 				SharedCategory: "SynthPaladinAura", SingleAura: true,
 			},
-			SpellID: 10293, DurationMs: 600000, Supported: true,
-			Stats:         []StatAmount{{Stat: stats.Armor, Amount: 735}},
+			SpellID: 10293, CastSpellID: 10293, DurationMs: 600000, Supported: true,
+			Effects:       []ResolvedEffect{aura(dbcenums.A_MOD_RESISTANCE, 1, 735)},
 			TalentCurve:   []float64{600000, 900000, 1200000},
 			TalentApplies: buffmanifest.TalentScalesDuration,
+			TalentSpellID: 20140, TalentPosition: 2,
 		},
 		{
 			BuffSpec: buffmanifest.BuffSpec{
@@ -81,8 +87,8 @@ func syntheticBuffRows() []ResolvedBuff {
 				Go: "SynthFrostResistanceAura", Name: "Frost Resistance Aura",
 				Category: "FrostResistanceAura", SharedCategory: "SynthPaladinAura", SingleAura: true,
 			},
-			SpellID: 19898, Supported: true,
-			Stats: []StatAmount{{Stat: stats.FrostResistance, Amount: 60}},
+			SpellID: 19898, CastSpellID: 19898, Supported: true,
+			Effects: []ResolvedEffect{aura(dbcenums.A_MOD_RESISTANCE, 16, 60)},
 		},
 		{
 			BuffSpec: buffmanifest.BuffSpec{
@@ -90,13 +96,12 @@ func syntheticBuffRows() []ResolvedBuff {
 				Proto: buffmanifest.ProtoBool, Kind: buffmanifest.KindDebuffAtkSpeed,
 				Go: "SynthThunderClap", Name: "Thunder Clap", Category: "AtkSpdReduction",
 			},
-			SpellID: 11581, DurationMs: 30000, Supported: true,
-			Pseudo: []PseudoMod{
-				{Kind: "MeleeSpeedMultiplier", Amount: 0.8, Multiplicative: true},
-			},
+			SpellID: 11581, CastSpellID: 11581, DurationMs: 30000, Supported: true,
+			Effects:        []ResolvedEffect{aura(dbcenums.A_MOD_MELEE_HASTE_3, 0, -20)},
 			TalentCurve:    []float64{0.8, 0.78, 0.76},
 			TalentApplies:  buffmanifest.TalentScalesValue,
 			TalentOnPseudo: true,
+			TalentSpellID:  12287, TalentPosition: 1,
 		},
 		{
 			BuffSpec: buffmanifest.BuffSpec{
@@ -105,7 +110,7 @@ func syntheticBuffRows() []ResolvedBuff {
 				Go: "SynthInnervates", Name: "Innervate", Label: "Innervates",
 				Category: "Innervate",
 			},
-			SpellID: 29166, DurationMs: 20000, CooldownMs: 360000, Supported: true,
+			SpellID: 29166, CastSpellID: 29166, DurationMs: 20000, CooldownMs: 360000, Supported: true,
 		},
 		{
 			BuffSpec: buffmanifest.BuffSpec{
@@ -114,10 +119,10 @@ func syntheticBuffRows() []ResolvedBuff {
 				Go: "SynthPowerInfusions", Name: "Power Infusion", Label: "Power Infusions",
 				Category: "PowerInfusion",
 			},
-			SpellID: 10060, DurationMs: 15000, CooldownMs: 180000, Supported: true,
-			Pseudo: []PseudoMod{
-				{Kind: "SchoolDamageDealtMultiplier", Amount: 1.2, Multiplicative: true, SchoolMask: 126},
-				{Kind: "HealingDealtMultiplier", Amount: 1.2, Multiplicative: true},
+			SpellID: 10060, CastSpellID: 10060, DurationMs: 15000, CooldownMs: 180000, Supported: true,
+			Effects: []ResolvedEffect{
+				aura(dbcenums.A_MOD_DAMAGE_PERCENT_DONE, 126, 20),
+				aura(dbcenums.A_MOD_HEALING_DONE_PERCENT, 0, 20),
 			},
 		},
 		{
@@ -135,8 +140,8 @@ func syntheticBuffRows() []ResolvedBuff {
 				Proto: buffmanifest.ProtoInt32, Kind: buffmanifest.KindItemCount,
 				Go: "SynthAtieshMage", Anchor: 28142, Label: "Atiesh - Mage",
 			},
-			SpellID: 28142, Supported: true,
-			Stats: []StatAmount{{Stat: stats.SpellCritPercent, Amount: 2}},
+			SpellID: 28142, CastSpellID: 28142, Supported: true,
+			Effects: []ResolvedEffect{aura(dbcenums.A_MOD_SPELL_CRIT_CHANCE, 0, 2)},
 		},
 		{
 			BuffSpec: buffmanifest.BuffSpec{
@@ -145,10 +150,11 @@ func syntheticBuffRows() []ResolvedBuff {
 				Go: "SynthThorns", Name: "Thorns", Category: "Thorns",
 				Pet: buffmanifest.PetStrip,
 			},
-			SpellID: 9910, DurationMs: 600000, SchoolMask: 8, Supported: true,
-			Effects:       []ResolvedEffect{{Index: 0, Effect: 6, Aura: 15, Value: 22}},
+			SpellID: 9910, CastSpellID: 9910, DurationMs: 600000, SchoolMask: 8, Supported: true,
+			Effects:       []ResolvedEffect{aura(dbcenums.A_DAMAGE_SHIELD, 0, 22)},
 			TalentCurve:   []float64{22, 27, 33},
 			TalentApplies: buffmanifest.TalentScalesValue,
+			TalentSpellID: 16836, TalentPosition: 1,
 		},
 		{
 			BuffSpec: buffmanifest.BuffSpec{
@@ -157,8 +163,8 @@ func syntheticBuffRows() []ResolvedBuff {
 				Go: "SynthSunderArmor", Name: "Sunder Armor", Category: "MajorArmorReduction",
 				SingleAura: true, Driver: true,
 			},
-			SpellID: 11597, DurationMs: 30000, MaxStacks: 5, Supported: true,
-			Stats: []StatAmount{{Stat: stats.Armor, Amount: -450}},
+			SpellID: 11597, CastSpellID: 11597, DurationMs: 30000, MaxStacks: 5, Supported: true,
+			Effects: []ResolvedEffect{aura(dbcenums.A_MOD_RESISTANCE, 1, -450)},
 		},
 		{
 			BuffSpec: buffmanifest.BuffSpec{
@@ -167,9 +173,8 @@ func syntheticBuffRows() []ResolvedBuff {
 				Go: "SynthExposeArmor", Name: "Expose Armor", Category: "MajorArmorReduction",
 				SingleAura: true,
 			},
-			SpellID: 11198, DurationMs: 30000, Supported: true,
-			Note:  "Effect 0 is worth -450.0 per combo point; this is the 5-point finisher.",
-			Stats: []StatAmount{{Stat: stats.Armor, Amount: -2250}},
+			SpellID: 11198, CastSpellID: 11198, DurationMs: 30000, Supported: true,
+			Effects: []ResolvedEffect{{Effect: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_RESISTANCE, Misc: 1, PerResource: -450}},
 		},
 		{
 			BuffSpec: buffmanifest.BuffSpec{
@@ -178,19 +183,20 @@ func syntheticBuffRows() []ResolvedBuff {
 				Go: "SynthCurseOfElements", Name: "Curse of the Elements", Category: "CurseOfElements",
 				SingleAura: true,
 			},
-			SpellID: 1311680, DurationMs: 300000, Supported: true,
-			Stats: []StatAmount{
-				{Stat: stats.FireResistance, Amount: -75},
-				{Stat: stats.NatureResistance, Amount: -75},
-				{Stat: stats.FrostResistance, Amount: -75},
-				{Stat: stats.ShadowResistance, Amount: -75},
-				{Stat: stats.ArcaneResistance, Amount: -75},
-			},
-			Pseudo: []PseudoMod{
-				{Kind: "SchoolDamageTakenMultiplier", Amount: 1.1, Multiplicative: true, SchoolMask: 126},
+			SpellID: 1311680, CastSpellID: 1311680, DurationMs: 300000, Supported: true,
+			Effects: []ResolvedEffect{
+				aura(dbcenums.A_MOD_RESISTANCE, 124, -75),
+				aura(dbcenums.A_MOD_DAMAGE_PERCENT_TAKEN, 126, 10),
 			},
 		},
 	}
+	for i := range rows {
+		if rows[i].Supported {
+			setEffectRefs(&rows[i])
+			(&buffResolver{}).mapEffects(&rows[i])
+		}
+	}
+	return rows
 }
 
 // The curve has to scale the amount the client states and convert afterwards: a

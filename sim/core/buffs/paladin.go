@@ -4,6 +4,8 @@ import (
 	"fmt"
 
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/dbcenums"
+	"github.com/wowsims/forever/sim/core/spelldata"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
@@ -104,9 +106,23 @@ type JudgementRank struct {
 }
 
 var (
-	JudgementOfTheCrusaderMaxRank = JudgementRank{SpellID: 20303, Value: 161}
-	JudgementOfLightMaxRank       = JudgementRank{SpellID: 20346, Value: 61}
-	JudgementOfWisdomMaxRank      = JudgementRank{SpellID: 20355, Value: 59}
+	JudgementOfTheCrusaderMaxRank = JudgementRank{SpellID: judgementOfTheCrusaderSpell.ID,
+		Value: amount(judgementOfTheCrusaderSpell.Effect(dbcenums.A_MOD_DAMAGE_TAKEN, int32(core.SpellSchoolHoly)))}
+	JudgementOfLightMaxRank = JudgementRank{SpellID: judgementOfLightSpell.ID,
+		Value: amount(spelldata.MustFind(judgementOfLightHealID).HealEffect())}
+	JudgementOfWisdomMaxRank = JudgementRank{SpellID: judgementOfWisdomSpell.ID,
+		Value: amount(spelldata.MustFind(judgementOfWisdomManaID).EnergizeEffect())}
+)
+
+// The raid's Judgement of the Crusader, which no generated row reads: the client states its bonus
+// for the holy school alone, which the manifest has no pseudo-stat for.
+var judgementOfTheCrusaderSpell = spelldata.MustFind(20303)
+
+// The top ranks' heal and mana. The judgement states neither: its trigger is a dummy, and the
+// spells the paladin's own ranks pair with it by hand carry the amounts.
+const (
+	judgementOfLightHealID  = 20343
+	judgementOfWisdomManaID = 20353
 )
 
 // Every judgement debuff a paladin puts up carries the tag, so an effect that refreshes "all

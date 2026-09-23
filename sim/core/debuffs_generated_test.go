@@ -176,8 +176,8 @@ func TestGeneratedDemoralizingDebuffsApplyOnce(t *testing.T) {
 
 	applyGeneratedTestDebuffs(target, &proto.Debuffs{DemoralizingRoar: true, DemoralizingShout: true})
 
-	if got := target.GetStats()[stats.AttackPower]; got != -204 {
-		t.Errorf("attack power is %v, want the client's -204 once", got)
+	if got := target.GetStats()[stats.AttackPower]; got != -205 {
+		t.Errorf("attack power is %v, want the store's -205 once", got)
 	}
 
 	roar := target.GetAura("Demoralizing Roar (External)")

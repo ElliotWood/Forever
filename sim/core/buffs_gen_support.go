@@ -1,9 +1,9 @@
 package core
 
 // The API sim/core/buffs/buffs_auto_gen.go and sim/core/buffs/debuffs_auto_gen.go
-// are generated against. Everything the generator emits is a data literal plus one
-// call into this file, so a generated constructor cannot go wrong in a way the
-// compiler does not catch.
+// are generated against. Everything the generator emits is a config of values
+// read off the spell store plus one call into this file, so a generated
+// constructor cannot go wrong in a way the compiler does not catch.
 
 import (
 	"fmt"

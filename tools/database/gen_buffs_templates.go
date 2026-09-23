@@ -20,12 +20,19 @@ var {{.OwnerAuraVar}} = {{.OwnerAura}}
 {{- end}}
 
 {{if .Supported}}
-{{if .HasWowhead}}// {{.Label}} - https://www.wowhead.com/forever/spell={{.SpellID}}{{end}}
+// {{.Label}}
 {{- if .Note}}
 // {{.Note}}
 {{- end}}
 {{- if .CategoryVar}}
 var {{.CategoryVar}} = "{{.Category}}"
+{{- end}}
+var {{.SpellVar}} = spelldata.MustFind({{.SpellID}})
+{{- if .CastVar}}
+var {{.CastVar}} = spelldata.MustFind({{.CastID}})
+{{- end}}
+{{- if .TalentVar}}
+var {{.TalentVar}} = spelldata.Talent({{.TalentID}}, {{.TalentRanks}})
 {{- end}}
 {{- if .HasValue}}
 func {{.Go}}Value(talentPoints int32) float64 {
@@ -44,7 +51,7 @@ func {{.Go}}Aura(unit *core.Unit, isPlayer bool, talentPoints int32{{.ExtraParam
 	{{.Constructor}}
 }
 {{- else}}
-{{if .HasWowhead}}// {{.Label}} - https://www.wowhead.com/forever/spell={{.SpellID}}
+{{if .HasSpell}}// {{.Label}}
 {{end}}// func {{.Go}}Aura(unit *core.Unit, isPlayer bool, talentPoints int32{{.ExtraParams}}) *core.Aura // {{.Field}}, {{.Kind}}: {{.Reason}}
 {{- end}}
 {{- end}}
@@ -60,7 +67,13 @@ import (
 
 {{ end }}
 	"github.com/wowsims/forever/sim/core"
+{{- if .NeedsEnums}}
+	"github.com/wowsims/forever/sim/core/dbcenums"
+{{- end}}
 	"github.com/wowsims/forever/sim/core/proto"
+{{- if .NeedsTime}}
+	"github.com/wowsims/forever/sim/core/spelldata"
+{{- end}}
 {{- if .NeedsStats}}
 	"github.com/wowsims/forever/sim/core/stats"
 {{- end}}
@@ -116,7 +129,13 @@ import (
 
 {{ end }}
 	"github.com/wowsims/forever/sim/core"
+{{- if .NeedsEnums}}
+	"github.com/wowsims/forever/sim/core/dbcenums"
+{{- end}}
 	"github.com/wowsims/forever/sim/core/proto"
+{{- if .NeedsTime}}
+	"github.com/wowsims/forever/sim/core/spelldata"
+{{- end}}
 {{- if .NeedsStats}}
 	"github.com/wowsims/forever/sim/core/stats"
 {{- end}}

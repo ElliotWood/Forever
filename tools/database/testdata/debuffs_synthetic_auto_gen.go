@@ -6,23 +6,27 @@ import (
 	"time"
 
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/spelldata"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
-// Thunder Clap - https://www.wowhead.com/forever/spell=11581
+// Thunder Clap
 var SynthThunderClapCategory = "AtkSpdReduction"
+var synthThunderClapSpell = spelldata.MustFind(11581)
+var synthThunderClapTalent = spelldata.Talent(12287, 2)
 
 func SynthThunderClapValue(talentPoints int32) float64 {
-	return []float64{0.8, 0.78, 0.76}[talentPoints]
+	return 1 + talentScaled(amount(synthThunderClapSpell.Effect(dbcenums.A_MOD_MELEE_HASTE_3, 0)), synthThunderClapTalent.Rank(talentPoints).EffectN(1))/100
 }
 func SynthThunderClapDuration(talentPoints int32) time.Duration {
-	return 30000 * time.Millisecond
+	return auraDuration(synthThunderClapSpell)
 }
 func SynthThunderClapAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
 	return core.NewGeneratedDebuff(unit, core.GeneratedBuff{
 		Label:    "Thunder Clap (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: 11581}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
+		ActionID: core.ActionID{SpellID: synthThunderClapSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
 		Duration: SynthThunderClapDuration(talentPoints),
 		Category: SynthThunderClapCategory,
 		IsPlayer: isPlayer,
@@ -32,19 +36,20 @@ func SynthThunderClapAura(unit *core.Unit, isPlayer bool, talentPoints int32) *c
 	})
 }
 
-// Sunder Armor - https://www.wowhead.com/forever/spell=11597
+// Sunder Armor
 var SynthSunderArmorCategory = "MajorArmorReduction"
+var synthSunderArmorSpell = spelldata.MustFind(11597)
 
 func SynthSunderArmorValue(talentPoints int32) float64 {
-	return -450.0
+	return amount(synthSunderArmorSpell.Effect(dbcenums.A_MOD_RESISTANCE, 1))
 }
 func SynthSunderArmorDuration(talentPoints int32) time.Duration {
-	return 30000 * time.Millisecond
+	return auraDuration(synthSunderArmorSpell)
 }
 func SynthSunderArmorAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
 	return core.NewGeneratedDebuff(unit, core.GeneratedBuff{
 		Label:      "Sunder Armor (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:   core.ActionID{SpellID: 11597}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
+		ActionID:   core.ActionID{SpellID: synthSunderArmorSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
 		Duration:   SynthSunderArmorDuration(talentPoints),
 		MaxStacks:  5,
 		Category:   SynthSunderArmorCategory,
@@ -56,20 +61,21 @@ func SynthSunderArmorAura(unit *core.Unit, isPlayer bool, talentPoints int32) *c
 	})
 }
 
-// Expose Armor - https://www.wowhead.com/forever/spell=11198
+// Expose Armor
 // Effect 0 is worth -450.0 per combo point; this is the 5-point finisher.
 var SynthExposeArmorCategory = "MajorArmorReduction"
+var synthExposeArmorSpell = spelldata.MustFind(11198)
 
 func SynthExposeArmorValue(talentPoints int32) float64 {
-	return -2250.0
+	return fullComboPoints(synthExposeArmorSpell.Effect(dbcenums.A_MOD_RESISTANCE, 1))
 }
 func SynthExposeArmorDuration(talentPoints int32) time.Duration {
-	return 30000 * time.Millisecond
+	return auraDuration(synthExposeArmorSpell)
 }
 func SynthExposeArmorAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
 	return core.NewGeneratedDebuff(unit, core.GeneratedBuff{
 		Label:      "Expose Armor (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:   core.ActionID{SpellID: 11198}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
+		ActionID:   core.ActionID{SpellID: synthExposeArmorSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
 		Duration:   SynthExposeArmorDuration(talentPoints),
 		Category:   SynthExposeArmorCategory,
 		SingleAura: true,
@@ -80,32 +86,33 @@ func SynthExposeArmorAura(unit *core.Unit, isPlayer bool, talentPoints int32) *c
 	})
 }
 
-// Curse of the Elements - https://www.wowhead.com/forever/spell=1311680
+// Curse of the Elements
 var SynthCurseOfElementsCategory = "CurseOfElements"
+var synthCurseOfElementsSpell = spelldata.MustFind(1311680)
 
 func SynthCurseOfElementsValue(talentPoints int32) float64 {
-	return -75.0
+	return amount(synthCurseOfElementsSpell.Effect(dbcenums.A_MOD_RESISTANCE, 124))
 }
 func SynthCurseOfElementsDuration(talentPoints int32) time.Duration {
-	return 300000 * time.Millisecond
+	return auraDuration(synthCurseOfElementsSpell)
 }
 func SynthCurseOfElementsAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
 	return core.NewGeneratedDebuff(unit, core.GeneratedBuff{
 		Label:      "Curse of the Elements (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:   core.ActionID{SpellID: 1311680}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
+		ActionID:   core.ActionID{SpellID: synthCurseOfElementsSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
 		Duration:   SynthCurseOfElementsDuration(talentPoints),
 		Category:   SynthCurseOfElementsCategory,
 		SingleAura: true,
 		IsPlayer:   isPlayer,
 		Stats: []core.StatConfig{
-			{Stat: stats.FireResistance, Amount: SynthCurseOfElementsValue(talentPoints), IsMultiplicative: false},
-			{Stat: stats.NatureResistance, Amount: -75.0, IsMultiplicative: false},
-			{Stat: stats.FrostResistance, Amount: -75.0, IsMultiplicative: false},
-			{Stat: stats.ShadowResistance, Amount: -75.0, IsMultiplicative: false},
-			{Stat: stats.ArcaneResistance, Amount: -75.0, IsMultiplicative: false},
+			{Stat: stats.ArcaneResistance, Amount: SynthCurseOfElementsValue(talentPoints), IsMultiplicative: false},
+			{Stat: stats.FireResistance, Amount: amount(synthCurseOfElementsSpell.Effect(dbcenums.A_MOD_RESISTANCE, 124)), IsMultiplicative: false},
+			{Stat: stats.FrostResistance, Amount: amount(synthCurseOfElementsSpell.Effect(dbcenums.A_MOD_RESISTANCE, 124)), IsMultiplicative: false},
+			{Stat: stats.NatureResistance, Amount: amount(synthCurseOfElementsSpell.Effect(dbcenums.A_MOD_RESISTANCE, 124)), IsMultiplicative: false},
+			{Stat: stats.ShadowResistance, Amount: amount(synthCurseOfElementsSpell.Effect(dbcenums.A_MOD_RESISTANCE, 124)), IsMultiplicative: false},
 		},
 		Pseudo: []core.PseudoConfig{
-			{Kind: core.PseudoStatSchoolDamageTakenMultiplier, Amount: 1.1, IsMultiplicative: true, SchoolMask: 126},
+			{Kind: core.PseudoStatSchoolDamageTakenMultiplier, Amount: 1 + amount(synthCurseOfElementsSpell.Effect(dbcenums.A_MOD_DAMAGE_PERCENT_TAKEN, 126))/100, IsMultiplicative: true, SchoolMask: 126},
 		},
 	})
 }

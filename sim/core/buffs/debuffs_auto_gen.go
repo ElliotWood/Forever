@@ -6,23 +6,26 @@ import (
 	"time"
 
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/spelldata"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
-// Hunter's Mark - https://www.wowhead.com/forever/spell=14325
+// Hunter's Mark
 var HuntersMarkCategory = "HuntersMark"
+var huntersMarkSpell = spelldata.MustFind(14325)
 
 func HuntersMarkValue(talentPoints int32) float64 {
-	return 71.0
+	return amount(huntersMarkSpell.Effect(dbcenums.A_RANGED_ATTACK_POWER_ATTACKER_BONUS, 0))
 }
 func HuntersMarkDuration(talentPoints int32) time.Duration {
-	return 120000 * time.Millisecond
+	return auraDuration(huntersMarkSpell)
 }
 func HuntersMarkAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
 	return core.NewGeneratedDebuff(unit, core.GeneratedBuff{
 		Label:      "Hunter's Mark (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:   core.ActionID{SpellID: 14325}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
+		ActionID:   core.ActionID{SpellID: huntersMarkSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
 		Duration:   HuntersMarkDuration(talentPoints),
 		Category:   HuntersMarkCategory,
 		SingleAura: true,
@@ -33,81 +36,87 @@ func HuntersMarkAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.A
 	})
 }
 
-// Judgement of the Crusader - https://www.wowhead.com/forever/spell=20303
+// Judgement of the Crusader
 // func JudgementOfTheCrusaderAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura // judgement_of_the_crusader, KindDebuffStat: spell 20303 states no aura effect this generator maps (auras 14)
 
-// Judgement of Light - https://www.wowhead.com/forever/spell=20346
+// Judgement of Light
+var judgementOfLightSpell = spelldata.MustFind(20346)
+
 func JudgementOfLightDuration(talentPoints int32) time.Duration {
-	return 40000 * time.Millisecond
+	return auraDuration(judgementOfLightSpell)
 }
 func JudgementOfLightAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
 	return core.NewGeneratedDebuff(unit, core.GeneratedBuff{
 		Label:    "Judgement of Light (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: 20346}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
+		ActionID: core.ActionID{SpellID: judgementOfLightSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
 		Duration: JudgementOfLightDuration(talentPoints),
 		IsPlayer: isPlayer,
 	})
 }
 
-// Judgement of Wisdom - https://www.wowhead.com/forever/spell=20355
+// Judgement of Wisdom
+var judgementOfWisdomSpell = spelldata.MustFind(20355)
+
 func JudgementOfWisdomDuration(talentPoints int32) time.Duration {
-	return 40000 * time.Millisecond
+	return auraDuration(judgementOfWisdomSpell)
 }
 func JudgementOfWisdomAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
 	return core.NewGeneratedDebuff(unit, core.GeneratedBuff{
 		Label:    "Judgement of Wisdom (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: 20355}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
+		ActionID: core.ActionID{SpellID: judgementOfWisdomSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
 		Duration: JudgementOfWisdomDuration(talentPoints),
 		IsPlayer: isPlayer,
 	})
 }
 
-// Mangle - https://www.wowhead.com/forever/spell=1238073
+// Mangle
 // func MangleAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura // mangle, KindDebuffDamageTaken: spell 1238073 states no aura effect this generator maps (auras )
 
-// Curse of the Elements - https://www.wowhead.com/forever/spell=1311680
+// Curse of the Elements
 var CurseOfElementsCategory = "CurseOfElements"
+var curseOfElementsSpell = spelldata.MustFind(1311680)
 
 func CurseOfElementsValue(talentPoints int32) float64 {
-	return -75.0
+	return amount(curseOfElementsSpell.Effect(dbcenums.A_MOD_RESISTANCE, 126))
 }
 func CurseOfElementsDuration(talentPoints int32) time.Duration {
-	return 300000 * time.Millisecond
+	return auraDuration(curseOfElementsSpell)
 }
 func CurseOfElementsAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
 	return core.NewGeneratedDebuff(unit, core.GeneratedBuff{
 		Label:      "Curse of the Elements (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:   core.ActionID{SpellID: 1311680}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
+		ActionID:   core.ActionID{SpellID: curseOfElementsSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
 		Duration:   CurseOfElementsDuration(talentPoints),
 		Category:   CurseOfElementsCategory,
 		SingleAura: true,
 		IsPlayer:   isPlayer,
 		Stats: []core.StatConfig{
 			{Stat: stats.ArcaneResistance, Amount: CurseOfElementsValue(talentPoints), IsMultiplicative: false},
-			{Stat: stats.FireResistance, Amount: -75.0, IsMultiplicative: false},
-			{Stat: stats.FrostResistance, Amount: -75.0, IsMultiplicative: false},
-			{Stat: stats.NatureResistance, Amount: -75.0, IsMultiplicative: false},
-			{Stat: stats.ShadowResistance, Amount: -75.0, IsMultiplicative: false},
+			{Stat: stats.FireResistance, Amount: amount(curseOfElementsSpell.Effect(dbcenums.A_MOD_RESISTANCE, 126)), IsMultiplicative: false},
+			{Stat: stats.FrostResistance, Amount: amount(curseOfElementsSpell.Effect(dbcenums.A_MOD_RESISTANCE, 126)), IsMultiplicative: false},
+			{Stat: stats.NatureResistance, Amount: amount(curseOfElementsSpell.Effect(dbcenums.A_MOD_RESISTANCE, 126)), IsMultiplicative: false},
+			{Stat: stats.ShadowResistance, Amount: amount(curseOfElementsSpell.Effect(dbcenums.A_MOD_RESISTANCE, 126)), IsMultiplicative: false},
 		},
 		Pseudo: []core.PseudoConfig{
-			{Kind: core.PseudoStatSchoolDamageTakenMultiplier, Amount: 1.1, IsMultiplicative: true, SchoolMask: 126},
+			{Kind: core.PseudoStatSchoolDamageTakenMultiplier, Amount: 1 + amount(curseOfElementsSpell.Effect(dbcenums.A_MOD_DAMAGE_PERCENT_TAKEN, 126))/100, IsMultiplicative: true, SchoolMask: 126},
 		},
 	})
 }
 
-// Curse of Recklessness - https://www.wowhead.com/forever/spell=11717
+// Curse of Recklessness
 var CurseOfRecklessnessCategory = "CurseOfRecklessness"
+var curseOfRecklessnessSpell = spelldata.MustFind(11717)
 
 func CurseOfRecklessnessValue(talentPoints int32) float64 {
-	return -505.0
+	return amount(curseOfRecklessnessSpell.Effect(dbcenums.A_MOD_RESISTANCE, 1))
 }
 func CurseOfRecklessnessDuration(talentPoints int32) time.Duration {
-	return 120000 * time.Millisecond
+	return auraDuration(curseOfRecklessnessSpell)
 }
 func CurseOfRecklessnessAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
 	return core.NewGeneratedDebuff(unit, core.GeneratedBuff{
 		Label:      "Curse of Recklessness (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:   core.ActionID{SpellID: 11717}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
+		ActionID:   core.ActionID{SpellID: curseOfRecklessnessSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
 		Duration:   CurseOfRecklessnessDuration(talentPoints),
 		Category:   CurseOfRecklessnessCategory,
 		SingleAura: true,
@@ -118,19 +127,20 @@ func CurseOfRecklessnessAura(unit *core.Unit, isPlayer bool, talentPoints int32)
 	})
 }
 
-// Faerie Fire - https://www.wowhead.com/forever/spell=9907
+// Faerie Fire
 var FaerieFireCategory = "FaerieFireAura"
+var faerieFireSpell = spelldata.MustFind(9907)
 
 func FaerieFireValue(talentPoints int32) float64 {
-	return -505.0
+	return amount(faerieFireSpell.Effect(dbcenums.A_MOD_RESISTANCE, 1))
 }
 func FaerieFireDuration(talentPoints int32) time.Duration {
-	return 40000 * time.Millisecond
+	return auraDuration(faerieFireSpell)
 }
 func FaerieFireAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
 	return core.NewGeneratedDebuff(unit, core.GeneratedBuff{
 		Label:      "Faerie Fire (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:   core.ActionID{SpellID: 9907}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
+		ActionID:   core.ActionID{SpellID: faerieFireSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
 		Duration:   FaerieFireDuration(talentPoints),
 		Category:   FaerieFireCategory,
 		SingleAura: true,
@@ -141,20 +151,21 @@ func FaerieFireAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Au
 	})
 }
 
-// Expose Armor - https://www.wowhead.com/forever/spell=11198
+// Expose Armor
 // Effect 0 is worth -450.0 per combo point; this is the 5-point finisher.
 var ExposeArmorCategory = "MajorArmorReduction"
+var exposeArmorSpell = spelldata.MustFind(11198)
 
 func ExposeArmorValue(talentPoints int32) float64 {
-	return -2250.0
+	return fullComboPoints(exposeArmorSpell.Effect(dbcenums.A_MOD_RESISTANCE, 1))
 }
 func ExposeArmorDuration(talentPoints int32) time.Duration {
-	return 30000 * time.Millisecond
+	return auraDuration(exposeArmorSpell)
 }
 func ExposeArmorAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
 	return core.NewGeneratedDebuff(unit, core.GeneratedBuff{
 		Label:      "Expose Armor (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:   core.ActionID{SpellID: 11198}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
+		ActionID:   core.ActionID{SpellID: exposeArmorSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
 		Duration:   ExposeArmorDuration(talentPoints),
 		Category:   ExposeArmorCategory,
 		SingleAura: true,
@@ -165,19 +176,20 @@ func ExposeArmorAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.A
 	})
 }
 
-// Sunder Armor - https://www.wowhead.com/forever/spell=11597
+// Sunder Armor
 var SunderArmorCategory = "MajorArmorReduction"
+var sunderArmorSpell = spelldata.MustFind(11597)
 
 func SunderArmorValue(talentPoints int32) float64 {
-	return -450.0
+	return amount(sunderArmorSpell.Effect(dbcenums.A_MOD_RESISTANCE, 1))
 }
 func SunderArmorDuration(talentPoints int32) time.Duration {
-	return 30000 * time.Millisecond
+	return auraDuration(sunderArmorSpell)
 }
 func SunderArmorAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
 	return core.NewGeneratedDebuff(unit, core.GeneratedBuff{
 		Label:      "Sunder Armor (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:   core.ActionID{SpellID: 11597}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
+		ActionID:   core.ActionID{SpellID: sunderArmorSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
 		Duration:   SunderArmorDuration(talentPoints),
 		MaxStacks:  5,
 		Category:   SunderArmorCategory,
@@ -189,19 +201,20 @@ func SunderArmorAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.A
 	})
 }
 
-// Gift of Arthas - https://www.wowhead.com/forever/spell=11374
+// Gift of Arthas
 var GiftOfArthasCategory = "GiftOfArthasAura"
+var giftOfArthasSpell = spelldata.MustFind(11374)
 
 func GiftOfArthasValue(talentPoints int32) float64 {
-	return 8.0
+	return amount(giftOfArthasSpell.Effect(dbcenums.A_MOD_DAMAGE_TAKEN, 1))
 }
 func GiftOfArthasDuration(talentPoints int32) time.Duration {
-	return 180000 * time.Millisecond
+	return auraDuration(giftOfArthasSpell)
 }
 func GiftOfArthasAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
 	return core.NewGeneratedDebuff(unit, core.GeneratedBuff{
 		Label:      "Gift of Arthas (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:   core.ActionID{SpellID: 11374}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
+		ActionID:   core.ActionID{SpellID: giftOfArthasSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
 		Duration:   GiftOfArthasDuration(talentPoints),
 		Category:   GiftOfArthasCategory,
 		SingleAura: true,
@@ -212,19 +225,20 @@ func GiftOfArthasAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.
 	})
 }
 
-// Demoralizing Roar - https://www.wowhead.com/forever/spell=9898
+// Demoralizing Roar
 var DemoralizingRoarCategory = "Demoralizing"
+var demoralizingRoarSpell = spelldata.MustFind(9898)
 
 func DemoralizingRoarValue(talentPoints int32) float64 {
-	return -204.0
+	return amount(demoralizingRoarSpell.Effect(dbcenums.A_MOD_ATTACK_POWER, 0))
 }
 func DemoralizingRoarDuration(talentPoints int32) time.Duration {
-	return 30000 * time.Millisecond
+	return auraDuration(demoralizingRoarSpell)
 }
 func DemoralizingRoarAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
 	return core.NewGeneratedDebuff(unit, core.GeneratedBuff{
 		Label:      "Demoralizing Roar (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:   core.ActionID{SpellID: 9898}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
+		ActionID:   core.ActionID{SpellID: demoralizingRoarSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
 		Duration:   DemoralizingRoarDuration(talentPoints),
 		Category:   DemoralizingRoarCategory,
 		SingleAura: true,
@@ -235,19 +249,20 @@ func DemoralizingRoarAura(unit *core.Unit, isPlayer bool, talentPoints int32) *c
 	})
 }
 
-// Demoralizing Shout - https://www.wowhead.com/forever/spell=11556
+// Demoralizing Shout
 var DemoralizingShoutCategory = "Demoralizing"
+var demoralizingShoutSpell = spelldata.MustFind(11556)
 
 func DemoralizingShoutValue(talentPoints int32) float64 {
-	return -204.0
+	return amount(demoralizingShoutSpell.Effect(dbcenums.A_MOD_ATTACK_POWER, 0))
 }
 func DemoralizingShoutDuration(talentPoints int32) time.Duration {
-	return 45000 * time.Millisecond
+	return auraDuration(demoralizingShoutSpell)
 }
 func DemoralizingShoutAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
 	return core.NewGeneratedDebuff(unit, core.GeneratedBuff{
 		Label:      "Demoralizing Shout (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:   core.ActionID{SpellID: 11556}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
+		ActionID:   core.ActionID{SpellID: demoralizingShoutSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
 		Duration:   DemoralizingShoutDuration(talentPoints),
 		Category:   DemoralizingShoutCategory,
 		SingleAura: true,
@@ -258,19 +273,20 @@ func DemoralizingShoutAura(unit *core.Unit, isPlayer bool, talentPoints int32) *
 	})
 }
 
-// Thunder Clap - https://www.wowhead.com/forever/spell=11581
+// Thunder Clap
 var ThunderClapCategory = "AtkSpdReduction"
+var thunderClapSpell = spelldata.MustFind(11581)
 
 func ThunderClapValue(talentPoints int32) float64 {
-	return 0.8
+	return 1 + amount(thunderClapSpell.Effect(dbcenums.A_MOD_MELEE_HASTE_3, 0))/100
 }
 func ThunderClapDuration(talentPoints int32) time.Duration {
-	return 30000 * time.Millisecond
+	return auraDuration(thunderClapSpell)
 }
 func ThunderClapAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
 	return core.NewGeneratedDebuff(unit, core.GeneratedBuff{
 		Label:    "Thunder Clap (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: 11581}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
+		ActionID: core.ActionID{SpellID: thunderClapSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
 		Duration: ThunderClapDuration(talentPoints),
 		Category: ThunderClapCategory,
 		IsPlayer: isPlayer,
@@ -280,17 +296,19 @@ func ThunderClapAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.A
 	})
 }
 
-// Insect Swarm - https://www.wowhead.com/forever/spell=24977
+// Insect Swarm
+var insectSwarmSpell = spelldata.MustFind(24977)
+
 func InsectSwarmValue(talentPoints int32) float64 {
-	return -2.0
+	return amount(insectSwarmSpell.Effect(dbcenums.A_MOD_HIT_CHANCE, 0))
 }
 func InsectSwarmDuration(talentPoints int32) time.Duration {
-	return 12000 * time.Millisecond
+	return auraDuration(insectSwarmSpell)
 }
 func InsectSwarmAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
 	return core.NewGeneratedDebuff(unit, core.GeneratedBuff{
 		Label:    "Insect Swarm (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: 24977}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
+		ActionID: core.ActionID{SpellID: insectSwarmSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
 		Duration: InsectSwarmDuration(talentPoints),
 		IsPlayer: isPlayer,
 		Stats: []core.StatConfig{
@@ -299,17 +317,19 @@ func InsectSwarmAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.A
 	})
 }
 
-// Scorpid Sting - https://www.wowhead.com/forever/spell=3043
+// Scorpid Sting
+var scorpidStingSpell = spelldata.MustFind(3043)
+
 func ScorpidStingValue(talentPoints int32) float64 {
-	return -2.0
+	return amount(scorpidStingSpell.Effect(dbcenums.A_MOD_HIT_CHANCE, 0))
 }
 func ScorpidStingDuration(talentPoints int32) time.Duration {
-	return 20000 * time.Millisecond
+	return auraDuration(scorpidStingSpell)
 }
 func ScorpidStingAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
 	return core.NewGeneratedDebuff(unit, core.GeneratedBuff{
 		Label:    "Scorpid Sting (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: 3043}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
+		ActionID: core.ActionID{SpellID: scorpidStingSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
 		Duration: ScorpidStingDuration(talentPoints),
 		IsPlayer: isPlayer,
 		Stats: []core.StatConfig{
