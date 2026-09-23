@@ -51,7 +51,7 @@ func (warrior *Warrior) registerExecute() {
 		spelldata.Melee(core.ProcMaskMeleeOHSpecial), // the off hand
 		spelldata.Proc(), spelldata.Tag(2))
 
-	odd := spelldata.SpellConfig(&warrior.Unit, executeRank, spelldata.Flags(flags), spelldata.Label(3), spelldata.Flags(core.SpellFlagAPL|core.SpellFlagHelpful))
+	odd := spelldata.SpellConfig(&warrior.Unit, executeRank, spelldata.Flags(flags), spelldata.Label(3), spelldata.Flags(core.SpellFlagAPL|core.SpellFlagHelpful), spelldata.Tag(1<<40))
 }
 `
 
@@ -128,6 +128,7 @@ func TestHoverSpellConfigUnevaluated(t *testing.T) {
 	for _, want := range []string{
 		"unevaluated: `spelldata.Flags(flags)`",
 		"unevaluated: `spelldata.Label(3)` (spelldata.Label is not an option this reads)",
+		"unevaluated: `spelldata.Tag(1 << 40)` (1 << 40 is not the int32 it takes)",
 		"Flags(SpellFlagAPL \\| SpellFlagHelpful)",
 	} {
 		if !strings.Contains(markdown, want) {

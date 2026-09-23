@@ -6,8 +6,8 @@ import (
 	"go/constant"
 	"go/doc"
 	"go/parser"
-	"go/printer"
 	"go/token"
+	"go/types"
 	"path/filepath"
 	"reflect"
 	"strconv"
@@ -148,7 +148,7 @@ func walkChain(node ast.Expr, offset func(token.Pos) int) (*chain, error) {
 	case *ast.CallExpr:
 		sel, ok := n.Fun.(*ast.SelectorExpr)
 		if !ok {
-			return nil, fmt.Errorf("%s is not an accessor call", nodeText(n.Fun))
+			return nil, fmt.Errorf("%s is not an accessor call", types.ExprString(n.Fun))
 		}
 		c, err := walkChain(sel.X, offset)
 		if err != nil {
@@ -160,7 +160,7 @@ func walkChain(node ast.Expr, offset func(token.Pos) int) (*chain, error) {
 			if err != nil {
 				return nil, err
 			}
-			seg.args = append(seg.args, argument{source: nodeText(arg), value: value})
+			seg.args = append(seg.args, argument{source: types.ExprString(arg), value: value})
 		}
 		if c.root.name == "spelldata" && len(c.segments) == 0 && (seg.name == "MustFind" || seg.name == "Find") && len(seg.args) == 1 {
 			c.root = root{byID: &seg}
@@ -169,7 +169,7 @@ func walkChain(node ast.Expr, offset func(token.Pos) int) (*chain, error) {
 		c.segments = append(c.segments, seg)
 		return c, nil
 	}
-	return nil, fmt.Errorf("%s is not a chain of accessor calls: write spellData.<Family> and the accessors on it", nodeText(node))
+	return nil, fmt.Errorf("%s is not a chain of accessor calls: write spellData.<Family> and the accessors on it", types.ExprString(node))
 }
 
 // A ladder followed by the store's own accessors, evaluated by name over the exported method set: an
@@ -273,10 +273,13 @@ func evalExpr(index map[string]*ladderFamily, c *chain, pkg string) (result *exp
 
 // Rank and ByID refused in the ladder's own terms, where the store would answer Nil or panic.
 func (f *ladderFamily) checkPick(seg segment) error {
-	if len(seg.args) != 1 || seg.args[0].value.Kind() != constant.Int {
+	if len(seg.args) != 1 {
 		return nil
 	}
-	n, _ := constant.Int64Val(seg.args[0].value)
+	n, ok := intValue(seg.args[0].value)
+	if !ok {
+		return nil
+	}
 	switch seg.name {
 	case "Rank":
 		if n < 1 || n > int64(f.ladder.Len()) {
@@ -315,7 +318,7 @@ func rankArgument(recv reflect.Value, seg segment) (int32, bool) {
 	if len(seg.args) != 1 || !strings.HasSuffix(seg.name, "At") {
 		return 0, false
 	}
-	n, exact := constant.Int64Val(constant.ToInt(seg.args[0].value))
+	n, exact := intValue(seg.args[0].value)
 	return int32(n), exact && n > 0
 }
 
@@ -363,15 +366,17 @@ func callSegment(recv reflect.Value, seg segment) (reflect.Value, error) {
 // narrow into an integer, and an integer the type cannot hold does not wrap: truncating it silently is
 // the reading a caller would not notice.
 func convertArg(arg argument, want reflect.Type) (reflect.Value, error) {
+	zero := reflect.Zero(want)
 	switch {
-	case isInteger(want):
-		n, exact := constant.Int64Val(constant.ToInt(arg.value))
-		zero := reflect.Zero(want)
-		fits := zero.CanInt() && !zero.OverflowInt(n) || zero.CanUint() && n >= 0 && !zero.OverflowUint(uint64(n))
-		if exact && fits {
+	case zero.CanUint():
+		if n, exact := constant.Uint64Val(constant.ToInt(arg.value)); exact && !zero.OverflowUint(n) {
 			return reflect.ValueOf(n).Convert(want), nil
 		}
-	case isFloat(want):
+	case zero.CanInt():
+		if n, exact := intValue(arg.value); exact && !zero.OverflowInt(n) {
+			return reflect.ValueOf(n).Convert(want), nil
+		}
+	case zero.CanFloat():
 		if v := constant.ToFloat(arg.value); v.Kind() == constant.Float {
 			f, _ := constant.Float64Val(v)
 			return reflect.ValueOf(f).Convert(want), nil
@@ -384,24 +389,16 @@ func convertArg(arg argument, want reflect.Type) (reflect.Value, error) {
 	return reflect.Value{}, fmt.Errorf("%s is not the %s it takes", arg.source, want)
 }
 
+func isInteger(t reflect.Type) bool {
+	zero := reflect.Zero(t)
+	return zero.CanInt() || zero.CanUint()
+}
+
 func arguments(n int) string {
 	if n == 1 {
 		return "1 argument"
 	}
 	return fmt.Sprintf("%d arguments", n)
-}
-
-func isInteger(t reflect.Type) bool {
-	switch t.Kind() {
-	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64,
-		reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-		return true
-	}
-	return false
-}
-
-func isFloat(t reflect.Type) bool {
-	return t.Kind() == reflect.Float32 || t.Kind() == reflect.Float64
 }
 
 // The value the last accessor answered, in the units the text form states elsewhere: a time as the
@@ -533,12 +530,4 @@ func baseTypeName(t reflect.Type) string {
 		return after
 	}
 	return name
-}
-
-func nodeText(node ast.Expr) string {
-	var out strings.Builder
-	if err := printer.Fprint(&out, token.NewFileSet(), node); err != nil {
-		return "the expression"
-	}
-	return out.String()
 }

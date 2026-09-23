@@ -182,6 +182,8 @@ func TestExprChainRefused(t *testing.T) {
 		{"spellData.Execute.Highest().EffectN(1).Average(level)", "level is not a literal"},
 		{"spellData.Execute.Highest().EffectN(1).Average(60.5)", "60.5 is not the int32 it takes"},
 		{"spellData.Execute.Highest().EffectN(1).Average(4294967356)", "4294967356 is not the int32 it takes"},
+		{"spellData.Execute.Highest().EffectN([]int{1}[0])", "[]int{…}[0] is not a literal"},
+		{"spelldata.MustFind(4294978870)", "4294978870 is not the int32 it takes"},
 		{"spellData.Execute.Highest().Refs()", "a []*spelldata.Spell is not a value to read"},
 		{"spellData.Execute.Highest().ChainAmp", `"ChainAmp" is not a field of *spelldata.Spell`},
 		{"spellData.Execute.Highest() + 1", "is not a chain of accessor calls"},

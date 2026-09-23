@@ -3,9 +3,10 @@ package main
 import (
 	"fmt"
 	"go/ast"
-	"go/constant"
 	"go/token"
+	"go/types"
 	"io"
+	"reflect"
 	"slices"
 	"strconv"
 	"strings"
@@ -23,19 +24,17 @@ type configOption struct {
 	err    error
 }
 
-var optionBuilders = map[string]struct {
-	args  int
-	build func(args []uint64) spelldata.SpellOpt
-}{
-	"Melee": {1, func(a []uint64) spelldata.SpellOpt { return spelldata.Melee(core.ProcMask(a[0])) }},
-	"Magic": {1, func(a []uint64) spelldata.SpellOpt { return spelldata.Magic(core.ProcMask(a[0])) }},
-	"Proc":  {0, func([]uint64) spelldata.SpellOpt { return spelldata.Proc() }},
-	"Flags": {1, func(a []uint64) spelldata.SpellOpt { return spelldata.Flags(core.SpellFlag(a[0])) }},
-	"Tag":   {1, func(a []uint64) spelldata.SpellOpt { return spelldata.Tag(int32(a[0])) }},
+// The options a SpellConfig call can pass, called with the arguments converted to what each takes.
+var optionBuilders = map[string]any{
+	"Melee": spelldata.Melee,
+	"Magic": spelldata.Magic,
+	"Proc":  spelldata.Proc,
+	"Flags": spelldata.Flags,
+	"Tag":   spelldata.Tag,
 }
 
 func readOption(expr ast.Expr) configOption {
-	source := nodeText(expr)
+	source := types.ExprString(expr)
 	option := configOption{label: source, source: source}
 
 	call, ok := expr.(*ast.CallExpr)
@@ -54,7 +53,7 @@ func readOption(expr ast.Expr) configOption {
 
 	args := make([]string, 0, len(call.Args))
 	for _, arg := range call.Args {
-		args = append(args, strings.ReplaceAll(nodeText(arg), "core.", ""))
+		args = append(args, strings.ReplaceAll(types.ExprString(arg), "core.", ""))
 	}
 	option.label = sel.Sel.Name + "(" + strings.Join(args, " | ") + ")"
 	if len(option.label) > 48 {
@@ -66,30 +65,27 @@ func readOption(expr ast.Expr) configOption {
 		option.err = fmt.Errorf("spelldata.%s is not an option this reads", sel.Sel.Name)
 		return option
 	}
-	if len(call.Args) != builder.args {
-		option.err = fmt.Errorf("spelldata.%s takes %s", sel.Sel.Name, arguments(builder.args))
+	build := reflect.ValueOf(builder)
+	if len(call.Args) != build.Type().NumIn() {
+		option.err = fmt.Errorf("spelldata.%s takes %s", sel.Sel.Name, arguments(build.Type().NumIn()))
 		return option
 	}
 
-	values := make([]uint64, 0, len(call.Args))
-	for _, arg := range call.Args {
+	in := make([]reflect.Value, 0, len(call.Args))
+	for i, arg := range call.Args {
 		value, err := evalConst(arg)
 		if err != nil {
 			option.err = err
 			return option
 		}
-		v, exact := constant.Uint64Val(constant.ToInt(value))
-		if !exact {
-			i, ok := constant.Int64Val(constant.ToInt(value))
-			if !ok {
-				option.err = fmt.Errorf("%s is not an integer", nodeText(arg))
-				return option
-			}
-			v = uint64(i)
+		converted, err := convertArg(argument{source: types.ExprString(arg), value: value}, build.Type().In(i))
+		if err != nil {
+			option.err = err
+			return option
 		}
-		values = append(values, v)
+		in = append(in, converted)
 	}
-	option.opt = builder.build(values)
+	option.opt = build.Call(in)[0].Interface().(spelldata.SpellOpt)
 	return option
 }
 
@@ -108,7 +104,7 @@ type configResult struct {
 
 func evalSpellConfig(expr *ast.CallExpr, declarations map[string]declaration, pkg string, trace *tracer) (*configResult, error) {
 	if len(expr.Args) < 2 {
-		return nil, fmt.Errorf("%s is not a SpellConfig call with a row", nodeText(expr))
+		return nil, fmt.Errorf("%s is not a SpellConfig call with a row", types.ExprString(expr))
 	}
 
 	s, pick, err := configPick(expr.Args[1], declarations, pkg, trace)
@@ -140,7 +136,7 @@ func evalSpellConfig(expr *ast.CallExpr, declarations map[string]declaration, pk
 }
 
 func configPick(arg ast.Expr, declarations map[string]declaration, pkg string, trace *tracer) (*spelldata.Spell, string, error) {
-	trace.add("  row %s", nodeText(arg))
+	trace.add("  row %s", types.ExprString(arg))
 	c, err := walkChain(arg, func(token.Pos) int { return 0 })
 	if err != nil {
 		return nil, "", err
@@ -154,7 +150,7 @@ func configPick(arg ast.Expr, declarations map[string]declaration, pkg string, t
 		return nil, "", err
 	}
 	if result.kind != kindSpell {
-		return nil, "", fmt.Errorf("%s reads a %s, not a row", nodeText(arg), result.kind)
+		return nil, "", fmt.Errorf("%s reads a %s, not a row", types.ExprString(arg), result.kind)
 	}
 	return result.spell, c.text(false), nil
 }
