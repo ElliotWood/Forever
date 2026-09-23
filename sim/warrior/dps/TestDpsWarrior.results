@@ -55,15 +55,6 @@ character_stats_results: {
  }
 }
 dps_results: {
- key: "TestDpsWarrior-AllItems-AegisofPreservation-19345"
- value: {
-  dps: 549.82306
-  tps: 314.258
-  dtps: 6.98593
-  hps: 23.89281
- }
-}
-dps_results: {
  key: "TestDpsWarrior-AllItems-Annihilator-12798"
  value: {
   dps: 549.82306
@@ -281,15 +272,6 @@ dps_results: {
 }
 dps_results: {
  key: "TestDpsWarrior-AllItems-GoldenBanana-270226"
- value: {
-  dps: 549.82306
-  tps: 314.258
-  dtps: 6.98593
-  hps: 23.89281
- }
-}
-dps_results: {
- key: "TestDpsWarrior-AllItems-Gri'lek'sCharmofValor-19952"
  value: {
   dps: 549.82306
   tps: 314.258
