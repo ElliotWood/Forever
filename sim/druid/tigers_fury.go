@@ -1,7 +1,7 @@
 package druid
 
 // Package-level state the commented-out implementations used:
-// var tigersFuryRank = spellData.TigersFury.ByID(9846)
+// var tigersFuryRank = spellData.TigersFury.ByID(5217)
 
 // TODO: To be implemented. The ability exists: spells 5217 and 417045 on the Feral Combat line. No rank
 // subtext, so no generated table -- pin the id directly.

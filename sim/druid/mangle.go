@@ -1,7 +1,7 @@
 package druid
 
 // Package-level state the commented-out implementation used:
-// var mangleBearRank = spellData.MangleBear.ByID(33987)
+// var mangleBearRank = spellData.Mangle.ByID(1238073)
 
 // TODO: To be implemented.
 func (druid *Druid) registerMangleAuras() {

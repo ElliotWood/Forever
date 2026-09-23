@@ -56,10 +56,6 @@ func (druid *Druid) registerProwlSpell() {
 	// 	},
 	//
 	// 	ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
-	// 		if !druid.InForm(Cat) {
-	// 			druid.CatFormAura.Activate(sim)
-	// 		}
-	//
 	// 		druid.ProwlAura.Activate(sim)
 	// 	},
 	// })

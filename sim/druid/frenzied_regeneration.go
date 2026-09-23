@@ -1,7 +1,7 @@
 package druid
 
 // Package-level state the commented-out implementations used:
-// var frenziedRegenerationRank = spellData.FrenziedRegeneration.ByID(26999)
+// var frenziedRegenerationRank = spellData.FrenziedRegeneration.ByID(22842)
 // var frenziedRegenerationTick = frenziedRegenerationRank.PeriodicEffect()
 
 // TODO: To be implemented. The ability exists: spells 22842 and 22845 on the Feral Combat line. No rank
