@@ -14,7 +14,7 @@ import (
 func TestGeneratedAuraKeepsTheCategorySingleAuraFlag(t *testing.T) {
 	target := newExclusiveTestTarget()
 
-	newGeneratedDebuff(target, GeneratedBuff{
+	NewGeneratedDebuff(target, GeneratedBuff{
 		Label:    "Generated Thunder Clap",
 		ActionID: ActionID{SpellID: 11581},
 		Duration: time.Second * 30,
@@ -33,7 +33,7 @@ func TestGeneratedAuraKeepsTheCategorySingleAuraFlag(t *testing.T) {
 		t.Errorf("registered %d effects under the bare category, want 1", len(slow.effects))
 	}
 
-	newGeneratedStatAura(target, GeneratedBuff{
+	NewGeneratedStatAura(target, GeneratedBuff{
 		Label:      "Generated Devotion Aura",
 		ActionID:   ActionID{SpellID: 10293},
 		Duration:   NeverExpires,
@@ -64,7 +64,7 @@ func TestGeneratedPseudoStatsCoverEverySchool(t *testing.T) {
 	// multiplier is only meaningful against the 1 a real unit starts at.
 	target.PseudoStats = stats.NewPseudoStats()
 
-	aura := newGeneratedDebuff(target, GeneratedBuff{
+	aura := NewGeneratedDebuff(target, GeneratedBuff{
 		Label:    "Generated Curse of the Elements",
 		ActionID: ActionID{SpellID: 1311680},
 		Duration: time.Minute * 5,
@@ -96,11 +96,11 @@ func TestGeneratedResistanceAuraCompetesForTheSchool(t *testing.T) {
 	// theirs for real, which is what the competition is about.
 	target.Env = &Environment{MeasuringStats: true}
 
-	generated := MakePermanent(newGeneratedStatAura(target, GeneratedBuff{
+	generated := MakePermanent(NewGeneratedStatAura(target, GeneratedBuff{
 		Label:      "Generated Frost Resistance Aura",
 		ActionID:   ActionID{SpellID: 19898},
 		Duration:   NeverExpires,
-		Category:   FrostResistanceAuraCategory,
+		Category:   "FrostResistanceAura",
 		SingleAura: true,
 		IsPlayer:   true,
 		Stats:      []StatConfig{{stats.FrostResistance, 60, false}},
@@ -132,7 +132,7 @@ func TestGeneratedResistanceAuraCompetesForTheSchool(t *testing.T) {
 		t.Errorf("the school category holds %d effects, want the generated aura and the totem", len(school.effects))
 	}
 
-	own := target.ExclusiveEffectManager.GetExclusiveEffectCategory(FrostResistanceAuraCategory)
+	own := target.ExclusiveEffectManager.GetExclusiveEffectCategory("FrostResistanceAura")
 	if !own.SingleAura {
 		t.Error("the aura's own category is not single-aura, so a second copy could sit next to it")
 	}
@@ -149,7 +149,7 @@ func TestGeneratedBuffCompetesPerSchoolForItsResistances(t *testing.T) {
 	target := newExclusiveTestTarget()
 	target.Env = &Environment{MeasuringStats: true}
 
-	giftOfTheWild := MakePermanent(newGeneratedStatAura(target, GeneratedBuff{
+	giftOfTheWild := MakePermanent(NewGeneratedStatAura(target, GeneratedBuff{
 		Label:    "Generated Gift of the Wild",
 		ActionID: ActionID{SpellID: 21850},
 		Duration: time.Hour,
@@ -161,7 +161,7 @@ func TestGeneratedBuffCompetesPerSchoolForItsResistances(t *testing.T) {
 		},
 	}))
 
-	prayerOfShadowProtection := MakePermanent(newGeneratedStatAura(target, GeneratedBuff{
+	prayerOfShadowProtection := MakePermanent(NewGeneratedStatAura(target, GeneratedBuff{
 		Label:    "Generated Prayer of Shadow Protection",
 		ActionID: ActionID{SpellID: 27683},
 		Duration: time.Minute * 20,
@@ -201,7 +201,7 @@ func TestGeneratedConcentrationAuraReducesPushback(t *testing.T) {
 	target := newExclusiveTestTarget()
 	target.PseudoStats = stats.NewPseudoStats()
 
-	aura := MakePermanent(newGeneratedStatAura(target, GeneratedBuff{
+	aura := MakePermanent(NewGeneratedStatAura(target, GeneratedBuff{
 		Label:      "Generated Concentration Aura",
 		ActionID:   ActionID{SpellID: 19746},
 		Duration:   NeverExpires,
@@ -225,7 +225,7 @@ func TestGeneratedBuffPseudoStatsCoverEveryField(t *testing.T) {
 	target := newExclusiveTestTarget()
 	target.PseudoStats = stats.NewPseudoStats()
 
-	aura := MakePermanent(newGeneratedStatAura(target, GeneratedBuff{
+	aura := MakePermanent(NewGeneratedStatAura(target, GeneratedBuff{
 		Label:    "Generated School Shield",
 		ActionID: ActionID{SpellID: 1311680},
 		Duration: NeverExpires,
@@ -262,7 +262,7 @@ func TestGeneratedBuffRaisesTheSchoolsItsMaskNames(t *testing.T) {
 	unit := newExclusiveTestTarget()
 	unit.PseudoStats = stats.NewPseudoStats()
 
-	aura := MakePermanent(newGeneratedStatAura(unit, GeneratedBuff{
+	aura := MakePermanent(NewGeneratedStatAura(unit, GeneratedBuff{
 		Label:    "Generated Power Infusion",
 		ActionID: ActionID{SpellID: 10060},
 		Duration: NeverExpires,
@@ -305,7 +305,7 @@ func TestGeneratedAttackSpeedDebuffBidsAgainstTheHandWrittenOnes(t *testing.T) {
 	target.Env = &Environment{MeasuringStats: true}
 	target.PseudoStats = stats.NewPseudoStats()
 
-	clap := MakePermanent(newGeneratedDebuff(target, GeneratedBuff{
+	clap := MakePermanent(NewGeneratedDebuff(target, GeneratedBuff{
 		Label:    "Generated Thunder Clap",
 		ActionID: ActionID{SpellID: 11581},
 		Duration: time.Second * 30,
@@ -361,7 +361,7 @@ func TestGeneratedThunderClapOutbidsThunderfurysCyclone(t *testing.T) {
 	target.Env = &Environment{MeasuringStats: true}
 	target.PseudoStats = stats.NewPseudoStats()
 
-	clap := MakePermanent(newGeneratedDebuff(target, GeneratedBuff{
+	clap := MakePermanent(NewGeneratedDebuff(target, GeneratedBuff{
 		Label:    "Generated Thunder Clap",
 		ActionID: ActionID{SpellID: 11581},
 		Duration: time.Second * 30,
@@ -406,7 +406,7 @@ func TestGeneratedDebuffKeepsItsResistancesInItsOwnCategory(t *testing.T) {
 	target.Env = &Environment{MeasuringStats: true}
 	target.PseudoStats = stats.NewPseudoStats()
 
-	curse := MakePermanent(newGeneratedDebuff(target, GeneratedBuff{
+	curse := MakePermanent(NewGeneratedDebuff(target, GeneratedBuff{
 		Label:      "Generated Curse of the Elements",
 		ActionID:   ActionID{SpellID: 1311680},
 		Duration:   time.Minute * 5,
@@ -466,9 +466,9 @@ func TestGeneratedDebuffKeepsItsResistancesInItsOwnCategory(t *testing.T) {
 // non-stacking buff keeps apart: what the aura applies and what it bids for its
 // category. A stacking buff prices the one off the other, so it refuses one.
 func TestAddGeneratedFlatBonusRaisesTheBidAndTheAmount(t *testing.T) {
-	char := newGeneratedBuffTestCharacter()
+	char := NewGeneratedBuffTestCharacter()
 
-	aura := newGeneratedStatAura(&char.Unit, GeneratedBuff{
+	aura := NewGeneratedStatAura(&char.Unit, GeneratedBuff{
 		Label:      "Generated Battle Shout",
 		ActionID:   ActionID{SpellID: 25289}.WithTag(-1),
 		Duration:   NeverExpires,
@@ -494,9 +494,9 @@ func TestAddGeneratedFlatBonusRaisesTheBidAndTheAmount(t *testing.T) {
 }
 
 func TestAddGeneratedFlatBonusRefusesAnAuraThatCannotCarryOne(t *testing.T) {
-	char := newGeneratedBuffTestCharacter()
+	char := NewGeneratedBuffTestCharacter()
 
-	stacking := newGeneratedDebuff(&char.Unit, GeneratedBuff{
+	stacking := NewGeneratedDebuff(&char.Unit, GeneratedBuff{
 		Label:     "Generated Sunder Armor",
 		ActionID:  ActionID{SpellID: 25225},
 		Duration:  time.Second * 30,
@@ -508,7 +508,7 @@ func TestAddGeneratedFlatBonusRefusesAnAuraThatCannotCarryOne(t *testing.T) {
 		AddGeneratedFlatBonus(stacking, stats.Armor, -2600, -30)
 	})
 
-	uncontested := newGeneratedStatAura(&char.Unit, GeneratedBuff{
+	uncontested := NewGeneratedStatAura(&char.Unit, GeneratedBuff{
 		Label:    "Generated Blood Pact",
 		ActionID: ActionID{SpellID: 11767}.WithTag(-1),
 		Duration: NeverExpires,
@@ -518,7 +518,7 @@ func TestAddGeneratedFlatBonusRefusesAnAuraThatCannotCarryOne(t *testing.T) {
 		AddGeneratedFlatBonus(uncontested, stats.Stamina, 54, 30)
 	})
 
-	contested := newGeneratedStatAura(&char.Unit, GeneratedBuff{
+	contested := NewGeneratedStatAura(&char.Unit, GeneratedBuff{
 		Label:      "Generated Devotion Aura",
 		ActionID:   ActionID{SpellID: 10293}.WithTag(-1),
 		Duration:   NeverExpires,

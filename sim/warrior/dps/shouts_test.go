@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/buffs"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/warrior"
 )
@@ -41,13 +42,13 @@ func TestWarriorCastsTheGeneratedBattleShout(t *testing.T) {
 	if want := (core.ActionID{SpellID: 25289, Tag: 0}); aura.ActionID != want {
 		t.Errorf("the warrior's own copy is %v, want %v", aura.ActionID, want)
 	}
-	if aura.Duration != core.BattleShoutDuration(war.Talents.BoomingVoice) {
+	if aura.Duration != buffs.BattleShoutDuration(war.Talents.BoomingVoice) {
 		t.Errorf("the warrior's own copy lasts %v, want %v",
-			aura.Duration, core.BattleShoutDuration(war.Talents.BoomingVoice))
+			aura.Duration, buffs.BattleShoutDuration(war.Talents.BoomingVoice))
 	}
-	if got := aura.ExclusiveEffects[0].Priority; got != core.BattleShoutValue(war.Talents.BoomingVoice) {
+	if got := aura.ExclusiveEffects[0].Priority; got != buffs.BattleShoutValue(war.Talents.BoomingVoice) {
 		t.Errorf("the warrior's own copy bids %v, want %v",
-			got, core.BattleShoutValue(war.Talents.BoomingVoice))
+			got, buffs.BattleShoutValue(war.Talents.BoomingVoice))
 	}
 }
 
@@ -91,10 +92,10 @@ func TestWarriorShoutsForTheTierTwoBonus(t *testing.T) {
 
 	bare, withSet := bidOf(false), bidOf(true)
 
-	if want := core.BattleShoutValue(0); bare != want {
+	if want := buffs.BattleShoutValue(0); bare != want {
 		t.Errorf("a warrior without the set bids %v, want the client's %v", bare, want)
 	}
-	if want := bare + core.BattleShoutT2Bonus; withSet != want {
+	if want := bare + buffs.BattleShoutT2Bonus; withSet != want {
 		t.Errorf("a warrior wearing the set bids %v, want %v", withSet, want)
 	}
 }
@@ -141,10 +142,10 @@ func TestAWarriorThatShoutsNothingLeavesTheExternalCopyAlone(t *testing.T) {
 		return external.ExclusiveEffects[0].Priority
 	}
 
-	if got, want := priorityOf(&proto.PartyBuffs{BattleShout: proto.TristateEffect_TristateEffectRegular}), core.BattleShoutValue(0); got != want {
+	if got, want := priorityOf(&proto.PartyBuffs{BattleShout: proto.TristateEffect_TristateEffectRegular}), buffs.BattleShoutValue(0); got != want {
 		t.Errorf("the party's copy bids %v, want the %v it is worth without the set", got, want)
 	}
-	want := core.BattleShoutValue(0) + core.BattleShoutT2Bonus
+	want := buffs.BattleShoutValue(0) + buffs.BattleShoutT2Bonus
 	if got := priorityOf(&proto.PartyBuffs{BattleShout: proto.TristateEffect_TristateEffectImproved}); got != want {
 		t.Errorf("the party's copy bids %v in its improved state, want %v", got, want)
 	}
@@ -187,7 +188,7 @@ func TestTwoWarriorsWearingTheSetShoutForOneBonus(t *testing.T) {
 
 	env, _, _ := core.NewEnvironment(raid, core.MakeSingleTargetEncounter(0), false, true)
 
-	want := core.BattleShoutValue(0) + core.BattleShoutT2Bonus
+	want := buffs.BattleShoutValue(0) + buffs.BattleShoutT2Bonus
 	for _, agent := range env.Raid.Parties[0].Players {
 		war := agent.(*DpsWarrior)
 		aura := war.GetAura("Battle Shout (Player)")
@@ -239,7 +240,7 @@ func TestWarriorShoutsOnlyWhenTheCategoryWillTakeIt(t *testing.T) {
 		return env
 	}
 
-	withSet := core.BattleShoutValue(0) + core.BattleShoutT2Bonus
+	withSet := buffs.BattleShoutValue(0) + buffs.BattleShoutT2Bonus
 
 	t.Run("an improved external shout outbids a warrior without the set", func(t *testing.T) {
 		sim := &core.Simulation{}

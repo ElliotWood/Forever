@@ -16,7 +16,7 @@ func (druid *Druid) registerInnervateCD() {
 	// actionID := core.ActionID{SpellID: 29166, Tag: druid.Index}
 	// var innervateSpell *DruidSpell
 	//
-	// innervateCD := core.InnervatesCooldown()
+	// innervateCD := buffs.InnervatesCooldown()
 	//
 	// amount := 0.05
 	// if innervateTarget == &druid.Unit {
@@ -25,7 +25,7 @@ func (druid *Druid) registerInnervateCD() {
 	// 	amount = 0.2
 	// }
 	//
-	// var innervateAura = core.InnervatesAura(innervateTarget, true, 0)
+	// var innervateAura = buffs.InnervatesAura(innervateTarget, true, 0)
 	//
 	// innervateSpell = druid.RegisterSpell(Humanoid|Moonkin|Tree, core.SpellConfig{
 	// 	ActionID:    actionID,
@@ -41,7 +41,7 @@ func (druid *Druid) registerInnervateCD() {
 	// 	},
 	// 	ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
 	// 		// If target already has another innervate, don't cast.
-	// 		return !innervateTarget.HasActiveAuraWithTag(core.InnervatesCategory)
+	// 		return !innervateTarget.HasActiveAuraWithTag(buffs.InnervatesCategory)
 	// 	},
 	// 	ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
 	// 		innervateAura.Activate(sim)

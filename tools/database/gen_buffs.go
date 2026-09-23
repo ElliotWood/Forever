@@ -1,13 +1,14 @@
 package database
 
 // Resolves tools/database/buffmanifest against the client database and renders
-// sim/core/buffs_auto_gen.go and sim/core/debuffs_auto_gen.go from the result.
+// sim/core/buffs/buffs_auto_gen.go and sim/core/buffs/debuffs_auto_gen.go from
+// the result.
 //
 // The manifest names which spell each proto field is; everything else - anchor
 // rank, values at level 60, duration, stacks, talent scaling, owner class - is
 // read here. A row the generator cannot express in the support API renders as a
 // commented shell carrying the reason, which is also how a row whose hand-written
-// constructor is still in sim/core renders: deleting that constructor and its
+// constructor is still in sim/core/buffs renders: deleting that constructor and its
 // apply block is what switches the row over to generated code.
 
 import (
@@ -37,8 +38,8 @@ import (
 	"github.com/wowsims/forever/tools/database/dbc"
 )
 
-const buffsGenFile = "sim/core/buffs_auto_gen.go"
-const debuffsGenFile = "sim/core/debuffs_auto_gen.go"
+const buffsGenFile = "sim/core/buffs/buffs_auto_gen.go"
+const debuffsGenFile = "sim/core/buffs/debuffs_auto_gen.go"
 
 // The two skill lines that grant runes rather than class abilities. Both are
 // CategoryID 7, so the anchor query has to name them.
@@ -156,7 +157,7 @@ type buffResolver struct {
 	runeGranted map[int32]bool
 	trees       map[int]int     // class mask -> live trait tree
 	traits      map[int][]trait // trait tree -> its definitions, loaded on demand
-	handWritten map[string]bool // Go stem of every hand-written <Go>Aura in sim/core
+	handWritten map[string]bool // Go stem of every hand-written <Go>Aura in sim/core/buffs
 	handApplied map[string]bool // proto field the hand-written apply functions still read
 }
 
@@ -202,7 +203,7 @@ func newBuffResolver(helper *DBHelper) (*buffResolver, error) {
 	if err != nil {
 		return nil, err
 	}
-	constructors, applied, err := scanHandWrittenBuffs(filepath.Join(root, "sim", "core"))
+	constructors, applied, err := scanHandWrittenBuffs(filepath.Join(root, "sim", "core", "buffs"))
 	if err != nil {
 		return nil, err
 	}
@@ -249,7 +250,7 @@ func loadRuneGrantedSpells(db *sql.DB) (map[int32]bool, error) {
 
 // The repository root, found by walking up from the working directory until
 // go.mod appears. The generator runs from the root and the regeneration test
-// from tools/database, and both have to reach sim/core.
+// from tools/database, and both have to reach sim/core/buffs.
 func repoRoot() (string, error) {
 	dir, err := os.Getwd()
 	if err != nil {
@@ -267,9 +268,9 @@ func repoRoot() (string, error) {
 	}
 }
 
-// Which buffs sim/core still implements by hand: the Go stems that already have a
-// <Go>Aura constructor, and the proto fields applyBuffEffects and
-// applyDebuffEffects still read. Both pin a row to a shell - generating a second
+// Which buffs sim/core/buffs still implements by hand: the Go stems that already
+// have a <Go>Aura constructor, and the proto fields applyBuffs and applyDebuffs
+// still read. Both pin a row to a shell - generating a second
 // aura for a buff the hand-written code still applies would apply it twice - and
 // deleting both is what hands the row over to the generator.
 func scanHandWrittenBuffs(coreDir string) (map[string]bool, map[string]bool, error) {
@@ -305,7 +306,7 @@ func scanHandWrittenBuffs(coreDir string) (map[string]bool, map[string]bool, err
 			if stem, found := strings.CutSuffix(fn.Name.Name, "Aura"); found && stem != "" {
 				constructors[stem] = true
 			}
-			if fn.Name.Name != "applyBuffEffects" && fn.Name.Name != "applyDebuffEffects" {
+			if fn.Name.Name != "applyBuffs" && fn.Name.Name != "applyDebuffs" {
 				continue
 			}
 			ast.Inspect(fn.Body, func(n ast.Node) bool {
@@ -1794,7 +1795,7 @@ type sharedCategoryRow struct {
 }
 
 // The identifier the generated file gives a shared category, which every row
-// that joins it and every caller in sim/core name.
+// that joins it and every caller in sim/core/buffs name.
 func sharedCategoryVar(category string) string {
 	return category + "Category"
 }
@@ -1900,7 +1901,7 @@ func buffDurationExpr(row ResolvedBuff) string {
 		return durationSliceLiteral(row.TalentCurve) + "[talentPoints]"
 	}
 	if row.DurationMs <= 0 {
-		return "NeverExpires"
+		return "core.NeverExpires"
 	}
 	return fmt.Sprintf("%d * time.Millisecond", row.DurationMs)
 }
@@ -1913,13 +1914,13 @@ func buffConstructor(row ResolvedBuff, rendered buffRow) string {
 	switch row.Kind {
 	case buffmanifest.KindDamageShield:
 		school := buffSchoolName(row.SchoolMask)
-		fmt.Fprintf(&b, "return newGeneratedDamageShield(unit, %s, %s, %s(talentPoints))",
+		fmt.Fprintf(&b, "return core.NewGeneratedDamageShield(unit, %s, %s, %s(talentPoints))",
 			config, school, row.Go+"Value")
 	default:
 		if row.Scope == buffmanifest.ScopeDebuff {
-			fmt.Fprintf(&b, "return newGeneratedDebuff(unit, %s)", config)
+			fmt.Fprintf(&b, "return core.NewGeneratedDebuff(unit, %s)", config)
 		} else {
-			fmt.Fprintf(&b, "return newGeneratedStatAura(unit, %s)", config)
+			fmt.Fprintf(&b, "return core.NewGeneratedStatAura(unit, %s)", config)
 		}
 	}
 	return b.String()
@@ -1927,9 +1928,9 @@ func buffConstructor(row ResolvedBuff, rendered buffRow) string {
 
 func buffConfigLiteral(row ResolvedBuff, rendered buffRow) string {
 	var b strings.Builder
-	b.WriteString("GeneratedBuff{\n")
-	fmt.Fprintf(&b, "Label: %q + Ternary(isPlayer, \"Player\", \"External\") + \")\",\n", rendered.Label+" (")
-	fmt.Fprintf(&b, "ActionID: ActionID{SpellID: %d}.WithTag(TernaryInt32(isPlayer, 0, -1)),\n", row.SpellID)
+	b.WriteString("core.GeneratedBuff{\n")
+	fmt.Fprintf(&b, "Label: %q + core.Ternary(isPlayer, \"Player\", \"External\") + \")\",\n", rendered.Label+" (")
+	fmt.Fprintf(&b, "ActionID: core.ActionID{SpellID: %d}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),\n", row.SpellID)
 	fmt.Fprintf(&b, "Duration: %sDuration(talentPoints),\n", row.Go)
 	if row.MaxStacks > 0 {
 		fmt.Fprintf(&b, "MaxStacks: %d,\n", row.MaxStacks)
@@ -1955,24 +1956,24 @@ func buffConfigLiteral(row ResolvedBuff, rendered buffRow) string {
 	}
 
 	if len(row.Stats) > 0 {
-		b.WriteString("Stats: []StatConfig{\n")
+		b.WriteString("Stats: []core.StatConfig{\n")
 		for i, stat := range row.Stats {
 			amount := formatFloat(stat.Amount)
 			if i == 0 && rendered.HasValue && !rendered.ValueOnPseudo {
 				amount = value
 			}
-			fmt.Fprintf(&b, "{stats.%s, %s%s, %t},\n", stat.Stat.StatName(), amount, scale, stat.Multiplicative)
+			fmt.Fprintf(&b, "{Stat: stats.%s, Amount: %s%s, IsMultiplicative: %t},\n", stat.Stat.StatName(), amount, scale, stat.Multiplicative)
 		}
 		b.WriteString("},\n")
 	}
 	if len(row.Pseudo) > 0 {
-		b.WriteString("Pseudo: []PseudoConfig{\n")
+		b.WriteString("Pseudo: []core.PseudoConfig{\n")
 		for i, mod := range row.Pseudo {
 			amount := formatFloat(mod.Amount)
 			if i == 0 && rendered.HasValue && rendered.ValueOnPseudo {
 				amount = value
 			}
-			fmt.Fprintf(&b, "{PseudoStat%s, %s%s, %t, %d},\n",
+			fmt.Fprintf(&b, "{Kind: core.PseudoStat%s, Amount: %s%s, IsMultiplicative: %t, SchoolMask: %d},\n",
 				mod.Kind, amount, scale, mod.Multiplicative, mod.SchoolMask)
 		}
 		b.WriteString("},\n")
@@ -1983,7 +1984,7 @@ func buffConfigLiteral(row ResolvedBuff, rendered buffRow) string {
 
 // The apply block: the condition the proto field is read by, and the call that
 // puts the buff on the unit. A kind whose behaviour is a cooldown, a proc or an
-// uptime calls a driver of a fixed name that sim/core/buffs_manual.go declares,
+// uptime calls a driver of a fixed name that sim/core/buffs/drivers.go declares,
 // and so does a row the manifest marks as driven. A driver is handed the whole
 // scope message rather than its own field, because a driven buff often reads a
 // second one: Grace of Air is 9 seconds long while the party is twisting totems.
@@ -2000,7 +2001,7 @@ func buffApply(row ResolvedBuff) (string, string, bool) {
 		cond, points = access, "0"
 	case buffmanifest.ProtoTristate:
 		cond = access + " != proto.TristateEffect_TristateEffectMissing"
-		points = fmt.Sprintf("GetTristateValueInt32(%s, 0, %d)", access, row.MaxTalentPoints())
+		points = fmt.Sprintf("core.GetTristateValueInt32(%s, 0, %d)", access, row.MaxTalentPoints())
 	case buffmanifest.ProtoInt32, buffmanifest.ProtoDouble:
 		cond, points = access+" > 0", "0"
 	default:
@@ -2023,7 +2024,7 @@ func buffApply(row ResolvedBuff) (string, string, bool) {
 		if row.Scope == buffmanifest.ScopeDebuff {
 			target = "target"
 		}
-		body = fmt.Sprintf("MakePermanent(%sAura(%s, false, %s))", row.Go, target, points)
+		body = fmt.Sprintf("core.MakePermanent(%sAura(%s, false, %s))", row.Go, target, points)
 	}
 	return cond, body, true
 }
@@ -2031,9 +2032,9 @@ func buffApply(row ResolvedBuff) (string, string, bool) {
 func buffSchoolName(mask int32) string {
 	name := schoolName(mask)
 	if name == "" {
-		return "SpellSchoolNone"
+		return "core.SpellSchoolNone"
 	}
-	return strings.ReplaceAll(name, "core.", "")
+	return name
 }
 
 func floatSliceLiteral(values []float64) string {

@@ -240,6 +240,10 @@ func (pet *Pet) IsGuardian() bool {
 	return pet.isGuardian
 }
 
+func (pet *Pet) EnabledOnStart() bool {
+	return pet.enabledOnStart
+}
+
 // petAgent should be the PetAgent which embeds this Pet.
 func (pet *Pet) Enable(sim *Simulation, petAgent PetAgent) {
 	if pet.enabled {

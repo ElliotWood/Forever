@@ -2,6 +2,7 @@ package warrior
 
 import (
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/buffs"
 	"github.com/wowsims/forever/sim/core/spelldata"
 )
 
@@ -15,8 +16,8 @@ func (warrior *Warrior) registerThunderClap() {
 		// The generated aura applies the client's slow; the Conqueror's set deepens it, and the
 		// part past the client's amount rides on the aura for as long as it is up.
 		extraSlow := 1.0
-		return core.ThunderClapAura(target, true, 0).ApplyOnGain(func(aura *core.Aura, sim *core.Simulation) {
-			extraSlow = (1 + thunderClapSlow*(1+warrior.thunderClapEffectBonus)) / core.ThunderClapValue(0)
+		return buffs.ThunderClapAura(target, true, 0).ApplyOnGain(func(aura *core.Aura, sim *core.Simulation) {
+			extraSlow = (1 + thunderClapSlow*(1+warrior.thunderClapEffectBonus)) / buffs.ThunderClapValue(0)
 			if extraSlow != 1 {
 				aura.Unit.MultiplyMeleeSpeed(sim, extraSlow)
 			}

@@ -280,11 +280,11 @@ func TestRenderedBuffFilesMatchTheFixtures(t *testing.T) {
 	}
 }
 
-// Builds sim/core with the rendered files overlaid onto it, which is the only
-// check that a generated constructor still names an identifier the support API
-// declares. The apply functions are renamed because the real generated files
+// Builds sim/core/buffs with the rendered files overlaid onto it, which is the
+// only check that a generated constructor still names an identifier the support
+// API declares. The apply functions are renamed because the real generated files
 // already declare them, and the drivers the rows call are stubbed here the way
-// sim/core/buffs_manual.go would declare them.
+// sim/core/buffs/drivers.go would declare them.
 func TestRenderedBuffFilesCompile(t *testing.T) {
 	goTool := findGoTool(t)
 	root, err := repoRoot()
@@ -300,41 +300,41 @@ func TestRenderedBuffFilesCompile(t *testing.T) {
 		if err := os.WriteFile(path, []byte(body), 0644); err != nil {
 			t.Fatal(err)
 		}
-		overlay[filepath.Join(root, "sim", "core", "zz_synthetic_"+filepath.Base(name))] = path
+		overlay[filepath.Join(root, "sim", "core", "buffs", "zz_synthetic_"+filepath.Base(name))] = path
 	}
 
 	drivers := filepath.Join(dir, "drivers.go")
-	if err := os.WriteFile(drivers, []byte("package core\n\n"+
-		"import \"github.com/wowsims/forever/sim/core/proto\"\n\n"+
-		"func driveSynthInnervates(char *Character, individual *proto.IndividualBuffs) {\n"+
-		"\tnewGeneratedExternalCD(char, SynthInnervatesAura(&char.Unit, false, 0),"+
-		" GeneratedExternalCD{NumSources: individual.Innervates,"+
-		" Cooldown: SynthInnervatesCooldown(), Type: CooldownTypeMana})\n}\n\n"+
-		"func driveSynthBattleShout(char *Character, _ *proto.PartyBuffs) {\n"+
-		"\tApplyFixedShoutAura(char, SynthBattleShoutAura(&char.Unit, false, 0),"+
+	if err := os.WriteFile(drivers, []byte("package buffs\n\n"+
+		"import (\n\t\"github.com/wowsims/forever/sim/core\"\n\t\"github.com/wowsims/forever/sim/core/proto\"\n)\n\n"+
+		"func driveSynthInnervates(char *core.Character, individual *proto.IndividualBuffs) {\n"+
+		"\tcore.NewGeneratedExternalCD(char, SynthInnervatesAura(&char.Unit, false, 0),"+
+		" core.GeneratedExternalCD{NumSources: individual.Innervates,"+
+		" Cooldown: SynthInnervatesCooldown(), Type: core.CooldownTypeMana})\n}\n\n"+
+		"func driveSynthBattleShout(char *core.Character, _ *proto.PartyBuffs) {\n"+
+		"\tcore.ApplyFixedShoutAura(char, SynthBattleShoutAura(&char.Unit, false, 0),"+
 		" SynthBattleShoutCategory)\n}\n\n"+
-		"func driveSynthSunderArmor(target *Unit, _ *proto.Debuffs, _ *proto.Raid) {\n"+
-		"\tMakePermanent(SynthSunderArmorAura(target, false, 0))\n}\n\n"+
-		"func driveSynthAtieshMage(char *Character, party *proto.PartyBuffs) {\n"+
-		"\tMakePermanent(SynthAtieshMageAura(&char.Unit, false, 0,"+
+		"func driveSynthSunderArmor(target *core.Unit, _ *proto.Debuffs, _ *proto.Raid) {\n"+
+		"\tcore.MakePermanent(SynthSunderArmorAura(target, false, 0))\n}\n\n"+
+		"func driveSynthAtieshMage(char *core.Character, party *proto.PartyBuffs) {\n"+
+		"\tcore.MakePermanent(SynthAtieshMageAura(&char.Unit, false, 0,"+
 		" float64(party.AtieshMage)))\n}\n\n"+
-		"func driveSynthPowerInfusions(char *Character, individual *proto.IndividualBuffs) {\n"+
-		"\tnewGeneratedExternalCD(char, SynthPowerInfusionsAura(&char.Unit, false, 0),"+
-		" GeneratedExternalCD{NumSources: individual.PowerInfusions,"+
-		" Cooldown: SynthPowerInfusionsCooldown(), Type: CooldownTypeDPS})\n}\n"), 0644); err != nil {
+		"func driveSynthPowerInfusions(char *core.Character, individual *proto.IndividualBuffs) {\n"+
+		"\tcore.NewGeneratedExternalCD(char, SynthPowerInfusionsAura(&char.Unit, false, 0),"+
+		" core.GeneratedExternalCD{NumSources: individual.PowerInfusions,"+
+		" Cooldown: SynthPowerInfusionsCooldown(), Type: core.CooldownTypeDPS})\n}\n"), 0644); err != nil {
 		t.Fatal(err)
 	}
-	overlay[filepath.Join(root, "sim", "core", "zz_synthetic_drivers.go")] = drivers
+	overlay[filepath.Join(root, "sim", "core", "buffs", "zz_synthetic_drivers.go")] = drivers
 
 	overlayPath := filepath.Join(dir, "overlay.json")
 	if err := os.WriteFile(overlayPath, []byte(overlayJSON(overlay)), 0644); err != nil {
 		t.Fatal(err)
 	}
 
-	cmd := exec.Command(goTool, "build", "-overlay", overlayPath, "./sim/core/")
+	cmd := exec.Command(goTool, "build", "-overlay", overlayPath, "./sim/core/buffs/")
 	cmd.Dir = root
 	if out, err := cmd.CombinedOutput(); err != nil {
-		t.Errorf("the generated constructors do not compile against sim/core:\n%s", out)
+		t.Errorf("the generated constructors do not compile against sim/core/buffs:\n%s", out)
 	}
 }
 

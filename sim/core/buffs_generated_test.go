@@ -1,9 +1,11 @@
-package core
+package core_test
 
 import (
 	"testing"
 	"time"
 
+	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/buffs"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/simsignals"
 	"github.com/wowsims/forever/sim/core/stats"
@@ -12,36 +14,23 @@ import (
 // applyBuffEffects takes an Agent, and the part of one a buff reaches is the
 // Character it wraps.
 type generatedBuffTestAgent struct {
-	*Character
+	*core.Character
 }
 
-func (agent generatedBuffTestAgent) GetCharacter() *Character       { return agent.Character }
-func (agent generatedBuffTestAgent) Initialize()                    {}
-func (agent generatedBuffTestAgent) ApplyTalents()                  {}
-func (agent generatedBuffTestAgent) Reset(_ *Simulation)            {}
-func (agent generatedBuffTestAgent) OnEncounterStart(_ *Simulation) {}
-
-func newGeneratedBuffTestCharacter() *Character {
-	char := &Character{
-		Unit: Unit{
-			Type:        PlayerUnit,
-			Level:       60,
-			auraTracker: newAuraTracker(),
-			Env:         &Environment{},
-		},
-	}
-	char.PseudoStats = stats.NewPseudoStats()
-	return char
-}
+func (agent generatedBuffTestAgent) GetCharacter() *core.Character       { return agent.Character }
+func (agent generatedBuffTestAgent) Initialize()                         {}
+func (agent generatedBuffTestAgent) ApplyTalents()                       {}
+func (agent generatedBuffTestAgent) Reset(_ *core.Simulation)            {}
+func (agent generatedBuffTestAgent) OnEncounterStart(_ *core.Simulation) {}
 
 func TestPartyBattleShoutAppliesTheGeneratedAura(t *testing.T) {
-	char := newGeneratedBuffTestCharacter()
+	char := core.NewGeneratedBuffTestCharacter()
 
-	applyBuffEffects(generatedBuffTestAgent{char},
+	core.ApplyBuffEffects(generatedBuffTestAgent{char},
 		&proto.RaidBuffs{}, &proto.PartyBuffs{BattleShout: proto.TristateEffect_TristateEffectRegular}, &proto.IndividualBuffs{})
-	char.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
+	char.ApplyBuildPhaseAuras(core.CharacterBuildPhaseBuffs)
 
-	if got := char.stats[stats.AttackPower]; got != 139 {
+	if got := char.GetStats()[stats.AttackPower]; got != 139 {
 		t.Errorf("the party's Battle Shout applied %v attack power, want the client's 139", got)
 	}
 
@@ -49,28 +38,28 @@ func TestPartyBattleShoutAppliesTheGeneratedAura(t *testing.T) {
 	if aura == nil {
 		t.Fatalf("no aura is labelled %q; the unit has %v", "Battle Shout (External)", auraLabels(char))
 	}
-	if want := (ActionID{SpellID: 25289, Tag: -1}); aura.ActionID != want {
+	if want := (core.ActionID{SpellID: 25289, Tag: -1}); aura.ActionID != want {
 		t.Errorf("the external copy is %v, want %v", aura.ActionID, want)
 	}
-	if BattleShoutDuration(0) != 3*time.Minute {
-		t.Errorf("Battle Shout lasts %v, want the client's 3 minutes", BattleShoutDuration(0))
+	if buffs.BattleShoutDuration(0) != 3*time.Minute {
+		t.Errorf("Battle Shout lasts %v, want the client's 3 minutes", buffs.BattleShoutDuration(0))
 	}
-	if aura.Duration != BattleShoutDuration(0) {
-		t.Errorf("the external copy lasts %v, want %v", aura.Duration, BattleShoutDuration(0))
+	if aura.Duration != buffs.BattleShoutDuration(0) {
+		t.Errorf("the external copy lasts %v, want %v", aura.Duration, buffs.BattleShoutDuration(0))
 	}
 
-	category := char.ExclusiveEffectManager.GetExclusiveEffectCategory(BattleShoutCategory)
+	category := char.ExclusiveEffectManager.GetExclusiveEffectCategory(buffs.BattleShoutCategory)
 	if !category.SingleAura {
 		t.Error("the Battle Shout category is not single-aura, so a second copy could sit next to it")
 	}
-	if len(category.effects) != 1 {
-		t.Errorf("the category holds %d effects, want one", len(category.effects))
-	} else if category.effects[0].Priority != 139 {
-		t.Errorf("the only effect in the category bids %v, want 139", category.effects[0].Priority)
+	if len(category.Effects()) != 1 {
+		t.Errorf("the category holds %d effects, want one", len(category.Effects()))
+	} else if category.Effects()[0].Priority != 139 {
+		t.Errorf("the only effect in the category bids %v, want 139", category.Effects()[0].Priority)
 	}
 
 	// The chain the driver installs finds the player's own shout by this tag.
-	if tagged := char.GetAurasWithTag(BattleShoutCategory); len(tagged) != 1 || tagged[0] != aura {
+	if tagged := char.GetAurasWithTag(buffs.BattleShoutCategory); len(tagged) != 1 || tagged[0] != aura {
 		t.Errorf("%d auras carry the Battle Shout tag, want only the external copy", len(tagged))
 	}
 }
@@ -82,22 +71,22 @@ func TestPartyBattleShoutAppliesTheGeneratedAura(t *testing.T) {
 // the player's copy takes the category and the external one is deactivated - the
 // character sheet shows 139 either way.
 func TestPlayerBattleShoutTakesTheCategoryOnATie(t *testing.T) {
-	char := newGeneratedBuffTestCharacter()
+	char := core.NewGeneratedBuffTestCharacter()
 
-	applyBuffEffects(generatedBuffTestAgent{char},
+	core.ApplyBuffEffects(generatedBuffTestAgent{char},
 		&proto.RaidBuffs{}, &proto.PartyBuffs{BattleShout: proto.TristateEffect_TristateEffectRegular}, &proto.IndividualBuffs{})
 
-	player := BattleShoutAura(&char.Unit, true, 0)
-	if want := (ActionID{SpellID: 25289, Tag: 0}); player.ActionID != want {
+	player := buffs.BattleShoutAura(&char.Unit, true, 0)
+	if want := (core.ActionID{SpellID: 25289, Tag: 0}); player.ActionID != want {
 		t.Errorf("the player's copy is %v, want %v", player.ActionID, want)
 	}
 	if player.Label != "Battle Shout (Player)" {
 		t.Errorf("the player's copy is labelled %q, want %q", player.Label, "Battle Shout (Player)")
 	}
 	// What a warrior whose DefaultShout is Battle does with its own aura.
-	player.BuildPhase = CharacterBuildPhaseBuffs
+	player.BuildPhase = core.CharacterBuildPhaseBuffs
 
-	char.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
+	char.ApplyBuildPhaseAuras(core.CharacterBuildPhaseBuffs)
 
 	external := char.GetAura("Battle Shout (External)")
 	if !player.IsActive() {
@@ -106,10 +95,10 @@ func TestPlayerBattleShoutTakesTheCategoryOnATie(t *testing.T) {
 	if external.IsActive() {
 		t.Error("the external copy stayed active, so both copies of the shout are on the character")
 	}
-	if got := char.stats[stats.AttackPower]; got != 139 {
+	if got := char.GetStats()[stats.AttackPower]; got != 139 {
 		t.Errorf("both copies together applied %v attack power, want 139", got)
 	}
-	if tagged := char.GetAurasWithTag(BattleShoutCategory); len(tagged) != 2 {
+	if tagged := char.GetAurasWithTag(buffs.BattleShoutCategory); len(tagged) != 2 {
 		t.Errorf("%d auras carry the Battle Shout tag, want both copies", len(tagged))
 	}
 }
@@ -127,12 +116,12 @@ func TestImprovedPartyBattleShoutAddsTheTierTwoBonus(t *testing.T) {
 		{"without it", &proto.PartyBuffs{BattleShout: proto.TristateEffect_TristateEffectRegular}, 139},
 	} {
 		t.Run(row.name, func(t *testing.T) {
-			char := newGeneratedBuffTestCharacter()
+			char := core.NewGeneratedBuffTestCharacter()
 
-			applyBuffEffects(generatedBuffTestAgent{char}, &proto.RaidBuffs{}, row.party, &proto.IndividualBuffs{})
-			char.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
+			core.ApplyBuffEffects(generatedBuffTestAgent{char}, &proto.RaidBuffs{}, row.party, &proto.IndividualBuffs{})
+			char.ApplyBuildPhaseAuras(core.CharacterBuildPhaseBuffs)
 
-			if got := char.stats[stats.AttackPower]; got != row.want {
+			if got := char.GetStats()[stats.AttackPower]; got != row.want {
 				t.Errorf("the party's Battle Shout applied %v attack power, want %v", got, row.want)
 			}
 			if got := char.GetAura("Battle Shout (External)").ExclusiveEffects[0].Priority; got != row.want {
@@ -152,21 +141,21 @@ func TestTheStrongerBattleShoutTakesTheCategory(t *testing.T) {
 		playerBonus  float64
 		wantPlayerUp bool
 	}{
-		{"the player wears the set", &proto.PartyBuffs{BattleShout: proto.TristateEffect_TristateEffectRegular}, BattleShoutT2Bonus, true},
+		{"the player wears the set", &proto.PartyBuffs{BattleShout: proto.TristateEffect_TristateEffectRegular}, buffs.BattleShoutT2Bonus, true},
 		{"the external warrior does", &proto.PartyBuffs{BattleShout: proto.TristateEffect_TristateEffectImproved}, 0, false},
 	} {
 		t.Run(row.name, func(t *testing.T) {
-			char := newGeneratedBuffTestCharacter()
+			char := core.NewGeneratedBuffTestCharacter()
 
-			applyBuffEffects(generatedBuffTestAgent{char}, &proto.RaidBuffs{}, row.party, &proto.IndividualBuffs{})
+			core.ApplyBuffEffects(generatedBuffTestAgent{char}, &proto.RaidBuffs{}, row.party, &proto.IndividualBuffs{})
 
-			player := BattleShoutAura(&char.Unit, true, 0)
+			player := buffs.BattleShoutAura(&char.Unit, true, 0)
 			if row.playerBonus != 0 {
-				AddGeneratedFlatBonus(player, stats.AttackPower, BattleShoutValue(0), row.playerBonus)
+				core.AddGeneratedFlatBonus(player, stats.AttackPower, buffs.BattleShoutValue(0), row.playerBonus)
 			}
-			player.BuildPhase = CharacterBuildPhaseBuffs
+			player.BuildPhase = core.CharacterBuildPhaseBuffs
 
-			char.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
+			char.ApplyBuildPhaseAuras(core.CharacterBuildPhaseBuffs)
 
 			external := char.GetAura("Battle Shout (External)")
 			if player.IsActive() != row.wantPlayerUp {
@@ -175,7 +164,7 @@ func TestTheStrongerBattleShoutTakesTheCategory(t *testing.T) {
 			if external.IsActive() == row.wantPlayerUp {
 				t.Errorf("the external copy is active: %v, want %v", external.IsActive(), !row.wantPlayerUp)
 			}
-			if got := char.stats[stats.AttackPower]; got != 169 {
+			if got := char.GetStats()[stats.AttackPower]; got != 169 {
 				t.Errorf("both copies together applied %v attack power, want the stronger one's 169", got)
 			}
 		})
@@ -184,13 +173,13 @@ func TestTheStrongerBattleShoutTakesTheCategory(t *testing.T) {
 
 // A flat stat row: no category at all, so the two sources of stamina add up.
 func TestGeneratedFlatStatBuffsAddUp(t *testing.T) {
-	char := newGeneratedBuffTestCharacter()
+	char := core.NewGeneratedBuffTestCharacter()
 
-	applyBuffEffects(generatedBuffTestAgent{char},
+	core.ApplyBuffEffects(generatedBuffTestAgent{char},
 		&proto.RaidBuffs{PrayerOfFortitude: true}, &proto.PartyBuffs{BloodPact: true}, &proto.IndividualBuffs{})
-	char.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
+	char.ApplyBuildPhaseAuras(core.CharacterBuildPhaseBuffs)
 
-	if got := char.stats[stats.Stamina]; got != 124 {
+	if got := char.GetStats()[stats.Stamina]; got != 124 {
 		t.Errorf("Prayer of Fortitude and Blood Pact applied %v stamina, want the client's 70 + 54", got)
 	}
 
@@ -198,7 +187,7 @@ func TestGeneratedFlatStatBuffsAddUp(t *testing.T) {
 	if fortitude == nil {
 		t.Fatalf("no aura is labelled %q; the unit has %v", "Prayer of Fortitude (External)", auraLabels(char))
 	}
-	if want := (ActionID{SpellID: 21564, Tag: -1}); fortitude.ActionID != want {
+	if want := (core.ActionID{SpellID: 21564, Tag: -1}); fortitude.ActionID != want {
 		t.Errorf("the external copy is %v, want %v", fortitude.ActionID, want)
 	}
 }
@@ -206,22 +195,22 @@ func TestGeneratedFlatStatBuffsAddUp(t *testing.T) {
 // A percentage row: every stat the client's A_MOD_TOTAL_STAT_PERCENTAGE names
 // goes through a multiplying dependency rather than a flat amount.
 func TestGeneratedGreaterBlessingOfKingsMultipliesEveryStat(t *testing.T) {
-	char := newGeneratedBuffTestCharacter()
-	char.stats = stats.Stats{
+	char := core.NewGeneratedBuffTestCharacter()
+	char.SetStats(stats.Stats{
 		stats.Strength: 100, stats.Agility: 100, stats.Stamina: 100,
 		stats.Intellect: 100, stats.Spirit: 100, stats.Armor: 100,
-	}
+	})
 
-	applyBuffEffects(generatedBuffTestAgent{char},
+	core.ApplyBuffEffects(generatedBuffTestAgent{char},
 		&proto.RaidBuffs{}, &proto.PartyBuffs{}, &proto.IndividualBuffs{GreaterBlessingOfKings: true})
 	measureGeneratedBuffStats(char)
 
 	for _, stat := range []stats.Stat{stats.Strength, stats.Agility, stats.Stamina, stats.Intellect, stats.Spirit} {
-		if got := char.stats[stat]; got != 110 {
+		if got := char.GetStats()[stat]; got != 110 {
 			t.Errorf("%s is %v, want 100 multiplied by the client's 1.1", stat.StatName(), got)
 		}
 	}
-	if got := char.stats[stats.Armor]; got != 100 {
+	if got := char.GetStats()[stats.Armor]; got != 100 {
 		t.Errorf("armor is %v, want the blessing to have left it alone", got)
 	}
 }
@@ -229,30 +218,30 @@ func TestGeneratedGreaterBlessingOfKingsMultipliesEveryStat(t *testing.T) {
 // Two sources of shadow resistance compete for the school, while everything
 // else Gift of the Wild grants is applied outright.
 func TestGeneratedResistancesCompeteAcrossBuffs(t *testing.T) {
-	char := newGeneratedBuffTestCharacter()
+	char := core.NewGeneratedBuffTestCharacter()
 
-	applyBuffEffects(generatedBuffTestAgent{char},
+	core.ApplyBuffEffects(generatedBuffTestAgent{char},
 		&proto.RaidBuffs{GiftOfTheWild: true, PrayerOfShadowProtection: true},
 		&proto.PartyBuffs{}, &proto.IndividualBuffs{})
-	char.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
+	char.ApplyBuildPhaseAuras(core.CharacterBuildPhaseBuffs)
 
-	if got := char.stats[stats.ShadowResistance]; got != 60 {
+	if got := char.GetStats()[stats.ShadowResistance]; got != 60 {
 		t.Errorf("shadow resistance is %v, want only Prayer of Shadow Protection's 60", got)
 	}
-	if got := char.stats[stats.FrostResistance]; got != 27 {
+	if got := char.GetStats()[stats.FrostResistance]; got != 27 {
 		t.Errorf("frost resistance is %v, want Gift of the Wild's 27", got)
 	}
-	if got := char.stats[stats.Armor]; got != 385 {
+	if got := char.GetStats()[stats.Armor]; got != 385 {
 		t.Errorf("armor is %v, want Gift of the Wild's 385", got)
 	}
-	if got := char.stats[stats.Stamina]; got != 16 {
+	if got := char.GetStats()[stats.Stamina]; got != 16 {
 		t.Errorf("stamina is %v, want Gift of the Wild's 16", got)
 	}
 
 	school := char.ExclusiveEffectManager.GetExclusiveEffectCategory(
-		ResistanceCategoryShadow + stats.ShadowResistance.StatName() + "Add")
-	if len(school.effects) != 2 {
-		t.Errorf("the shadow school holds %d effects, want both buffs", len(school.effects))
+		core.ResistanceCategoryShadow + stats.ShadowResistance.StatName() + "Add")
+	if len(school.Effects()) != 2 {
+		t.Errorf("the shadow school holds %d effects, want both buffs", len(school.Effects()))
 	}
 }
 
@@ -260,25 +249,25 @@ func TestGeneratedResistancesCompeteAcrossBuffs(t *testing.T) {
 // paladin from having two of them up. Only the player's own copy joins it: the
 // external copy has to be able to sit next to the one the paladin casts.
 func TestGeneratedPaladinAuraJoinsTheSharedCategoryOnThePlayerCopyOnly(t *testing.T) {
-	char := newGeneratedBuffTestCharacter()
+	char := core.NewGeneratedBuffTestCharacter()
 
-	applyBuffEffects(generatedBuffTestAgent{char},
+	core.ApplyBuffEffects(generatedBuffTestAgent{char},
 		&proto.RaidBuffs{}, &proto.PartyBuffs{DevotionAura: true}, &proto.IndividualBuffs{})
 
 	shared := char.ExclusiveEffectManager.GetExclusiveEffectCategory("PaladinAura")
-	if len(shared.effects) != 0 {
-		t.Errorf("the external copy joined the shared category with %d effects, want none", len(shared.effects))
+	if len(shared.Effects()) != 0 {
+		t.Errorf("the external copy joined the shared category with %d effects, want none", len(shared.Effects()))
 	}
 
-	player := DevotionAuraAura(&char.Unit, true, 0)
-	if len(shared.effects) != 1 {
-		t.Errorf("the player's copy put %d effects in the shared category, want one", len(shared.effects))
+	player := buffs.DevotionAuraAura(&char.Unit, true, 0)
+	if len(shared.Effects()) != 1 {
+		t.Errorf("the player's copy put %d effects in the shared category, want one", len(shared.Effects()))
 	}
-	player.BuildPhase = CharacterBuildPhaseBuffs
+	player.BuildPhase = core.CharacterBuildPhaseBuffs
 
 	measureGeneratedBuffStats(char)
 
-	own := char.ExclusiveEffectManager.GetExclusiveEffectCategory(DevotionAuraCategory)
+	own := char.ExclusiveEffectManager.GetExclusiveEffectCategory(buffs.DevotionAuraCategory)
 	if !own.SingleAura {
 		t.Error("the aura's own category is not single-aura, so a second copy could sit next to it")
 	}
@@ -293,7 +282,7 @@ func TestGeneratedPaladinAuraJoinsTheSharedCategoryOnThePlayerCopyOnly(t *testin
 	if external.IsActive() {
 		t.Error("the external copy stayed active, so both copies of the aura are on the character")
 	}
-	if got := char.stats[stats.Armor]; got != 735 {
+	if got := char.GetStats()[stats.Armor]; got != 735 {
 		t.Errorf("both copies together applied %v armor, want the client's 735", got)
 	}
 }
@@ -301,14 +290,14 @@ func TestGeneratedPaladinAuraJoinsTheSharedCategoryOnThePlayerCopyOnly(t *testin
 // A totem the client only ties to its cast by name, improved by the talent the
 // live tree still prices.
 func TestGeneratedManaSpringTotemTakesTheTalentedValue(t *testing.T) {
-	char := newGeneratedBuffTestCharacter()
+	char := core.NewGeneratedBuffTestCharacter()
 
-	applyBuffEffects(generatedBuffTestAgent{char}, &proto.RaidBuffs{},
+	core.ApplyBuffEffects(generatedBuffTestAgent{char}, &proto.RaidBuffs{},
 		&proto.PartyBuffs{ManaSpringTotem: proto.TristateEffect_TristateEffectImproved},
 		&proto.IndividualBuffs{})
-	char.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
+	char.ApplyBuildPhaseAuras(core.CharacterBuildPhaseBuffs)
 
-	if got := char.stats[stats.MP5]; got != 30 {
+	if got := char.GetStats()[stats.MP5]; got != 30 {
 		t.Errorf("the improved totem applied %v MP5, want the curve's top value 30", got)
 	}
 
@@ -316,15 +305,15 @@ func TestGeneratedManaSpringTotemTakesTheTalentedValue(t *testing.T) {
 	if aura == nil {
 		t.Fatalf("no aura is labelled %q; the unit has %v", "Mana Spring Totem (External)", auraLabels(char))
 	}
-	if want := (ActionID{SpellID: 10494, Tag: -1}); aura.ActionID != want {
+	if want := (core.ActionID{SpellID: 10494, Tag: -1}); aura.ActionID != want {
 		t.Errorf("the totem's aura is %v, want the aura family member %v", aura.ActionID, want)
 	}
 
 	category := char.ExclusiveEffectManager.GetExclusiveEffectCategory(
-		ManaSpringTotemCategory + stats.MP5.StatName() + "Add")
-	if len(category.effects) != 1 || category.effects[0].Priority != 30 {
+		buffs.ManaSpringTotemCategory + stats.MP5.StatName() + "Add")
+	if len(category.Effects()) != 1 || category.Effects()[0].Priority != 30 {
 		t.Errorf("the totem's category holds %d effects, first bid %v; want one bidding 30",
-			len(category.effects), category.effects[0].Priority)
+			len(category.Effects()), category.Effects()[0].Priority)
 	}
 }
 
@@ -345,18 +334,18 @@ func TestGeneratedCritAurasApplyTheClientsThreeToEveryKindOfCrit(t *testing.T) {
 		{"both", &proto.PartyBuffs{LeaderOfThePack: true, MoonkinAura: true}},
 	} {
 		t.Run(row.name, func(t *testing.T) {
-			char := newGeneratedBuffTestCharacter()
+			char := core.NewGeneratedBuffTestCharacter()
 
-			applyBuffEffects(generatedBuffTestAgent{char}, &proto.RaidBuffs{}, row.party, &proto.IndividualBuffs{})
-			char.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
+			core.ApplyBuffEffects(generatedBuffTestAgent{char}, &proto.RaidBuffs{}, row.party, &proto.IndividualBuffs{})
+			char.ApplyBuildPhaseAuras(core.CharacterBuildPhaseBuffs)
 
-			if got := char.stats[stats.PhysicalCritPercent]; got != 3 {
+			if got := char.GetStats()[stats.PhysicalCritPercent]; got != 3 {
 				t.Errorf("%s applied %v physical crit, want the client's 3", row.name, got)
 			}
-			if got := char.stats[stats.SpellCritPercent]; got != 3 {
+			if got := char.GetStats()[stats.SpellCritPercent]; got != 3 {
 				t.Errorf("%s applied %v spell crit, want the client's 3", row.name, got)
 			}
-			if got := char.stats[stats.RangedCritPercent]; got != 0 {
+			if got := char.GetStats()[stats.RangedCritPercent]; got != 0 {
 				t.Errorf("%s applied %v on top of the physical crit a ranged attack already reads", row.name, got)
 			}
 		})
@@ -366,11 +355,11 @@ func TestGeneratedCritAurasApplyTheClientsThreeToEveryKindOfCrit(t *testing.T) {
 // The loser of the category is still a registered aura on the character, so a
 // class port can find it and a log can name it; it simply holds nothing.
 func TestGeneratedCritAurasLeaveTheOutbidCopyRegisteredAndInert(t *testing.T) {
-	char := newGeneratedBuffTestCharacter()
+	char := core.NewGeneratedBuffTestCharacter()
 
-	applyBuffEffects(generatedBuffTestAgent{char}, &proto.RaidBuffs{},
+	core.ApplyBuffEffects(generatedBuffTestAgent{char}, &proto.RaidBuffs{},
 		&proto.PartyBuffs{LeaderOfThePack: true, MoonkinAura: true}, &proto.IndividualBuffs{})
-	char.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
+	char.ApplyBuildPhaseAuras(core.CharacterBuildPhaseBuffs)
 
 	pack := char.GetAura("Leader of the Pack (External)")
 	moonkin := char.GetAura("Moonkin Aura (External)")
@@ -381,12 +370,12 @@ func TestGeneratedCritAurasLeaveTheOutbidCopyRegisteredAndInert(t *testing.T) {
 		t.Errorf("both copies are active: %v, want exactly one holding the category", pack.IsActive())
 	}
 
-	category := char.ExclusiveEffectManager.GetExclusiveEffectCategory(LeaderOfThePackCategory)
+	category := char.ExclusiveEffectManager.GetExclusiveEffectCategory(buffs.LeaderOfThePackCategory)
 	if !category.SingleAura {
 		t.Error("the DruidCritAura category is not single-aura, so both copies could sit on the character")
 	}
-	if len(category.effects) != 2 {
-		t.Errorf("%d effects bid for DruidCritAura, want both copies", len(category.effects))
+	if len(category.Effects()) != 2 {
+		t.Errorf("%d effects bid for DruidCritAura, want both copies", len(category.Effects()))
 	}
 	if active := category.GetActiveEffect(); active == nil || active.Priority != 3 {
 		t.Errorf("the category is held at %v, want the client's 3", active)
@@ -395,11 +384,11 @@ func TestGeneratedCritAurasLeaveTheOutbidCopyRegisteredAndInert(t *testing.T) {
 
 // The row whose only amount is a pseudo-stat the client states as a reduction.
 func TestGeneratedPartyConcentrationAuraReducesPushback(t *testing.T) {
-	char := newGeneratedBuffTestCharacter()
+	char := core.NewGeneratedBuffTestCharacter()
 
-	applyBuffEffects(generatedBuffTestAgent{char}, &proto.RaidBuffs{},
+	core.ApplyBuffEffects(generatedBuffTestAgent{char}, &proto.RaidBuffs{},
 		&proto.PartyBuffs{ConcentrationAura: true}, &proto.IndividualBuffs{})
-	char.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
+	char.ApplyBuildPhaseAuras(core.CharacterBuildPhaseBuffs)
 
 	if got := char.PseudoStats.PushbackChance; got != 0.65 {
 		t.Errorf("Concentration Aura left the pushback chance at %v, want 1 reduced by the client's 35%%", got)
@@ -410,16 +399,16 @@ func TestGeneratedPartyConcentrationAuraReducesPushback(t *testing.T) {
 // A_MOD_RANGED_ATTACK_POWER effect worth 50: melee attack power is untouched and
 // the 75 of rank 4 is not what the party gets.
 func TestGeneratedTrueshotAuraGivesTheTopRanksRangedAttackPower(t *testing.T) {
-	char := newGeneratedBuffTestCharacter()
+	char := core.NewGeneratedBuffTestCharacter()
 
-	applyBuffEffects(generatedBuffTestAgent{char},
+	core.ApplyBuffEffects(generatedBuffTestAgent{char},
 		&proto.RaidBuffs{}, &proto.PartyBuffs{TrueshotAura: true}, &proto.IndividualBuffs{})
-	char.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
+	char.ApplyBuildPhaseAuras(core.CharacterBuildPhaseBuffs)
 
-	if got := char.stats[stats.RangedAttackPower]; got != 50 {
+	if got := char.GetStats()[stats.RangedAttackPower]; got != 50 {
 		t.Errorf("Trueshot Aura applied %v ranged attack power, want the client's 50", got)
 	}
-	if got := char.stats[stats.AttackPower]; got != 0 {
+	if got := char.GetStats()[stats.AttackPower]; got != 0 {
 		t.Errorf("Trueshot Aura applied %v melee attack power, want none", got)
 	}
 
@@ -427,19 +416,19 @@ func TestGeneratedTrueshotAuraGivesTheTopRanksRangedAttackPower(t *testing.T) {
 	if aura == nil {
 		t.Fatalf("no aura is labelled %q; the unit has %v", "Trueshot Aura (External)", auraLabels(char))
 	}
-	if want := (ActionID{SpellID: 20906, Tag: -1}); aura.ActionID != want {
+	if want := (core.ActionID{SpellID: 20906, Tag: -1}); aura.ActionID != want {
 		t.Errorf("the external copy is %v, want %v", aura.ActionID, want)
 	}
-	if aura.Duration != NeverExpires {
+	if aura.Duration != core.NeverExpires {
 		t.Errorf("the party's Trueshot Aura lasts %v, want it permanent", aura.Duration)
 	}
 }
 
 // The build phase enables a multiplying dependency without recomputing the
 // unit's stats; applyAllEffects measures them afterwards, and so does this.
-func measureGeneratedBuffStats(char *Character) {
-	char.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
-	char.stats = char.SortAndApplyStatDependencies(char.stats).FloorGameStats()
+func measureGeneratedBuffStats(char *core.Character) {
+	char.ApplyBuildPhaseAuras(core.CharacterBuildPhaseBuffs)
+	char.SetStats(char.SortAndApplyStatDependencies(char.GetStats()).FloorGameStats())
 }
 
 // Every buff a pet is given or denied, field by field, for a pet that is out
@@ -462,11 +451,11 @@ func TestGeneratedPetBuffsStripExactlyTheRowsThePolicyNames(t *testing.T) {
 			}
 	}
 
-	owner := newGeneratedBuffTestCharacter()
-	pet := &Pet{Character: *newGeneratedBuffTestCharacter(), Owner: owner, enabledOnStart: true}
+	owner := core.NewGeneratedBuffTestCharacter()
+	pet := core.NewGeneratedBuffTestPet(owner, true)
 
 	raid, party, individual := ticked()
-	applyGeneratedPetBuffs(pet, raid, party, individual)
+	core.StripPetBuffs(pet, raid, party, individual)
 
 	// Stripped whenever the pet is out: Thorns is not given to it, it cannot
 	// gain an extra attack, and nobody spends a cooldown on a pet.
@@ -488,9 +477,9 @@ func TestGeneratedPetBuffsStripExactlyTheRowsThePolicyNames(t *testing.T) {
 		t.Errorf("a pet out from the start lost a targeted buff: %v, %v", raid, individual)
 	}
 
-	late := &Pet{Character: *newGeneratedBuffTestCharacter(), Owner: owner}
+	late := core.NewGeneratedBuffTestPet(owner, false)
 	raid, party, individual = ticked()
-	applyGeneratedPetBuffs(late, raid, party, individual)
+	core.StripPetBuffs(late, raid, party, individual)
 
 	if raid.ArcaneBrilliance || raid.PrayerOfSpirit || raid.GiftOfTheWild ||
 		raid.PrayerOfFortitude || raid.PrayerOfShadowProtection {
@@ -509,28 +498,28 @@ func TestGeneratedPetBuffsStripExactlyTheRowsThePolicyNames(t *testing.T) {
 // twisting on it is 9 seconds long and re-cast every 10, and without it the
 // totem simply stands.
 func TestGeneratedGraceOfAirFollowsTotemTwisting(t *testing.T) {
-	standing := newGeneratedBuffTestCharacter()
-	applyBuffEffects(generatedBuffTestAgent{standing},
+	standing := core.NewGeneratedBuffTestCharacter()
+	core.ApplyBuffEffects(generatedBuffTestAgent{standing},
 		&proto.RaidBuffs{}, &proto.PartyBuffs{GraceOfAirTotem: true}, &proto.IndividualBuffs{})
-	standing.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
+	standing.ApplyBuildPhaseAuras(core.CharacterBuildPhaseBuffs)
 
-	if got := standing.stats[stats.Agility]; got != 89 {
+	if got := standing.GetStats()[stats.Agility]; got != 89 {
 		t.Errorf("the totem applied %v agility, want the client's 89", got)
 	}
 	aura := standing.GetAura("Grace of Air Totem (External)")
 	if aura == nil {
 		t.Fatalf("no aura is labelled %q; the unit has %v", "Grace of Air Totem (External)", auraLabels(standing))
 	}
-	if aura.Duration != NeverExpires {
+	if aura.Duration != core.NeverExpires {
 		t.Errorf("the totem's aura lasts %v, want it to stand for the fight", aura.Duration)
 	}
 
-	twisting := newGeneratedBuffTestCharacter()
-	applyBuffEffects(generatedBuffTestAgent{twisting}, &proto.RaidBuffs{},
+	twisting := core.NewGeneratedBuffTestCharacter()
+	core.ApplyBuffEffects(generatedBuffTestAgent{twisting}, &proto.RaidBuffs{},
 		&proto.PartyBuffs{GraceOfAirTotem: true, TotemTwisting: true}, &proto.IndividualBuffs{})
-	twisting.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
+	twisting.ApplyBuildPhaseAuras(core.CharacterBuildPhaseBuffs)
 
-	if got := twisting.stats[stats.Agility]; got != 89 {
+	if got := twisting.GetStats()[stats.Agility]; got != 89 {
 		t.Errorf("the twisted totem applied %v agility, want the client's 89", got)
 	}
 	twisted := twisting.GetAura("Grace of Air Totem (External)")
@@ -564,7 +553,7 @@ func TestGeneratedGraceOfAirFollowsTotemTwisting(t *testing.T) {
 	standingSim := setupFakeSimWithBuffs(&proto.RaidBuffs{},
 		&proto.PartyBuffs{GraceOfAirTotem: true}, &proto.IndividualBuffs{})
 	permanent := standingSim.Raid.Parties[0].Players[0].GetCharacter().GetAura("Grace of Air Totem (External)")
-	if !permanent.IsActive() || permanent.Duration != NeverExpires {
+	if !permanent.IsActive() || permanent.Duration != core.NeverExpires {
 		t.Errorf("without twisting the totem is active %v for %v, want it up from the pull for the fight",
 			permanent.IsActive(), permanent.Duration)
 	}
@@ -574,12 +563,12 @@ func TestGeneratedGraceOfAirFollowsTotemTwisting(t *testing.T) {
 // per druid staff, 2 spell crit per mage one, 62 healing per priest one and
 // 33 spell damage plus 33 healing per warlock one.
 func TestGeneratedAtieshStavesCountTheStaves(t *testing.T) {
-	char := newGeneratedBuffTestCharacter()
+	char := core.NewGeneratedBuffTestCharacter()
 
-	applyBuffEffects(generatedBuffTestAgent{char}, &proto.RaidBuffs{},
+	core.ApplyBuffEffects(generatedBuffTestAgent{char}, &proto.RaidBuffs{},
 		&proto.PartyBuffs{AtieshDruid: 1, AtieshMage: 3, AtieshPriest: 2, AtieshWarlock: 1},
 		&proto.IndividualBuffs{})
-	char.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
+	char.ApplyBuildPhaseAuras(core.CharacterBuildPhaseBuffs)
 
 	for stat, want := range map[stats.Stat]float64{
 		stats.MP5:              11,
@@ -587,7 +576,7 @@ func TestGeneratedAtieshStavesCountTheStaves(t *testing.T) {
 		stats.HealingPower:     62*2 + 33,
 		stats.SpellDamage:      33,
 	} {
-		if got := char.stats[stat]; got != want {
+		if got := char.GetStats()[stat]; got != want {
 			t.Errorf("the party's staves applied %v %s, want %v", got, stat.StatName(), want)
 		}
 	}
@@ -611,13 +600,13 @@ func TestGeneratedWindfuryTotemProcAppliesTheClientsAttackPower(t *testing.T) {
 		t.Errorf("the proc buff lasts %v, want the client's 1 second", proc.Duration)
 	}
 
-	before := char.stats[stats.AttackPower]
+	before := char.GetStats()[stats.AttackPower]
 	proc.Activate(sim)
-	if got := char.stats[stats.AttackPower] - before; got != 246 {
+	if got := char.GetStats()[stats.AttackPower] - before; got != 246 {
 		t.Errorf("the proc applied %v attack power, want the client's 246", got)
 	}
 	proc.Deactivate(sim)
-	if got := char.stats[stats.AttackPower]; got != before {
+	if got := char.GetStats()[stats.AttackPower]; got != before {
 		t.Errorf("the proc left %v attack power behind when it expired", got-before)
 	}
 
@@ -625,10 +614,10 @@ func TestGeneratedWindfuryTotemProcAppliesTheClientsAttackPower(t *testing.T) {
 	if totem == nil {
 		t.Fatalf("no aura is labelled %q; the unit has %v", "Windfury Totem", auraLabels(char))
 	}
-	category := char.ExclusiveEffectManager.GetExclusiveEffectCategory(WindfuryTotemCategory)
-	if len(category.effects) != 1 || category.effects[0].Priority != WindfuryTotemValue(0) {
+	category := char.ExclusiveEffectManager.GetExclusiveEffectCategory(buffs.WindfuryTotemCategory)
+	if len(category.Effects()) != 1 || category.Effects()[0].Priority != buffs.WindfuryTotemValue(0) {
 		t.Errorf("the category holds %d effects, first bid %v; want one bidding 246",
-			len(category.effects), category.effects[0].Priority)
+			len(category.Effects()), category.Effects()[0].Priority)
 	}
 	if char.GetAura("Windfury Totem Trigger") == nil {
 		t.Error("the driver registered no proc trigger for the totem")
@@ -642,8 +631,8 @@ func TestGeneratedThornsStrikesBackAtAMeleeHit(t *testing.T) {
 	char := sim.Raid.Parties[0].Players[0].GetCharacter()
 	attacker := sim.Encounter.AllTargetUnits[0]
 
-	if ThornsValue(0) != 22 {
-		t.Errorf("Thorns is worth %v, want the client's 22", ThornsValue(0))
+	if buffs.ThornsValue(0) != 22 {
+		t.Errorf("Thorns is worth %v, want the client's 22", buffs.ThornsValue(0))
 	}
 
 	aura := char.GetAura("Thorns (External)")
@@ -654,7 +643,7 @@ func TestGeneratedThornsStrikesBackAtAMeleeHit(t *testing.T) {
 		t.Fatal("the raid's Thorns is not up at the start of the fight")
 	}
 
-	shield := char.GetSpell(ActionID{SpellID: 9910, Tag: 1})
+	shield := char.GetSpell(core.ActionID{SpellID: 9910, Tag: 1})
 	if shield == nil {
 		t.Fatal("the shield registered no spell to deal its damage with")
 	}
@@ -663,7 +652,7 @@ func TestGeneratedThornsStrikesBackAtAMeleeHit(t *testing.T) {
 	// cancelled and every hit the test asks about is delivered by hand.
 	attacker.AutoAttacks.CancelAutoSwing(sim)
 
-	landed := &SpellResult{Target: &char.Unit, Outcome: OutcomeHit}
+	landed := &core.SpellResult{Target: &char.Unit, Outcome: core.OutcomeHit}
 	aura.OnSpellHitTaken(aura, sim, attacker.AutoAttacks.MHAuto(), landed)
 	sim.Step()
 	if got := shield.SpellMetrics[attacker.UnitIndex].Casts; got != 1 {
@@ -673,7 +662,7 @@ func TestGeneratedThornsStrikesBackAtAMeleeHit(t *testing.T) {
 		t.Errorf("the shield dealt %v damage, want the client's 22", got)
 	}
 
-	caster := sim.Raid.Parties[0].Players[0].(*FakeAgent)
+	caster := sim.Raid.Parties[0].Players[0].(*core.FakeAgent)
 	aura.OnSpellHitTaken(aura, sim, caster.Spell, landed)
 	sim.Step()
 	if got := shield.SpellMetrics[attacker.UnitIndex].Casts; got != 1 {
@@ -684,32 +673,32 @@ func TestGeneratedThornsStrikesBackAtAMeleeHit(t *testing.T) {
 // Retribution Aura is the paladin's slot: the external copy keeps its own
 // category and stays out of the shared one only the paladin's own cast joins.
 func TestGeneratedRetributionAuraHoldsThePaladinSlot(t *testing.T) {
-	char := newGeneratedBuffTestCharacter()
+	char := core.NewGeneratedBuffTestCharacter()
 
-	applyBuffEffects(generatedBuffTestAgent{char},
+	core.ApplyBuffEffects(generatedBuffTestAgent{char},
 		&proto.RaidBuffs{}, &proto.PartyBuffs{RetributionAura: true}, &proto.IndividualBuffs{})
 
 	external := char.GetAura("Retribution Aura (External)")
 	if external == nil {
 		t.Fatalf("no aura is labelled %q; the unit has %v", "Retribution Aura (External)", auraLabels(char))
 	}
-	if RetributionAuraValue(0) != 30 {
-		t.Errorf("the aura is worth %v holy damage, want the client's 30", RetributionAuraValue(0))
+	if buffs.RetributionAuraValue(0) != 30 {
+		t.Errorf("the aura is worth %v holy damage, want the client's 30", buffs.RetributionAuraValue(0))
 	}
 
-	category := char.ExclusiveEffectManager.GetExclusiveEffectCategory(RetributionAuraCategory)
-	if !category.SingleAura || len(category.effects) != 1 || category.effects[0].Priority != 30 {
+	category := char.ExclusiveEffectManager.GetExclusiveEffectCategory(buffs.RetributionAuraCategory)
+	if !category.SingleAura || len(category.Effects()) != 1 || category.Effects()[0].Priority != 30 {
 		t.Errorf("the category is single-aura %v with %d effects, first bid %v; want one bidding 30",
-			category.SingleAura, len(category.effects), category.effects[0].Priority)
+			category.SingleAura, len(category.Effects()), category.Effects()[0].Priority)
 	}
-	if shared := char.ExclusiveEffectManager.GetExclusiveEffectCategory(PaladinAuraCategory); len(shared.effects) != 0 {
+	if shared := char.ExclusiveEffectManager.GetExclusiveEffectCategory(buffs.PaladinAuraCategory); len(shared.Effects()) != 0 {
 		t.Errorf("the external copy put %d effects in the paladin's shared category, want none",
-			len(shared.effects))
+			len(shared.Effects()))
 	}
 
-	player := RetributionAuraAura(&char.Unit, true, 0)
-	if shared := char.ExclusiveEffectManager.GetExclusiveEffectCategory(PaladinAuraCategory); len(shared.effects) != 1 {
-		t.Errorf("the paladin's own copy put %d effects in the shared category, want one", len(shared.effects))
+	player := buffs.RetributionAuraAura(&char.Unit, true, 0)
+	if shared := char.ExclusiveEffectManager.GetExclusiveEffectCategory(buffs.PaladinAuraCategory); len(shared.Effects()) != 1 {
+		t.Errorf("the paladin's own copy put %d effects in the shared category, want one", len(shared.Effects()))
 	}
 	if player == external {
 		t.Error("the paladin's own copy and the external one are the same aura")
@@ -719,27 +708,27 @@ func TestGeneratedRetributionAuraHoldsThePaladinSlot(t *testing.T) {
 // The party's copy cannot see the providing paladin, so the spell power the party states is folded
 // into the damage it bids and deals.
 func TestRetributionAuraCarriesThePartysSpellPower(t *testing.T) {
-	char := newGeneratedBuffTestCharacter()
+	char := core.NewGeneratedBuffTestCharacter()
 
-	applyBuffEffects(generatedBuffTestAgent{char},
+	core.ApplyBuffEffects(generatedBuffTestAgent{char},
 		&proto.RaidBuffs{}, &proto.PartyBuffs{RetributionAura: true, RetributionAuraSpellPower: 450}, &proto.IndividualBuffs{})
 
 	if char.GetAura("Retribution Aura (External)") == nil {
 		t.Fatalf("no aura is labelled %q; the unit has %v", "Retribution Aura (External)", auraLabels(char))
 	}
 
-	want := RetributionAuraValue(0) + RetributionAuraSpellPowerCoefficient*450
-	category := char.ExclusiveEffectManager.GetExclusiveEffectCategory(RetributionAuraCategory)
-	if len(category.effects) != 1 || category.effects[0].Priority != want {
+	want := buffs.RetributionAuraValue(0) + buffs.RetributionAuraSpellPowerCoefficient*450
+	category := char.ExclusiveEffectManager.GetExclusiveEffectCategory(buffs.RetributionAuraCategory)
+	if len(category.Effects()) != 1 || category.Effects()[0].Priority != want {
 		t.Errorf("the category has %d effects, first bid %v; want one bidding %v",
-			len(category.effects), category.effects[0].Priority, want)
+			len(category.Effects()), category.Effects()[0].Priority, want)
 	}
 }
 
 // A whole environment, because an external cooldown registers a spell, a timer
 // per source and a major cooldown, none of which a bare Character has.
-func setupFakeSimWithBuffs(raid *proto.RaidBuffs, party *proto.PartyBuffs, individual *proto.IndividualBuffs) *Simulation {
-	sim := NewSim(&proto.RaidSimRequest{
+func setupFakeSimWithBuffs(raid *proto.RaidBuffs, party *proto.PartyBuffs, individual *proto.IndividualBuffs) *core.Simulation {
+	sim := core.NewSim(&proto.RaidSimRequest{
 		SimOptions: &proto.SimOptions{RandomSeed: 100},
 		Raid: &proto.Raid{
 			Parties: []*proto.Party{
@@ -782,14 +771,14 @@ func TestGeneratedInnervatesTakeTurnsBetweenTheirSources(t *testing.T) {
 	if aura == nil {
 		t.Fatalf("no aura is labelled %q; the unit has %v", "Innervates (External)", auraLabels(char))
 	}
-	if aura.Duration != InnervatesDuration(0) || aura.Duration != time.Second*20 {
+	if aura.Duration != buffs.InnervatesDuration(0) || aura.Duration != time.Second*20 {
 		t.Errorf("the innervate lasts %v, want the client's 20 seconds", aura.Duration)
 	}
-	if InnervatesCooldown() != time.Minute*6 {
-		t.Errorf("the innervate's cooldown is %v, want the client's 6 minutes", InnervatesCooldown())
+	if buffs.InnervatesCooldown() != time.Minute*6 {
+		t.Errorf("the innervate's cooldown is %v, want the client's 6 minutes", buffs.InnervatesCooldown())
 	}
 
-	spell := char.GetSpell(ActionID{SpellID: 29166, Tag: -1})
+	spell := char.GetSpell(core.ActionID{SpellID: 29166, Tag: -1})
 	if spell == nil {
 		t.Fatal("no spell stands for the external innervates")
 	}
@@ -824,7 +813,7 @@ func TestGeneratedInnervatesTakeTurnsBetweenTheirSources(t *testing.T) {
 		t.Error("a third innervate lands before either druid's six minutes are up")
 	}
 
-	sim.CurrentTime = InnervatesCooldown() + time.Minute
+	sim.CurrentTime = buffs.InnervatesCooldown() + time.Minute
 	if !ready() {
 		t.Error("the first druid cannot innervate again six minutes later")
 	}
@@ -841,19 +830,19 @@ func TestGeneratedPowerInfusionRaisesDamageAndHealingDone(t *testing.T) {
 	if aura == nil {
 		t.Fatalf("no aura is labelled %q; the unit has %v", "Power Infusions (External)", auraLabels(char))
 	}
-	if aura.Duration != time.Second*15 || PowerInfusionsCooldown() != time.Minute*3 {
+	if aura.Duration != time.Second*15 || buffs.PowerInfusionsCooldown() != time.Minute*3 {
 		t.Errorf("the infusion lasts %v on a %v cooldown, want the client's 15 seconds and 3 minutes",
-			aura.Duration, PowerInfusionsCooldown())
+			aura.Duration, buffs.PowerInfusionsCooldown())
 	}
 
 	healing := char.PseudoStats.HealingDealtMultiplier
-	physical := generatedSchoolIndexes(1)[0]
+	physical := core.GeneratedSchoolIndexes(1)[0]
 	before := char.PseudoStats.SchoolDamageDealtMultiplier[physical]
 
 	aura.Activate(sim)
 	// Spell 10060 states mask 126, which is every school but physical, so a
 	// melee swing is not part of what the infusion raises.
-	for _, school := range generatedSchoolIndexes(126) {
+	for _, school := range core.GeneratedSchoolIndexes(126) {
 		if got := char.PseudoStats.SchoolDamageDealtMultiplier[school]; got != 1.2 {
 			t.Errorf("school %d deals %v times the damage, want the client's 1.2", school, got)
 		}
@@ -866,7 +855,7 @@ func TestGeneratedPowerInfusionRaisesDamageAndHealingDone(t *testing.T) {
 	}
 
 	aura.Deactivate(sim)
-	for _, school := range generatedSchoolIndexes(126) {
+	for _, school := range core.GeneratedSchoolIndexes(126) {
 		if got := char.PseudoStats.SchoolDamageDealtMultiplier[school]; got != 1 {
 			t.Errorf("school %d still deals %v times the damage once the infusion expired", school, got)
 		}
@@ -886,19 +875,19 @@ func TestGeneratedManaTideTotemRestoresTheClientsMana(t *testing.T) {
 	if aura == nil {
 		t.Fatalf("no aura is labelled %q; the unit has %v", "Mana Tide Totem (External)", auraLabels(char))
 	}
-	if aura.Duration != time.Second*13 || ManaTideTotemsCooldown() != time.Minute*5 {
+	if aura.Duration != time.Second*13 || buffs.ManaTideTotemsCooldown() != time.Minute*5 {
 		t.Errorf("the totem stands for %v on a %v cooldown, want the client's 13 seconds and 5 minutes",
-			aura.Duration, ManaTideTotemsCooldown())
+			aura.Duration, buffs.ManaTideTotemsCooldown())
 	}
-	if want := 290 * 5000.0 / 3000.0; ManaTideTotemsValue(0) != want {
+	if want := 290 * 5000.0 / 3000.0; buffs.ManaTideTotemsValue(0) != want {
 		t.Errorf("the totem is worth %v MP5, want the 290 per 3 seconds the client states as %v",
-			ManaTideTotemsValue(0), want)
+			buffs.ManaTideTotemsValue(0), want)
 	}
 
-	before := char.stats[stats.MP5]
+	before := char.GetStats()[stats.MP5]
 	aura.Activate(sim)
-	if got := char.stats[stats.MP5] - before; got != ManaTideTotemsValue(0) {
-		t.Errorf("the totem applied %v MP5, want %v", got, ManaTideTotemsValue(0))
+	if got := char.GetStats()[stats.MP5] - before; got != buffs.ManaTideTotemsValue(0) {
+		t.Errorf("the totem applied %v MP5, want %v", got, buffs.ManaTideTotemsValue(0))
 	}
 }
 
@@ -918,15 +907,15 @@ func TestGeneratedDrivenBuffsAreNotBuildPhaseAuras(t *testing.T) {
 		if aura == nil {
 			t.Fatalf("no aura is labelled %q; the unit has %v", label, auraLabels(char))
 		}
-		if aura.BuildPhase != CharacterBuildPhaseNone {
+		if aura.BuildPhase != core.CharacterBuildPhaseNone {
 			t.Errorf("%s is measured in build phase %v, want none of them", label, aura.BuildPhase)
 		}
 	}
 }
 
-func auraLabels(char *Character) []string {
-	labels := make([]string, 0, len(char.auras))
-	for _, aura := range char.auras {
+func auraLabels(char *core.Character) []string {
+	labels := make([]string, 0, len(char.GetAuras()))
+	for _, aura := range char.GetAuras() {
 		labels = append(labels, aura.Label)
 	}
 	return labels

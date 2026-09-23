@@ -1,7 +1,7 @@
 package core
 
-// The API sim/core/buffs_auto_gen.go and sim/core/debuffs_auto_gen.go are
-// generated against. Everything the generator emits is a data literal plus one
+// The API sim/core/buffs/buffs_auto_gen.go and sim/core/buffs/debuffs_auto_gen.go
+// are generated against. Everything the generator emits is a data literal plus one
 // call into this file, so a generated constructor cannot go wrong in a way the
 // compiler does not catch.
 
@@ -94,7 +94,7 @@ type GeneratedBuff struct {
 // dependencies are computed with it; tag 0 is the player's own and is applied
 // during the fight. The aura's Tag is the category name, so that a driver
 // handed the external copy can find the player's own among the unit's auras.
-func newGeneratedStatAura(unit *Unit, config GeneratedBuff) *Aura {
+func NewGeneratedStatAura(unit *Unit, config GeneratedBuff) *Aura {
 	auraConfig := Aura{
 		Label:      config.Label,
 		Tag:        config.Category,
@@ -186,7 +186,7 @@ func generatedHasCategoryEffect(config GeneratedBuff, bareWhenCategory bool) boo
 // carries the bare category name, which is the one the hand-written debuffs
 // compete in, and holds every stat and pseudo-stat the debuff applies so that
 // only the strongest of several armor reductions is on the target at a time.
-func newGeneratedDebuff(target *Unit, config GeneratedBuff) *Aura {
+func NewGeneratedDebuff(target *Unit, config GeneratedBuff) *Aura {
 	auraConfig := Aura{
 		Label:     config.Label,
 		ActionID:  config.ActionID,
@@ -255,13 +255,13 @@ func registerGeneratedCategoryEffect(aura *Aura, config GeneratedBuff, perStack 
 }
 
 // The damage a generated damage shield deals back to whoever lands a melee hit.
-func newGeneratedDamageShield(unit *Unit, config GeneratedBuff, school SpellSchool, damage float64) *Aura {
-	return newDamageShield(unit, config, school, damage, 0)
+func NewGeneratedDamageShield(unit *Unit, config GeneratedBuff, school SpellSchool, damage float64) *Aura {
+	return NewDamageShield(unit, config, school, damage, 0)
 }
 
 // A damage shield whose damage also scales with the wearer's spell power by
 // bonusCoefficient; the generated shields state none.
-func newDamageShield(unit *Unit, config GeneratedBuff, school SpellSchool, damage float64, bonusCoefficient float64) *Aura {
+func NewDamageShield(unit *Unit, config GeneratedBuff, school SpellSchool, damage float64, bonusCoefficient float64) *Aura {
 	procSpell := unit.RegisterSpell(SpellConfig{
 		ActionID:    config.ActionID.WithTag(config.ActionID.Tag + 2),
 		SpellSchool: school,
@@ -317,7 +317,7 @@ type GeneratedExternalCD struct {
 // casters taking turns. The aura carries the buff's own label, duration and
 // effects; its tag is what tells the sim the buff is already up, so a row whose
 // cooldown is driven states a category for the generator to tag it with.
-func newGeneratedExternalCD(char *Character, aura *Aura, config GeneratedExternalCD) {
+func NewGeneratedExternalCD(char *Character, aura *Aura, config GeneratedExternalCD) {
 	if config.NumSources == 0 {
 		return
 	}

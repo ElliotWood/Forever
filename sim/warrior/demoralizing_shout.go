@@ -2,6 +2,7 @@ package warrior
 
 import (
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/buffs"
 	"github.com/wowsims/forever/sim/core/spelldata"
 )
 
@@ -12,7 +13,7 @@ func (warrior *Warrior) registerDemoralizingShout() {
 		// Nothing in the warrior tree prices this shout: Forever has no Improved
 		// Demoralizing Shout, and Booming Voice widens the radius only, so the
 		// aura is the client's attack power reduction for 45 seconds.
-		return core.DemoralizingShoutAura(target, true, 0)
+		return buffs.DemoralizingShoutAura(target, true, 0)
 	})
 
 	config := spelldata.SpellConfig(&warrior.Unit, demoralizingShoutRank, spelldata.Flags(core.SpellFlagAPL))

@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/buffs"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/spelldata"
 	"github.com/wowsims/forever/sim/core/stats"
@@ -24,18 +25,18 @@ func (warrior *Warrior) registerBattleShout() {
 	// the user saying this warrior wears them; the equipped set is not read. The
 	// set is worth the 30 on the shout this warrior makes, so it raises what that
 	// copy applies and what the cast is worth to the category together.
-	battleShoutBase := core.BattleShoutValue(0)
+	battleShoutBase := buffs.BattleShoutValue(0)
 	battleShoutValue := battleShoutBase
 	shoutsWithTheSet := castsOwnShout && warrior.HasBsT2
 	if shoutsWithTheSet {
-		battleShoutValue += core.BattleShoutT2Bonus
+		battleShoutValue += buffs.BattleShoutT2Bonus
 	}
 
 	auras := warrior.NewAllyAuraArray(func(unit *core.Unit) *core.Aura {
 		// Booming Voice widens the radius only, so the aura takes no talent points.
-		aura := core.BattleShoutAura(unit, castsOwnShout, 0)
+		aura := buffs.BattleShoutAura(unit, castsOwnShout, 0)
 		if shoutsWithTheSet {
-			core.AddGeneratedFlatBonus(aura, stats.AttackPower, battleShoutBase, core.BattleShoutT2Bonus)
+			core.AddGeneratedFlatBonus(aura, stats.AttackPower, battleShoutBase, buffs.BattleShoutT2Bonus)
 		}
 		aura.BuildPhase = core.Ternary(warrior.DefaultShout == proto.WarriorShout_WarriorShoutBattle, core.CharacterBuildPhaseBuffs, core.CharacterBuildPhaseNone)
 		return aura
@@ -47,7 +48,7 @@ func (warrior *Warrior) registerBattleShout() {
 	// is about to run out. Anything else has to be outbid first - a warrior
 	// without the set would otherwise keep recasting a 139 shout the category
 	// turns away while an external 169 one is up.
-	battleShoutCategory := warrior.GetExclusiveEffectCategory(core.BattleShoutCategory)
+	battleShoutCategory := warrior.GetExclusiveEffectCategory(buffs.BattleShoutCategory)
 
 	config := spelldata.SpellConfig(&warrior.Unit, battleShoutRank, spelldata.Flags(core.SpellFlagAPL))
 	config.ProcMask = core.ProcMaskEmpty

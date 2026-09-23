@@ -297,7 +297,7 @@ func (priest *Priest) applyPowerInfusion() {
 	// 	return
 	// }
 	//
-	// piAura := core.PowerInfusionsAura(&priest.Unit, true, 0)
+	// piAura := buffs.PowerInfusionsAura(&priest.Unit, true, 0)
 	//
 	// piSpell := priest.RegisterSpell(core.SpellConfig{
 	// 	ActionID:    core.ActionID{SpellID: 10060},
@@ -309,7 +309,7 @@ func (priest *Priest) applyPowerInfusion() {
 	// 	Cast: core.CastConfig{
 	// 		CD: core.Cooldown{
 	// 			Timer:    priest.NewTimer(),
-	// 			Duration: core.PowerInfusionsCooldown(),
+	// 			Duration: buffs.PowerInfusionsCooldown(),
 	// 		},
 	// 		DefaultCast: core.Cast{
 	// 			NonEmpty: true,

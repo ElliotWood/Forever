@@ -13,7 +13,7 @@ func (druid *Druid) registerFaerieFireSpell() {
 	// auras := druid.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
 	// 	// The druid's own copy of the aura; the client has no Improved Faerie
 	// 	// Fire node, so there are no talent points to pass.
-	// 	return core.FaerieFireAura(target, true, 0)
+	// 	return buffs.FaerieFireAura(target, true, 0)
 	// })
 	//
 	// druid.FaerieFire = druid.RegisterSpell(Humanoid|Moonkin, core.SpellConfig{
@@ -60,7 +60,7 @@ func (druid *Druid) registerFaerieFireFeralSpell() {
 	// druid.FaerieFireAuras = druid.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
 	// 	// The druid's own copy of the aura; the client has no Improved Faerie
 	// 	// Fire node, so there are no talent points to pass.
-	// 	return core.FaerieFireAura(target, true, 0)
+	// 	return buffs.FaerieFireAura(target, true, 0)
 	// })
 	//
 	// druid.FaerieFireFeral = druid.RegisterSpell(Cat|Bear, core.SpellConfig{

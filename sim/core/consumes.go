@@ -57,7 +57,7 @@ func applyConsumeEffects(agent Agent, partyBuffs *proto.PartyBuffs) {
 		if consumables.GuardianElixirId == 9088 {
 			character.AddStat(stats.ShadowResistance, 10)
 			auras := character.NewEnemyAuraArray(func(target *Unit) *Aura {
-				return GiftOfArthasAura(target, true, 0)
+				return registeredBuffs().GiftOfArthasAura(target)
 			})
 			procSpell := character.RegisterSpell(SpellConfig{
 				ActionID:    ActionID{SpellID: 11374},

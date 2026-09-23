@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/buffs"
 	"github.com/wowsims/forever/sim/core/proto"
 )
 
@@ -35,12 +36,12 @@ func TestWarriorAppliesTheGeneratedDemoralizingShout(t *testing.T) {
 	if want := (core.ActionID{SpellID: 11556, Tag: 0}); aura.ActionID != want {
 		t.Errorf("the warrior's own copy is %v, want %v", aura.ActionID, want)
 	}
-	if aura.Duration != core.DemoralizingShoutDuration(0) {
+	if aura.Duration != buffs.DemoralizingShoutDuration(0) {
 		t.Errorf("the warrior's own copy lasts %v, want the client's 45 seconds", aura.Duration)
 	}
-	if got := aura.ExclusiveEffects[0].Priority; got != -core.DemoralizingShoutValue(0) {
+	if got := aura.ExclusiveEffects[0].Priority; got != -buffs.DemoralizingShoutValue(0) {
 		t.Errorf("the warrior's own copy bids %v, want the magnitude of %v",
-			got, core.DemoralizingShoutValue(0))
+			got, buffs.DemoralizingShoutValue(0))
 	}
 	if war.DemoralizingShoutAuras.Get(target) != aura {
 		t.Error("the spell's aura array holds an aura other than the warrior's own shout")
