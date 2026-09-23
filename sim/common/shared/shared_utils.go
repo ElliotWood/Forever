@@ -798,21 +798,24 @@ func spellDataProcDamageSpell(character *core.Character, damage *spelldata.Spell
 	outcome := damageOutcome(defenseType, damage.CannotCrit(), OutcomeDefault)
 	effect := damage.DamageEffect()
 
+	single := make(core.SpellResultSlice, 1)
 	periodic := damage.PeriodicDamageEffect()
 	if periodic == spelldata.NilEffect {
 		multiTarget := effect.HitsAnArea() || effect.ChainTargets > 1
+		// Bound once per spell: the batch keeps the outcome, so binding it per cast would allocate.
+		var batchSpell *core.Spell
+		var batchOutcome core.OutcomeApplier
 		config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			var results []*core.SpellResult
+			results := single
 			if multiTarget {
-				results = slices.Clone(calcMultiTargetDamage(sim, spell, target, damage, effect, character.Level, GetOutcome(spell, outcome)))
-			} else {
-				results = []*core.SpellResult{spell.CalcDamage(sim, target, effect.Roll(sim, character.Level), GetOutcome(spell, outcome))}
-			}
-			afterTravel(sim, spell, func(sim *core.Simulation) {
-				for _, result := range results {
-					spell.DealDamage(sim, result)
+				if batchSpell != spell {
+					batchSpell, batchOutcome = spell, GetOutcome(spell, outcome)
 				}
-			})
+				results = calcMultiTargetDamage(sim, spell, target, damage, effect, character.Level, batchOutcome)
+			} else {
+				results[0] = spell.CalcDamage(sim, target, effect.Roll(sim, character.Level), GetOutcome(spell, outcome))
+			}
+			dealOnArrival(sim, spell, target, results, nil)
 		}
 		return config
 	}
@@ -821,32 +824,47 @@ func spellDataProcDamageSpell(character *core.Character, damage *spelldata.Spell
 	// on unrolled, and each tick rolls the outcome the row states for it.
 	config.Dot = spelldata.DotConfig(damage, periodic)
 	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-		var result *core.SpellResult
+		var results core.SpellResultSlice
 		if effect != spelldata.NilEffect {
-			result = spell.CalcDamage(sim, target, effect.Roll(sim, character.Level), GetOutcome(spell, outcome))
+			results = single
+			results[0] = spell.CalcDamage(sim, target, effect.Roll(sim, character.Level), GetOutcome(spell, outcome))
 		}
-		afterTravel(sim, spell, func(sim *core.Simulation) {
-			if result != nil {
-				spell.DealDamage(sim, result)
-				if !result.Landed() {
-					return
-				}
-			}
-			spell.Dot(target).Apply(sim)
-		})
+		dealOnArrival(sim, spell, target, results, applyDotIfLanded)
 	}
 
 	return config
 }
 
-// The damage is calculated on cast and lands once the missile the row states has flown the caster's
-// distance to the target. A row without a missile speed lands at once.
-func afterTravel(sim *core.Simulation, spell *core.Spell, land func(*core.Simulation)) {
+type afterDealt func(sim *core.Simulation, spell *core.Spell, target *core.Unit, results core.SpellResultSlice)
+
+// Deals the results the cast calculated, then runs after where it is set: at once, or where the spell
+// has a missile speed once it has flown the caster's distance to the target. The flight carries a
+// copy of the results, since the spell's next cast calculates into the same ones.
+func dealOnArrival(sim *core.Simulation, spell *core.Spell, target *core.Unit, results core.SpellResultSlice, after afterDealt) {
 	if spell.MissileSpeed == 0 {
-		land(sim)
+		dealResults(sim, spell, target, results, after)
 		return
 	}
-	spell.WaitTravelTime(sim, land)
+	results = slices.Clone(results)
+	spell.WaitTravelTime(sim, func(sim *core.Simulation) {
+		dealResults(sim, spell, target, results, after)
+	})
+}
+
+func dealResults(sim *core.Simulation, spell *core.Spell, target *core.Unit, results core.SpellResultSlice, after afterDealt) {
+	for _, result := range results {
+		spell.DealDamage(sim, result)
+	}
+	if after != nil {
+		after(sim, spell, target, results)
+	}
+}
+
+// The damage over time goes on with the hit that carries it, or on its own where there is none.
+func applyDotIfLanded(sim *core.Simulation, spell *core.Spell, target *core.Unit, results core.SpellResultSlice) {
+	if len(results) == 0 || results[0].Landed() {
+		spell.Dot(target).Apply(sim)
+	}
 }
 
 // The damage of an effect that reaches more than its target, dealt as a batch: every enemy in
@@ -1100,14 +1118,10 @@ func spellDataOnUseDamageSpell(character *core.Character, damage *spelldata.Spel
 		return config
 	}
 
+	single := make(core.SpellResultSlice, 1)
 	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-		result := spell.CalcOutcome(sim, target, applicationOutcome(spell))
-		afterTravel(sim, spell, func(sim *core.Simulation) {
-			spell.DealOutcome(sim, result)
-			if result.Landed() {
-				spell.Dot(target).Apply(sim)
-			}
-		})
+		single[0] = spell.CalcOutcome(sim, target, applicationOutcome(spell))
+		dealOnArrival(sim, spell, target, single, applyDotIfLanded)
 	}
 	return config
 }
