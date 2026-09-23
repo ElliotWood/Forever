@@ -58,7 +58,7 @@ func slowAuras(character *core.Character, row *spelldata.Spell) core.AuraArray {
 		}
 
 		aura := target.RegisterAura(spelldata.AuraConfig(row, spelldata.Label(label)))
-		spelldata.ParseEffects(nil, aura, row, spelldata.Effects(row.SlowEffects()...))
+		spelldata.ParseEffects(character, aura, row, spelldata.Effects(row.SlowEffects()...))
 		return aura
 	})
 }
