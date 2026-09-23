@@ -83,6 +83,23 @@ var auraTable = map[dbcenums.EffectAuraType]row{
 	dbcenums.A_MOD_DAMAGE_DONE: func(p *parser, e *Effect, v float64) *attachment {
 		return p.statsBuff(damageDoneStats(e.Misc), v)
 	},
+	// Flat damage taken per hit, which the sim keeps once for physical hits and once for magic ones.
+	dbcenums.A_MOD_DAMAGE_TAKEN: func(p *parser, e *Effect, v float64) *attachment {
+		return p.pseudoAdd("damage-taken-flat", p.damageTakenFields(e.Misc), v)
+	},
+
+	// The cost of the spells of the schools the mask names, in core's multiplicative cost bucket.
+	// Whether a second stack multiplies again or adds again is not stated, so a stacking row is
+	// skipped.
+	dbcenums.A_MOD_POWER_COST_SCHOOL_PCT: func(p *parser, e *Effect, v float64) *attachment {
+		if p.stacking || e.Misc == 0 {
+			return nil
+		}
+		return p.modFloat("SpellMod_PowerCost_Pct", core.SpellModConfig{
+			Kind:   core.SpellMod_PowerCost_Pct,
+			School: core.SpellSchool(e.Misc),
+		}, v/100)
+	},
 
 	dbcenums.A_MOD_THREAT: func(p *parser, e *Effect, v float64) *attachment {
 		return p.pseudoMultiplier("threat", []*float64{&p.unit.PseudoStats.ThreatMultiplier},
@@ -146,7 +163,7 @@ var auraTable = map[dbcenums.EffectAuraType]row{
 			percentMultiplier(v))
 	},
 	dbcenums.A_MOD_HEALING: func(p *parser, e *Effect, v float64) *attachment {
-		return p.pseudoAdd("healing-taken-flat", &p.unit.PseudoStats.BonusHealingTaken, v)
+		return p.pseudoAdd("healing-taken-flat", []*float64{&p.unit.PseudoStats.BonusHealingTaken}, v)
 	},
 
 	// Mana regen, which the client states per five seconds on the mana bar.
@@ -472,9 +489,9 @@ func (p *parser) statMultiplier(sts []stats.Stat, mult float64) *attachment {
 // static path has no Simulation for a later Refresh to hand over.
 //
 // Expiry undoes the multiplier by dividing by it, so a row that states -100% or worse has no way
-// back and is reported rather than applied.
+// back and is reported rather than applied. A pet wears no equipment, so there is no share to scale.
 func (p *parser) equipScaling(stat stats.Stat, mult float64) *attachment {
-	if p.character == nil || p.stacking || (p.static && p.conditional) || mult <= 0 {
+	if p.character == nil || p.unit.Type == core.PetUnit || p.stacking || (p.static && p.conditional) || mult <= 0 {
 		return nil
 	}
 
@@ -505,11 +522,32 @@ func (p *parser) pseudoMultiplier(kind string, fields []*float64, mult float64) 
 	})
 }
 
-// A pseudo-stat the sim adds to, which follows the stacks the way a flat stat does.
-func (p *parser) pseudoAdd(kind string, field *float64, v float64) *attachment {
+// Pseudo-stats the sim adds to, which follow the stacks the way a flat stat does.
+func (p *parser) pseudoAdd(kind string, fields []*float64, v float64) *attachment {
+	if len(fields) == 0 {
+		return nil
+	}
+
 	return additive(kind, v, func(_ *core.Simulation, delta float64) {
-		*field += delta
+		for _, field := range fields {
+			*field += delta
+		}
 	})
+}
+
+// The flat damage-taken fields a school mask names: every school is both, and a mask the two fields
+// cannot state on their own - a single magic school - names none.
+func (p *parser) damageTakenFields(mask int32) []*float64 {
+	physical, magic := &p.unit.PseudoStats.BonusPhysicalDamageTaken, &p.unit.PseudoStats.BonusSpellDamageTaken
+	switch mask {
+	case miscAllSchools:
+		return []*float64{physical, magic}
+	case miscMagicSchool:
+		return []*float64{magic}
+	case int32(core.SpellSchoolPhysical):
+		return []*float64{physical}
+	}
+	return nil
 }
 
 // One of the speeds the unit recomputes on every change. They take the Simulation the aura's gain

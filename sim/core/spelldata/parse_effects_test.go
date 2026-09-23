@@ -526,6 +526,8 @@ func TestEveryTableRow(t *testing.T) {
 		{dbcenums.A_MECHANIC_DURATION_MOD, int32(dbcenums.MECHANIC_STUN), -20, "stun-duration", 0.8, false},
 		{dbcenums.A_MOD_EXPERTISE, 0, 5, "stat ExpertiseRating", 5 * core.ExpertisePerQuarterPercentReduction, false},
 		{dbcenums.A_MOD_MELEE_HASTE_3, 0, 25, "melee-speed", 1.25, true},
+		{dbcenums.A_MOD_DAMAGE_TAKEN, 126, -10, "damage-taken-flat", -10, false},
+		{dbcenums.A_MOD_POWER_COST_SCHOOL_PCT, 126, 20, "SpellMod_PowerCost_Pct", 0.2, false},
 	}
 
 	// A row added to one of the three tables and to no case here would be invisible, so the cases
@@ -760,5 +762,74 @@ func TestParseSkipsANonPositiveMultiplier(t *testing.T) {
 	}
 	if got := character.PseudoStats.ThreatMultiplier; got != 1 {
 		t.Errorf("the threat multiplier is %v, want the 1 it started at", got)
+	}
+}
+
+// A school cost modifier reaches the spells of the schools its mask names and no others.
+func TestParseStaticSchoolCostModifier(t *testing.T) {
+	withRows(t, parseRows())
+	character := parseCharacter(&proto.Player{
+		Class: proto.Class_ClassMage,
+		Spec:  &proto.Player_Mage{Mage: &proto.Mage{}},
+	})
+	manaSpell := func(id int32, school core.SpellSchool) *core.Spell {
+		return character.RegisterSpell(core.SpellConfig{
+			ActionID:    core.ActionID{SpellID: id},
+			SpellSchool: school,
+			ManaCost:    core.ManaCostOptions{FlatCost: 100},
+		})
+	}
+	arcane, physical := manaSpell(2600, core.SpellSchoolArcane), manaSpell(2601, core.SpellSchoolPhysical)
+
+	ParseStatic(character, oneEffectRow(dbcenums.A_MOD_POWER_COST_SCHOOL_PCT, miscMagicSchool, 20))
+
+	if got := arcane.Cost.GetCurrentCost(); math.Abs(got-120) > 1e-9 {
+		t.Errorf("an arcane spell costs %v, want 120", got)
+	}
+	if got := physical.Cost.GetCurrentCost(); got != 100 {
+		t.Errorf("a physical spell costs %v, want the 100 the magic mask leaves alone", got)
+	}
+}
+
+// Flat damage taken lands on the physical field, the magic field or both, by the mask; a single magic
+// school has no field of its own and is skipped.
+func TestParseStaticFlatDamageTakenBySchool(t *testing.T) {
+	withRows(t, parseRows())
+
+	for _, c := range []struct {
+		misc            int32
+		physical, magic float64
+	}{
+		{miscAllSchools, -10, -10},
+		{miscMagicSchool, 0, -10},
+		{int32(core.SpellSchoolPhysical), -10, 0},
+	} {
+		character := parseWarrior()
+		ParseStatic(character, oneEffectRow(dbcenums.A_MOD_DAMAGE_TAKEN, c.misc, -10))
+
+		if got := character.PseudoStats.BonusPhysicalDamageTaken; got != c.physical {
+			t.Errorf("misc %d: physical damage taken %v, want %v", c.misc, got, c.physical)
+		}
+		if got := character.PseudoStats.BonusSpellDamageTaken; got != c.magic {
+			t.Errorf("misc %d: magic damage taken %v, want %v", c.misc, got, c.magic)
+		}
+	}
+
+	fire := ParseStatic(parseWarrior(), oneEffectRow(dbcenums.A_MOD_DAMAGE_TAKEN, int32(core.SpellSchoolFire), -10))
+	if len(fire.Applied) != 0 || len(fire.Skipped) != 1 {
+		t.Errorf("a fire-only mask attached %v, want it skipped", appliedKinds(fire))
+	}
+}
+
+// A pet wears no equipment, so the armor modifier has no share of its armor to scale.
+func TestParseSkipsEquipScalingOnAPet(t *testing.T) {
+	withRows(t, parseRows())
+	pet := parseWarrior()
+	pet.Unit.Type = core.PetUnit
+
+	parsed := ParseStatic(pet, oneEffectRow(dbcenums.A_MOD_BASE_RESISTANCE_PCT, miscArmor, 10))
+
+	if len(parsed.Applied) != 0 || len(parsed.Skipped) != 1 {
+		t.Errorf("the armor modifier on a pet attached %v, want it skipped", appliedKinds(parsed))
 	}
 }
