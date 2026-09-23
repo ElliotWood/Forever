@@ -44,16 +44,12 @@ export const LandingForever = () => (
 			<strong>Unaffiliated with any official or community sim project.</strong> One person writes it, every bug here is mine, and every number is
 			provisional &mdash; useful for catching the sim doing something obviously wrong, not as a statement about Forever.
 		</p>
-		<p className="m-0 opacity-80" data-testid="wowsims-credit">
-			Built on the open-source{' '}
-			<a href="https://github.com/wowsims" target="_blank" rel="noreferrer">
-				WoWSims
-			</a>{' '}
-			simulators, used under their{' '}
+		<p className="m-0 opacity-80" data-testid="licence-credit">
+			Built on open-source simulator code, used under its{' '}
 			<a href={`${SITE_REPO_URL}/blob/master/LICENSE`} target="_blank" rel="noreferrer">
 				MIT licence
 			</a>
-			. The engine is their work.
+			.
 		</p>
 		<p className="m-0 flex flex-wrap gap-3">
 			<Cta href="arena/" icon="trophy">

@@ -7,14 +7,13 @@
 			"toggle": "Toggle navigation"
 		},
 		"home": {
-			"title": "WoWSims - Forever",
+			"title": "Forever Sim (unofficial)",
 			"description": "A powerful simulation tool for World of Warcraft: Forever",
-			"welcomeDescription": "Welcome to WoWSims - Forever! This is a community-driven project to provide class and raid simulations for World of Warcraft® Forever together with the leading theorycrafters and class representatives."
+			"welcomeDescription": "Welcome to Forever Sim, an unofficial, personal simulator for World of Warcraft® Forever. It is not affiliated with any official or community sim project."
 		},
 		"header": {
-			"wowsims": "WoWSims",
-			"expansion": "Forever",
-			"supportDevs": "Support our devs"
+			"wowsims": "Forever Sim",
+			"expansion": "Forever"
 		}
 	},
 	"common": {
@@ -302,8 +301,7 @@
 		},
 		"unlaunched": {
 			"title": "This sim is currently not supported.",
-			"contribute_message": "Want to contribute?",
-			"discord_message": "Make sure to join our Discord!",
+			"contribute_message": "Want to help? Issues and pull requests are welcome on GitHub.",
 			"old_sim_message": "You can find the old Sim for this spec here:"
 		},
 		"notifications": {
@@ -2318,8 +2316,6 @@
 		"known_issues": "Known Issues",
 		"bug_report": "Report a bug or Request a feature",
 		"sim_options": "Sim Options",
-		"discord": "Join us on Discord",
-		"patreon": "Support us on Patreon",
 		"github": "Contribute on GitHub",
 		"status": {
 			"unlaunched": "This sim is a WORK IN PROGRESS. It is not fully developed and should not be used for general purposes.",
@@ -2490,7 +2486,7 @@
 			}
 		},
 		"header": {
-			"title": "WoWSims - Forever",
+			"title": "Forever Sim (unofficial)",
 			"phase": "{{phase}} - {{status}}"
 		},
 		"results": {

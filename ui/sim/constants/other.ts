@@ -26,23 +26,12 @@ export const CURRENT_API_VERSION: number = readMessageOption(ProtoVersion, 'prot
 
 // Github pages serves our site under the /forever directory
 export const REPO_NAME = 'forever';
-export const REPO_URL = `https://github.com/wowsims/${REPO_NAME}`;
+export const REPO_URL = 'https://github.com/ElliotWood/Forever';
 export const REPO_RELEASES_URL = `${REPO_URL}/releases`;
 export const REPO_NEW_ISSUE_URL = `${REPO_URL}/issues/new`;
 export const REPO_CHOOSE_NEW_ISSUE_URL = `${REPO_NEW_ISSUE_URL}/choose`;
 
-export const SOCIALS = [
-	{ key: 'discord', href: 'https://discord.gg/p3DgvmnDCS', className: 'ui-social-link', icon: 'discord', tooltip: 'info.discord' },
-	{ key: 'github', href: REPO_URL, className: 'ui-social-link', icon: 'github', tooltip: 'info.github' },
-	{
-		key: 'patreon',
-		href: 'https://patreon.com/wowsims',
-		className: 'ui-social-link',
-		icon: 'patreon',
-		tooltip: 'info.patreon',
-		label: ' Patreon',
-	},
-] as const;
+export const SOCIALS = [{ key: 'github', href: REPO_URL, className: 'ui-social-link', icon: 'github', tooltip: 'info.github' }] as const;
 
 export type Social = (typeof SOCIALS)[number];
 
