@@ -24,6 +24,7 @@ import {
 	SPELL_HASTE_RATING_PER_HASTE_PERCENT,
 	SPELL_HIT_RATING_PER_HIT_PERCENT,
 } from '../constants/mechanics';
+import { ENCOUNTER_DEFAULTS } from '../constants/encounter';
 import { CURRENT_API_VERSION } from '../constants/other';
 import { getSpecConfig } from '../player/player';
 import { PseudoStat as ClassicPseudoStat, Stat as ClassicStat } from '../proto/legacy_classic/common';
@@ -286,6 +287,9 @@ export const convertClassicSettingsJson = (classic: Json): IndividualSimSettings
 	if (c.epWeightsStats) c.epWeightsStats = convertUnitStats(c.epWeightsStats, true);
 	for (const key of ['dpsRefStat', 'healRefStat', 'tankRefStat']) c[key] = convertStatName(c[key]);
 	for (const target of c.encounter?.targets ?? []) target.stats = convertUnitStats({ stats: target.stats }).stats;
+	// Master's fight had no 45% and 90% phases. Left at 0 the fight never passes 90%, so it never
+	// reaches execute range either (no Execute, no below-20% effects): take the defaults.
+	if (c.encounter) c.encounter = { executeProportion45: ENCOUNTER_DEFAULTS.executeProportion45, executeProportion90: ENCOUNTER_DEFAULTS.executeProportion90, ...c.encounter };
 
 	if (player.consumes) player.consumables = convertConsumes(player.consumes);
 	delete player.consumes;

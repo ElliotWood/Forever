@@ -57,6 +57,9 @@ describe('classic-engine share links', () => {
 			// Stat arrays are re-indexed: the boss's armor moves from master's slot to ours.
 			expect(settings.encounter!.targets[0].stats[Stat.StatArmor]).toBe(classic.encounter!.targets[0].stats[ClassicStat.StatArmor]);
 			expect(settings.encounter!.duration).toBe(classic.encounter!.duration);
+			// Master had no 45%/90% phases; without them the fight never reaches execute range.
+			expect(settings.encounter!.executeProportion90).toBe(0.9);
+			expect(settings.encounter!.executeProportion45).toBe(0.45);
 			// The same settings through the JSON importer / autosave path.
 			const viaJson = IndividualSimSettings.fromJson(parseLegacySettingsJson(JSON.stringify(ClassicSettings.toJson(classic))) as never);
 			expect(IndividualSimSettings.equals(viaJson, settings)).toBe(true);
