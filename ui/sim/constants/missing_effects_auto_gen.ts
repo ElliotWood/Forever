@@ -2871,10 +2871,4 @@ export const MISSING_ENCHANT_EFFECTS = new Map<number, string[]>([
 			"Permanently enchant a pair of gloves to give a small chance to acquire Death Lotus when gathering any herb in Hyjal.", // 1294053 - https://www.wowhead.com/forever/spell=1294053
 		]
 	],
-	[
-		8721, // Enchant Weapon - Recovery
-		[
-			"Permanently enchant a Melee Weapon to trigger Recovery when you are Parried or Dodged, healing you for 5% of your maximum health. Cannot occur more often than once every 10 sec.", // 1248761 - https://www.wowhead.com/forever/spell=1248761
-		]
-	],
 ])

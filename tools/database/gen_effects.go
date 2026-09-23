@@ -86,6 +86,8 @@ type Entry struct {
 	// Set when the effect deals flat damage instead of granting stats. Those resolve no stats, so
 	// without this they are dropped before they are ever emitted.
 	DealsDamage bool
+	// The same for an effect that heals the wearer.
+	Heals bool
 }
 
 // The literals a stacking on-use needs in the generated call. Everything else - stacks,
@@ -112,6 +114,8 @@ type ProcRouting struct {
 	// Set where the spell the proc applies deals damage instead of granting an aura, which is a
 	// constructor of its own: there is no buff to build.
 	Damage bool
+	// The same for a spell that heals the wearer.
+	Heal bool
 	// Empty when the rows state enough to build the listener.
 	Unsupported []string
 	// What the rows resolve to, for the reader of the generated file.
@@ -155,6 +159,45 @@ func (r *ProcRouting) asDamage(damageSpellID int32) {
 	}
 
 	r.Summary = procSummary(r.TriggerSpellID, spelldata.Find(int32(r.TriggerSpellID)), r.BuffSpellID)
+}
+
+// A proc whose spell heals the wearer, the E_HEAL_PCT or E_HEAL spell the client hangs below the
+// trigger.
+func (r *ProcRouting) asHeal(healSpellID int32) {
+	r.Heal = true
+	r.BuffSpellID = int(healSpellID)
+
+	if effect := spelldata.Find(healSpellID).ProcHealEffect(); effect.Target[0] != dbcenums.TARGET_UNIT_CASTER {
+		r.Unsupported = append(r.Unsupported, fmt.Sprintf("the heal lands on implicit target %d, not the wearer", effect.Target[0]))
+	}
+
+	r.Summary = procSummary(r.TriggerSpellID, spelldata.Find(int32(r.TriggerSpellID)), r.BuffSpellID)
+}
+
+// The heal spell a proc casts: the spell itself, or one it triggers.
+func procHealSpell(spellID int32) int32 {
+	return findProcHealSpell(spellID, map[int32]bool{})
+}
+
+func findProcHealSpell(spellID int32, seen map[int32]bool) int32 {
+	s := spelldata.Find(spellID)
+	if s == spelldata.Nil || seen[spellID] {
+		return 0
+	}
+	seen[spellID] = true
+
+	if s.ProcHealEffect() != spelldata.NilEffect {
+		return spellID
+	}
+	for i := range s.Effects {
+		if s.Effects[i].TriggerID == 0 {
+			continue
+		}
+		if heal := findProcHealSpell(s.Effects[i].TriggerID, seen); heal != 0 {
+			return heal
+		}
+	}
+	return 0
 }
 
 // The buff the proc applies has to last for something: an aura of no duration is one the sim
@@ -719,7 +762,7 @@ func TryParseProcEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, inst
 			// BuildProcInfo does for the shapes below. The two that need more than the rows state
 			// stay where they are: a window accumulating a second aura, and an effect with no stats.
 			if itemEffect.StackingAura == nil && len(dbc.EffectStats(itemEffect)) > 0 {
-				entry.Proc = routeItemProc(parsed, itemEffect)
+				entry.Proc = routeItemProc(parsed, itemEffect, renderedTooltip)
 				if entry.Proc != nil {
 					entry.Proc.requireABuffDuration()
 					entry.Supported = entry.Proc.Supported()
@@ -731,7 +774,7 @@ func TryParseProcEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, inst
 			// client hangs below its trigger, read from that spell's own row.
 			if len(dbc.EffectStats(itemEffect)) == 0 {
 				if damage := dbc.ResolveDamageEffect(int(itemEffect.BuffId)); damage != nil {
-					entry.Proc = routeItemProc(parsed, itemEffect)
+					entry.Proc = routeItemProc(parsed, itemEffect, renderedTooltip)
 					if entry.Proc != nil {
 						entry.Proc.asDamage(int32(damage.SpellID))
 						entry.Supported = entry.Proc.Supported()
@@ -740,7 +783,19 @@ func TryParseProcEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, inst
 				}
 			}
 
-			if (len(dbc.EffectStats(itemEffect)) == 0 && !entry.DealsDamage) || !entry.Supported {
+			// The same for an effect that heals the wearer.
+			if len(dbc.EffectStats(itemEffect)) == 0 && !entry.DealsDamage {
+				if heal := procHealSpell(itemEffect.BuffId); heal != 0 {
+					entry.Proc = routeItemProc(parsed, itemEffect, renderedTooltip)
+					if entry.Proc != nil {
+						entry.Proc.asHeal(heal)
+						entry.Supported = entry.Proc.Supported()
+						entry.Heals = true
+					}
+				}
+			}
+
+			if (len(dbc.EffectStats(itemEffect)) == 0 && !entry.DealsDamage && !entry.Heals) || !entry.Supported {
 				StoreMissingEffect("ItemEffects", parsed.Name, Variant{
 					ID:      int(parsed.Id),
 					Name:    renderedTooltip,
@@ -780,14 +835,22 @@ func TryParseProcEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, inst
 }
 
 // The rows an item effect names: the client's ItemEffect row carries the spell with the proc on it,
-// and the shipped entry carries the spell that applies the stats.
-func routeItemProc(parsed *proto.UIItem, itemEffect *proto.ItemEffect) *ProcRouting {
+// and the shipped entry carries the spell that applies the stats. A 100 beside "sometimes" on the
+// tooltip is a rate the rows do not carry, as it is on an enchant: Darkmoon Card: Heroism 23689.
+func routeItemProc(parsed *proto.UIItem, itemEffect *proto.ItemEffect, tooltip string) *ProcRouting {
 	effect := dbc.GetItemEffectForBuffID(int(parsed.Id), int(itemEffect.BuffId))
 	if effect == nil {
 		return nil
 	}
 
-	return routeProc(effect.SpellID, int(itemEffect.BuffId), effect.TriggerType == dbc.ITEM_SPELLTRIGGER_CHANCE_ON_HIT)
+	routing := routeProc(effect.SpellID, int(itemEffect.BuffId), effect.TriggerType == dbc.ITEM_SPELLTRIGGER_CHANCE_ON_HIT)
+	trigger := spelldata.Find(int32(effect.SpellID))
+	if trigger.ProcChanceSource == spelldata.ProcChanceAlways && trigger.RPPM == 0 &&
+		enchantTooltipStatesAnUnknownRate(tooltip) && !statesNoRate(routing) {
+		routing.Unsupported = append(routing.Unsupported, spelldata.ReasonStatesNoRate)
+	}
+
+	return routing
 }
 
 func TryParseOnUseEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instance *dbc.DBC, groupMap map[string]Group) EffectParseResult {
@@ -969,6 +1032,7 @@ func routeEnchantSlot(slot dbc.EnchantProcSlot, instance *dbc.DBC, grantTooltip 
 	}
 
 	damage := dbc.ResolveDamageEffect(slot.SpellID)
+	heal := procHealSpell(int32(slot.SpellID))
 	switch {
 	case hasStats, multipliesStats:
 		routing.requireABuffDuration()
@@ -978,6 +1042,8 @@ func routeEnchantSlot(slot dbc.EnchantProcSlot, instance *dbc.DBC, grantTooltip 
 			routing.Unsupported = append(routing.Unsupported,
 				fmt.Sprintf("the damage spell hits %s (TargetCreatureType %d) only", creatureTypeNames(mask), mask))
 		}
+	case heal != 0:
+		routing.asHeal(heal)
 	default:
 		routing.Unsupported = append(routing.Unsupported,
 			fmt.Sprintf("the enchant's effect entry resolves no stats from %d (%s)", applied, spellEffectKinds(instance, applied)))
@@ -985,6 +1051,12 @@ func routeEnchantSlot(slot dbc.EnchantProcSlot, instance *dbc.DBC, grantTooltip 
 
 	if slot.ChancePct > 0 {
 		routing.Summary += fmt.Sprintf("; the enchantment states %d%%", slot.ChancePct)
+	}
+
+	if routing.ProcHint != 0 {
+		trigger := spelldata.Find(int32(slot.SpellID))
+		decoded := core.DecodeProcTypeMask(trigger.ProcFlags, trigger.ProcHint|routing.ProcHint)
+		routing.Summary += fmt.Sprintf("; the enchant's tooltip restricts it to %s", asCoreOutcome(decoded.Outcome))
 	}
 
 	return routing
@@ -1041,10 +1113,6 @@ func (r *ProcRouting) readEnchantTooltip(tooltip string) {
 	}
 
 	r.ProcHint = hints & (core.ProcHintAttackDodged | core.ProcHintAttackParried) &^ trigger.ProcHint
-	if r.ProcHint != 0 {
-		decoded := core.DecodeProcTypeMask(trigger.ProcFlags, trigger.ProcHint|r.ProcHint)
-		r.Summary += fmt.Sprintf("; the enchant's tooltip restricts it to %s", asCoreOutcome(decoded.Outcome))
-	}
 }
 
 // "Often", "sometimes" and "occasionally" are how an enchant's tooltip says its proc has a rate the

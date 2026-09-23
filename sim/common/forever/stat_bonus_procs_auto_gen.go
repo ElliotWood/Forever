@@ -1441,12 +1441,10 @@ func RegisterAllProcs() {
 	//
 	// Sometimes heals bearer of 150 damage when damaging an enemy in melee.
 	// https://www.wowhead.com/forever/spell=23682
-	// shared.NewProcStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
-	//	Callback:           core.CallbackEmpty,
-	//	ProcMask:           core.ProcMaskUnknown,
-	//	Outcome:            core.OutcomeEmpty,
-	//	RequireDamageDealt: false
-	// }, []shared.ItemVariant{
+	// unsupported: states no rate
+	// trigger 23689 (every time, core.CallbackOnSpellHitDealt, core.ProcMaskMeleeMHAuto | core.ProcMaskMeleeOHAuto | core.ProcMaskMeleeMHSpecial | core.ProcMaskMeleeOHSpecial) -> buff 23682
+	// shared.NewSpellDataHealProc(shared.SpellDataProc{TriggerSpellID: 23689, BuffSpellID: 23682},
+	//	[]shared.ItemVariant{
 	//	{ItemID: 19287, ItemName: "Darkmoon Card: Heroism"},
 	// })
 

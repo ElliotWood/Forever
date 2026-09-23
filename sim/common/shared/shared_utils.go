@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/spelldata"
 	"github.com/wowsims/forever/sim/core/stats"
@@ -427,6 +428,12 @@ func NewSpellDataDamageProc(cfg SpellDataProc, variants []ItemVariant) {
 	forEachSpellDataVariant(cfg, variants, registerSpellDataDamageProc)
 }
 
+// An item or enchant proc whose "buff" heals the wearer: the client applies no aura, it casts an
+// E_HEAL_PCT or E_HEAL spell. BuffSpellID names that spell.
+func NewSpellDataHealProc(cfg SpellDataProc, variants []ItemVariant) {
+	forEachSpellDataVariant(cfg, variants, registerSpellDataHealProc)
+}
+
 func forEachSpellDataVariant(cfg SpellDataProc, variants []ItemVariant, register func(SpellDataProc)) {
 	if len(variants) == 0 {
 		register(cfg)
@@ -750,7 +757,7 @@ func applySpellDataDamageProc(agent core.Agent, cfg SpellDataProc, source effect
 	source.registerProc(character, character.MakeProcTriggerAura(config), source.eligibleSlots(character))
 }
 
-// A damage proc's listener as the trigger's row and the effect state it, without the handler.
+// A damage or heal proc's listener as the trigger's row and the effect state it, without the handler.
 func spellDataDamageTrigger(character *core.Character, cfg SpellDataProc, source effectSource, trigger *spelldata.Spell) core.ProcTrigger {
 	config := spelldata.ProcTrigger(character, trigger, nil,
 		weaponProcShape(cfg), spellDataProcRate(source, trigger, nil), statedWeaponProcChance(cfg, source))
@@ -844,6 +851,73 @@ func procDamageTarget(character *core.Character, callback core.AuraCallback, spe
 	}
 
 	return target
+}
+
+func registerSpellDataHealProc(cfg SpellDataProc) {
+	source := cfg.effectSource()
+
+	// Soft fail to allow for overrides for bad effects
+	if source.isAlreadyImplemented() {
+		return
+	}
+
+	trigger := cfg.trigger()
+	heal := spelldata.MustFind(cfg.BuffSpellID)
+
+	// A listener with no callback never fires, and the row says so before any character exists.
+	if !cfg.IsWeaponProc && decodedCallback(trigger) == core.CallbackEmpty {
+		return
+	}
+
+	source.registerEffect(func(agent core.Agent) {
+		applySpellDataHealProc(agent, cfg, source, trigger, heal)
+	})
+}
+
+func applySpellDataHealProc(agent core.Agent, cfg SpellDataProc, source effectSource, trigger *spelldata.Spell, heal *spelldata.Spell) {
+	character := agent.GetCharacter()
+	healSpell := character.RegisterSpell(spellDataProcHealSpell(character, heal))
+
+	config := spellDataDamageTrigger(character, cfg, source, trigger)
+	config.Handler = func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
+		healSpell.Cast(sim, &character.Unit)
+	}
+	config.TriggerImmediately = true
+
+	source.registerProc(character, character.MakeProcTriggerAura(config), source.eligibleSlots(character))
+}
+
+// The heal the proc casts, as its row states it: a share of the target's maximum health or an amount
+// the effect rolls, the spell power share the row states, and a crit unless the row rules one out.
+// It goes through the healing path so it is measured as healing. Like the damage shape it is a
+// proc's spell, out of the rotation and not a cast of its own.
+func spellDataProcHealSpell(character *core.Character, heal *spelldata.Spell) core.SpellConfig {
+	config := spelldata.SpellConfig(&character.Unit, heal, spelldata.Magic(core.ProcMaskSpellHealing), spelldata.Proc())
+	// A heal crits for the magic multiplier whatever the row files it under: 1248759 states no
+	// defense type at all.
+	config.DefenseType = core.DefenseTypeMagic
+	if heal.IsAProc() {
+		config.Flags |= core.SpellFlagProc
+	}
+
+	effect := heal.ProcHealEffect()
+	amount := func(sim *core.Simulation, target *core.Unit) float64 {
+		if effect.Type == dbcenums.E_HEAL_PCT {
+			return target.MaxHealth() * effect.Percent()
+		}
+		return effect.Roll(sim, character.Level)
+	}
+
+	cannotCrit := heal.CannotCrit()
+	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+		outcome := spell.OutcomeHealingCrit
+		if cannotCrit {
+			outcome = spell.OutcomeHealing
+		}
+		spell.CalcAndDealHealing(sim, target, amount(sim, target), outcome)
+	}
+
+	return config
 }
 
 func decodedCallback(s *spelldata.Spell) core.AuraCallback {

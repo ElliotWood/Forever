@@ -110,6 +110,12 @@ func (s *Spell) HealEffect() *Effect {
 	return s.firstOfType(dbcenums.E_HEAL)
 }
 
+// The effect a proc's heal lands through: E_HEAL_PCT, a percentage of the target's maximum health
+// (Recovery 1248759 reads 5), or E_HEAL, an amount the effect rolls.
+func (s *Spell) ProcHealEffect() *Effect {
+	return s.firstOfType(dbcenums.E_HEAL_PCT, dbcenums.E_HEAL)
+}
+
 func (s *Spell) EnergizeEffect() *Effect {
 	return s.firstOfType(dbcenums.E_ENERGIZE)
 }

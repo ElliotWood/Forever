@@ -2,6 +2,7 @@ package forever
 
 import (
 	"github.com/wowsims/forever/sim/common/shared"
+	"github.com/wowsims/forever/sim/core"
 )
 
 func RegisterAllEnchants() {
@@ -302,22 +303,6 @@ func RegisterAllEnchants() {
 	//	TriggerSpellID: 1294053,
 	// }, nil)
 
-	// TODO: Manual implementation required
-	//       This can be ignored if the effect has already been implemented.
-	//       With next db run the item will be removed if implemented.
-	//
-	// Permanently enchant a Melee Weapon to trigger Recovery when you are Parried or Dodged, healing you for
-	// 5% of your maximum health. Cannot occur more often than once every 10 sec.
-	// https://www.wowhead.com/forever/spell=1248760
-	// unsupported: the enchant's effect entry resolves no stats from 1248759 (E_HEAL_PCT)
-	// trigger 1248761 (every time, core.CallbackOnSpellHitDealt, core.ProcMaskMeleeMHAuto | core.ProcMaskMeleeOHAuto | core.ProcMaskMeleeMHSpecial | core.ProcMaskMeleeOHSpecial); the enchant's tooltip restricts it to core.OutcomeDodge | core.OutcomeParry
-	// shared.NewSpellDataProc(shared.SpellDataProc{
-	//	Name:           "Enchant Weapon - Recovery",
-	//	EnchantID:      8721,
-	//	TriggerSpellID: 1248761,
-	//	ProcHint:       core.ProcHintAttackDodged | core.ProcHintAttackParried,
-	// }, nil)
-
 	// Enchants a weapon to have a 15% chance to inflict 11 Fire damage to all enemies within 3 yards.
 	// https://www.wowhead.com/forever/spell=6296
 	// trigger 6297 (0%, core.CallbackEmpty, core.ProcMaskUnknown); the enchantment states 15%
@@ -361,5 +346,17 @@ func RegisterAllEnchants() {
 		EnchantID:      8216,
 		TriggerSpellID: 1248758,
 		BuffSpellID:    1299796,
+	}, nil)
+
+	// Permanently enchant a Melee Weapon to trigger Recovery when you are Parried or Dodged, healing you for
+	// 5% of your maximum health. Cannot occur more often than once every 10 sec.
+	// https://www.wowhead.com/forever/spell=1248760
+	// trigger 1248761 (every time, core.CallbackOnSpellHitDealt, core.ProcMaskMeleeMHAuto | core.ProcMaskMeleeOHAuto | core.ProcMaskMeleeMHSpecial | core.ProcMaskMeleeOHSpecial) -> buff 1248759; the enchant's tooltip restricts it to core.OutcomeDodge | core.OutcomeParry
+	shared.NewSpellDataHealProc(shared.SpellDataProc{
+		Name:           "Enchant Weapon - Recovery",
+		EnchantID:      8721,
+		TriggerSpellID: 1248761,
+		BuffSpellID:    1248759,
+		ProcHint:       core.ProcHintAttackDodged | core.ProcHintAttackParried,
 	}, nil)
 }

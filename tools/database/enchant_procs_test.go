@@ -4,7 +4,10 @@ import (
 	"slices"
 	"strings"
 	"testing"
+	"time"
 
+	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/spelldata"
 	"github.com/wowsims/forever/sim/core/stats"
 	"github.com/wowsims/forever/tools/database/dbc"
@@ -42,7 +45,7 @@ func TestEnchantProcRouting(t *testing.T) {
 		{7941, "Grand Arcanist: spell power and healing register, the mana beside them is not a stat", []want{{1231152, false, 0, ""}}},
 		{8216, "Insight: 35%, a buff that multiplies Spirit", []want{{1248758, false, 0, ""}}},
 		{8217, "Revelation: 100 beside 'a chance to trigger'", []want{{1248806, false, 0, spelldata.ReasonStatesNoRate}}},
-		{8721, "Recovery: 100 beside a cooldown, which is a rate; the heal is not a buff", []want{{1248761, false, 0, "E_HEAL_PCT"}}},
+		{8721, "Recovery: 100 beside a cooldown, a heal on the wearer's attack dodged or parried", []want{{1248761, false, 0, ""}}},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			enchant, ok := instance.EnchantsByEffectId[tc.effectID]
@@ -147,6 +150,51 @@ func TestEnchantPercentStatBuffIsTheAppliedSpell(t *testing.T) {
 	want := []spelldata.StatMultiplier{{Stat: stats.Spirit, Multiplier: 2}}
 	if got := spelldata.PercentStats(spelldata.Find(1299796), 60); !slices.Equal(got, want) {
 		t.Errorf("multipliers %v, want %v", got, want)
+	}
+}
+
+// Recovery's equip aura 1248761 carries no description; its grant 1248760 reads "trigger Recovery when
+// you are Parried or Dodged". The routing carries that outcome, the row's 10 s ProcCategoryRecovery
+// and its ProcChance of 100, and casts the 5% E_HEAL_PCT heal 1248759 it applies.
+func TestRecoveryHealsOnTheWearersAttackDodgedOrParried(t *testing.T) {
+	inRepositoryRoot(t)
+	instance := dbc.GetDBC()
+	grants := enchantGrantEffects(instance.SpellEffectsById)
+
+	enchant := instance.EnchantsByEffectId[8721]
+	got := routeEnchantProcs(enchant.ProcSlots(), instance, renderSpellTooltip(instance, grants[8721].SpellID))
+	if len(got) != 1 {
+		t.Fatalf("%d routings, want 1", len(got))
+	}
+	r := got[0]
+
+	if !r.Supported() {
+		t.Fatalf("refused (%s), want it registered", r.Reason())
+	}
+	if !r.Heal || r.Damage || r.TriggerSpellID != 1248761 || r.BuffSpellID != 1248759 {
+		t.Errorf("heal %v, damage %v, trigger %d, buff %d; want a heal from 1248761 casting 1248759",
+			r.Heal, r.Damage, r.TriggerSpellID, r.BuffSpellID)
+	}
+	if want := core.ProcHintAttackDodged | core.ProcHintAttackParried; r.ProcHint != want {
+		t.Errorf("hint %q, want %q", formatProcHint(r.ProcHint), formatProcHint(want))
+	}
+
+	trigger := spelldata.Find(1248761)
+	decoded := core.DecodeProcTypeMask(trigger.ProcFlags, trigger.ProcHint|r.ProcHint)
+	if decoded.Callback != core.CallbackOnSpellHitDealt {
+		t.Errorf("callback %v, want the wearer's own hits dealt", decoded.Callback)
+	}
+	if decoded.Outcome != core.OutcomeDodge|core.OutcomeParry || decoded.RequireDamageDealt {
+		t.Errorf("outcome %d, require damage %v; want dodge or parry with no damage dealt",
+			decoded.Outcome, decoded.RequireDamageDealt)
+	}
+	if trigger.StatedChance() != 1 || trigger.ICD() != 10*time.Second {
+		t.Errorf("chance %v, ICD %v; want every time, once every 10 s", trigger.StatedChance(), trigger.ICD())
+	}
+
+	heal := spelldata.Find(1248759).ProcHealEffect()
+	if heal.Type != dbcenums.E_HEAL_PCT || heal.Percent() != 0.05 {
+		t.Errorf("heal effect %v at %v, want E_HEAL_PCT at 5%%", heal.Type, heal.Percent())
 	}
 }
 
