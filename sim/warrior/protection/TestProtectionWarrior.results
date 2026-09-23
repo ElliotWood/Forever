@@ -79,6 +79,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-Beastmaster'sBoots-22061"
+ value: {
+  dps: 518.34388
+  tps: 796.27183
+  dtps: 3496.64931
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-BlazefuryMedallion-17111"
  value: {
   dps: 515.37624
@@ -461,6 +469,14 @@ dps_results: {
   dps: 521.36353
   tps: 801.03129
   dtps: 3600.05994
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-ObsidianMailTunic-22191"
+ value: {
+  dps: 541.2533
+  tps: 830.78732
+  dtps: 3603.97029
  }
 }
 dps_results: {
