@@ -61,6 +61,13 @@ var IgnoreMissingEffectBySpellID = map[int]string{
 	16372: "Seal of Ascension - no tooltip and no mechanic",
 }
 
+// Absorbs a server script restricts to spells the client does not list, keyed by spell ID with the
+// reason the generated file gives. 1287808, Onyxia Blood Talisman's, states 10000000000 beside the
+// A_DUMMY that names the Dragon Breath spells.
+var UnsupportedAbsorbBySpellID = map[int32]string{
+	1287808: "the absorb of 10000000000 beside an A_DUMMY absorbs only the spells a script names, which the client does not list",
+}
+
 var OtherItemIdsToFetch = []string{}
 var ConsumableOverrides = []*proto.Consumable{
 	{Id: 23334, CooldownDuration: int32(time.Hour.Seconds())}, // Cracked Power Core

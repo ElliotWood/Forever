@@ -255,17 +255,11 @@ func energizeUnsupported(s *spelldata.Spell, effect *spelldata.Effect) []string 
 	return unsupported
 }
 
-// An absorb of at least this much beside an A_DUMMY effect is a script's: the dummy stands for the
-// spells it absorbs, which the client does not list. Blood of the Broodmother 1287808 states
-// 10000000000 beside the dummy that names Dragon Breath spells.
-const scriptedAbsorbAmount = 1e9
-
 func absorbUnsupported(absorb *spelldata.Spell) []string {
 	effect := absorb.AbsorbEffect()
 	unsupported := wearerTarget("absorb", effect)
-	if effect.BasePoints >= scriptedAbsorbAmount && absorb.FirstAura(dbcenums.A_DUMMY) != spelldata.NilEffect {
-		unsupported = append(unsupported, fmt.Sprintf(
-			"the absorb of %.0f beside an A_DUMMY absorbs only the spells a script names, which the client does not list", effect.BasePoints))
+	if reason, ok := UnsupportedAbsorbBySpellID[absorb.ID]; ok {
+		unsupported = append(unsupported, reason)
 	}
 	if absorb.DurationMs == 0 {
 		unsupported = append(unsupported, "the absorb states no duration")
