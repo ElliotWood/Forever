@@ -6,116 +6,94 @@ import (
 	"time"
 
 	"github.com/wowsims/forever/sim/core"
-	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/spelldata"
-	"github.com/wowsims/forever/sim/core/stats"
 )
 
 // Thunder Clap
 var SynthThunderClapCategory = "AtkSpdReduction"
 var synthThunderClapSpell = spelldata.MustFind(11581)
-var synthThunderClapTalent = spelldata.Talent(12287, 2)
+var synthThunderClapMeta = &Meta{
+	Label:        "Thunder Clap",
+	Spell:        synthThunderClapSpell,
+	Category:     SynthThunderClapCategory,
+	Talent:       spelldata.Talent(12287, 2),
+	TalentEffect: 1,
+}
 
 func SynthThunderClapValue(talentPoints int32) float64 {
-	return 1 + talentScaled(amount(synthThunderClapSpell.Effect(dbcenums.A_MOD_MELEE_HASTE_3, 0)), synthThunderClapTalent.Rank(talentPoints).EffectN(1))/100
+	return synthThunderClapMeta.Value(talentPoints)
 }
 func SynthThunderClapDuration(talentPoints int32) time.Duration {
-	return auraDuration(synthThunderClapSpell)
+	return synthThunderClapMeta.Duration(talentPoints)
 }
 func SynthThunderClapAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedDebuff(unit, core.GeneratedBuff{
-		Label:    "Thunder Clap (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: synthThunderClapSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration: SynthThunderClapDuration(talentPoints),
-		Category: SynthThunderClapCategory,
-		IsPlayer: isPlayer,
-		Pseudo: []core.PseudoConfig{
-			{Kind: core.PseudoStatMeleeSpeedMultiplier, Amount: SynthThunderClapValue(talentPoints), IsMultiplicative: true, SchoolMask: 0},
-		},
-	})
+	return newDebuff(unit, synthThunderClapMeta, isPlayer, talentPoints)
 }
 
 // Sunder Armor
 var SynthSunderArmorCategory = "MajorArmorReduction"
 var synthSunderArmorSpell = spelldata.MustFind(11597)
+var synthSunderArmorMeta = &Meta{
+	Label:      "Sunder Armor",
+	Spell:      synthSunderArmorSpell,
+	Category:   SynthSunderArmorCategory,
+	SingleAura: true,
+}
 
 func SynthSunderArmorValue(talentPoints int32) float64 {
-	return amount(synthSunderArmorSpell.Effect(dbcenums.A_MOD_RESISTANCE, 1))
+	return synthSunderArmorMeta.Value(talentPoints)
 }
 func SynthSunderArmorDuration(talentPoints int32) time.Duration {
-	return auraDuration(synthSunderArmorSpell)
+	return synthSunderArmorMeta.Duration(talentPoints)
 }
 func SynthSunderArmorAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedDebuff(unit, core.GeneratedBuff{
-		Label:      "Sunder Armor (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:   core.ActionID{SpellID: synthSunderArmorSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration:   SynthSunderArmorDuration(talentPoints),
-		MaxStacks:  5,
-		Category:   SynthSunderArmorCategory,
-		SingleAura: true,
-		IsPlayer:   isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.Armor, Amount: SynthSunderArmorValue(talentPoints), IsMultiplicative: false},
-		},
-	})
+	return newDebuff(unit, synthSunderArmorMeta, isPlayer, talentPoints)
 }
 
 // Expose Armor
-// Effect 0 is worth -450.0 per combo point; this is the 5-point finisher.
 var SynthExposeArmorCategory = "MajorArmorReduction"
 var synthExposeArmorSpell = spelldata.MustFind(11198)
+var synthExposeArmorMeta = &Meta{
+	Label:           "Expose Armor",
+	Spell:           synthExposeArmorSpell,
+	Category:        SynthExposeArmorCategory,
+	SingleAura:      true,
+	FullComboPoints: true,
+}
 
 func SynthExposeArmorValue(talentPoints int32) float64 {
-	return fullComboPoints(synthExposeArmorSpell.Effect(dbcenums.A_MOD_RESISTANCE, 1))
+	return synthExposeArmorMeta.Value(talentPoints)
 }
 func SynthExposeArmorDuration(talentPoints int32) time.Duration {
-	return auraDuration(synthExposeArmorSpell)
+	return synthExposeArmorMeta.Duration(talentPoints)
 }
 func SynthExposeArmorAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedDebuff(unit, core.GeneratedBuff{
-		Label:      "Expose Armor (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:   core.ActionID{SpellID: synthExposeArmorSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration:   SynthExposeArmorDuration(talentPoints),
-		Category:   SynthExposeArmorCategory,
-		SingleAura: true,
-		IsPlayer:   isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.Armor, Amount: SynthExposeArmorValue(talentPoints), IsMultiplicative: false},
-		},
-	})
+	return newDebuff(unit, synthExposeArmorMeta, isPlayer, talentPoints)
 }
 
 // Curse of the Elements
 var SynthCurseOfElementsCategory = "CurseOfElements"
 var synthCurseOfElementsSpell = spelldata.MustFind(1311680)
+var synthCurseOfElementsMeta = &Meta{
+	Label:      "Curse of the Elements",
+	Spell:      synthCurseOfElementsSpell,
+	Category:   SynthCurseOfElementsCategory,
+	SingleAura: true,
+}
 
 func SynthCurseOfElementsValue(talentPoints int32) float64 {
-	return amount(synthCurseOfElementsSpell.Effect(dbcenums.A_MOD_RESISTANCE, 124))
+	return synthCurseOfElementsMeta.Value(talentPoints)
 }
 func SynthCurseOfElementsDuration(talentPoints int32) time.Duration {
-	return auraDuration(synthCurseOfElementsSpell)
+	return synthCurseOfElementsMeta.Duration(talentPoints)
 }
 func SynthCurseOfElementsAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedDebuff(unit, core.GeneratedBuff{
-		Label:      "Curse of the Elements (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:   core.ActionID{SpellID: synthCurseOfElementsSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration:   SynthCurseOfElementsDuration(talentPoints),
-		Category:   SynthCurseOfElementsCategory,
-		SingleAura: true,
-		IsPlayer:   isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.ArcaneResistance, Amount: SynthCurseOfElementsValue(talentPoints), IsMultiplicative: false},
-			{Stat: stats.FireResistance, Amount: amount(synthCurseOfElementsSpell.Effect(dbcenums.A_MOD_RESISTANCE, 124)), IsMultiplicative: false},
-			{Stat: stats.FrostResistance, Amount: amount(synthCurseOfElementsSpell.Effect(dbcenums.A_MOD_RESISTANCE, 124)), IsMultiplicative: false},
-			{Stat: stats.NatureResistance, Amount: amount(synthCurseOfElementsSpell.Effect(dbcenums.A_MOD_RESISTANCE, 124)), IsMultiplicative: false},
-			{Stat: stats.ShadowResistance, Amount: amount(synthCurseOfElementsSpell.Effect(dbcenums.A_MOD_RESISTANCE, 124)), IsMultiplicative: false},
-		},
-		Pseudo: []core.PseudoConfig{
-			{Kind: core.PseudoStatSchoolDamageTakenMultiplier, Amount: 1 + amount(synthCurseOfElementsSpell.Effect(dbcenums.A_MOD_DAMAGE_PERCENT_TAKEN, 126))/100, IsMultiplicative: true, SchoolMask: 126},
-		},
-	})
+	return newDebuff(unit, synthCurseOfElementsMeta, isPlayer, talentPoints)
 }
+
+// Judgement of the Crusader
+// func SynthJudgementOfTheCrusaderAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura // judgement_of_the_crusader, KindDebuffStat: spell 20303 states no aura effect the parse attaches: effect 1 A_MOD_DAMAGE_TAKEN(14) misc 2
 
 func applyGeneratedDebuffs(target *core.Unit, debuffs *proto.Debuffs, raid *proto.Raid) {
 	if debuffs.ThunderClap {

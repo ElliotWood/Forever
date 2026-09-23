@@ -1,10 +1,9 @@
 package database
 
-// Pins what the generator emits for a row it can express. Only battle_shout of
-// the real manifest renders code so far - every other row is still a shell - so
-// without these synthetic rows most of the supported branch of the templates
-// would be untested, and nothing would notice a generated constructor that no
-// longer compiles against sim/core/buffs_gen_support.go.
+// Pins what the generator emits for each shape a row can take, from synthetic
+// rows that cover every branch of the templates, and builds the result against
+// sim/core/buffs so that a generated Meta or constructor call that no longer
+// compiles against sim/core/buffs/meta.go is noticed here.
 //
 // Needs no client database. Set UPDATE_BUFF_FIXTURES=1 to rewrite the fixtures
 // after a deliberate change.
@@ -17,19 +16,29 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/dbcenums"
+	"github.com/wowsims/forever/sim/core/spelldata"
 	"github.com/wowsims/forever/tools/database/buffmanifest"
-	"github.com/wowsims/forever/tools/database/dbc"
 )
 
 // One row per shape the templates have a branch for. The proto field of each row
 // is a real one whose compiled type matches the row's declared type, so the
-// rendered apply blocks type-check against the sim. Each row states its effects
-// and goes through the same mapping a resolved row does.
+// rendered apply blocks type-check against the sim. Each row states its spell
+// and goes through the same parse a resolved row does.
 func syntheticBuffRows() []ResolvedBuff {
-	aura := func(a dbc.EffectAuraType, misc int32, value float64) ResolvedEffect {
-		return ResolvedEffect{Effect: dbcenums.E_APPLY_AURA, Aura: a, Misc: misc, Value: value}
+	aura := func(a dbcenums.EffectAuraType, misc int32, points float64) spelldata.Effect {
+		return spelldata.Effect{Type: dbcenums.E_APPLY_AURA, Aura: a, Misc: misc, BasePoints: points}
 	}
+	spell := func(id int32, school core.SpellSchool, durationMs int32, effects ...spelldata.Effect) *spelldata.Spell {
+		for i := range effects {
+			effects[i].SpellID, effects[i].Index = id, uint8(i)
+		}
+		return &spelldata.Spell{ID: id, School: school, DurationMs: durationMs, Effects: effects}
+	}
+	mana := spelldata.Effect{Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PERIODIC_ENERGIZE,
+		Misc: int32(dbcenums.POWER_MANA), BasePoints: 10, PeriodMs: 2000}
+
 	rows := []ResolvedBuff{
 		{
 			BuffSpec: buffmanifest.BuffSpec{
@@ -38,10 +47,20 @@ func syntheticBuffRows() []ResolvedBuff {
 				Go: "SynthManaSpring", Name: "Mana Spring Totem", Category: "ManaSpringTotem",
 			},
 			SpellID: 10494, CastSpellID: 10494, Supported: true,
-			Effects:       []ResolvedEffect{{Effect: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PERIODIC_ENERGIZE, Value: 10, PeriodMs: 2000}},
+			Spell:         spell(10494, core.SpellSchoolNature, 0, mana),
 			TalentRanks:   5,
 			TalentApplies: buffmanifest.TalentScalesValue,
 			TalentSpellID: 16187, TalentPosition: 1,
+		},
+		{
+			BuffSpec: buffmanifest.BuffSpec{
+				Field: "mana_tide_totems", Scope: buffmanifest.ScopeParty,
+				Proto: buffmanifest.ProtoInt32, Kind: buffmanifest.KindExternalCD,
+				Go: "SynthManaTide", Name: "Mana Tide Totem", Category: "ManaTideTotem",
+			},
+			SpellID: 17360, CastSpellID: 17359, DurationMs: 12000, CooldownMs: 300000,
+			DurationFromCast: true, Supported: true,
+			Spell: spell(17360, core.SpellSchoolNature, 0, mana),
 		},
 		{
 			BuffSpec: buffmanifest.BuffSpec{
@@ -51,10 +70,9 @@ func syntheticBuffRows() []ResolvedBuff {
 				Pet: buffmanifest.PetStripWhenSummonedLate,
 			},
 			SpellID: 20217, CastSpellID: 20217, DurationMs: 3600000, Supported: true,
-			Effects: []ResolvedEffect{
+			Spell: spell(20217, core.SpellSchoolHoly, 3600000,
 				aura(dbcenums.A_MOD_TOTAL_STAT_PERCENTAGE, 0, 10),
-				aura(dbcenums.A_MOD_TOTAL_STAT_PERCENTAGE, 1, 10),
-			},
+				aura(dbcenums.A_MOD_TOTAL_STAT_PERCENTAGE, 1, 10)),
 		},
 		{
 			BuffSpec: buffmanifest.BuffSpec{
@@ -64,7 +82,7 @@ func syntheticBuffRows() []ResolvedBuff {
 				SingleAura: true, Driver: true,
 			},
 			SpellID: 25289, CastSpellID: 25289, DurationMs: 180000, Supported: true,
-			Effects: []ResolvedEffect{aura(dbcenums.A_MOD_ATTACK_POWER, 0, 139)},
+			Spell: spell(25289, core.SpellSchoolPhysical, 180000, aura(dbcenums.A_MOD_ATTACK_POWER, 0, 139)),
 		},
 		{
 			BuffSpec: buffmanifest.BuffSpec{
@@ -72,9 +90,12 @@ func syntheticBuffRows() []ResolvedBuff {
 				Proto: buffmanifest.ProtoBool, Kind: buffmanifest.KindResistance,
 				Go: "SynthDevotionAura", Name: "Devotion Aura", Category: "DevotionAura",
 				SharedCategory: "SynthPaladinAura", SingleAura: true,
+				SkipAuras: []string{"A_MOD_HEALING_PCT"},
 			},
 			SpellID: 10293, CastSpellID: 10293, DurationMs: 600000, Supported: true,
-			Effects:       []ResolvedEffect{aura(dbcenums.A_MOD_RESISTANCE, 1, 735)},
+			Spell: spell(10293, core.SpellSchoolHoly, 600000,
+				aura(dbcenums.A_MOD_RESISTANCE, 1, 735),
+				aura(dbcenums.A_MOD_HEALING_PCT, 0, 0)),
 			TalentRanks:   2,
 			TalentApplies: buffmanifest.TalentScalesDuration,
 			TalentSpellID: 20140, TalentPosition: 2,
@@ -87,7 +108,16 @@ func syntheticBuffRows() []ResolvedBuff {
 				Category: "FrostResistanceAura", SharedCategory: "SynthPaladinAura", SingleAura: true,
 			},
 			SpellID: 19898, CastSpellID: 19898, Supported: true,
-			Effects: []ResolvedEffect{aura(dbcenums.A_MOD_RESISTANCE, 16, 60)},
+			Spell: spell(19898, core.SpellSchoolHoly, -1, aura(dbcenums.A_MOD_RESISTANCE, 16, 60)),
+		},
+		{
+			BuffSpec: buffmanifest.BuffSpec{
+				Field: "frost_resistance_totem", Scope: buffmanifest.ScopeRaid,
+				Proto: buffmanifest.ProtoBool, Kind: buffmanifest.KindResistance,
+				Go: "SynthFrostResistanceTotem", Name: "Frost Resistance Totem", Category: "ResistanceFrost",
+			},
+			SpellID: 10477, CastSpellID: 10477, Supported: true,
+			Spell: spell(10477, core.SpellSchoolNature, 0, aura(dbcenums.A_MOD_RESISTANCE, 16, 60)),
 		},
 		{
 			BuffSpec: buffmanifest.BuffSpec{
@@ -96,11 +126,10 @@ func syntheticBuffRows() []ResolvedBuff {
 				Go: "SynthThunderClap", Name: "Thunder Clap", Category: "AtkSpdReduction",
 			},
 			SpellID: 11581, CastSpellID: 11581, DurationMs: 30000, Supported: true,
-			Effects:        []ResolvedEffect{aura(dbcenums.A_MOD_MELEE_HASTE_3, 0, -20)},
-			TalentRanks:    2,
-			TalentApplies:  buffmanifest.TalentScalesValue,
-			TalentOnPseudo: true,
-			TalentSpellID:  12287, TalentPosition: 1,
+			Spell:         spell(11581, core.SpellSchoolPhysical, 30000, aura(dbcenums.A_MOD_MELEE_HASTE_3, 0, -20)),
+			TalentRanks:   2,
+			TalentApplies: buffmanifest.TalentScalesValue,
+			TalentSpellID: 12287, TalentPosition: 1,
 		},
 		{
 			BuffSpec: buffmanifest.BuffSpec{
@@ -110,6 +139,9 @@ func syntheticBuffRows() []ResolvedBuff {
 				Category: "Innervate",
 			},
 			SpellID: 29166, CastSpellID: 29166, DurationMs: 20000, CooldownMs: 360000, Supported: true,
+			Spell: spell(29166, core.SpellSchoolNature, 20000,
+				aura(dbcenums.A_MOD_MANA_REGEN_INTERRUPT, 0, 100),
+				aura(dbcenums.A_MOD_POWER_REGEN_PERCENT, 0, 400)),
 		},
 		{
 			BuffSpec: buffmanifest.BuffSpec{
@@ -119,10 +151,9 @@ func syntheticBuffRows() []ResolvedBuff {
 				Category: "PowerInfusion",
 			},
 			SpellID: 10060, CastSpellID: 10060, DurationMs: 15000, CooldownMs: 180000, Supported: true,
-			Effects: []ResolvedEffect{
+			Spell: spell(10060, core.SpellSchoolHoly, 15000,
 				aura(dbcenums.A_MOD_DAMAGE_PERCENT_DONE, 126, 20),
-				aura(dbcenums.A_MOD_HEALING_DONE_PERCENT, 0, 20),
-			},
+				aura(dbcenums.A_MOD_HEALING_DONE_PERCENT, 0, 20)),
 		},
 		{
 			BuffSpec: buffmanifest.BuffSpec{
@@ -140,7 +171,7 @@ func syntheticBuffRows() []ResolvedBuff {
 				Go: "SynthAtieshMage", Label: "Atiesh - Mage",
 			},
 			SpellID: 28142, CastSpellID: 28142, Supported: true,
-			Effects: []ResolvedEffect{aura(dbcenums.A_MOD_SPELL_CRIT_CHANCE, 0, 2)},
+			Spell: spell(28142, core.SpellSchoolPhysical, -1, aura(dbcenums.A_MOD_SPELL_CRIT_CHANCE, 0, 2)),
 		},
 		{
 			BuffSpec: buffmanifest.BuffSpec{
@@ -149,8 +180,8 @@ func syntheticBuffRows() []ResolvedBuff {
 				Go: "SynthThorns", Name: "Thorns", Category: "Thorns",
 				Pet: buffmanifest.PetStrip,
 			},
-			SpellID: 9910, CastSpellID: 9910, DurationMs: 600000, SchoolMask: 8, Supported: true,
-			Effects:       []ResolvedEffect{aura(dbcenums.A_DAMAGE_SHIELD, 0, 22)},
+			SpellID: 9910, CastSpellID: 9910, DurationMs: 600000, Supported: true,
+			Spell:         spell(9910, core.SpellSchoolNature, 600000, aura(dbcenums.A_DAMAGE_SHIELD, 0, 18)),
 			TalentRanks:   2,
 			TalentApplies: buffmanifest.TalentScalesValue,
 			TalentSpellID: 16836, TalentPosition: 1,
@@ -162,8 +193,12 @@ func syntheticBuffRows() []ResolvedBuff {
 				Go: "SynthSunderArmor", Name: "Sunder Armor", Category: "MajorArmorReduction",
 				SingleAura: true, Driver: true,
 			},
-			SpellID: 11597, CastSpellID: 11597, DurationMs: 30000, MaxStacks: 5, Supported: true,
-			Effects: []ResolvedEffect{aura(dbcenums.A_MOD_RESISTANCE, 1, -450)},
+			SpellID: 11597, CastSpellID: 11597, DurationMs: 30000, Supported: true,
+			Spell: func() *spelldata.Spell {
+				s := spell(11597, core.SpellSchoolPhysical, 30000, aura(dbcenums.A_MOD_RESISTANCE, 1, -450))
+				s.MaxStack = 5
+				return s
+			}(),
 		},
 		{
 			BuffSpec: buffmanifest.BuffSpec{
@@ -173,7 +208,8 @@ func syntheticBuffRows() []ResolvedBuff {
 				SingleAura: true,
 			},
 			SpellID: 11198, CastSpellID: 11198, DurationMs: 30000, Supported: true,
-			Effects: []ResolvedEffect{{Effect: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_RESISTANCE, Misc: 1, PerResource: -450}},
+			Spell: spell(11198, core.SpellSchoolPhysical, 30000, spelldata.Effect{Type: dbcenums.E_APPLY_AURA,
+				Aura: dbcenums.A_MOD_RESISTANCE, Misc: 1, PointsPerResource: -450}),
 		},
 		{
 			BuffSpec: buffmanifest.BuffSpec{
@@ -183,40 +219,34 @@ func syntheticBuffRows() []ResolvedBuff {
 				SingleAura: true,
 			},
 			SpellID: 1311680, CastSpellID: 1311680, DurationMs: 300000, Supported: true,
-			Effects: []ResolvedEffect{
+			Spell: spell(1311680, core.SpellSchoolShadow, 300000,
 				aura(dbcenums.A_MOD_RESISTANCE, 124, -75),
-				aura(dbcenums.A_MOD_DAMAGE_PERCENT_TAKEN, 126, 10),
+				aura(dbcenums.A_MOD_DAMAGE_PERCENT_TAKEN, 126, 10)),
+		},
+		{
+			BuffSpec: buffmanifest.BuffSpec{
+				Field: "judgement_of_the_crusader", Scope: buffmanifest.ScopeDebuff,
+				Proto: buffmanifest.ProtoBool, Kind: buffmanifest.KindDebuffStat,
+				Go: "SynthJudgementOfTheCrusader", Name: "Judgement of the Crusader",
+				Category: "Judgement of the Crusader", SingleAura: true,
 			},
+			SpellID: 20303, CastSpellID: 20303, DurationMs: 10000, Supported: true,
+			Spell: spell(20303, core.SpellSchoolHoly, 10000, aura(dbcenums.A_MOD_DAMAGE_TAKEN, 2, 140)),
 		},
 	}
 	for i := range rows {
-		if rows[i].Supported {
-			setEffectRefs(&rows[i])
-			mapEffects(&rows[i])
+		if rows[i].Spell == nil {
+			continue
+		}
+		if err := resolveSkipAuras(&rows[i]); err != nil {
+			panic(err)
+		}
+		parseBuff(&rows[i])
+		if isSchoolResistanceCategory(rows[i].Category) {
+			rows[i].Category = ""
 		}
 	}
 	return rows
-}
-
-// The sim holds flat damage taken in a physical field and a spell field, and
-// the client states the aura with a school mask. A mask naming some spell
-// schools and not others - Judgement of the Crusader is holy alone - fits
-// neither, and the spell field would raise what every school does to the target.
-func TestSchoolMaskedDamageTakenHasNoFieldToLandOn(t *testing.T) {
-	physical := ResolvedEffect{Aura: dbcenums.A_MOD_DAMAGE_TAKEN, Misc: 1, Value: 8}
-	if mods, ok := pseudoModsOf(physical); !ok || mods[0].Kind != "BonusPhysicalDamageTaken" || mods[0].Amount != 8 {
-		t.Errorf("a physical mask maps to %v, ok %v; want 8 BonusPhysicalDamageTaken", mods, ok)
-	}
-
-	everySchool := ResolvedEffect{Aura: dbcenums.A_MOD_DAMAGE_TAKEN, Misc: 126, Value: 40}
-	if mods, ok := pseudoModsOf(everySchool); !ok || mods[0].Kind != "BonusSpellDamageTaken" || mods[0].Amount != 40 {
-		t.Errorf("a mask of every spell school maps to %v, ok %v; want 40 BonusSpellDamageTaken", mods, ok)
-	}
-
-	holy := ResolvedEffect{Aura: dbcenums.A_MOD_DAMAGE_TAKEN, Misc: 2, Value: 161}
-	if mods, ok := pseudoModsOf(holy); ok {
-		t.Errorf("a holy-only mask maps to %v, want the row to stay a shell", mods)
-	}
 }
 
 var syntheticFixtures = map[string]string{
@@ -299,7 +329,11 @@ func TestRenderedBuffFilesCompile(t *testing.T) {
 		"func driveSynthPowerInfusions(char *core.Character, individual *proto.IndividualBuffs) {\n"+
 		"\tcore.NewGeneratedExternalCD(char, SynthPowerInfusionsAura(&char.Unit, false, 0),"+
 		" core.GeneratedExternalCD{NumSources: individual.PowerInfusions,"+
-		" Cooldown: SynthPowerInfusionsCooldown(), Type: core.CooldownTypeDPS})\n}\n"), 0644); err != nil {
+		" Cooldown: SynthPowerInfusionsCooldown(), Type: core.CooldownTypeDPS})\n}\n\n"+
+		"func driveSynthManaTide(char *core.Character, party *proto.PartyBuffs) {\n"+
+		"\tcore.NewGeneratedExternalCD(char, SynthManaTideAura(&char.Unit, false, 0),"+
+		" core.GeneratedExternalCD{NumSources: party.ManaTideTotems,"+
+		" Cooldown: SynthManaTideCooldown(), Type: core.CooldownTypeMana})\n}\n"), 0644); err != nil {
 		t.Fatal(err)
 	}
 	overlay[filepath.Join(root, "sim", "core", "buffs", "zz_synthetic_drivers.go")] = drivers

@@ -9,7 +9,6 @@ import (
 	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/spelldata"
-	"github.com/wowsims/forever/sim/core/stats"
 )
 
 // The category the rows that name it join without an effect of their own, so
@@ -18,195 +17,167 @@ var PaladinAuraCategory = "PaladinAura"
 
 // Blood Pact
 var bloodPactSpell = spelldata.MustFind(11767)
+var bloodPactMeta = &Meta{
+	Label: "Blood Pact",
+	Spell: bloodPactSpell,
+}
 
 func BloodPactValue(talentPoints int32) float64 {
-	return amount(bloodPactSpell.Effect(dbcenums.A_MOD_STAT, 2))
+	return bloodPactMeta.Value(talentPoints)
 }
 func BloodPactDuration(talentPoints int32) time.Duration {
-	return auraDuration(bloodPactSpell)
+	return bloodPactMeta.Duration(talentPoints)
 }
 func BloodPactAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
-		Label:    "Blood Pact (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: bloodPactSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration: BloodPactDuration(talentPoints),
-		IsPlayer: isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.Stamina, Amount: BloodPactValue(talentPoints), IsMultiplicative: false},
-		},
-	})
+	return newBuff(unit, bloodPactMeta, isPlayer, talentPoints)
 }
 
 // Battle Shout
 var BattleShoutCategory = "BattleShout"
 var battleShoutSpell = spelldata.MustFind(25289)
+var battleShoutMeta = &Meta{
+	Label:      "Battle Shout",
+	Spell:      battleShoutSpell,
+	Category:   BattleShoutCategory,
+	SingleAura: true,
+}
 
 func BattleShoutValue(talentPoints int32) float64 {
-	return amount(battleShoutSpell.Effect(dbcenums.A_MOD_ATTACK_POWER, 0))
+	return battleShoutMeta.Value(talentPoints)
 }
 func BattleShoutDuration(talentPoints int32) time.Duration {
-	return auraDuration(battleShoutSpell)
+	return battleShoutMeta.Duration(talentPoints)
 }
 func BattleShoutAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
-		Label:      "Battle Shout (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:   core.ActionID{SpellID: battleShoutSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration:   BattleShoutDuration(talentPoints),
-		Category:   BattleShoutCategory,
-		SingleAura: true,
-		IsPlayer:   isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.AttackPower, Amount: BattleShoutValue(talentPoints), IsMultiplicative: false},
-		},
-	})
+	return newBuff(unit, battleShoutMeta, isPlayer, talentPoints)
 }
 
 // Devotion Aura
 var DevotionAuraCategory = "DevotionAura"
 var devotionAuraSpell = spelldata.MustFind(10293)
+var devotionAuraMeta = &Meta{
+	Label:          "Devotion Aura",
+	Spell:          devotionAuraSpell,
+	Category:       DevotionAuraCategory,
+	SharedCategory: PaladinAuraCategory,
+	SingleAura:     true,
+	SkipAuras:      []dbcenums.EffectAuraType{dbcenums.A_MOD_HEALING_PCT, dbcenums.A_MECHANIC_DURATION_MOD},
+}
 
 func DevotionAuraValue(talentPoints int32) float64 {
-	return amount(devotionAuraSpell.Effect(dbcenums.A_MOD_RESISTANCE, 1))
+	return devotionAuraMeta.Value(talentPoints)
 }
 func DevotionAuraDuration(talentPoints int32) time.Duration {
-	return auraDuration(devotionAuraSpell)
+	return devotionAuraMeta.Duration(talentPoints)
 }
 func DevotionAuraAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
-		Label:          "Devotion Aura (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:       core.ActionID{SpellID: devotionAuraSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration:       DevotionAuraDuration(talentPoints),
-		Category:       DevotionAuraCategory,
-		SharedCategory: PaladinAuraCategory,
-		SingleAura:     true,
-		IsPlayer:       isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.Armor, Amount: DevotionAuraValue(talentPoints), IsMultiplicative: false},
-		},
-	})
+	return newBuff(unit, devotionAuraMeta, isPlayer, talentPoints)
 }
 
 // Leader of the Pack
 var LeaderOfThePackCategory = "DruidCritAura"
 var leaderOfThePackSpell = spelldata.MustFind(24932)
+var leaderOfThePackMeta = &Meta{
+	Label:      "Leader of the Pack",
+	Spell:      leaderOfThePackSpell,
+	Category:   LeaderOfThePackCategory,
+	SingleAura: true,
+}
 
 func LeaderOfThePackValue(talentPoints int32) float64 {
-	return amount(leaderOfThePackSpell.Effect(dbcenums.A_MOD_CRIT_PCT, 0))
+	return leaderOfThePackMeta.Value(talentPoints)
 }
 func LeaderOfThePackDuration(talentPoints int32) time.Duration {
-	return auraDuration(leaderOfThePackSpell)
+	return leaderOfThePackMeta.Duration(talentPoints)
 }
 func LeaderOfThePackAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
-		Label:      "Leader of the Pack (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:   core.ActionID{SpellID: leaderOfThePackSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration:   LeaderOfThePackDuration(talentPoints),
-		Category:   LeaderOfThePackCategory,
-		SingleAura: true,
-		IsPlayer:   isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.PhysicalCritPercent, Amount: LeaderOfThePackValue(talentPoints), IsMultiplicative: false},
-			{Stat: stats.SpellCritPercent, Amount: amount(leaderOfThePackSpell.Effect(dbcenums.A_MOD_CRIT_PCT, 0)), IsMultiplicative: false},
-		},
-	})
+	return newBuff(unit, leaderOfThePackMeta, isPlayer, talentPoints)
 }
 
 // Mana Spring Totem
 var ManaSpringTotemCategory = "ManaSpringTotem"
 var manaSpringTotemSpell = spelldata.MustFind(10494)
-var manaSpringTotemTalent = spelldata.Talent(16187, 5)
+var manaSpringTotemMeta = &Meta{
+	Label:        "Mana Spring Totem",
+	Spell:        manaSpringTotemSpell,
+	Category:     ManaSpringTotemCategory,
+	Talent:       spelldata.Talent(16187, 5),
+	TalentEffect: 1,
+}
 
 func ManaSpringTotemValue(talentPoints int32) float64 {
-	return manaPerFive(manaSpringTotemSpell.Effect(dbcenums.A_PERIODIC_ENERGIZE, 0), talentScaled(amount(manaSpringTotemSpell.Effect(dbcenums.A_PERIODIC_ENERGIZE, 0)), manaSpringTotemTalent.Rank(talentPoints).EffectN(1)))
+	return manaSpringTotemMeta.Value(talentPoints)
 }
 func ManaSpringTotemDuration(talentPoints int32) time.Duration {
-	return auraDuration(manaSpringTotemSpell)
+	return manaSpringTotemMeta.Duration(talentPoints)
 }
 func ManaSpringTotemAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
-		Label:    "Mana Spring Totem (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: manaSpringTotemSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration: ManaSpringTotemDuration(talentPoints),
-		Category: ManaSpringTotemCategory,
-		IsPlayer: isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.MP5, Amount: ManaSpringTotemValue(talentPoints), IsMultiplicative: false},
-		},
-	})
+	return newBuff(unit, manaSpringTotemMeta, isPlayer, talentPoints)
 }
 
 // Mana Tide Totem
 var ManaTideTotemsCategory = "ManaTideTotem"
 var manaTideTotemsSpell = spelldata.MustFind(17360)
-var manaTideTotemsCast = spelldata.MustFind(17359)
+var manaTideTotemsMeta = &Meta{
+	Label:    "Mana Tide Totem",
+	Spell:    manaTideTotemsSpell,
+	Cast:     spelldata.MustFind(17359),
+	Category: ManaTideTotemsCategory,
+}
 
 func ManaTideTotemsValue(talentPoints int32) float64 {
-	return manaPerFive(manaTideTotemsSpell.Effect(dbcenums.A_PERIODIC_ENERGIZE, 0), amount(manaTideTotemsSpell.Effect(dbcenums.A_PERIODIC_ENERGIZE, 0)))
+	return manaTideTotemsMeta.Value(talentPoints)
 }
 func ManaTideTotemsDuration(talentPoints int32) time.Duration {
-	return auraDuration(manaTideTotemsCast)
+	return manaTideTotemsMeta.Duration(talentPoints)
 }
 func ManaTideTotemsCooldown() time.Duration {
-	return cooldown(manaTideTotemsCast)
+	return manaTideTotemsMeta.Cooldown()
 }
 func ManaTideTotemsAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
-		Label:    "Mana Tide Totem (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: manaTideTotemsSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration: ManaTideTotemsDuration(talentPoints),
-		Category: ManaTideTotemsCategory,
-		IsPlayer: isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.MP5, Amount: ManaTideTotemsValue(talentPoints), IsMultiplicative: false},
-		},
-	})
+	return newBuff(unit, manaTideTotemsMeta, isPlayer, talentPoints)
 }
 
 // Moonkin Aura
 var MoonkinAuraCategory = "DruidCritAura"
 var moonkinAuraSpell = spelldata.MustFind(24907)
+var moonkinAuraMeta = &Meta{
+	Label:      "Moonkin Aura",
+	Spell:      moonkinAuraSpell,
+	Category:   MoonkinAuraCategory,
+	SingleAura: true,
+}
 
 func MoonkinAuraValue(talentPoints int32) float64 {
-	return amount(moonkinAuraSpell.Effect(dbcenums.A_MOD_CRIT_PCT, 0))
+	return moonkinAuraMeta.Value(talentPoints)
 }
 func MoonkinAuraDuration(talentPoints int32) time.Duration {
-	return auraDuration(moonkinAuraSpell)
+	return moonkinAuraMeta.Duration(talentPoints)
 }
 func MoonkinAuraAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
-		Label:      "Moonkin Aura (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:   core.ActionID{SpellID: moonkinAuraSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration:   MoonkinAuraDuration(talentPoints),
-		Category:   MoonkinAuraCategory,
-		SingleAura: true,
-		IsPlayer:   isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.PhysicalCritPercent, Amount: MoonkinAuraValue(talentPoints), IsMultiplicative: false},
-			{Stat: stats.SpellCritPercent, Amount: amount(moonkinAuraSpell.Effect(dbcenums.A_MOD_CRIT_PCT, 0)), IsMultiplicative: false},
-		},
-	})
+	return newBuff(unit, moonkinAuraMeta, isPlayer, talentPoints)
 }
 
 // Retribution Aura
 var RetributionAuraCategory = "RetributionAura"
 var retributionAuraSpell = spelldata.MustFind(10301)
+var retributionAuraMeta = &Meta{
+	Label:          "Retribution Aura",
+	Spell:          retributionAuraSpell,
+	Category:       RetributionAuraCategory,
+	SharedCategory: PaladinAuraCategory,
+	SingleAura:     true,
+	SkipAuras:      []dbcenums.EffectAuraType{dbcenums.A_MOD_HEALING_PCT, dbcenums.A_MECHANIC_DURATION_MOD},
+}
 
 func RetributionAuraValue(talentPoints int32) float64 {
-	return amount(retributionAuraSpell.Effect(dbcenums.A_DAMAGE_SHIELD, 0))
+	return retributionAuraMeta.Value(talentPoints)
 }
 func RetributionAuraDuration(talentPoints int32) time.Duration {
-	return auraDuration(retributionAuraSpell)
+	return retributionAuraMeta.Duration(talentPoints)
 }
 func RetributionAuraAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedDamageShield(unit, core.GeneratedBuff{
-		Label:          "Retribution Aura (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:       core.ActionID{SpellID: retributionAuraSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration:       RetributionAuraDuration(talentPoints),
-		Category:       RetributionAuraCategory,
-		SharedCategory: PaladinAuraCategory,
-		SingleAura:     true,
-		IsPlayer:       isPlayer,
-	}, core.SpellSchoolHoly, RetributionAuraValue(talentPoints))
+	return newDamageShield(unit, retributionAuraMeta, isPlayer, talentPoints)
 }
 
 // func RetributionAuraSpellPowerAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura // retribution_aura_spell_power, KindFlag: the Holy spell power of the paladin providing Retribution Aura, which driveRetributionAura scales the damage with; a sim input with no spell source, rendered under Other Inputs.
@@ -214,201 +185,165 @@ func RetributionAuraAura(unit *core.Unit, isPlayer bool, talentPoints int32) *co
 // Concentration Aura
 var ConcentrationAuraCategory = "ConcentrationAura"
 var concentrationAuraSpell = spelldata.MustFind(19746)
+var concentrationAuraMeta = &Meta{
+	Label:          "Concentration Aura",
+	Spell:          concentrationAuraSpell,
+	Category:       ConcentrationAuraCategory,
+	SharedCategory: PaladinAuraCategory,
+	SingleAura:     true,
+	SkipAuras:      []dbcenums.EffectAuraType{dbcenums.A_MOD_HEALING_PCT, dbcenums.A_MECHANIC_DURATION_MOD},
+}
 
 func ConcentrationAuraValue(talentPoints int32) float64 {
-	return -amount(concentrationAuraSpell.Effect(dbcenums.A_REDUCE_PUSHBACK, 127)) / 100
+	return concentrationAuraMeta.Value(talentPoints)
 }
 func ConcentrationAuraDuration(talentPoints int32) time.Duration {
-	return auraDuration(concentrationAuraSpell)
+	return concentrationAuraMeta.Duration(talentPoints)
 }
 func ConcentrationAuraAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
-		Label:          "Concentration Aura (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:       core.ActionID{SpellID: concentrationAuraSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration:       ConcentrationAuraDuration(talentPoints),
-		Category:       ConcentrationAuraCategory,
-		SharedCategory: PaladinAuraCategory,
-		SingleAura:     true,
-		IsPlayer:       isPlayer,
-		Pseudo: []core.PseudoConfig{
-			{Kind: core.PseudoStatPushbackChance, Amount: ConcentrationAuraValue(talentPoints), IsMultiplicative: false, SchoolMask: 0},
-		},
-	})
+	return newBuff(unit, concentrationAuraMeta, isPlayer, talentPoints)
 }
 
 // Trueshot Aura
 var trueshotAuraSpell = spelldata.MustFind(20906)
+var trueshotAuraMeta = &Meta{
+	Label: "Trueshot Aura",
+	Spell: trueshotAuraSpell,
+}
 
 func TrueshotAuraValue(talentPoints int32) float64 {
-	return amount(trueshotAuraSpell.Effect(dbcenums.A_MOD_RANGED_ATTACK_POWER, 0))
+	return trueshotAuraMeta.Value(talentPoints)
 }
 func TrueshotAuraDuration(talentPoints int32) time.Duration {
-	return auraDuration(trueshotAuraSpell)
+	return trueshotAuraMeta.Duration(talentPoints)
 }
 func TrueshotAuraAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
-		Label:    "Trueshot Aura (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: trueshotAuraSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration: TrueshotAuraDuration(talentPoints),
-		IsPlayer: isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.RangedAttackPower, Amount: TrueshotAuraValue(talentPoints), IsMultiplicative: false},
-		},
-	})
+	return newBuff(unit, trueshotAuraMeta, isPlayer, talentPoints)
 }
 
 // Atiesh - Mage
 var atieshMageSpell = spelldata.MustFind(28142)
+var atieshMageMeta = &Meta{
+	Label: "Atiesh - Mage",
+	Spell: atieshMageSpell,
+}
 
 func AtieshMageValue(talentPoints int32) float64 {
-	return amount(atieshMageSpell.Effect(dbcenums.A_MOD_SPELL_CRIT_CHANCE, 0))
+	return atieshMageMeta.Value(talentPoints)
 }
 func AtieshMageDuration(talentPoints int32) time.Duration {
-	return auraDuration(atieshMageSpell)
+	return atieshMageMeta.Duration(talentPoints)
 }
 func AtieshMageAura(unit *core.Unit, isPlayer bool, talentPoints int32, count float64) *core.Aura {
-	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
-		Label:    "Atiesh - Mage (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: atieshMageSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration: AtieshMageDuration(talentPoints),
-		IsPlayer: isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.SpellCritPercent, Amount: AtieshMageValue(talentPoints) * count, IsMultiplicative: false},
-		},
-	})
+	return newItemCountBuff(unit, atieshMageMeta, isPlayer, count)
 }
 
 // Atiesh - Warlock
 var atieshWarlockSpell = spelldata.MustFind(28143)
+var atieshWarlockMeta = &Meta{
+	Label: "Atiesh - Warlock",
+	Spell: atieshWarlockSpell,
+}
 
 func AtieshWarlockValue(talentPoints int32) float64 {
-	return amount(atieshWarlockSpell.Effect(dbcenums.A_MOD_DAMAGE_DONE, 126))
+	return atieshWarlockMeta.Value(talentPoints)
 }
 func AtieshWarlockDuration(talentPoints int32) time.Duration {
-	return auraDuration(atieshWarlockSpell)
+	return atieshWarlockMeta.Duration(talentPoints)
 }
 func AtieshWarlockAura(unit *core.Unit, isPlayer bool, talentPoints int32, count float64) *core.Aura {
-	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
-		Label:    "Atiesh - Warlock (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: atieshWarlockSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration: AtieshWarlockDuration(talentPoints),
-		IsPlayer: isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.SpellDamage, Amount: AtieshWarlockValue(talentPoints) * count, IsMultiplicative: false},
-			{Stat: stats.HealingPower, Amount: amount(atieshWarlockSpell.Effect(dbcenums.A_MOD_HEALING_DONE, 126)) * count, IsMultiplicative: false},
-		},
-	})
+	return newItemCountBuff(unit, atieshWarlockMeta, isPlayer, count)
 }
 
 // Strength of Earth Totem
 var StrengthOfEarthTotemCategory = "StrengthOfEarthTotem"
 var strengthOfEarthTotemSpell = spelldata.MustFind(25362)
+var strengthOfEarthTotemMeta = &Meta{
+	Label:    "Strength of Earth Totem",
+	Spell:    strengthOfEarthTotemSpell,
+	Category: StrengthOfEarthTotemCategory,
+}
 
 func StrengthOfEarthTotemValue(talentPoints int32) float64 {
-	return amount(strengthOfEarthTotemSpell.Effect(dbcenums.A_MOD_STAT, 0))
+	return strengthOfEarthTotemMeta.Value(talentPoints)
 }
 func StrengthOfEarthTotemDuration(talentPoints int32) time.Duration {
-	return auraDuration(strengthOfEarthTotemSpell)
+	return strengthOfEarthTotemMeta.Duration(talentPoints)
 }
 func StrengthOfEarthTotemAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
-		Label:    "Strength of Earth Totem (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: strengthOfEarthTotemSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration: StrengthOfEarthTotemDuration(talentPoints),
-		Category: StrengthOfEarthTotemCategory,
-		IsPlayer: isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.Strength, Amount: StrengthOfEarthTotemValue(talentPoints), IsMultiplicative: false},
-		},
-	})
+	return newBuff(unit, strengthOfEarthTotemMeta, isPlayer, talentPoints)
 }
 
 // Grace of Air Totem
 var GraceOfAirTotemCategory = "GraceOfAirTotem"
 var graceOfAirTotemSpell = spelldata.MustFind(25360)
+var graceOfAirTotemMeta = &Meta{
+	Label:    "Grace of Air Totem",
+	Spell:    graceOfAirTotemSpell,
+	Category: GraceOfAirTotemCategory,
+}
 
 func GraceOfAirTotemValue(talentPoints int32) float64 {
-	return amount(graceOfAirTotemSpell.Effect(dbcenums.A_MOD_STAT, 1))
+	return graceOfAirTotemMeta.Value(talentPoints)
 }
 func GraceOfAirTotemDuration(talentPoints int32) time.Duration {
-	return auraDuration(graceOfAirTotemSpell)
+	return graceOfAirTotemMeta.Duration(talentPoints)
 }
 func GraceOfAirTotemAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
-		Label:    "Grace of Air Totem (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: graceOfAirTotemSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration: GraceOfAirTotemDuration(talentPoints),
-		Category: GraceOfAirTotemCategory,
-		IsPlayer: isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.Agility, Amount: GraceOfAirTotemValue(talentPoints), IsMultiplicative: false},
-		},
-	})
+	return newBuff(unit, graceOfAirTotemMeta, isPlayer, talentPoints)
 }
 
 // Windfury Totem
 var WindfuryTotemCategory = "WindfuryTotem"
 var windfuryTotemSpell = spelldata.MustFind(10610)
+var windfuryTotemMeta = &Meta{
+	Label:    "Windfury Totem",
+	Spell:    windfuryTotemSpell,
+	Category: WindfuryTotemCategory,
+}
 
 func WindfuryTotemValue(talentPoints int32) float64 {
-	return amount(windfuryTotemSpell.Effect(dbcenums.A_MOD_ATTACK_POWER, 0))
+	return windfuryTotemMeta.Value(talentPoints)
 }
 func WindfuryTotemDuration(talentPoints int32) time.Duration {
-	return auraDuration(windfuryTotemSpell)
+	return windfuryTotemMeta.Duration(talentPoints)
 }
 func WindfuryTotemAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
-		Label:    "Windfury Totem (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: windfuryTotemSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration: WindfuryTotemDuration(talentPoints),
-		Category: WindfuryTotemCategory,
-		IsPlayer: isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.AttackPower, Amount: WindfuryTotemValue(talentPoints), IsMultiplicative: false},
-		},
-	})
+	return newBuff(unit, windfuryTotemMeta, isPlayer, talentPoints)
 }
 
 // Atiesh - Druid
 var atieshDruidSpell = spelldata.MustFind(28145)
+var atieshDruidMeta = &Meta{
+	Label: "Atiesh - Druid",
+	Spell: atieshDruidSpell,
+}
 
 func AtieshDruidValue(talentPoints int32) float64 {
-	return amount(atieshDruidSpell.Effect(dbcenums.A_MOD_POWER_REGEN, 0))
+	return atieshDruidMeta.Value(talentPoints)
 }
 func AtieshDruidDuration(talentPoints int32) time.Duration {
-	return auraDuration(atieshDruidSpell)
+	return atieshDruidMeta.Duration(talentPoints)
 }
 func AtieshDruidAura(unit *core.Unit, isPlayer bool, talentPoints int32, count float64) *core.Aura {
-	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
-		Label:    "Atiesh - Druid (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: atieshDruidSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration: AtieshDruidDuration(talentPoints),
-		IsPlayer: isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.MP5, Amount: AtieshDruidValue(talentPoints) * count, IsMultiplicative: false},
-		},
-	})
+	return newItemCountBuff(unit, atieshDruidMeta, isPlayer, count)
 }
 
 // Atiesh - Priest
 var atieshPriestSpell = spelldata.MustFind(28144)
+var atieshPriestMeta = &Meta{
+	Label: "Atiesh - Priest",
+	Spell: atieshPriestSpell,
+}
 
 func AtieshPriestValue(talentPoints int32) float64 {
-	return amount(atieshPriestSpell.Effect(dbcenums.A_MOD_HEALING_DONE, 126))
+	return atieshPriestMeta.Value(talentPoints)
 }
 func AtieshPriestDuration(talentPoints int32) time.Duration {
-	return auraDuration(atieshPriestSpell)
+	return atieshPriestMeta.Duration(talentPoints)
 }
 func AtieshPriestAura(unit *core.Unit, isPlayer bool, talentPoints int32, count float64) *core.Aura {
-	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
-		Label:    "Atiesh - Priest (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: atieshPriestSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration: AtieshPriestDuration(talentPoints),
-		IsPlayer: isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.HealingPower, Amount: AtieshPriestValue(talentPoints) * count, IsMultiplicative: false},
-		},
-	})
+	return newItemCountBuff(unit, atieshPriestMeta, isPlayer, count)
 }
 
 // func TotemTwistingAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura // totem_twisting, KindFlag: sim behaviour toggle with no spell source; rendered under Other Inputs.
@@ -416,452 +351,374 @@ func AtieshPriestAura(unit *core.Unit, isPlayer bool, talentPoints int32, count 
 // Arcane Brilliance
 var ArcaneBrillianceCategory = "StatBuff"
 var arcaneBrillianceSpell = spelldata.MustFind(23028)
+var arcaneBrillianceMeta = &Meta{
+	Label:    "Arcane Brilliance",
+	Spell:    arcaneBrillianceSpell,
+	Category: ArcaneBrillianceCategory,
+}
 
 func ArcaneBrillianceValue(talentPoints int32) float64 {
-	return amount(arcaneBrillianceSpell.Effect(dbcenums.A_MOD_STAT, 3))
+	return arcaneBrillianceMeta.Value(talentPoints)
 }
 func ArcaneBrillianceDuration(talentPoints int32) time.Duration {
-	return auraDuration(arcaneBrillianceSpell)
+	return arcaneBrillianceMeta.Duration(talentPoints)
 }
 func ArcaneBrillianceAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
-		Label:    "Arcane Brilliance (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: arcaneBrillianceSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration: ArcaneBrillianceDuration(talentPoints),
-		Category: ArcaneBrillianceCategory,
-		IsPlayer: isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.Intellect, Amount: ArcaneBrillianceValue(talentPoints), IsMultiplicative: false},
-		},
-	})
+	return newBuff(unit, arcaneBrillianceMeta, isPlayer, talentPoints)
 }
 
 // Greater Blessing of Kings
 var greaterBlessingOfKingsSpell = spelldata.MustFind(25898)
+var greaterBlessingOfKingsMeta = &Meta{
+	Label: "Greater Blessing of Kings",
+	Spell: greaterBlessingOfKingsSpell,
+}
 
 func GreaterBlessingOfKingsValue(talentPoints int32) float64 {
-	return 1 + amount(greaterBlessingOfKingsSpell.Effect(dbcenums.A_MOD_TOTAL_STAT_PERCENTAGE, -1))/100
+	return greaterBlessingOfKingsMeta.Value(talentPoints)
 }
 func GreaterBlessingOfKingsDuration(talentPoints int32) time.Duration {
-	return auraDuration(greaterBlessingOfKingsSpell)
+	return greaterBlessingOfKingsMeta.Duration(talentPoints)
 }
 func GreaterBlessingOfKingsAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
-		Label:    "Greater Blessing of Kings (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: greaterBlessingOfKingsSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration: GreaterBlessingOfKingsDuration(talentPoints),
-		IsPlayer: isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.Strength, Amount: GreaterBlessingOfKingsValue(talentPoints), IsMultiplicative: true},
-			{Stat: stats.Agility, Amount: 1 + amount(greaterBlessingOfKingsSpell.Effect(dbcenums.A_MOD_TOTAL_STAT_PERCENTAGE, -1))/100, IsMultiplicative: true},
-			{Stat: stats.Stamina, Amount: 1 + amount(greaterBlessingOfKingsSpell.Effect(dbcenums.A_MOD_TOTAL_STAT_PERCENTAGE, -1))/100, IsMultiplicative: true},
-			{Stat: stats.Intellect, Amount: 1 + amount(greaterBlessingOfKingsSpell.Effect(dbcenums.A_MOD_TOTAL_STAT_PERCENTAGE, -1))/100, IsMultiplicative: true},
-			{Stat: stats.Spirit, Amount: 1 + amount(greaterBlessingOfKingsSpell.Effect(dbcenums.A_MOD_TOTAL_STAT_PERCENTAGE, -1))/100, IsMultiplicative: true},
-		},
-	})
+	return newBuff(unit, greaterBlessingOfKingsMeta, isPlayer, talentPoints)
 }
 
 // Prayer of Spirit
 var PrayerOfSpiritCategory = "StatBuff"
 var prayerOfSpiritSpell = spelldata.MustFind(27681)
+var prayerOfSpiritMeta = &Meta{
+	Label:    "Prayer of Spirit",
+	Spell:    prayerOfSpiritSpell,
+	Category: PrayerOfSpiritCategory,
+}
 
 func PrayerOfSpiritValue(talentPoints int32) float64 {
-	return amount(prayerOfSpiritSpell.Effect(dbcenums.A_MOD_STAT, 4))
+	return prayerOfSpiritMeta.Value(talentPoints)
 }
 func PrayerOfSpiritDuration(talentPoints int32) time.Duration {
-	return auraDuration(prayerOfSpiritSpell)
+	return prayerOfSpiritMeta.Duration(talentPoints)
 }
 func PrayerOfSpiritAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
-		Label:    "Prayer of Spirit (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: prayerOfSpiritSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration: PrayerOfSpiritDuration(talentPoints),
-		Category: PrayerOfSpiritCategory,
-		IsPlayer: isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.Spirit, Amount: PrayerOfSpiritValue(talentPoints), IsMultiplicative: false},
-		},
-	})
+	return newBuff(unit, prayerOfSpiritMeta, isPlayer, talentPoints)
 }
 
 // Gift of the Wild
+// Left out: effect 3 A_MOD_RESISTANCE(22) misc 2
 var giftOfTheWildSpell = spelldata.MustFind(21850)
+var giftOfTheWildMeta = &Meta{
+	Label: "Gift of the Wild",
+	Spell: giftOfTheWildSpell,
+}
 
 func GiftOfTheWildValue(talentPoints int32) float64 {
-	return amount(giftOfTheWildSpell.Effect(dbcenums.A_MOD_RESISTANCE, 1))
+	return giftOfTheWildMeta.Value(talentPoints)
 }
 func GiftOfTheWildDuration(talentPoints int32) time.Duration {
-	return auraDuration(giftOfTheWildSpell)
+	return giftOfTheWildMeta.Duration(talentPoints)
 }
 func GiftOfTheWildAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
-		Label:    "Gift of the Wild (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: giftOfTheWildSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration: GiftOfTheWildDuration(talentPoints),
-		IsPlayer: isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.Armor, Amount: GiftOfTheWildValue(talentPoints), IsMultiplicative: false},
-			{Stat: stats.Strength, Amount: amount(giftOfTheWildSpell.Effect(dbcenums.A_MOD_STAT, -1)), IsMultiplicative: false},
-			{Stat: stats.Agility, Amount: amount(giftOfTheWildSpell.Effect(dbcenums.A_MOD_STAT, -1)), IsMultiplicative: false},
-			{Stat: stats.Stamina, Amount: amount(giftOfTheWildSpell.Effect(dbcenums.A_MOD_STAT, -1)), IsMultiplicative: false},
-			{Stat: stats.Intellect, Amount: amount(giftOfTheWildSpell.Effect(dbcenums.A_MOD_STAT, -1)), IsMultiplicative: false},
-			{Stat: stats.Spirit, Amount: amount(giftOfTheWildSpell.Effect(dbcenums.A_MOD_STAT, -1)), IsMultiplicative: false},
-			{Stat: stats.FireResistance, Amount: amount(giftOfTheWildSpell.Effect(dbcenums.A_MOD_RESISTANCE, 4)), IsMultiplicative: false},
-			{Stat: stats.NatureResistance, Amount: amount(giftOfTheWildSpell.Effect(dbcenums.A_MOD_RESISTANCE, 8)), IsMultiplicative: false},
-			{Stat: stats.FrostResistance, Amount: amount(giftOfTheWildSpell.Effect(dbcenums.A_MOD_RESISTANCE, 16)), IsMultiplicative: false},
-			{Stat: stats.ShadowResistance, Amount: amount(giftOfTheWildSpell.Effect(dbcenums.A_MOD_RESISTANCE, 32)), IsMultiplicative: false},
-			{Stat: stats.ArcaneResistance, Amount: amount(giftOfTheWildSpell.Effect(dbcenums.A_MOD_RESISTANCE, 64)), IsMultiplicative: false},
-		},
-	})
+	return newBuff(unit, giftOfTheWildMeta, isPlayer, talentPoints)
 }
 
 // Thorns
 var ThornsCategory = "Thorns"
 var thornsSpell = spelldata.MustFind(9910)
+var thornsMeta = &Meta{
+	Label:      "Thorns",
+	Spell:      thornsSpell,
+	Category:   ThornsCategory,
+	SingleAura: true,
+}
 
 func ThornsValue(talentPoints int32) float64 {
-	return amount(thornsSpell.Effect(dbcenums.A_DAMAGE_SHIELD, 0))
+	return thornsMeta.Value(talentPoints)
 }
 func ThornsDuration(talentPoints int32) time.Duration {
-	return auraDuration(thornsSpell)
+	return thornsMeta.Duration(talentPoints)
 }
 func ThornsAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedDamageShield(unit, core.GeneratedBuff{
-		Label:      "Thorns (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:   core.ActionID{SpellID: thornsSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration:   ThornsDuration(talentPoints),
-		Category:   ThornsCategory,
-		SingleAura: true,
-		IsPlayer:   isPlayer,
-	}, core.SpellSchoolNature, ThornsValue(talentPoints))
+	return newDamageShield(unit, thornsMeta, isPlayer, talentPoints)
 }
 
 // Prayer of Fortitude
 var prayerOfFortitudeSpell = spelldata.MustFind(21564)
+var prayerOfFortitudeMeta = &Meta{
+	Label: "Prayer of Fortitude",
+	Spell: prayerOfFortitudeSpell,
+}
 
 func PrayerOfFortitudeValue(talentPoints int32) float64 {
-	return amount(prayerOfFortitudeSpell.Effect(dbcenums.A_MOD_STAT, 2))
+	return prayerOfFortitudeMeta.Value(talentPoints)
 }
 func PrayerOfFortitudeDuration(talentPoints int32) time.Duration {
-	return auraDuration(prayerOfFortitudeSpell)
+	return prayerOfFortitudeMeta.Duration(talentPoints)
 }
 func PrayerOfFortitudeAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
-		Label:    "Prayer of Fortitude (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: prayerOfFortitudeSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration: PrayerOfFortitudeDuration(talentPoints),
-		IsPlayer: isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.Stamina, Amount: PrayerOfFortitudeValue(talentPoints), IsMultiplicative: false},
-		},
-	})
+	return newBuff(unit, prayerOfFortitudeMeta, isPlayer, talentPoints)
 }
 
 // Greater Blessing of Might
 var greaterBlessingOfMightSpell = spelldata.MustFind(25916)
+var greaterBlessingOfMightMeta = &Meta{
+	Label: "Greater Blessing of Might",
+	Spell: greaterBlessingOfMightSpell,
+}
 
 func GreaterBlessingOfMightValue(talentPoints int32) float64 {
-	return amount(greaterBlessingOfMightSpell.Effect(dbcenums.A_MOD_ATTACK_POWER, 0))
+	return greaterBlessingOfMightMeta.Value(talentPoints)
 }
 func GreaterBlessingOfMightDuration(talentPoints int32) time.Duration {
-	return auraDuration(greaterBlessingOfMightSpell)
+	return greaterBlessingOfMightMeta.Duration(talentPoints)
 }
 func GreaterBlessingOfMightAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
-		Label:    "Greater Blessing of Might (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: greaterBlessingOfMightSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration: GreaterBlessingOfMightDuration(talentPoints),
-		IsPlayer: isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.AttackPower, Amount: GreaterBlessingOfMightValue(talentPoints), IsMultiplicative: false},
-		},
-	})
+	return newBuff(unit, greaterBlessingOfMightMeta, isPlayer, talentPoints)
 }
 
 // Greater Blessing of Wisdom
 var greaterBlessingOfWisdomSpell = spelldata.MustFind(25918)
+var greaterBlessingOfWisdomMeta = &Meta{
+	Label: "Greater Blessing of Wisdom",
+	Spell: greaterBlessingOfWisdomSpell,
+}
 
 func GreaterBlessingOfWisdomValue(talentPoints int32) float64 {
-	return manaPerFive(greaterBlessingOfWisdomSpell.Effect(dbcenums.A_PERIODIC_ENERGIZE, 0), amount(greaterBlessingOfWisdomSpell.Effect(dbcenums.A_PERIODIC_ENERGIZE, 0)))
+	return greaterBlessingOfWisdomMeta.Value(talentPoints)
 }
 func GreaterBlessingOfWisdomDuration(talentPoints int32) time.Duration {
-	return auraDuration(greaterBlessingOfWisdomSpell)
+	return greaterBlessingOfWisdomMeta.Duration(talentPoints)
 }
 func GreaterBlessingOfWisdomAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
-		Label:    "Greater Blessing of Wisdom (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: greaterBlessingOfWisdomSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration: GreaterBlessingOfWisdomDuration(talentPoints),
-		IsPlayer: isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.MP5, Amount: GreaterBlessingOfWisdomValue(talentPoints), IsMultiplicative: false},
-		},
-	})
+	return newBuff(unit, greaterBlessingOfWisdomMeta, isPlayer, talentPoints)
 }
 
 // Greater Blessing of Salvation
 var greaterBlessingOfSalvationSpell = spelldata.MustFind(25895)
+var greaterBlessingOfSalvationMeta = &Meta{
+	Label: "Greater Blessing of Salvation",
+	Spell: greaterBlessingOfSalvationSpell,
+}
 
 func GreaterBlessingOfSalvationValue(talentPoints int32) float64 {
-	return 1 + amount(greaterBlessingOfSalvationSpell.Effect(dbcenums.A_MOD_THREAT, 127))/100
+	return greaterBlessingOfSalvationMeta.Value(talentPoints)
 }
 func GreaterBlessingOfSalvationDuration(talentPoints int32) time.Duration {
-	return auraDuration(greaterBlessingOfSalvationSpell)
+	return greaterBlessingOfSalvationMeta.Duration(talentPoints)
 }
 func GreaterBlessingOfSalvationAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
-		Label:    "Greater Blessing of Salvation (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: greaterBlessingOfSalvationSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration: GreaterBlessingOfSalvationDuration(talentPoints),
-		IsPlayer: isPlayer,
-		Pseudo: []core.PseudoConfig{
-			{Kind: core.PseudoStatThreatMultiplier, Amount: GreaterBlessingOfSalvationValue(talentPoints), IsMultiplicative: true, SchoolMask: 0},
-		},
-	})
+	return newBuff(unit, greaterBlessingOfSalvationMeta, isPlayer, talentPoints)
 }
 
 // Greater Blessing of Light
+// Left out: effect 1 A_DUMMY(4) misc 0
+// Left out: effect 2 A_DUMMY(4) misc 0
 var GreaterBlessingOfLightCategory = "BlessingOfLight"
 var greaterBlessingOfLightSpell = spelldata.MustFind(25890)
+var greaterBlessingOfLightMeta = &Meta{
+	Label:    "Greater Blessing of Light",
+	Spell:    greaterBlessingOfLightSpell,
+	Category: GreaterBlessingOfLightCategory,
+}
 
 func GreaterBlessingOfLightDuration(talentPoints int32) time.Duration {
-	return auraDuration(greaterBlessingOfLightSpell)
+	return greaterBlessingOfLightMeta.Duration(talentPoints)
 }
 func GreaterBlessingOfLightAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
-		Label:    "Greater Blessing of Light (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: greaterBlessingOfLightSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration: GreaterBlessingOfLightDuration(talentPoints),
-		Category: GreaterBlessingOfLightCategory,
-		IsPlayer: isPlayer,
-	})
+	return newBuff(unit, greaterBlessingOfLightMeta, isPlayer, talentPoints)
 }
 
 // Prayer of Shadow Protection
 var prayerOfShadowProtectionSpell = spelldata.MustFind(27683)
+var prayerOfShadowProtectionMeta = &Meta{
+	Label: "Prayer of Shadow Protection",
+	Spell: prayerOfShadowProtectionSpell,
+}
 
 func PrayerOfShadowProtectionValue(talentPoints int32) float64 {
-	return amount(prayerOfShadowProtectionSpell.Effect(dbcenums.A_MOD_RESISTANCE, 32))
+	return prayerOfShadowProtectionMeta.Value(talentPoints)
 }
 func PrayerOfShadowProtectionDuration(talentPoints int32) time.Duration {
-	return auraDuration(prayerOfShadowProtectionSpell)
+	return prayerOfShadowProtectionMeta.Duration(talentPoints)
 }
 func PrayerOfShadowProtectionAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
-		Label:    "Prayer of Shadow Protection (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: prayerOfShadowProtectionSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration: PrayerOfShadowProtectionDuration(talentPoints),
-		IsPlayer: isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.ShadowResistance, Amount: PrayerOfShadowProtectionValue(talentPoints), IsMultiplicative: false},
-		},
-	})
+	return newBuff(unit, prayerOfShadowProtectionMeta, isPlayer, talentPoints)
 }
 
 // Fire Resistance Aura
 var FireResistanceAuraCategory = "FireResistanceAura"
 var fireResistanceAuraSpell = spelldata.MustFind(19900)
+var fireResistanceAuraMeta = &Meta{
+	Label:          "Fire Resistance Aura",
+	Spell:          fireResistanceAuraSpell,
+	Category:       FireResistanceAuraCategory,
+	SharedCategory: PaladinAuraCategory,
+	SingleAura:     true,
+	SkipAuras:      []dbcenums.EffectAuraType{dbcenums.A_MOD_HEALING_PCT, dbcenums.A_MECHANIC_DURATION_MOD},
+}
 
 func FireResistanceAuraValue(talentPoints int32) float64 {
-	return amount(fireResistanceAuraSpell.Effect(dbcenums.A_MOD_RESISTANCE, 4))
+	return fireResistanceAuraMeta.Value(talentPoints)
 }
 func FireResistanceAuraDuration(talentPoints int32) time.Duration {
-	return auraDuration(fireResistanceAuraSpell)
+	return fireResistanceAuraMeta.Duration(talentPoints)
 }
 func FireResistanceAuraAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
-		Label:          "Fire Resistance Aura (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:       core.ActionID{SpellID: fireResistanceAuraSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration:       FireResistanceAuraDuration(talentPoints),
-		Category:       FireResistanceAuraCategory,
-		SharedCategory: PaladinAuraCategory,
-		SingleAura:     true,
-		IsPlayer:       isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.FireResistance, Amount: FireResistanceAuraValue(talentPoints), IsMultiplicative: false},
-		},
-	})
+	return newBuff(unit, fireResistanceAuraMeta, isPlayer, talentPoints)
 }
 
 // Frost Resistance Aura
 var FrostResistanceAuraCategory = "FrostResistanceAura"
 var frostResistanceAuraSpell = spelldata.MustFind(19898)
+var frostResistanceAuraMeta = &Meta{
+	Label:          "Frost Resistance Aura",
+	Spell:          frostResistanceAuraSpell,
+	Category:       FrostResistanceAuraCategory,
+	SharedCategory: PaladinAuraCategory,
+	SingleAura:     true,
+	SkipAuras:      []dbcenums.EffectAuraType{dbcenums.A_MOD_HEALING_PCT, dbcenums.A_MECHANIC_DURATION_MOD},
+}
 
 func FrostResistanceAuraValue(talentPoints int32) float64 {
-	return amount(frostResistanceAuraSpell.Effect(dbcenums.A_MOD_RESISTANCE, 16))
+	return frostResistanceAuraMeta.Value(talentPoints)
 }
 func FrostResistanceAuraDuration(talentPoints int32) time.Duration {
-	return auraDuration(frostResistanceAuraSpell)
+	return frostResistanceAuraMeta.Duration(talentPoints)
 }
 func FrostResistanceAuraAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
-		Label:          "Frost Resistance Aura (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:       core.ActionID{SpellID: frostResistanceAuraSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration:       FrostResistanceAuraDuration(talentPoints),
-		Category:       FrostResistanceAuraCategory,
-		SharedCategory: PaladinAuraCategory,
-		SingleAura:     true,
-		IsPlayer:       isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.FrostResistance, Amount: FrostResistanceAuraValue(talentPoints), IsMultiplicative: false},
-		},
-	})
+	return newBuff(unit, frostResistanceAuraMeta, isPlayer, talentPoints)
 }
 
 // Shadow Resistance Aura
 var ShadowResistanceAuraCategory = "ShadowResistanceAura"
 var shadowResistanceAuraSpell = spelldata.MustFind(19896)
+var shadowResistanceAuraMeta = &Meta{
+	Label:          "Shadow Resistance Aura",
+	Spell:          shadowResistanceAuraSpell,
+	Category:       ShadowResistanceAuraCategory,
+	SharedCategory: PaladinAuraCategory,
+	SingleAura:     true,
+	SkipAuras:      []dbcenums.EffectAuraType{dbcenums.A_MOD_HEALING_PCT, dbcenums.A_MECHANIC_DURATION_MOD},
+}
 
 func ShadowResistanceAuraValue(talentPoints int32) float64 {
-	return amount(shadowResistanceAuraSpell.Effect(dbcenums.A_MOD_RESISTANCE, 32))
+	return shadowResistanceAuraMeta.Value(talentPoints)
 }
 func ShadowResistanceAuraDuration(talentPoints int32) time.Duration {
-	return auraDuration(shadowResistanceAuraSpell)
+	return shadowResistanceAuraMeta.Duration(talentPoints)
 }
 func ShadowResistanceAuraAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
-		Label:          "Shadow Resistance Aura (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:       core.ActionID{SpellID: shadowResistanceAuraSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration:       ShadowResistanceAuraDuration(talentPoints),
-		Category:       ShadowResistanceAuraCategory,
-		SharedCategory: PaladinAuraCategory,
-		SingleAura:     true,
-		IsPlayer:       isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.ShadowResistance, Amount: ShadowResistanceAuraValue(talentPoints), IsMultiplicative: false},
-		},
-	})
+	return newBuff(unit, shadowResistanceAuraMeta, isPlayer, talentPoints)
 }
 
 // Fire Resistance Totem
 var fireResistanceTotemSpell = spelldata.MustFind(10535)
+var fireResistanceTotemMeta = &Meta{
+	Label: "Fire Resistance Totem",
+	Spell: fireResistanceTotemSpell,
+}
 
 func FireResistanceTotemValue(talentPoints int32) float64 {
-	return amount(fireResistanceTotemSpell.Effect(dbcenums.A_MOD_RESISTANCE, 4))
+	return fireResistanceTotemMeta.Value(talentPoints)
 }
 func FireResistanceTotemDuration(talentPoints int32) time.Duration {
-	return auraDuration(fireResistanceTotemSpell)
+	return fireResistanceTotemMeta.Duration(talentPoints)
 }
 func FireResistanceTotemAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
-		Label:    "Fire Resistance Totem (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: fireResistanceTotemSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration: FireResistanceTotemDuration(talentPoints),
-		IsPlayer: isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.FireResistance, Amount: FireResistanceTotemValue(talentPoints), IsMultiplicative: false},
-		},
-	})
+	return newBuff(unit, fireResistanceTotemMeta, isPlayer, talentPoints)
 }
 
 // Frost Resistance Totem
 var frostResistanceTotemSpell = spelldata.MustFind(10477)
+var frostResistanceTotemMeta = &Meta{
+	Label: "Frost Resistance Totem",
+	Spell: frostResistanceTotemSpell,
+}
 
 func FrostResistanceTotemValue(talentPoints int32) float64 {
-	return amount(frostResistanceTotemSpell.Effect(dbcenums.A_MOD_RESISTANCE, 16))
+	return frostResistanceTotemMeta.Value(talentPoints)
 }
 func FrostResistanceTotemDuration(talentPoints int32) time.Duration {
-	return auraDuration(frostResistanceTotemSpell)
+	return frostResistanceTotemMeta.Duration(talentPoints)
 }
 func FrostResistanceTotemAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
-		Label:    "Frost Resistance Totem (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: frostResistanceTotemSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration: FrostResistanceTotemDuration(talentPoints),
-		IsPlayer: isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.FrostResistance, Amount: FrostResistanceTotemValue(talentPoints), IsMultiplicative: false},
-		},
-	})
+	return newBuff(unit, frostResistanceTotemMeta, isPlayer, talentPoints)
 }
 
 // Nature Resistance Totem
 var natureResistanceTotemSpell = spelldata.MustFind(10599)
+var natureResistanceTotemMeta = &Meta{
+	Label: "Nature Resistance Totem",
+	Spell: natureResistanceTotemSpell,
+}
 
 func NatureResistanceTotemValue(talentPoints int32) float64 {
-	return amount(natureResistanceTotemSpell.Effect(dbcenums.A_MOD_RESISTANCE, 8))
+	return natureResistanceTotemMeta.Value(talentPoints)
 }
 func NatureResistanceTotemDuration(talentPoints int32) time.Duration {
-	return auraDuration(natureResistanceTotemSpell)
+	return natureResistanceTotemMeta.Duration(talentPoints)
 }
 func NatureResistanceTotemAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
-		Label:    "Nature Resistance Totem (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: natureResistanceTotemSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration: NatureResistanceTotemDuration(talentPoints),
-		IsPlayer: isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.NatureResistance, Amount: NatureResistanceTotemValue(talentPoints), IsMultiplicative: false},
-		},
-	})
+	return newBuff(unit, natureResistanceTotemMeta, isPlayer, talentPoints)
 }
 
 // Aspect of the Wild
 var aspectOfTheWildSpell = spelldata.MustFind(20190)
+var aspectOfTheWildMeta = &Meta{
+	Label: "Aspect of the Wild",
+	Spell: aspectOfTheWildSpell,
+}
 
 func AspectOfTheWildValue(talentPoints int32) float64 {
-	return amount(aspectOfTheWildSpell.Effect(dbcenums.A_MOD_RESISTANCE, 8))
+	return aspectOfTheWildMeta.Value(talentPoints)
 }
 func AspectOfTheWildDuration(talentPoints int32) time.Duration {
-	return auraDuration(aspectOfTheWildSpell)
+	return aspectOfTheWildMeta.Duration(talentPoints)
 }
 func AspectOfTheWildAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
-		Label:    "Aspect of the Wild (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: aspectOfTheWildSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration: AspectOfTheWildDuration(talentPoints),
-		IsPlayer: isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.NatureResistance, Amount: AspectOfTheWildValue(talentPoints), IsMultiplicative: false},
-		},
-	})
+	return newBuff(unit, aspectOfTheWildMeta, isPlayer, talentPoints)
 }
 
 // Innervates
+// Left out: effect 1 A_MOD_MANA_REGEN_INTERRUPT(134) misc 0
+// Left out: effect 2 A_MOD_POWER_REGEN_PERCENT(110) misc 0
 var InnervatesCategory = "Innervate"
 var innervatesSpell = spelldata.MustFind(29166)
+var innervatesMeta = &Meta{
+	Label:    "Innervates",
+	Spell:    innervatesSpell,
+	Category: InnervatesCategory,
+}
 
 func InnervatesDuration(talentPoints int32) time.Duration {
-	return auraDuration(innervatesSpell)
+	return innervatesMeta.Duration(talentPoints)
 }
 func InnervatesCooldown() time.Duration {
-	return cooldown(innervatesSpell)
+	return innervatesMeta.Cooldown()
 }
 func InnervatesAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
-		Label:    "Innervates (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: innervatesSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration: InnervatesDuration(talentPoints),
-		Category: InnervatesCategory,
-		IsPlayer: isPlayer,
-	})
+	return newBuff(unit, innervatesMeta, isPlayer, talentPoints)
 }
 
 // Power Infusions
 var PowerInfusionsCategory = "PowerInfusion"
 var powerInfusionsSpell = spelldata.MustFind(10060)
+var powerInfusionsMeta = &Meta{
+	Label:    "Power Infusions",
+	Spell:    powerInfusionsSpell,
+	Category: PowerInfusionsCategory,
+}
 
 func PowerInfusionsValue(talentPoints int32) float64 {
-	return 1 + amount(powerInfusionsSpell.Effect(dbcenums.A_MOD_HEALING_DONE_PERCENT, 126))/100
+	return powerInfusionsMeta.Value(talentPoints)
 }
 func PowerInfusionsDuration(talentPoints int32) time.Duration {
-	return auraDuration(powerInfusionsSpell)
+	return powerInfusionsMeta.Duration(talentPoints)
 }
 func PowerInfusionsCooldown() time.Duration {
-	return cooldown(powerInfusionsSpell)
+	return powerInfusionsMeta.Cooldown()
 }
 func PowerInfusionsAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedStatAura(unit, core.GeneratedBuff{
-		Label:    "Power Infusions (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: powerInfusionsSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration: PowerInfusionsDuration(talentPoints),
-		Category: PowerInfusionsCategory,
-		IsPlayer: isPlayer,
-		Pseudo: []core.PseudoConfig{
-			{Kind: core.PseudoStatHealingDealtMultiplier, Amount: PowerInfusionsValue(talentPoints), IsMultiplicative: true, SchoolMask: 0},
-			{Kind: core.PseudoStatSchoolDamageDealtMultiplier, Amount: 1 + amount(powerInfusionsSpell.Effect(dbcenums.A_MOD_DAMAGE_PERCENT_DONE, 126))/100, IsMultiplicative: true, SchoolMask: 126},
-		},
-	})
+	return newBuff(unit, powerInfusionsMeta, isPlayer, talentPoints)
 }
 
 func applyGeneratedBuffs(char *core.Character, raid *proto.RaidBuffs, party *proto.PartyBuffs, individual *proto.IndividualBuffs) {

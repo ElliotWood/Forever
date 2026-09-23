@@ -6,336 +6,284 @@ import (
 	"time"
 
 	"github.com/wowsims/forever/sim/core"
-	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/spelldata"
-	"github.com/wowsims/forever/sim/core/stats"
 )
 
 // Hunter's Mark
+// Left out: effect 1 A_MOD_STALKED(68) misc 0
 var HuntersMarkCategory = "HuntersMark"
 var huntersMarkSpell = spelldata.MustFind(14325)
+var huntersMarkMeta = &Meta{
+	Label:      "Hunter's Mark",
+	Spell:      huntersMarkSpell,
+	Category:   HuntersMarkCategory,
+	SingleAura: true,
+}
 
 func HuntersMarkValue(talentPoints int32) float64 {
-	return amount(huntersMarkSpell.Effect(dbcenums.A_RANGED_ATTACK_POWER_ATTACKER_BONUS, 0))
+	return huntersMarkMeta.Value(talentPoints)
 }
 func HuntersMarkDuration(talentPoints int32) time.Duration {
-	return auraDuration(huntersMarkSpell)
+	return huntersMarkMeta.Duration(talentPoints)
 }
 func HuntersMarkAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedDebuff(unit, core.GeneratedBuff{
-		Label:      "Hunter's Mark (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:   core.ActionID{SpellID: huntersMarkSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration:   HuntersMarkDuration(talentPoints),
-		Category:   HuntersMarkCategory,
-		SingleAura: true,
-		IsPlayer:   isPlayer,
-		Pseudo: []core.PseudoConfig{
-			{Kind: core.PseudoStatBonusRangedAttackPower, Amount: HuntersMarkValue(talentPoints), IsMultiplicative: false, SchoolMask: 0},
-		},
-	})
+	return newDebuff(unit, huntersMarkMeta, isPlayer, talentPoints)
 }
 
 // Judgement of the Crusader
-// func JudgementOfTheCrusaderAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura // judgement_of_the_crusader, KindDebuffStat: spell 20303 states no aura effect this generator maps (auras 14)
+// func JudgementOfTheCrusaderAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura // judgement_of_the_crusader, KindDebuffStat: spell 20303 states no aura effect the parse attaches: effect 1 A_MOD_DAMAGE_TAKEN(14) misc 2
 
 // Judgement of Light
+// Left out: effect 1 A_PROC_TRIGGER_SPELL(42) misc 0
 var judgementOfLightSpell = spelldata.MustFind(20346)
+var judgementOfLightMeta = &Meta{
+	Label: "Judgement of Light",
+	Spell: judgementOfLightSpell,
+}
 
 func JudgementOfLightDuration(talentPoints int32) time.Duration {
-	return auraDuration(judgementOfLightSpell)
+	return judgementOfLightMeta.Duration(talentPoints)
 }
 func JudgementOfLightAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedDebuff(unit, core.GeneratedBuff{
-		Label:    "Judgement of Light (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: judgementOfLightSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration: JudgementOfLightDuration(talentPoints),
-		IsPlayer: isPlayer,
-	})
+	return newDebuff(unit, judgementOfLightMeta, isPlayer, talentPoints)
 }
 
 // Judgement of Wisdom
+// Left out: effect 1 A_PROC_TRIGGER_SPELL(42) misc 0
 var judgementOfWisdomSpell = spelldata.MustFind(20355)
+var judgementOfWisdomMeta = &Meta{
+	Label: "Judgement of Wisdom",
+	Spell: judgementOfWisdomSpell,
+}
 
 func JudgementOfWisdomDuration(talentPoints int32) time.Duration {
-	return auraDuration(judgementOfWisdomSpell)
+	return judgementOfWisdomMeta.Duration(talentPoints)
 }
 func JudgementOfWisdomAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedDebuff(unit, core.GeneratedBuff{
-		Label:    "Judgement of Wisdom (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: judgementOfWisdomSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration: JudgementOfWisdomDuration(talentPoints),
-		IsPlayer: isPlayer,
-	})
+	return newDebuff(unit, judgementOfWisdomMeta, isPlayer, talentPoints)
 }
 
 // Mangle
-// func MangleAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura // mangle, KindDebuffDamageTaken: spell 1238073 states no aura effect this generator maps (auras )
+// func MangleAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura // mangle, KindDebuffDamageTaken: spell 1238073 states no aura effect the parse attaches
 
 // Curse of the Elements
 var CurseOfElementsCategory = "CurseOfElements"
 var curseOfElementsSpell = spelldata.MustFind(1311680)
+var curseOfElementsMeta = &Meta{
+	Label:      "Curse of the Elements",
+	Spell:      curseOfElementsSpell,
+	Category:   CurseOfElementsCategory,
+	SingleAura: true,
+}
 
 func CurseOfElementsValue(talentPoints int32) float64 {
-	return amount(curseOfElementsSpell.Effect(dbcenums.A_MOD_RESISTANCE, 126))
+	return curseOfElementsMeta.Value(talentPoints)
 }
 func CurseOfElementsDuration(talentPoints int32) time.Duration {
-	return auraDuration(curseOfElementsSpell)
+	return curseOfElementsMeta.Duration(talentPoints)
 }
 func CurseOfElementsAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedDebuff(unit, core.GeneratedBuff{
-		Label:      "Curse of the Elements (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:   core.ActionID{SpellID: curseOfElementsSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration:   CurseOfElementsDuration(talentPoints),
-		Category:   CurseOfElementsCategory,
-		SingleAura: true,
-		IsPlayer:   isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.ArcaneResistance, Amount: CurseOfElementsValue(talentPoints), IsMultiplicative: false},
-			{Stat: stats.FireResistance, Amount: amount(curseOfElementsSpell.Effect(dbcenums.A_MOD_RESISTANCE, 126)), IsMultiplicative: false},
-			{Stat: stats.FrostResistance, Amount: amount(curseOfElementsSpell.Effect(dbcenums.A_MOD_RESISTANCE, 126)), IsMultiplicative: false},
-			{Stat: stats.NatureResistance, Amount: amount(curseOfElementsSpell.Effect(dbcenums.A_MOD_RESISTANCE, 126)), IsMultiplicative: false},
-			{Stat: stats.ShadowResistance, Amount: amount(curseOfElementsSpell.Effect(dbcenums.A_MOD_RESISTANCE, 126)), IsMultiplicative: false},
-		},
-		Pseudo: []core.PseudoConfig{
-			{Kind: core.PseudoStatSchoolDamageTakenMultiplier, Amount: 1 + amount(curseOfElementsSpell.Effect(dbcenums.A_MOD_DAMAGE_PERCENT_TAKEN, 126))/100, IsMultiplicative: true, SchoolMask: 126},
-		},
-	})
+	return newDebuff(unit, curseOfElementsMeta, isPlayer, talentPoints)
 }
 
 // Curse of Recklessness
+// Left out: effect 1 A_DUMMY(4) misc 0
+// Left out: effect 3 A_PREVENTS_FLEEING(92) misc 0
 var CurseOfRecklessnessCategory = "CurseOfRecklessness"
 var curseOfRecklessnessSpell = spelldata.MustFind(11717)
+var curseOfRecklessnessMeta = &Meta{
+	Label:      "Curse of Recklessness",
+	Spell:      curseOfRecklessnessSpell,
+	Category:   CurseOfRecklessnessCategory,
+	SingleAura: true,
+}
 
 func CurseOfRecklessnessValue(talentPoints int32) float64 {
-	return amount(curseOfRecklessnessSpell.Effect(dbcenums.A_MOD_RESISTANCE, 1))
+	return curseOfRecklessnessMeta.Value(talentPoints)
 }
 func CurseOfRecklessnessDuration(talentPoints int32) time.Duration {
-	return auraDuration(curseOfRecklessnessSpell)
+	return curseOfRecklessnessMeta.Duration(talentPoints)
 }
 func CurseOfRecklessnessAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedDebuff(unit, core.GeneratedBuff{
-		Label:      "Curse of Recklessness (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:   core.ActionID{SpellID: curseOfRecklessnessSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration:   CurseOfRecklessnessDuration(talentPoints),
-		Category:   CurseOfRecklessnessCategory,
-		SingleAura: true,
-		IsPlayer:   isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.Armor, Amount: CurseOfRecklessnessValue(talentPoints), IsMultiplicative: false},
-		},
-	})
+	return newDebuff(unit, curseOfRecklessnessMeta, isPlayer, talentPoints)
 }
 
 // Faerie Fire
+// Left out: effect 2 A_DISPEL_IMMUNITY(41) misc 6
+// Left out: effect 3 A_DISPEL_IMMUNITY(41) misc 5
 var FaerieFireCategory = "FaerieFireAura"
 var faerieFireSpell = spelldata.MustFind(9907)
+var faerieFireMeta = &Meta{
+	Label:      "Faerie Fire",
+	Spell:      faerieFireSpell,
+	Category:   FaerieFireCategory,
+	SingleAura: true,
+}
 
 func FaerieFireValue(talentPoints int32) float64 {
-	return amount(faerieFireSpell.Effect(dbcenums.A_MOD_RESISTANCE, 1))
+	return faerieFireMeta.Value(talentPoints)
 }
 func FaerieFireDuration(talentPoints int32) time.Duration {
-	return auraDuration(faerieFireSpell)
+	return faerieFireMeta.Duration(talentPoints)
 }
 func FaerieFireAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedDebuff(unit, core.GeneratedBuff{
-		Label:      "Faerie Fire (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:   core.ActionID{SpellID: faerieFireSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration:   FaerieFireDuration(talentPoints),
-		Category:   FaerieFireCategory,
-		SingleAura: true,
-		IsPlayer:   isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.Armor, Amount: FaerieFireValue(talentPoints), IsMultiplicative: false},
-		},
-	})
+	return newDebuff(unit, faerieFireMeta, isPlayer, talentPoints)
 }
 
 // Expose Armor
-// Effect 0 is worth -450.0 per combo point; this is the 5-point finisher.
 var ExposeArmorCategory = "MajorArmorReduction"
 var exposeArmorSpell = spelldata.MustFind(11198)
+var exposeArmorMeta = &Meta{
+	Label:           "Expose Armor",
+	Spell:           exposeArmorSpell,
+	Category:        ExposeArmorCategory,
+	SingleAura:      true,
+	FullComboPoints: true,
+}
 
 func ExposeArmorValue(talentPoints int32) float64 {
-	return fullComboPoints(exposeArmorSpell.Effect(dbcenums.A_MOD_RESISTANCE, 1))
+	return exposeArmorMeta.Value(talentPoints)
 }
 func ExposeArmorDuration(talentPoints int32) time.Duration {
-	return auraDuration(exposeArmorSpell)
+	return exposeArmorMeta.Duration(talentPoints)
 }
 func ExposeArmorAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedDebuff(unit, core.GeneratedBuff{
-		Label:      "Expose Armor (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:   core.ActionID{SpellID: exposeArmorSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration:   ExposeArmorDuration(talentPoints),
-		Category:   ExposeArmorCategory,
-		SingleAura: true,
-		IsPlayer:   isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.Armor, Amount: ExposeArmorValue(talentPoints), IsMultiplicative: false},
-		},
-	})
+	return newDebuff(unit, exposeArmorMeta, isPlayer, talentPoints)
 }
 
 // Sunder Armor
 var SunderArmorCategory = "MajorArmorReduction"
 var sunderArmorSpell = spelldata.MustFind(11597)
+var sunderArmorMeta = &Meta{
+	Label:      "Sunder Armor",
+	Spell:      sunderArmorSpell,
+	Category:   SunderArmorCategory,
+	SingleAura: true,
+}
 
 func SunderArmorValue(talentPoints int32) float64 {
-	return amount(sunderArmorSpell.Effect(dbcenums.A_MOD_RESISTANCE, 1))
+	return sunderArmorMeta.Value(talentPoints)
 }
 func SunderArmorDuration(talentPoints int32) time.Duration {
-	return auraDuration(sunderArmorSpell)
+	return sunderArmorMeta.Duration(talentPoints)
 }
 func SunderArmorAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedDebuff(unit, core.GeneratedBuff{
-		Label:      "Sunder Armor (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:   core.ActionID{SpellID: sunderArmorSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration:   SunderArmorDuration(talentPoints),
-		MaxStacks:  5,
-		Category:   SunderArmorCategory,
-		SingleAura: true,
-		IsPlayer:   isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.Armor, Amount: SunderArmorValue(talentPoints), IsMultiplicative: false},
-		},
-	})
+	return newDebuff(unit, sunderArmorMeta, isPlayer, talentPoints)
 }
 
 // Gift of Arthas
 var GiftOfArthasCategory = "GiftOfArthasAura"
 var giftOfArthasSpell = spelldata.MustFind(11374)
+var giftOfArthasMeta = &Meta{
+	Label:      "Gift of Arthas",
+	Spell:      giftOfArthasSpell,
+	Category:   GiftOfArthasCategory,
+	SingleAura: true,
+}
 
 func GiftOfArthasValue(talentPoints int32) float64 {
-	return amount(giftOfArthasSpell.Effect(dbcenums.A_MOD_DAMAGE_TAKEN, 1))
+	return giftOfArthasMeta.Value(talentPoints)
 }
 func GiftOfArthasDuration(talentPoints int32) time.Duration {
-	return auraDuration(giftOfArthasSpell)
+	return giftOfArthasMeta.Duration(talentPoints)
 }
 func GiftOfArthasAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedDebuff(unit, core.GeneratedBuff{
-		Label:      "Gift of Arthas (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:   core.ActionID{SpellID: giftOfArthasSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration:   GiftOfArthasDuration(talentPoints),
-		Category:   GiftOfArthasCategory,
-		SingleAura: true,
-		IsPlayer:   isPlayer,
-		Pseudo: []core.PseudoConfig{
-			{Kind: core.PseudoStatBonusPhysicalDamageTaken, Amount: GiftOfArthasValue(talentPoints), IsMultiplicative: false, SchoolMask: 0},
-		},
-	})
+	return newDebuff(unit, giftOfArthasMeta, isPlayer, talentPoints)
 }
 
 // Demoralizing Roar
 var DemoralizingRoarCategory = "Demoralizing"
 var demoralizingRoarSpell = spelldata.MustFind(9898)
+var demoralizingRoarMeta = &Meta{
+	Label:      "Demoralizing Roar",
+	Spell:      demoralizingRoarSpell,
+	Category:   DemoralizingRoarCategory,
+	SingleAura: true,
+}
 
 func DemoralizingRoarValue(talentPoints int32) float64 {
-	return amount(demoralizingRoarSpell.Effect(dbcenums.A_MOD_ATTACK_POWER, 0))
+	return demoralizingRoarMeta.Value(talentPoints)
 }
 func DemoralizingRoarDuration(talentPoints int32) time.Duration {
-	return auraDuration(demoralizingRoarSpell)
+	return demoralizingRoarMeta.Duration(talentPoints)
 }
 func DemoralizingRoarAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedDebuff(unit, core.GeneratedBuff{
-		Label:      "Demoralizing Roar (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:   core.ActionID{SpellID: demoralizingRoarSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration:   DemoralizingRoarDuration(talentPoints),
-		Category:   DemoralizingRoarCategory,
-		SingleAura: true,
-		IsPlayer:   isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.AttackPower, Amount: DemoralizingRoarValue(talentPoints), IsMultiplicative: false},
-		},
-	})
+	return newDebuff(unit, demoralizingRoarMeta, isPlayer, talentPoints)
 }
 
 // Demoralizing Shout
 var DemoralizingShoutCategory = "Demoralizing"
 var demoralizingShoutSpell = spelldata.MustFind(11556)
+var demoralizingShoutMeta = &Meta{
+	Label:      "Demoralizing Shout",
+	Spell:      demoralizingShoutSpell,
+	Category:   DemoralizingShoutCategory,
+	SingleAura: true,
+}
 
 func DemoralizingShoutValue(talentPoints int32) float64 {
-	return amount(demoralizingShoutSpell.Effect(dbcenums.A_MOD_ATTACK_POWER, 0))
+	return demoralizingShoutMeta.Value(talentPoints)
 }
 func DemoralizingShoutDuration(talentPoints int32) time.Duration {
-	return auraDuration(demoralizingShoutSpell)
+	return demoralizingShoutMeta.Duration(talentPoints)
 }
 func DemoralizingShoutAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedDebuff(unit, core.GeneratedBuff{
-		Label:      "Demoralizing Shout (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:   core.ActionID{SpellID: demoralizingShoutSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration:   DemoralizingShoutDuration(talentPoints),
-		Category:   DemoralizingShoutCategory,
-		SingleAura: true,
-		IsPlayer:   isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.AttackPower, Amount: DemoralizingShoutValue(talentPoints), IsMultiplicative: false},
-		},
-	})
+	return newDebuff(unit, demoralizingShoutMeta, isPlayer, talentPoints)
 }
 
 // Thunder Clap
 var ThunderClapCategory = "AtkSpdReduction"
 var thunderClapSpell = spelldata.MustFind(11581)
+var thunderClapMeta = &Meta{
+	Label:    "Thunder Clap",
+	Spell:    thunderClapSpell,
+	Category: ThunderClapCategory,
+}
 
 func ThunderClapValue(talentPoints int32) float64 {
-	return 1 + amount(thunderClapSpell.Effect(dbcenums.A_MOD_MELEE_HASTE_3, 0))/100
+	return thunderClapMeta.Value(talentPoints)
 }
 func ThunderClapDuration(talentPoints int32) time.Duration {
-	return auraDuration(thunderClapSpell)
+	return thunderClapMeta.Duration(talentPoints)
 }
 func ThunderClapAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedDebuff(unit, core.GeneratedBuff{
-		Label:    "Thunder Clap (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: thunderClapSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration: ThunderClapDuration(talentPoints),
-		Category: ThunderClapCategory,
-		IsPlayer: isPlayer,
-		Pseudo: []core.PseudoConfig{
-			{Kind: core.PseudoStatMeleeSpeedMultiplier, Amount: ThunderClapValue(talentPoints), IsMultiplicative: true, SchoolMask: 0},
-		},
-	})
+	return newDebuff(unit, thunderClapMeta, isPlayer, talentPoints)
 }
 
 // Insect Swarm
+// Left out: effect 1 A_PERIODIC_DAMAGE(3) misc 0
 var insectSwarmSpell = spelldata.MustFind(24977)
+var insectSwarmMeta = &Meta{
+	Label: "Insect Swarm",
+	Spell: insectSwarmSpell,
+}
 
 func InsectSwarmValue(talentPoints int32) float64 {
-	return amount(insectSwarmSpell.Effect(dbcenums.A_MOD_HIT_CHANCE, 0))
+	return insectSwarmMeta.Value(talentPoints)
 }
 func InsectSwarmDuration(talentPoints int32) time.Duration {
-	return auraDuration(insectSwarmSpell)
+	return insectSwarmMeta.Duration(talentPoints)
 }
 func InsectSwarmAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedDebuff(unit, core.GeneratedBuff{
-		Label:    "Insect Swarm (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: insectSwarmSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration: InsectSwarmDuration(talentPoints),
-		IsPlayer: isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.PhysicalHitPercent, Amount: InsectSwarmValue(talentPoints), IsMultiplicative: false},
-		},
-	})
+	return newDebuff(unit, insectSwarmMeta, isPlayer, talentPoints)
 }
 
 // Scorpid Sting
 var scorpidStingSpell = spelldata.MustFind(3043)
+var scorpidStingMeta = &Meta{
+	Label: "Scorpid Sting",
+	Spell: scorpidStingSpell,
+}
 
 func ScorpidStingValue(talentPoints int32) float64 {
-	return amount(scorpidStingSpell.Effect(dbcenums.A_MOD_HIT_CHANCE, 0))
+	return scorpidStingMeta.Value(talentPoints)
 }
 func ScorpidStingDuration(talentPoints int32) time.Duration {
-	return auraDuration(scorpidStingSpell)
+	return scorpidStingMeta.Duration(talentPoints)
 }
 func ScorpidStingAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedDebuff(unit, core.GeneratedBuff{
-		Label:    "Scorpid Sting (" + core.Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: core.ActionID{SpellID: scorpidStingSpell.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration: ScorpidStingDuration(talentPoints),
-		IsPlayer: isPlayer,
-		Stats: []core.StatConfig{
-			{Stat: stats.PhysicalHitPercent, Amount: ScorpidStingValue(talentPoints), IsMultiplicative: false},
-		},
-	})
+	return newDebuff(unit, scorpidStingMeta, isPlayer, talentPoints)
 }
 
 func applyGeneratedDebuffs(target *core.Unit, debuffs *proto.Debuffs, raid *proto.Raid) {

@@ -78,10 +78,10 @@ func TestResolvedBuffInvariants(t *testing.T) {
 		if want, pinned := pinnedCategories[row.Field]; pinned && row.Category != want {
 			t.Errorf("%s: the aura competes under %q, want %q", row.Field, row.Category, want)
 		}
-		if want, pinned := pinnedStatAmounts[row.Field]; pinned {
+		if want, pinned := pinnedAmounts[row.Field]; pinned {
 			got := map[string]float64{}
-			for _, amount := range row.Stats {
-				got[amount.Stat.StatName()] = amount.Amount
+			for _, applied := range row.Applied {
+				got[applied.Kind] = applied.Value
 			}
 			if !maps.Equal(got, want) {
 				t.Errorf("%s: grants %v, want %v", row.Field, got, want)
@@ -135,16 +135,22 @@ func scopeComplaint(row ResolvedBuff) string {
 	return ""
 }
 
-// The two auras the client states as a bare A_MOD_CRIT_PCT, which carries no
-// school: what they are worth is the client's 3, and it lands on every kind of
-// crit, which is what the manifest's StatOverride says.
+// What the parse attaches for a row, by the kind it attaches as. The two auras
+// the client states as a bare A_MOD_CRIT_PCT carry no school: what they are
+// worth is the client's 3, and it lands on every kind of crit.
 //
 // Expose Armor states nothing on the effect itself: its -450 armor is per combo
 // point, and the raid config's debuff is the five-point finisher.
-var pinnedStatAmounts = map[string]map[string]float64{
-	"leader_of_the_pack": {"PhysicalCritPercent": 3, "SpellCritPercent": 3},
-	"moonkin_aura":       {"PhysicalCritPercent": 3, "SpellCritPercent": 3},
-	"expose_armor":       {"Armor": -2250},
+//
+// The paladin auras state a healing-taken row of 0 beside the aura, which the
+// manifest's SkipAuras leaves out.
+var pinnedAmounts = map[string]map[string]float64{
+	"leader_of_the_pack": {"stat PhysicalCritPercent+SpellCritPercent": 3},
+	"moonkin_aura":       {"stat PhysicalCritPercent+SpellCritPercent": 3},
+	"expose_armor":       {"stat Armor": -2250},
+	"devotion_aura":      {"stat Armor": 735},
+	"concentration_aura": {"pushback": -0.35},
+	"retribution_aura":   {},
 }
 
 // Mana Spring is the only buff an improving talent prices: Restorative Totems, five points.

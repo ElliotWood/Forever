@@ -2,6 +2,10 @@ package buffmanifest
 
 import "github.com/wowsims/forever/sim/core/proto"
 
+// The paladin auras state a healing-taken row of 0, and Concentration Aura two mechanic rows of 0,
+// none of which the raid's copy applies.
+var paladinAuraSkips = []string{"A_MOD_HEALING_PCT", "A_MECHANIC_DURATION_MOD"}
+
 // Manifest holds one row per proto field of RaidBuffs, PartyBuffs, IndividualBuffs
 // and Debuffs. Rows follow the UI registry order: PARTY_BUFFS_CONFIG, then
 // BUFFS_CONFIG, then DEBUFFS_CONFIG, with the fields of a scope that have no UI
@@ -29,8 +33,9 @@ var Manifest = []BuffSpec{
 		SpellID: 10293,
 		Go:      "DevotionAura", Name: "Devotion Aura", Owner: proto.Class_ClassPaladin,
 		Category: "DevotionAura", SharedCategory: "PaladinAura", SingleAura: true,
-		Stats: []proto.Stat{proto.Stat_StatArmor},
-		Notes: "no Improved Devotion Aura node in paladin tree 1100.",
+		SkipAuras: paladinAuraSkips,
+		Stats:     []proto.Stat{proto.Stat_StatArmor},
+		Notes:     "no Improved Devotion Aura node in paladin tree 1100.",
 	},
 	{
 		Field: "leader_of_the_pack", Number: 3, Scope: ScopeParty, Proto: ProtoBool, Kind: KindStatFlat,
@@ -38,9 +43,8 @@ var Manifest = []BuffSpec{
 		Go:      "LeaderOfThePack", Name: "Leader of the Pack", AuraName: "Leader of the Pack",
 		Owner: proto.Class_ClassDruid, Pet: PetCapAtRegular,
 		Category: "DruidCritAura", SingleAura: true,
-		StatOverride: []string{"PhysicalCritPercent", "SpellCritPercent"},
-		Stats:        []proto.Stat{proto.Stat_StatMeleeCritRating, proto.Stat_StatSpellCritRating},
-		Notes:        "SkillLineAbility resolves the name to the talent passive 17007; the party aura is the second spell of the same name, 24932. Neither carries a rank subtext, so the aura-family rule takes the one that applies a party aura, 24932, which the row pins. No improving talent in druid tree 1089. Spell 24932 reads \"Increases critical strike chance by $s1%\" and names no school, so the 3 goes on every kind of crit: PhysicalCritPercent is melee and ranged, SpellCritPercent the rest. Spell 17007 calls it exclusive with Moonkin Aura, which is the DruidCritAura category the two rows share.",
+		Stats: []proto.Stat{proto.Stat_StatMeleeCritRating, proto.Stat_StatSpellCritRating},
+		Notes: "SkillLineAbility resolves the name to the talent passive 17007; the party aura is the second spell of the same name, 24932. Neither carries a rank subtext, so the aura-family rule takes the one that applies a party aura, 24932, which the row pins. No improving talent in druid tree 1089. Spell 24932 reads \"Increases critical strike chance by $s1%\" and names no school, so the 3 goes on every kind of crit: PhysicalCritPercent is melee and ranged, SpellCritPercent the rest. Spell 17007 calls it exclusive with Moonkin Aura, which is the DruidCritAura category the two rows share.",
 	},
 	{
 		Field: "mana_spring_totem", Number: 9, Scope: ScopeParty, Proto: ProtoTristate, Kind: KindStatFlat,
@@ -65,17 +69,17 @@ var Manifest = []BuffSpec{
 		SpellID: 24907,
 		Go:      "MoonkinAura", Name: "Moonkin Aura", Owner: proto.Class_ClassDruid, Pet: PetCapAtRegular,
 		Category: "DruidCritAura", SingleAura: true,
-		StatOverride: []string{"PhysicalCritPercent", "SpellCritPercent"},
-		Stats:        []proto.Stat{proto.Stat_StatMeleeCritRating, proto.Stat_StatSpellCritRating},
-		Notes:        "A_MOD_CRIT_PCT names no school, so spell 24907's 3 goes on every kind of crit: PhysicalCritPercent is melee and ranged, SpellCritPercent the rest. It shares the DruidCritAura category with Leader of the Pack, which spell 17007 calls it exclusive with. No improving talent in druid tree 1089.",
+		Stats: []proto.Stat{proto.Stat_StatMeleeCritRating, proto.Stat_StatSpellCritRating},
+		Notes: "A_MOD_CRIT_PCT names no school, so spell 24907's 3 goes on every kind of crit: PhysicalCritPercent is melee and ranged, SpellCritPercent the rest. It shares the DruidCritAura category with Leader of the Pack, which spell 17007 calls it exclusive with. No improving talent in druid tree 1089.",
 	},
 	{
 		Field: "retribution_aura", Number: 5, Scope: ScopeParty, Proto: ProtoBool, Kind: KindDamageShield,
 		SpellID: 10301,
 		Go:      "RetributionAura", Name: "Retribution Aura", Owner: proto.Class_ClassPaladin,
 		Category: "RetributionAura", SharedCategory: "PaladinAura", SingleAura: true, Driver: true,
-		Stats: []proto.Stat{proto.Stat_StatResilienceRating, proto.Stat_StatArmor, proto.Stat_StatDefenseRating},
-		Notes: "the only paladin trait matching Retribution Aura is Benediction (20101), which modifies cost (misc 14). Driven because the damage scales with the providing paladin's Holy spell power, which retribution_aura_spell_power states.",
+		SkipAuras: paladinAuraSkips,
+		Stats:     []proto.Stat{proto.Stat_StatResilienceRating, proto.Stat_StatArmor, proto.Stat_StatDefenseRating},
+		Notes:     "the only paladin trait matching Retribution Aura is Benediction (20101), which modifies cost (misc 14). Driven because the damage scales with the providing paladin's Holy spell power, which retribution_aura_spell_power states.",
 	},
 	{
 		Field: "retribution_aura_spell_power", Number: 19, Scope: ScopeParty, Proto: ProtoDouble, Kind: KindFlag,
@@ -87,8 +91,9 @@ var Manifest = []BuffSpec{
 		SpellID: 19746,
 		Go:      "ConcentrationAura", Name: "Concentration Aura", Owner: proto.Class_ClassPaladin,
 		Category: "ConcentrationAura", SharedCategory: "PaladinAura", SingleAura: true,
-		Stats: []proto.Stat{proto.Stat_StatDefenseRating},
-		Notes: "no Improved Concentration Aura node in paladin tree 1100.",
+		SkipAuras: paladinAuraSkips,
+		Stats:     []proto.Stat{proto.Stat_StatDefenseRating},
+		Notes:     "no Improved Concentration Aura node in paladin tree 1100.",
 	},
 	{
 		Field: "trueshot_aura", Number: 6, Scope: ScopeParty, Proto: ProtoBool, Kind: KindStatFlat,
@@ -244,21 +249,24 @@ var Manifest = []BuffSpec{
 		SpellID: 19900,
 		Go:      "FireResistanceAura", Name: "Fire Resistance Aura", Owner: proto.Class_ClassPaladin,
 		Category: "FireResistanceAura", SharedCategory: "PaladinAura", SingleAura: true,
-		Stats: []proto.Stat{proto.Stat_StatFireResistance},
+		SkipAuras: paladinAuraSkips,
+		Stats:     []proto.Stat{proto.Stat_StatFireResistance},
 	},
 	{
 		Field: "frost_resistance_aura", Number: 8, Scope: ScopeRaid, Proto: ProtoBool, Kind: KindResistance,
 		SpellID: 19898,
 		Go:      "FrostResistanceAura", Name: "Frost Resistance Aura", Owner: proto.Class_ClassPaladin,
 		Category: "FrostResistanceAura", SharedCategory: "PaladinAura", SingleAura: true,
-		Stats: []proto.Stat{proto.Stat_StatFrostResistance},
+		SkipAuras: paladinAuraSkips,
+		Stats:     []proto.Stat{proto.Stat_StatFrostResistance},
 	},
 	{
 		Field: "shadow_resistance_aura", Number: 9, Scope: ScopeRaid, Proto: ProtoBool, Kind: KindResistance,
 		SpellID: 19896,
 		Go:      "ShadowResistanceAura", Name: "Shadow Resistance Aura", Owner: proto.Class_ClassPaladin,
 		Category: "ShadowResistanceAura", SharedCategory: "PaladinAura", SingleAura: true,
-		Stats: []proto.Stat{proto.Stat_StatShadowResistance},
+		SkipAuras: paladinAuraSkips,
+		Stats:     []proto.Stat{proto.Stat_StatShadowResistance},
 	},
 	{
 		Field: "fire_resistance_totem", Number: 10, Scope: ScopeRaid, Proto: ProtoBool, Kind: KindResistance,

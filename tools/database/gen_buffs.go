@@ -5,18 +5,19 @@ package database
 // sim/core/buffs/debuffs_auto_gen.go from the result, in the same pass that
 // renders the store.
 //
-// The manifest names the spell each proto field reads; which of its effects are
-// which stats, its stacks, its timing and the talent that improves it are read
-// here, and the generated constructors read the values themselves off the store
-// at runtime. A row the generator cannot express in the support API renders as a
-// commented shell carrying the reason.
+// The manifest names the spell each proto field reads, and the generated file
+// states it as a buffs.Meta: which of its effects are which stats, what they are
+// worth and how they stack is read off the row at runtime by
+// spelldata.ParseEffects. The generator asks the same parse, through
+// spelldata.DryRun, whether the row attaches anything and what it leaves out, so
+// a row it writes is one the sim builds the same way. A row the parse attaches
+// nothing of renders as a commented shell carrying the reason.
 
 import (
 	"bytes"
 	"errors"
 	"fmt"
 	"go/format"
-	"math"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -25,55 +26,16 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/spelldata"
-	"github.com/wowsims/forever/sim/core/stats"
 	"github.com/wowsims/forever/tools/database/buffmanifest"
 	"github.com/wowsims/forever/tools/database/dbc"
 )
 
 const buffsGenFile = "sim/core/buffs/buffs_auto_gen.go"
 const debuffsGenFile = "sim/core/buffs/debuffs_auto_gen.go"
-
-// The combo points a finisher the raid config simply has on the target is cast
-// with.
-const maxComboPoints = 5
-
-// StatAmount is one stat the aura grants: its amount at level 60, and Expr, the
-// Go expression the generated file reads that amount from the store with.
-type StatAmount struct {
-	Stat           stats.Stat
-	Amount         float64
-	Expr           string
-	Multiplicative bool
-}
-
-// PseudoMod is one PseudoStats field the aura modifies.
-type PseudoMod struct {
-	Kind           string // PseudoStats field name, e.g. "ThreatMultiplier"
-	Amount         float64
-	Expr           string
-	Multiplicative bool
-	SchoolMask     int32 // client school bits, 0 = every school
-}
-
-// ResolvedEffect is one SpellEffect row of the anchor spell, with its value
-// already derived for level 60 and truncated toward zero. Ref is the Go
-// expression that reaches the effect in the store, and Amount the one that reads
-// its value in the client's units.
-type ResolvedEffect struct {
-	Index          int32
-	Effect         dbc.SpellEffectType
-	Aura           dbc.EffectAuraType
-	Misc           int32
-	Value          float64
-	PerResource    float64
-	PeriodMs       int32
-	ImplicitTarget dbc.ImplicitTarget
-	Ref            string
-	Amount         string
-}
 
 // ResolvedBuff is one manifest row plus everything the database states about it.
 type ResolvedBuff struct {
@@ -83,23 +45,27 @@ type ResolvedBuff struct {
 	CastSpellID int32 // the cast, where the manifest pins one; SpellID otherwise
 	DurationMs  int32 // -1 or 0 never expires
 	CooldownMs  int32 // 0 when the client states none; read from the cast
-	MaxStacks   int32
-	SchoolMask  int32
-	Effects     []ResolvedEffect
 
-	Stats  []StatAmount
-	Pseudo []PseudoMod
+	// Spell is the row the store carries for SpellID, built from the same
+	// captured client rows the store is rendered from.
+	Spell *spelldata.Spell
 
-	// OverrideStats is the manifest's StatOverride resolved to sim stats.
-	OverrideStats []stats.Stat
+	// SkipAuraTypes is the manifest's SkipAuras read as auras.
+	SkipAuraTypes []dbcenums.EffectAuraType
+	// FullComboPoints says a debuff's amount is stated per combo point, and the
+	// raid config's copy is the finisher at full combo points.
+	FullComboPoints bool
+
+	// Applied is what the parse attaches for the row, and LeftOut the aura
+	// effects it leaves out, one note each.
+	Applied []spelldata.Applied
+	LeftOut []string
 
 	// TalentRanks is how many points the improving talent takes, 0 for a row
 	// no talent prices.
 	TalentRanks   int32
 	TalentApplies buffmanifest.TalentApplies
 
-	// TalentOnPseudo says the talent prices Pseudo[0] rather than Stats[0].
-	TalentOnPseudo bool
 	// TalentSpellID is the spell of the trait node that prices the improvement,
 	// which is the icon the UI shows for the improved state. TalentPosition is
 	// the effect of that spell the improvement is read from, counted the way
@@ -113,10 +79,6 @@ type ResolvedBuff struct {
 	ScopeFromClient buffmanifest.BuffScope
 
 	DBName string
-
-	// Note is what the generated file says about the row above its constructor,
-	// for a value the client states in a way the row had to be read through.
-	Note string
 
 	Supported bool
 	Reason    string
@@ -173,14 +135,21 @@ func resolveBuff(t *spellTables, nodes []traitNode, spec buffmanifest.BuffSpec) 
 	if err := loadBuffSpell(t, &row); err != nil {
 		return row, err
 	}
-	if err := resolveStatOverride(&row); err != nil {
+	if err := resolveSkipAuras(&row); err != nil {
 		return row, err
 	}
-	mapEffects(&row)
+	parseBuff(&row)
 	if err := resolveTalent(t, nodes, &row); err != nil {
 		return row, err
 	}
 	validateScope(&row)
+
+	// The sim puts every resistance stat into its school's category by itself, so
+	// a row whose manifest category is that school says the same thing twice and
+	// has no exclusivity of its own beyond it.
+	if isSchoolResistanceCategory(row.Category) {
+		row.Category = ""
+	}
 
 	if compiled != buffProtoTypeNames[spec.Proto] && row.Supported {
 		row.unsupported("proto field not yet retyped: the sim compiled against %s, the manifest declares %s",
@@ -189,11 +158,11 @@ func resolveBuff(t *spellTables, nodes []traitNode, spec buffmanifest.BuffSpec) 
 	return row, nil
 }
 
-// The spell's name, school, duration, stacks and effects, and the cooldown of a
-// buff other players cast on their own: the shared timer the sim hands the next
-// source is the cast's cooldown, and a totem's aura states neither how long the
-// totem stands nor when the next one may be dropped. Mana Tide is that row -
-// 17360 carries the mana, the cast 17359 the 13 seconds and the 5 minutes.
+// The spell's name, its row and duration, and the cooldown of a buff other
+// players cast on their own: the shared timer the sim hands the next source is
+// the cast's cooldown, and a totem's aura states neither how long the totem
+// stands nor when the next one may be dropped. Mana Tide is that row - 17360
+// carries the mana, the cast 17359 the 13 seconds and the 5 minutes.
 func loadBuffSpell(t *spellTables, row *ResolvedBuff) error {
 	if row.SpellID = row.BuffSpec.SpellID; row.SpellID == 0 {
 		return fmt.Errorf("names no spell")
@@ -209,26 +178,9 @@ func loadBuffSpell(t *spellTables, row *ResolvedBuff) error {
 	}
 
 	spell := t.row(row.SpellID)
+	row.Spell = storeRowSpell(spell)
 	row.DBName = spell.Name
-	row.SchoolMask = int32(spell.School)
 	row.DurationMs = spell.DurationMs
-	row.MaxStacks = int32(spell.MaxStack)
-
-	for _, e := range spell.Effects {
-		value := (&spelldata.Effect{BasePoints: e.BasePoints, PPL: e.PPL,
-			SpellLevel: e.SpellLevel, MaxLevel: e.MaxLevel}).Average(RankLevel)
-		row.Effects = append(row.Effects, ResolvedEffect{
-			Index:          int32(e.Index),
-			Effect:         e.Type,
-			Aura:           e.Aura,
-			Misc:           e.Misc,
-			Value:          value,
-			PerResource:    e.PointsPerResource,
-			PeriodMs:       e.PeriodMs,
-			ImplicitTarget: dbc.ImplicitTarget(e.Target[0]),
-		})
-	}
-	setEffectRefs(row)
 
 	if row.Kind != buffmanifest.KindExternalCD {
 		return nil
@@ -247,6 +199,126 @@ func loadBuffSpell(t *spellTables, row *ResolvedBuff) error {
 		row.unsupported("spell %d states no duration, which the external cooldown's aura needs", row.SpellID)
 	}
 	return nil
+}
+
+// The store's row as sim/core/spelldata states it, copied field by field from the generator's
+// mirror of it. The parse reads this rather than the compiled store, which is the output the same
+// pass rewrites.
+func storeRowSpell(row storeSpell) *spelldata.Spell {
+	s := &spelldata.Spell{}
+	copyStoreFields(reflect.ValueOf(s).Elem(), reflect.ValueOf(row))
+	return s
+}
+
+func copyStoreFields(to reflect.Value, from reflect.Value) {
+	for i := 0; i < from.NumField(); i++ {
+		field := from.Type().Field(i)
+		dst := to.FieldByName(field.Name)
+		if !field.IsExported() || !dst.IsValid() {
+			continue
+		}
+
+		src := from.Field(i)
+		if src.Kind() == reflect.Slice && src.Type().Elem().Kind() == reflect.Struct {
+			dst.Set(reflect.MakeSlice(dst.Type(), src.Len(), src.Len()))
+			for j := 0; j < src.Len(); j++ {
+				copyStoreFields(dst.Index(j), src.Index(j))
+			}
+			continue
+		}
+		dst.Set(src.Convert(dst.Type()))
+	}
+}
+
+// The manifest's SkipAuras, read as the auras dbcenums names.
+func resolveSkipAuras(row *ResolvedBuff) error {
+	for _, name := range row.SkipAuras {
+		aura, ok := auraByName(name)
+		if !ok {
+			return fmt.Errorf("SkipAuras names %q, which is no aura", name)
+		}
+		row.SkipAuraTypes = append(row.SkipAuraTypes, aura)
+	}
+	return nil
+}
+
+func auraByName(name string) (dbcenums.EffectAuraType, bool) {
+	for aura := dbcenums.EffectAuraType(0); aura < 1024; aura++ {
+		if named, ok := dbcenums.Named(aura); ok && named == name {
+			return aura, true
+		}
+	}
+	return 0, false
+}
+
+// What the parse makes of the row with the options the generated Meta states:
+// the amounts it attaches and the aura effects it leaves out. A kind whose
+// behaviour is a driver's is written whatever the parse attaches, a damage
+// shield needs its shield, and every other kind needs an amount.
+func parseBuff(row *ResolvedBuff) {
+	// The value a debuff states per combo point is 0 on the spell itself. The
+	// raid config is one debuff that is simply on the target, which is the
+	// finisher at full combo points; a caster spending fewer of them takes its
+	// own value through a driver.
+	if row.Kind == buffmanifest.KindDebuffStat {
+		row.FullComboPoints = slices.ContainsFunc(row.Spell.Effects, func(e spelldata.Effect) bool {
+			return e.PointsPerResource != 0 && e.Average(core.CharacterLevel) == 0
+		})
+	}
+
+	// The constructors parse a buff with no character, as they do a debuff.
+	opts := row.parseOptions()
+	row.Applied = spelldata.DryRun(row.Spell, false, opts...).Applied
+	row.LeftOut = spelldata.BuffUnsupported(row.Spell, false, opts...)
+
+	switch row.Kind {
+	case buffmanifest.KindDamageShield:
+		if !row.hasDamageShield() {
+			row.unsupported("no A_DAMAGE_SHIELD effect on spell %d", row.SpellID)
+		}
+	case buffmanifest.KindExternalCD, buffmanifest.KindProc, buffmanifest.KindManual,
+		buffmanifest.KindDebuffUptime:
+		// Driver kinds: the hand-written driver decides what the numbers mean.
+	default:
+		if len(row.Applied) > 0 {
+			return
+		}
+		if len(row.LeftOut) == 0 {
+			row.unsupported("spell %d states no aura effect the parse attaches", row.SpellID)
+			return
+		}
+		row.unsupported("spell %d states no aura effect the parse attaches: %s", row.SpellID,
+			strings.Join(row.LeftOut, "; "))
+	}
+}
+
+// The options buffs.Meta.Options states for the row, less the talent's scaling,
+// which prices an amount and never changes what is attached. A damage shield's
+// own effect is left to newDamageShield, and an item-count row counts its
+// amounts, which is what a multiplier cannot be read through.
+func (row *ResolvedBuff) parseOptions() []spelldata.ParseOpt {
+	opts := []spelldata.ParseOpt{spelldata.Level(core.CharacterLevel), spelldata.BuffAuras()}
+
+	skip := row.SkipAuraTypes
+	if row.Kind == buffmanifest.KindDamageShield {
+		skip = append(slices.Clone(skip), dbcenums.A_DAMAGE_SHIELD)
+	}
+	if len(skip) > 0 {
+		opts = append(opts, spelldata.SkipAuras(skip...))
+	}
+	if row.FullComboPoints {
+		opts = append(opts, spelldata.FullComboPoints())
+	}
+	if row.Kind == buffmanifest.KindItemCount {
+		opts = append(opts, spelldata.Count(1))
+	}
+	return opts
+}
+
+func (row *ResolvedBuff) hasDamageShield() bool {
+	return slices.ContainsFunc(row.Spell.Effects, func(e spelldata.Effect) bool {
+		return e.Aura == dbcenums.A_DAMAGE_SHIELD && appliesAura(e.Type)
+	})
 }
 
 // The improving talent the manifest pins, which the store keeps as a ladder of
@@ -290,13 +362,9 @@ func resolveTalent(t *spellTables, nodes []traitNode, row *ResolvedBuff) error {
 	if mod.Misc == int32(dbcenums.SPELLMOD_DURATION) {
 		row.TalentApplies = buffmanifest.TalentScalesDuration
 	}
-	if row.TalentApplies != buffmanifest.TalentScalesDuration {
-		_, onPseudo, ok := row.talentTarget()
-		if !ok {
-			row.warn("talent %q has nothing to scale: spell %d states no amount this generator maps", row.Talent.Name, row.SpellID)
-			return nil
-		}
-		row.TalentOnPseudo = onPseudo
+	if row.TalentApplies != buffmanifest.TalentScalesDuration && len(row.Applied) == 0 && !row.hasDamageShield() {
+		row.warn("talent %q has nothing to scale: the parse attaches no amount of spell %d", row.Talent.Name, row.SpellID)
+		return nil
 	}
 	row.TalentRanks = nodes[node].MaxRanks
 	return nil
@@ -319,14 +387,17 @@ func validateScope(row *ResolvedBuff) {
 // effect itself, and an aura the client applies over an area or on one ally
 // names it in the effect's target.
 func clientScope(row ResolvedBuff) (buffmanifest.BuffScope, bool) {
-	for _, effect := range row.Effects {
-		switch effect.Effect {
+	if row.Spell == nil {
+		return buffmanifest.ScopeIndividual, false
+	}
+	for _, effect := range row.Spell.Effects {
+		switch effect.Type {
 		case dbcenums.E_APPLY_AREA_AURA_RAID:
 			return buffmanifest.ScopeRaid, true
 		case dbcenums.E_APPLY_AREA_AURA_PARTY:
 			return buffmanifest.ScopeParty, true
 		case dbcenums.E_APPLY_AURA:
-			switch effect.ImplicitTarget {
+			switch dbc.ImplicitTarget(effect.Target[0]) {
 			case dbc.TARGET_UNIT_CASTER_AREA_RAID:
 				return buffmanifest.ScopeRaid, true
 			case dbc.TARGET_UNIT_CASTER_AREA_PARTY:
@@ -403,273 +474,11 @@ func compiledProtoType(spec buffmanifest.BuffSpec) (string, error) {
 	return field.Type.String(), nil
 }
 
-func isAuraApplication(effect dbc.SpellEffectType) bool {
+// The effect types that put an aura on someone: the plain application and the
+// area auras, which carry the same aura and misc values.
+func appliesAura(effect dbcenums.SpellEffectType) bool {
 	return effect == dbcenums.E_APPLY_AURA || effect == dbcenums.E_APPLY_AREA_AURA_PARTY ||
 		effect == dbcenums.E_APPLY_AREA_AURA_RAID
-}
-
-// How the generated file reaches each effect: by its aura and misc value where
-// no other effect of the spell shares them, and by position where one does.
-func setEffectRefs(row *ResolvedBuff) {
-	for i := range row.Effects {
-		e := &row.Effects[i]
-		shared := 0
-		for _, other := range row.Effects {
-			if other.Aura == e.Aura && other.Misc == e.Misc {
-				shared++
-			}
-		}
-		name, named := dbcenums.Named(e.Aura)
-		if shared == 1 && e.Aura != 0 && named {
-			e.Ref = fmt.Sprintf("%s.Effect(dbcenums.%s, %d)", spellVar(row.Go), name, e.Misc)
-		} else {
-			e.Ref = fmt.Sprintf("%s.EffectN(%d)", spellVar(row.Go), i+1)
-		}
-		e.Amount = "amount(" + e.Ref + ")"
-	}
-}
-
-func spellVar(stem string) string {
-	return lowerFirst(stem) + "Spell"
-}
-
-func castVar(stem string) string {
-	return lowerFirst(stem) + "Cast"
-}
-
-func talentVar(stem string) string {
-	return lowerFirst(stem) + "Talent"
-}
-
-func lowerFirst(s string) string {
-	return strings.ToLower(s[:1]) + s[1:]
-}
-
-// The stats or pseudo-stats the row's kind says its effects are. An aura this
-// cannot express is not an error: the row becomes a shell naming the aura, which
-// is the signal that either the support API or the manifest has to grow.
-func mapEffects(row *ResolvedBuff) {
-	var unmapped []string
-	damageShield := false
-	for i := range row.Effects {
-		e := row.Effects[i]
-		if !isAuraApplication(e.Effect) {
-			continue
-		}
-		if e.Aura == dbcenums.A_DAMAGE_SHIELD {
-			damageShield = true
-			continue
-		}
-		// The value a spell states per combo point is 0 on the spell itself.
-		// The raid config is one debuff that is simply on the target, which is
-		// the finisher at full combo points; a caster spending fewer of them
-		// takes its own value through a driver.
-		if e.PerResource != 0 && e.Value == 0 {
-			if row.Kind != buffmanifest.KindDebuffStat {
-				row.unsupported("effect %d is worth %v per combo point, which the support API cannot express",
-					e.Index, e.PerResource)
-				return
-			}
-			row.Effects[i].Value = e.PerResource * maxComboPoints
-			row.Effects[i].Amount = "fullComboPoints(" + e.Ref + ")"
-			e = row.Effects[i]
-			row.Note = fmt.Sprintf("Effect %d is worth %s per combo point; this is the %d-point finisher.",
-				e.Index, formatFloat(e.PerResource), maxComboPoints)
-		}
-		if amounts, ok := row.statAmounts(e); ok {
-			row.Stats = append(row.Stats, amounts...)
-			continue
-		}
-		if mods, ok := pseudoModsOf(e); ok {
-			row.Pseudo = append(row.Pseudo, mods...)
-			continue
-		}
-		if !slices.Contains(unmapped, strconv.Itoa(int(e.Aura))) {
-			unmapped = append(unmapped, strconv.Itoa(int(e.Aura)))
-		}
-	}
-
-	// The sim puts every resistance stat into its school's category by itself, so
-	// a row whose manifest category is that school says the same thing twice and
-	// has no exclusivity of its own beyond it.
-	if isSchoolResistanceCategory(row.Category) {
-		row.Category = ""
-	}
-
-	switch row.Kind {
-	case buffmanifest.KindDamageShield:
-		if !damageShield {
-			row.unsupported("no A_DAMAGE_SHIELD effect on spell %d", row.SpellID)
-			return
-		}
-	case buffmanifest.KindItemCount:
-		// The count multiplies every amount, which a multiplier cannot be read
-		// through: two of the same staff would raise a stat by twice its factor.
-		for _, stat := range row.Stats {
-			if stat.Multiplicative {
-				row.unsupported("%s is a multiplier, which a count of items cannot scale", stat.Stat.StatName())
-				return
-			}
-		}
-		for _, mod := range row.Pseudo {
-			if mod.Multiplicative {
-				row.unsupported("%s is a multiplier, which a count of items cannot scale", mod.Kind)
-				return
-			}
-		}
-	case buffmanifest.KindExternalCD, buffmanifest.KindProc, buffmanifest.KindManual,
-		buffmanifest.KindDebuffUptime:
-		// Driver kinds: the hand-written driver decides what the numbers mean.
-	default:
-		if len(row.Stats) == 0 && len(row.Pseudo) == 0 {
-			row.unsupported("spell %d states no aura effect this generator maps (auras %s)",
-				row.SpellID, strings.Join(unmapped, ", "))
-			return
-		}
-	}
-
-	for _, aura := range unmapped {
-		row.warn("aura %s of spell %d is left out: the generator maps no stat or pseudo-stat to it",
-			aura, row.SpellID)
-	}
-}
-
-// The stats one effect grants. A row that names stats itself puts the effect's
-// value on exactly those, which is how an aura the client leaves unqualified -
-// A_MOD_CRIT_PCT says "critical strike chance" and no more - reaches the melee
-// or the spell crit stat.
-func (row ResolvedBuff) statAmounts(e ResolvedEffect) ([]StatAmount, bool) {
-	if len(row.OverrideStats) == 0 {
-		return statAmountsOf(e)
-	}
-	out := make([]StatAmount, 0, len(row.OverrideStats))
-	for _, stat := range row.OverrideStats {
-		out = append(out, StatAmount{Stat: stat, Amount: e.Value, Expr: e.Amount})
-	}
-	return out, true
-}
-
-// The manifest's StatOverride, read as sim stats. A row that states one may
-// only have a single aura effect: every effect would otherwise be mapped onto
-// the same stats and the amounts would add up.
-func resolveStatOverride(row *ResolvedBuff) error {
-	if len(row.StatOverride) == 0 {
-		return nil
-	}
-
-	auraEffects := 0
-	for _, e := range row.Effects {
-		if isAuraApplication(e.Effect) {
-			auraEffects++
-		}
-	}
-	if auraEffects != 1 {
-		return fmt.Errorf("states a StatOverride, but spell %d has %d aura effects",
-			row.SpellID, auraEffects)
-	}
-
-	for _, name := range row.StatOverride {
-		stat, ok := statByName(name)
-		if !ok {
-			return fmt.Errorf("StatOverride names %q, which is not a sim stat", name)
-		}
-		row.OverrideStats = append(row.OverrideStats, stat)
-	}
-	return nil
-}
-
-func statByName(name string) (stats.Stat, bool) {
-	for stat := stats.Stat(0); stat < stats.SimStatsLen; stat++ {
-		if stat.StatName() == name {
-			return stat, true
-		}
-	}
-	return 0, false
-}
-
-func statAmountsOf(e ResolvedEffect) ([]StatAmount, bool) {
-	flat := func(stat stats.Stat, amount float64) ([]StatAmount, bool) {
-		return []StatAmount{{Stat: stat, Amount: amount, Expr: e.Amount}}, true
-	}
-	each := func(sts []stats.Stat, amount float64, expr string, multiplicative bool) ([]StatAmount, bool) {
-		var out []StatAmount
-		for _, stat := range sts {
-			out = append(out, StatAmount{Stat: stat, Amount: amount, Expr: expr, Multiplicative: multiplicative})
-		}
-		return out, true
-	}
-	mainStats := []stats.Stat{stats.Strength, stats.Agility, stats.Stamina, stats.Intellect, stats.Spirit}
-	multiplier, multiplierExpr := 1+e.Value/100, "1 + "+e.Amount+"/100"
-
-	switch e.Aura {
-	case dbcenums.A_MOD_STAT:
-		if e.Misc == -1 {
-			return each(mainStats, e.Value, e.Amount, false)
-		}
-		stat, ok := dbc.MapMainStatToStat(int(e.Misc))
-		if !ok {
-			return nil, false
-		}
-		return flat(stats.Stat(stat), e.Value)
-	case dbcenums.A_MOD_ATTACK_POWER:
-		return flat(stats.AttackPower, e.Value)
-	case dbcenums.A_MOD_RANGED_ATTACK_POWER:
-		return flat(stats.RangedAttackPower, e.Value)
-	case dbcenums.A_MOD_INCREASE_HEALTH:
-		return flat(stats.Health, e.Value)
-	case dbcenums.A_MOD_HEALING_DONE:
-		return flat(stats.HealingPower, e.Value)
-	case dbcenums.A_MOD_POWER_REGEN:
-		// The client states mana per 5 seconds directly on this aura.
-		return flat(stats.MP5, e.Value)
-	case dbcenums.A_PERIODIC_ENERGIZE:
-		// The client's amount is already whole; what the conversion to mana per
-		// five seconds produces is not, and truncating it would lose part of a
-		// tick the aura really restores.
-		if e.PeriodMs <= 0 {
-			return nil, false
-		}
-		return []StatAmount{{Stat: stats.MP5, Amount: e.Value * 5000 / float64(e.PeriodMs),
-			Expr: fmt.Sprintf("manaPerFive(%s, %s)", e.Ref, e.Amount)}}, true
-	case dbcenums.A_MOD_SPELL_CRIT_CHANCE:
-		return flat(stats.SpellCritPercent, e.Value)
-	case dbcenums.A_MOD_HIT_CHANCE:
-		return flat(stats.PhysicalHitPercent, e.Value)
-	case dbcenums.A_MOD_EXPERTISE:
-		return flat(stats.ExpertisePercent, e.Value)
-	case dbcenums.A_MOD_RESISTANCE:
-		var sts []stats.Stat
-		for bit, stat := range resistanceBits {
-			if e.Misc&bit != 0 {
-				sts = append(sts, stat)
-			}
-		}
-		slices.Sort(sts)
-		// Bit 2 is Holy, which has no resistance stat in the sim; a mask of only
-		// that bit resolves to nothing rather than to a wrong stat.
-		if len(sts) == 0 {
-			return nil, false
-		}
-		return each(sts, e.Value, e.Amount, false)
-	case dbcenums.A_MOD_DAMAGE_DONE, dbcenums.A_MOD_RATING:
-		stat := dbc.ConvertEffectAuraToStatIndex(e.Aura, int(e.Misc))
-		if stat < 0 {
-			return nil, false
-		}
-		return flat(stats.Stat(stat), e.Value)
-	case dbcenums.A_MOD_TOTAL_STAT_PERCENTAGE:
-		if e.Misc == -1 {
-			return each(mainStats, multiplier, multiplierExpr, true)
-		}
-		stat, ok := dbc.MapMainStatToStat(int(e.Misc))
-		if !ok {
-			return nil, false
-		}
-		return each([]stats.Stat{stats.Stat(stat)}, multiplier, multiplierExpr, true)
-	case dbcenums.A_MOD_ATTACK_POWER_PCT:
-		return each([]stats.Stat{stats.AttackPower}, multiplier, multiplierExpr, true)
-	}
-	return nil, false
 }
 
 // Whether a manifest category names a resistance school, which is the category
@@ -683,102 +492,8 @@ func isSchoolResistanceCategory(category string) bool {
 	return false
 }
 
-// Holy, fire, nature, frost, shadow and arcane together, which is every school
-// the sim counts as spell damage.
-const everySpellSchoolMask int32 = 126
-
-// The spell schools plus physical, which is everything a unit can deal.
-const everySchoolMask int32 = 127
-
-var resistanceBits = map[int32]stats.Stat{
-	1:  stats.Armor,
-	4:  stats.FireResistance,
-	8:  stats.NatureResistance,
-	16: stats.FrostResistance,
-	32: stats.ShadowResistance,
-	64: stats.ArcaneResistance,
-}
-
-func pseudoModsOf(e ResolvedEffect) ([]PseudoMod, bool) {
-	multiplier, multiplierExpr := 1+e.Value/100, "1 + "+e.Amount+"/100"
-	multiply := func(kind string, schoolMask int32) ([]PseudoMod, bool) {
-		return []PseudoMod{{Kind: kind, Amount: multiplier, Expr: multiplierExpr, Multiplicative: true, SchoolMask: schoolMask}}, true
-	}
-	add := func(kind string) ([]PseudoMod, bool) {
-		return []PseudoMod{{Kind: kind, Amount: e.Value, Expr: e.Amount}}, true
-	}
-
-	switch e.Aura {
-	case dbcenums.A_MOD_THREAT:
-		return multiply("ThreatMultiplier", 0)
-	case dbcenums.A_MOD_DAMAGE_PERCENT_DONE:
-		// A mask of every school, physical included, raises everything the unit
-		// deals; anything narrower is per school, so a buff the client states
-		// for the magic schools does not raise a melee swing.
-		if e.Misc == everySchoolMask {
-			return multiply("DamageDealtMultiplier", 0)
-		}
-		// A mask of 0 names no school, so the effect raises nothing: emitting it
-		// would be a no-op the reader of the generated file has to work out.
-		if e.Misc == 0 {
-			return nil, false
-		}
-		return multiply("SchoolDamageDealtMultiplier", e.Misc)
-	case dbcenums.A_MOD_HEALING_DONE_PERCENT:
-		return multiply("HealingDealtMultiplier", 0)
-	case dbcenums.A_REDUCE_PUSHBACK:
-		// PseudoStats.PushbackChance is the chance of being pushed back and
-		// starts at 1, so the client's "35% less pushback" is -0.35 there.
-		return []PseudoMod{{Kind: "PushbackChance", Amount: -e.Value / 100, Expr: "-" + e.Amount + "/100"}}, true
-	case dbcenums.A_MOD_MELEE_HASTE_3, dbcenums.A_MOD_ATTACKSPEED:
-		return multiply("MeleeSpeedMultiplier", 0)
-	case dbcenums.A_MOD_DAMAGE_PERCENT_TAKEN:
-		return multiply("SchoolDamageTakenMultiplier", e.Misc)
-	case dbcenums.A_RANGED_ATTACK_POWER_ATTACKER_BONUS:
-		return add("BonusRangedAttackPower")
-	case dbcenums.A_MOD_DAMAGE_TAKEN:
-		// The sim splits flat damage taken into a physical and a spell field,
-		// so the school mask picks which one the effect is. A mask that names
-		// some spell schools and not others has neither: the spell field would
-		// raise what every school does to the target.
-		if e.Misc&1 != 0 {
-			return add("BonusPhysicalDamageTaken")
-		}
-		if e.Misc&everySpellSchoolMask == everySpellSchoolMask {
-			return add("BonusSpellDamageTaken")
-		}
-		return nil, false
-	}
-	return nil, false
-}
-
-// The effect the talent's curve is read through, and whether it lands on a
-// pseudo-stat. It is the first effect the kind mapping took an amount from, so
-// the curve and Stats[0] or Pseudo[0] describe the same number.
-func (row ResolvedBuff) talentTarget() (ResolvedEffect, bool, bool) {
-	// The damage shield is stepped over here exactly as the kind mapping steps
-	// over it, so a spell that shields and buffs a stat prices the stat, and it
-	// is only fallen back on when the spell states nothing else.
-	var shield ResolvedEffect
-	var shielded bool
-	for _, e := range row.Effects {
-		if !isAuraApplication(e.Effect) {
-			continue
-		}
-		if e.Aura == dbcenums.A_DAMAGE_SHIELD {
-			if !shielded {
-				shield, shielded = e, true
-			}
-			continue
-		}
-		if _, ok := row.statAmounts(e); ok {
-			return e, false, true
-		}
-		if _, ok := pseudoModsOf(e); ok {
-			return e, true, true
-		}
-	}
-	return shield, false, shielded
+func lowerFirst(s string) string {
+	return strings.ToLower(s[:1]) + s[1:]
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -788,36 +503,29 @@ func (row ResolvedBuff) talentTarget() (ResolvedEffect, bool, bool) {
 // buffRow is what the templates see: every expression the generated file needs,
 // already spelled as Go source.
 type buffRow struct {
-	Go            string
-	Field         string
-	Label         string
-	SpellID       int32
-	Kind          string
-	Reason        string
-	Note          string
-	Supported     bool
-	HasSpell      bool
-	SpellVar      string
-	CastVar       string
-	CastID        int32
-	TalentVar     string
-	TalentID      int32
-	TalentRanks   int32
-	Category      string
-	CategoryVar   string
-	ValueExpr     string
-	HasValue      bool
-	ValueOnPseudo bool
-	Duration      string
-	Cooldown      string
-	HasCooldown   bool
-	ExtraParams   string
-	OwnerAura     string
-	OwnerAuraVar  string
-	Constructor   string
-	ApplyIf       string
-	ApplyBody     string
-	HasApply      bool
+	Go           string
+	Field        string
+	Label        string
+	SpellID      int32
+	Kind         string
+	Reason       string
+	LeftOut      []string
+	Supported    bool
+	HasSpell     bool
+	SpellVar     string
+	MetaVar      string
+	MetaFields   string
+	Category     string
+	CategoryVar  string
+	HasValue     bool
+	HasCooldown  bool
+	ExtraParams  string
+	OwnerAura    string
+	OwnerAuraVar string
+	Constructor  string
+	ApplyIf      string
+	ApplyBody    string
+	HasApply     bool
 }
 
 // Every file the manifest renders, by the path it is written to: the two Go
@@ -861,16 +569,15 @@ func renderBuffFiles(rows []ResolvedBuff) (map[string][]byte, error) {
 func renderBuffFile(resolved []ResolvedBuff, debuffs bool) ([]byte, error) {
 	var rows []buffRow
 	var shared []sharedCategoryRow
-	needsTime, needsStats, needsEnums := false, false, false
+	needsSpells, needsEnums := false, false
 	for _, row := range resolved {
 		if (row.Scope == buffmanifest.ScopeDebuff) != debuffs {
 			continue
 		}
 		rendered := renderRow(row)
 		if rendered.Supported {
-			needsTime = true
-			needsStats = needsStats || len(row.Stats) > 0
-			needsEnums = needsEnums || strings.Contains(rendered.ValueExpr+rendered.Constructor, "dbcenums.")
+			needsSpells = true
+			needsEnums = needsEnums || len(row.SkipAuraTypes) > 0
 			if row.SharedCategory != "" && !slices.ContainsFunc(shared, func(c sharedCategoryRow) bool { return c.Name == row.SharedCategory }) {
 				shared = append(shared, sharedCategoryRow{Var: sharedCategoryVar(row.SharedCategory), Name: row.SharedCategory})
 			}
@@ -892,7 +599,7 @@ func renderBuffFile(resolved []ResolvedBuff, debuffs bool) ([]byte, error) {
 
 	var rendered bytes.Buffer
 	if err := tmpl.Execute(&rendered, map[string]any{
-		"Rows": rows, "NeedsTime": needsTime, "NeedsStats": needsStats, "NeedsEnums": needsEnums,
+		"Rows": rows, "NeedsSpells": needsSpells, "NeedsEnums": needsEnums,
 		"SharedCategories": shared, "PetRows": petBuffRows(resolved),
 	}); err != nil {
 		return nil, fmt.Errorf("rendering %s: %w", name, err)
@@ -997,7 +704,7 @@ func buffScopeField(scope buffmanifest.BuffScope) string {
 func renderRow(row ResolvedBuff) buffRow {
 	out := buffRow{
 		Go: row.Go, Field: row.Field, Label: buffLabel(row),
-		SpellID: row.SpellID, Kind: row.Kind.String(), Reason: row.Reason, Note: row.Note,
+		SpellID: row.SpellID, Kind: row.Kind.String(), Reason: row.Reason, LeftOut: row.LeftOut,
 		Supported: row.Supported, HasSpell: row.SpellID != 0,
 	}
 	if row.Pet == buffmanifest.PetInheritOwnerAura {
@@ -1021,23 +728,11 @@ func renderRow(row ResolvedBuff) buffRow {
 		out.Category = row.Category
 		out.CategoryVar = row.Go + "Category"
 	}
-	out.SpellVar = spellVar(row.Go)
-	timing := out.SpellVar
-	if row.CastSpellID != row.SpellID && (row.DurationFromCast || row.CooldownMs > 0) {
-		out.CastVar, out.CastID = castVar(row.Go), row.CastSpellID
-		timing = out.CastVar
-	}
-	if row.TalentRanks > 0 {
-		out.TalentVar, out.TalentID, out.TalentRanks = talentVar(row.Go), row.TalentSpellID, row.TalentRanks
-	}
-	out.ValueExpr, out.ValueOnPseudo, out.HasValue = buffValueExpr(row, out)
-	out.Duration = buffDurationExpr(row, out)
-	if row.DurationFromCast {
-		out.Duration = "auraDuration(" + out.CastVar + ")"
-	}
-	if row.CooldownMs > 0 {
-		out.Cooldown, out.HasCooldown = "cooldown("+timing+")", true
-	}
+	out.SpellVar = lowerFirst(row.Go) + "Spell"
+	out.MetaVar = lowerFirst(row.Go) + "Meta"
+	out.MetaFields = buffMetaFields(row, out)
+	out.HasValue = len(row.Applied) > 0 || row.Kind == buffmanifest.KindDamageShield
+	out.HasCooldown = row.CooldownMs > 0
 	out.Constructor = buffConstructor(row, out)
 	out.ApplyIf, out.ApplyBody, out.HasApply = buffApply(row)
 	return out
@@ -1055,83 +750,14 @@ func buffLabel(row ResolvedBuff) string {
 	return row.DBName
 }
 
-// The first stat amount, talent-scaled when the tree prices the talent: the
-// talent's rank reads its modifier off the ladder the store keeps for it.
-func buffValueExpr(row ResolvedBuff, rendered buffRow) (string, bool, bool) {
-	if rendered.TalentVar != "" && row.TalentApplies != buffmanifest.TalentScalesDuration {
-		if target, onPseudo, ok := row.talentTarget(); ok {
-			target.Amount = fmt.Sprintf("talentScaled(%s, %s)", target.Amount, talentModifier(row, rendered))
-			return row.convertedExpr(target, onPseudo), onPseudo, true
-		}
-	}
-	if len(row.Stats) > 0 {
-		return row.Stats[0].Expr, false, true
-	}
-	if len(row.Pseudo) > 0 {
-		return row.Pseudo[0].Expr, true, true
-	}
-	for _, e := range row.Effects {
-		if e.Aura == dbcenums.A_DAMAGE_SHIELD {
-			return e.Amount, false, true
-		}
-	}
-	return "", false, false
-}
-
-func talentModifier(row ResolvedBuff, rendered buffRow) string {
-	return fmt.Sprintf("%s.Rank(talentPoints).EffectN(%d)", rendered.TalentVar, row.TalentPosition)
-}
-
-// What the effect is worth once the kind mapping has converted it, as the
-// expression the generated file reads it with.
-func (row ResolvedBuff) convertedExpr(e ResolvedEffect, onPseudo bool) string {
-	if onPseudo {
-		if mods, ok := pseudoModsOf(e); ok {
-			return mods[0].Expr
-		}
-		return e.Amount
-	}
-	if amounts, ok := row.statAmounts(e); ok {
-		return amounts[0].Expr
-	}
-	return e.Amount
-}
-
-func buffDurationExpr(row ResolvedBuff, rendered buffRow) string {
-	if rendered.TalentVar != "" && row.TalentApplies == buffmanifest.TalentScalesDuration {
-		return fmt.Sprintf("talentScaledDuration(%s, %s)", rendered.SpellVar, talentModifier(row, rendered))
-	}
-	return "auraDuration(" + rendered.SpellVar + ")"
-}
-
-// The call the constructor makes into the hand-written support API.
-func buffConstructor(row ResolvedBuff, rendered buffRow) string {
+// The fields of the row's buffs.Meta literal, one per line, leaving out the
+// ones at their zero value.
+func buffMetaFields(row ResolvedBuff, rendered buffRow) string {
 	var b strings.Builder
-	config := buffConfigLiteral(row, rendered)
-
-	switch row.Kind {
-	case buffmanifest.KindDamageShield:
-		school := buffSchoolName(row.SchoolMask)
-		fmt.Fprintf(&b, "return core.NewGeneratedDamageShield(unit, %s, %s, %s(talentPoints))",
-			config, school, row.Go+"Value")
-	default:
-		if row.Scope == buffmanifest.ScopeDebuff {
-			fmt.Fprintf(&b, "return core.NewGeneratedDebuff(unit, %s)", config)
-		} else {
-			fmt.Fprintf(&b, "return core.NewGeneratedStatAura(unit, %s)", config)
-		}
-	}
-	return b.String()
-}
-
-func buffConfigLiteral(row ResolvedBuff, rendered buffRow) string {
-	var b strings.Builder
-	b.WriteString("core.GeneratedBuff{\n")
-	fmt.Fprintf(&b, "Label: %q + core.Ternary(isPlayer, \"Player\", \"External\") + \")\",\n", rendered.Label+" (")
-	fmt.Fprintf(&b, "ActionID: core.ActionID{SpellID: %s.ID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),\n", rendered.SpellVar)
-	fmt.Fprintf(&b, "Duration: %sDuration(talentPoints),\n", row.Go)
-	if row.MaxStacks > 0 {
-		fmt.Fprintf(&b, "MaxStacks: %d,\n", row.MaxStacks)
+	fmt.Fprintf(&b, "Label: %q,\n", rendered.Label)
+	fmt.Fprintf(&b, "Spell: %s,\n", rendered.SpellVar)
+	if row.CastSpellID != row.SpellID && (row.DurationFromCast || row.CooldownMs > 0) {
+		fmt.Fprintf(&b, "Cast: spelldata.MustFind(%d),\n", row.CastSpellID)
 	}
 	if rendered.CategoryVar != "" {
 		fmt.Fprintf(&b, "Category: %s,\n", rendered.CategoryVar)
@@ -1142,42 +768,38 @@ func buffConfigLiteral(row ResolvedBuff, rendered buffRow) string {
 	if row.SingleAura {
 		b.WriteString("SingleAura: true,\n")
 	}
-	b.WriteString("IsPlayer: isPlayer,\n")
-
-	// The talent prices one amount, so the call to <Go>Value goes where that
-	// amount sits and every other amount is read off its own effect.
-	value := row.Go + "Value(talentPoints)"
-	// Every amount of an item-count row is per item.
-	scale := ""
-	if rendered.ExtraParams != "" {
-		scale = " * count"
-	}
-
-	if len(row.Stats) > 0 {
-		b.WriteString("Stats: []core.StatConfig{\n")
-		for i, stat := range row.Stats {
-			amount := stat.Expr
-			if i == 0 && rendered.HasValue && !rendered.ValueOnPseudo {
-				amount = value
-			}
-			fmt.Fprintf(&b, "{Stat: stats.%s, Amount: %s%s, IsMultiplicative: %t},\n", stat.Stat.StatName(), amount, scale, stat.Multiplicative)
+	if row.TalentRanks > 0 {
+		fmt.Fprintf(&b, "Talent: spelldata.Talent(%d, %d),\n", row.TalentSpellID, row.TalentRanks)
+		fmt.Fprintf(&b, "TalentEffect: %d,\n", row.TalentPosition)
+		if row.TalentApplies == buffmanifest.TalentScalesDuration {
+			b.WriteString("TalentScalesDuration: true,\n")
 		}
-		b.WriteString("},\n")
 	}
-	if len(row.Pseudo) > 0 {
-		b.WriteString("Pseudo: []core.PseudoConfig{\n")
-		for i, mod := range row.Pseudo {
-			amount := mod.Expr
-			if i == 0 && rendered.HasValue && rendered.ValueOnPseudo {
-				amount = value
-			}
-			fmt.Fprintf(&b, "{Kind: core.PseudoStat%s, Amount: %s%s, IsMultiplicative: %t, SchoolMask: %d},\n",
-				mod.Kind, amount, scale, mod.Multiplicative, mod.SchoolMask)
+	if len(row.SkipAuraTypes) > 0 {
+		names := make([]string, len(row.SkipAuraTypes))
+		for i, aura := range row.SkipAuraTypes {
+			name, _ := dbcenums.Named(aura)
+			names[i] = "dbcenums." + name
 		}
-		b.WriteString("},\n")
+		fmt.Fprintf(&b, "SkipAuras: []dbcenums.EffectAuraType{%s},\n", strings.Join(names, ", "))
 	}
-	b.WriteString("}")
+	if row.FullComboPoints {
+		b.WriteString("FullComboPoints: true,\n")
+	}
 	return b.String()
+}
+
+// The call the constructor makes into sim/core/buffs/meta.go.
+func buffConstructor(row ResolvedBuff, rendered buffRow) string {
+	switch {
+	case row.Kind == buffmanifest.KindDamageShield:
+		return fmt.Sprintf("return newDamageShield(unit, %s, isPlayer, talentPoints)", rendered.MetaVar)
+	case row.Scope == buffmanifest.ScopeDebuff:
+		return fmt.Sprintf("return newDebuff(unit, %s, isPlayer, talentPoints)", rendered.MetaVar)
+	case row.Kind == buffmanifest.KindItemCount:
+		return fmt.Sprintf("return newItemCountBuff(unit, %s, isPlayer, count)", rendered.MetaVar)
+	}
+	return fmt.Sprintf("return newBuff(unit, %s, isPlayer, talentPoints)", rendered.MetaVar)
 }
 
 // The apply block: the condition the proto field is read by, and the call that
@@ -1226,19 +848,3 @@ func buffApply(row ResolvedBuff) (string, string, bool) {
 	}
 	return cond, body, true
 }
-
-func buffSchoolName(mask int32) string {
-	name := schoolName(mask)
-	if name == "" {
-		return "core.SpellSchoolNone"
-	}
-	return name
-}
-
-func formatFloat(v float64) string {
-	if v == math.Trunc(v) {
-		return strconv.FormatFloat(v, 'f', 1, 64)
-	}
-	return strconv.FormatFloat(v, 'f', -1, 64)
-}
-

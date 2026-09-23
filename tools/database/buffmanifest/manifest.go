@@ -200,15 +200,12 @@ type BuffSpec struct {
 	SingleAura     bool
 	Driver         bool // apply block hands the field to drive<Go>; the aura is not simply always up
 	Pet            PetPolicy
-	// StatOverride names the sim stats the aura's value lands on, spelled the
-	// way stats.Stat.StatName() spells them, for an aura the client states
-	// without saying which stat it means: A_MOD_CRIT_PCT carries no school, so
-	// Leader of the Pack and Moonkin Aura name both crit stats here. The names
-	// are checked while the row is resolved, and a row that states one may have
-	// only one aura effect, since every effect would otherwise land on the same
-	// stats.
-	StatOverride []string
-	Stats        []proto.Stat // UI relevance tags
+	// SkipAuras names auras of the spell the buff leaves out, spelled the way
+	// sim/core/dbcenums spells them, for a row the client states beside the
+	// buff that the raid's copy does not apply. The names are checked while the
+	// row is resolved.
+	SkipAuras []string
+	Stats     []proto.Stat // UI relevance tags
 	// ImpAction names the improved state's source when it is not a talent: an
 	// item, or the spell an item set grants at a piece threshold. It is the icon
 	// the improved state shows, and a tristate row states it or a Talent.
