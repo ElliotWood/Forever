@@ -1,6 +1,7 @@
 package database
 
 import (
+	"slices"
 	"strings"
 	"testing"
 
@@ -71,6 +72,68 @@ func TestEnchantProcRouting(t *testing.T) {
 			}
 		})
 	}
+}
+
+// A PPM override answers "states no rate" on the spell the slot is routed through - the combat spell
+// of an Effect 1 slot, the equip aura of an Effect 3 one - and leaves every other refusal in place.
+func TestEnchantProcRoutingTakesAPPMOverride(t *testing.T) {
+	inRepositoryRoot(t)
+	instance := dbc.GetDBC()
+	grants := enchantGrantEffects(instance.SpellEffectsById)
+
+	for _, tc := range []struct {
+		effectID   int
+		name       string
+		overrideOn int32
+	}{
+		{803, "Fiery Weapon: Effect 1, a damage combat spell", 13897},
+		{1899, "Unholy Weapon: Effect 1, a combat spell granting a buff", 20006},
+		{8217, "Revelation: Effect 3, the aura's 100 beside 'a chance to trigger'", 1248806},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			enchant := instance.EnchantsByEffectId[tc.effectID]
+			route := func() *ProcRouting {
+				t.Helper()
+				got := routeEnchantProcs(enchant.ProcSlots(), instance,
+					renderSpellTooltip(instance, grants[tc.effectID].SpellID))
+				if len(got) != 1 || got[0].TriggerSpellID != int(tc.overrideOn) {
+					t.Fatalf("routings %v, want one through %d", got, tc.overrideOn)
+				}
+				return got[0]
+			}
+
+			before := route()
+			if !statesNoRate(before) {
+				t.Fatalf("reason %q names no missing rate to answer", before.Reason())
+			}
+
+			withPPMOverride(t, tc.overrideOn, 2)
+
+			after := route()
+			want := slices.DeleteFunc(slices.Clone(before.Unsupported), func(reason string) bool {
+				return reason == spelldata.ReasonStatesNoRate
+			})
+			if !slices.Equal(after.Unsupported, want) {
+				t.Errorf("unsupported = %v with the override, want %v", after.Unsupported, want)
+			}
+		})
+	}
+}
+
+// The store row as a PPM override writes it, restored when the test ends.
+func withPPMOverride(t *testing.T, spellID int32, ppm float32) {
+	t.Helper()
+	row := spelldata.Find(spellID)
+	if row == spelldata.Nil {
+		t.Fatalf("spell %d is not in the store", spellID)
+	}
+
+	original := *row
+	overridden := original
+	overridden.RPPM = ppm
+	overridden.ProcChanceSource, overridden.ProcChanceEffect = spelldata.ProcChancePPM, 0
+	*row = overridden
+	t.Cleanup(func() { *row = original })
 }
 
 // Recovery's tooltip states a cooldown with "more often than", which is not the "often" of a rate.

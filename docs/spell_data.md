@@ -579,6 +579,25 @@ carry, and two overrides of the same field on one spell. Every one that is appli
 `// override: <field> <value> -- <reason>` comment on the row it wrote to, so reading the generated
 store says which numbers are not the client's.
 
+An item or enchant proc refused as `states no rate` registers once a `PPM` override sits on the spell
+it is routed through - the `TriggerSpellID` of its commented-out registration, the id on its
+`// trigger N` line:
+
+- A combat enchant (Effect 1) or a chance-on-hit item effect: the combat spell itself - Fiery Weapon's
+  13897, Unholy Weapon's 20006 - not the spell that grants the enchant. The rate is measured on the
+  hits of the weapon carrying it (`NewDynamicLegacyProcForEnchant(id, ppm, 0)`, or `...ForWeapon` for an
+  item).
+- An equip aura (Effect 3): the aura carrying the proc trigger - Revelation's 1248806 - not the spell it
+  triggers (1248808) nor the grant (1248805). The rate is measured on the aura's own proc mask
+  (`NewLegacyPPMManager`), so an aura whose flags decode to no mask stays refused as `no proc mask to
+  measure its rate on`.
+
+Where a combat spell and an aura apply the same spell (Crusader), the slot whose row states a rate is
+the one kept, so the override goes on the combat spell to keep it the combat spell. After adding a row,
+run `gen_spelldata` and then `gen_db`, which classifies the procs out of the store compiled into it.
+`TestEnchantProcRoutingTakesAPPMOverride` in `tools/database` and `TestSpellDataProcTakesAPPMOverride`
+in `sim/common/shared` pin both halves on those three rows with a rate that exists only in the test.
+
 `overrides.AreaBonuses` is the second table in the same file, for an effect whose tooltip says it is
 doubled in some kind of area while the client states no companion row for it ("This effect is doubled
 in Volcanic areas" on Molten Fury). A row names the AreaGroup ids any of which counts, the factor on

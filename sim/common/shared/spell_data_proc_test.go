@@ -1,6 +1,8 @@
 package shared
 
 import (
+	"math"
+	"slices"
 	"strings"
 	"testing"
 	"time"
@@ -430,5 +432,90 @@ func TestStatedEnchantChanceRollsOnTheEnchantedWeaponOnly(t *testing.T) {
 	}
 	if got := config.DPM.Chance(core.ProcMaskMeleeOHAuto, nil); got != 0 {
 		t.Errorf("off hand chance = %v, want 0", got)
+	}
+}
+
+// A PPM override on a rate-less enchant proc's row clears its refusal, and the registration measures
+// the rate: on the enchanted weapon's hits for a combat spell, on the aura's own mask for an equip
+// aura.
+func TestSpellDataProcTakesAPPMOverride(t *testing.T) {
+	const mainHandID, offHandID, enchantID int32 = 990501, 990502, 990503
+	const ppm = 2.0
+	core.AddToDatabase(&proto.SimDatabase{
+		Items:    []*proto.SimItem{testOneHander(mainHandID), testOneHander(offHandID)},
+		Enchants: []*proto.SimEnchant{{EffectId: enchantID, Name: "Test Rate-less Enchant"}},
+	})
+
+	items := make([]*proto.ItemSpec, proto.ItemSlot_ItemSlotOffHand+1)
+	for i := range items {
+		items[i] = &proto.ItemSpec{}
+	}
+	items[proto.ItemSlot_ItemSlotMainHand] = &proto.ItemSpec{Id: mainHandID, Enchant: enchantID}
+	items[proto.ItemSlot_ItemSlotOffHand] = &proto.ItemSpec{Id: offHandID}
+
+	agent := newTestAgent()
+	character := agent.character
+	character.Equipment = core.ProtoToEquipment(&proto.EquipmentSpec{Items: items})
+	character.EnableAutoAttacks(agent, core.AutoAttackOptions{
+		MainHand:       character.WeaponFromMainHand(),
+		OffHand:        character.WeaponFromOffHand(),
+		AutoSwingMelee: true,
+	})
+	mainHandSpeed := testOneHander(mainHandID).WeaponSpeed
+	mainHandChance := mainHandSpeed * (ppm / 60)
+
+	for _, tc := range []struct {
+		name         string
+		spellID      int32
+		isWeaponProc bool
+		damage       bool
+		heard        core.ProcMask
+	}{
+		{"Fiery Weapon's combat spell 13897", 13897, true, true, core.ProcMaskMeleeMHAuto},
+		{"Unholy Weapon's combat spell 20006", 20006, true, false, core.ProcMaskMeleeMHAuto},
+		{"Revelation's equip aura 1248806", 1248806, false, false, core.ProcMaskSpellDamage},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			row := *spelldata.MustFind(tc.spellID)
+			unsupported := func() []string {
+				if tc.isWeaponProc {
+					return spelldata.CombatEnchantUnsupported(&row, false)
+				}
+				return spelldata.ItemProcUnsupported(&row, false)
+			}
+
+			// An equip aura's missing rate is read off the enchant's tooltip, by the generator.
+			if tc.isWeaponProc && !slices.Contains(unsupported(), spelldata.ReasonStatesNoRate) {
+				t.Fatalf("unsupported = %v before the override, want the missing rate named", unsupported())
+			}
+
+			row.RPPM = ppm
+			row.ProcChanceSource, row.ProcChanceEffect = spelldata.ProcChancePPM, 0
+			if got := unsupported(); len(got) != 0 {
+				t.Errorf("unsupported = %v with the override, want none", got)
+			}
+
+			cfg := SpellDataProc{Name: "Test " + tc.name, EnchantID: enchantID, TriggerSpellID: row.ID,
+				BuffSpellID: row.ID, IsWeaponProc: tc.isWeaponProc}
+			var config core.ProcTrigger
+			if tc.damage {
+				config = spellDataDamageTrigger(character, cfg, cfg.effectSource(), &row)
+			} else {
+				config = spellDataTrigger(character, cfg, cfg.effectSource(), &row, &row, &proto.ItemEffect{}, nil)
+			}
+
+			if config.ProcChance != 0 {
+				t.Errorf("flat chance = %v, want none beside the rate", config.ProcChance)
+			}
+			if config.DPM == nil {
+				t.Fatal("no procs-per-minute manager")
+			}
+			if got := config.DPM.Chance(tc.heard, nil); math.Abs(got-mainHandChance) > 1e-12 {
+				t.Errorf("chance = %v, want %v ppm on the main hand's %v s, %v", got, ppm, mainHandSpeed, mainHandChance)
+			}
+			if got := config.DPM.Chance(core.ProcMaskMeleeOHAuto, nil); got != 0 {
+				t.Errorf("off hand chance = %v, want 0", got)
+			}
+		})
 	}
 }
