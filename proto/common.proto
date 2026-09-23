@@ -38,9 +38,7 @@ message ScalingItemProperties {
     map<int32, double> stats = 4; // for compactness
 	int32 ilvl = 6;
 
-	// Stats the item grants only while the encounter takes place in that kind of area, from an
-	// on-equip spell the client restricts to one of its area groups. Kept apart from stats above
-	// so the sim adds them against the encounter and the UI can show them as conditional.
+	// Stats that only apply while the encounter is in that kind of area.
 	repeated AreaStats area_stats = 7;
 }
 
