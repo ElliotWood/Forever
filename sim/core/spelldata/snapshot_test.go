@@ -28,7 +28,7 @@ func withGeneratedStore(t *testing.T) {
 	t.Helper()
 	install(generatedSpells, generatedCurves)
 	t.Cleanup(func() {
-		replaceForTest(fixture())
+		setSpells(fixture())
 		curves = map[int32][][]float64{}
 	})
 }

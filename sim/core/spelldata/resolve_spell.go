@@ -170,11 +170,11 @@ func castConfig(unit *core.Unit, s *Spell) core.CastConfig {
 	}
 
 	switch {
-	case s.CooldownMs > 0 && s.CategoryCooldownMs > 0:
-		cast.CD = core.Cooldown{Timer: unit.NewTimer(), Duration: s.Cooldown()}
-		cast.SharedCD = core.Cooldown{Timer: categoryTimer(unit, s), Duration: s.CategoryCooldown()}
 	case s.CooldownMs > 0:
 		cast.CD = core.Cooldown{Timer: unit.NewTimer(), Duration: s.Cooldown()}
+		if s.CategoryCooldownMs > 0 {
+			cast.SharedCD = core.Cooldown{Timer: categoryTimer(unit, s), Duration: s.CategoryCooldown()}
+		}
 	case s.CategoryCooldownMs > 0:
 		cast.CD = core.Cooldown{Timer: categoryTimer(unit, s), Duration: s.CategoryCooldown()}
 	}

@@ -16,7 +16,7 @@ import (
 func generatedStore() func() {
 	install(generatedSpells, generatedCurves)
 	return func() {
-		replaceForTest(fixture())
+		setSpells(fixture())
 		curves = map[int32][][]float64{}
 	}
 }

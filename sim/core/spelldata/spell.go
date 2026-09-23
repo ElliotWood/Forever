@@ -177,22 +177,6 @@ func (s *Spell) RankNumber() int32 {
 	return rankOf(s)
 }
 
-func (s *Spell) HasLabel(id int16) bool {
-	return slices.Contains(s.Labels, id)
-}
-
-// Whether the modifier effect names this spell. A label-keyed modifier aura names its spells through
-// SpellLabel instead of through a class mask; matching those means keying on the aura, since the label
-// sits in the effect's misc value only for that family of auras.
-// TODO: match e.Misc against s.Labels for the auras that name their targets by label, once the sim
-// registers a talent that uses one: A_MOD_RECOVERY_RATE_BY_SPELL_LABEL 143,
-// A_SUPPRESS_ITEM_PASSIVE_EFFECT_BY_SPELL_LABEL 182, A_ADD_PCT_MODIFIER_BY_SPELL_LABEL 218,
-// A_ADD_FLAT_MODIFIER_BY_SPELL_LABEL 219, A_CAST_WHILE_WALKING_BY_SPELL_LABEL 307,
-// A_MOD_AURA_TIME_RATE_BY_SPELL_LABEL 470 and A_MOD_DAMAGE_TAKEN_FROM_CASTER_BY_LABEL 507.
-func (s *Spell) AffectedBy(e *Effect) bool {
-	return s.ClassFlags.Matches(e.ClassFlags)
-}
-
 // The spells the tooltip names, in the order it names them. An id the store does not carry is left
 // out rather than answered as Nil.
 func (s *Spell) Refs() []*Spell {

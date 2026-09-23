@@ -81,8 +81,8 @@ func parseRows() []Spell {
 
 func withParseRows(t *testing.T) {
 	t.Helper()
-	replaceForTest(parseRows())
-	t.Cleanup(func() { replaceForTest(fixture()) })
+	setSpells(parseRows())
+	t.Cleanup(func() { setSpells(fixture()) })
 }
 
 // A character with its pseudo-stats and dependencies in place, which is what a stat buff and a

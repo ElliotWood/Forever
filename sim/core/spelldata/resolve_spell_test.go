@@ -109,8 +109,8 @@ func resolverRows() []Spell {
 // The resolver rows for one test, with the package's own fixture put back afterwards.
 func withResolverRows(t *testing.T) {
 	t.Helper()
-	replaceForTest(resolverRows())
-	t.Cleanup(func() { replaceForTest(fixture()) })
+	setSpells(resolverRows())
+	t.Cleanup(func() { setSpells(fixture()) })
 }
 
 // The timers are all a resolved config needs off the unit, and both are created on demand.

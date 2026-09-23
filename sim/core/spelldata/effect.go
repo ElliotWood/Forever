@@ -86,8 +86,9 @@ func (e *Effect) Max(level int32) float64 {
 
 // The amount for one cast: rolled where the client states a spread, the average where it does not.
 func (e *Effect) Roll(sim *core.Simulation, level int32) float64 {
+	average := e.Average(level)
 	if e.Variance == 0 {
-		return e.Average(level)
+		return average
 	}
-	return sim.Roll(e.Min(level), e.Max(level))
+	return sim.Roll(average*(1-e.Variance/2), average*(1+e.Variance/2))
 }

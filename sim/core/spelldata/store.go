@@ -38,28 +38,18 @@ var all []*Spell
 // replaces a spell with it.
 var drivers = map[int32][]int32{}
 
-// Which spells carry a given SpellLabel.
-var byLabel = map[int16][]int32{}
-
 func install(rows []Spell, rowCurves map[int32][][]float64) {
-	if rowCurves != nil {
-		curves = rowCurves
-	}
+	curves = rowCurves
 	setSpells(rows)
 }
 
-// Tests build their rows by hand and swap them in here. The indices are rebuilt, the curves are left
-// alone so a test can state its own.
-func replaceForTest(rows []Spell) {
-	setSpells(rows)
-}
-
+// Tests build their rows by hand and swap them in here too. The indices are rebuilt, the curves are
+// left alone so a test can state its own.
 func setSpells(rows []Spell) {
 	spells = rows
 
 	all = make([]*Spell, len(spells))
 	drivers = map[int32][]int32{}
-	byLabel = map[int16][]int32{}
 
 	for i := range spells {
 		s := &spells[i]
@@ -81,10 +71,6 @@ func setSpells(rows []Spell) {
 			if e.Aura == dbcenums.A_OVERRIDE_ACTIONBAR_SPELLS && e.BasePoints > 0 {
 				addDriver(int32(e.BasePoints), s.ID)
 			}
-		}
-
-		for _, label := range s.Labels {
-			byLabel[label] = append(byLabel[label], s.ID)
 		}
 	}
 }

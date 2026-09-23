@@ -77,8 +77,8 @@ func procRows() []Spell {
 
 func withProcRows(t *testing.T) {
 	t.Helper()
-	replaceForTest(procRows())
-	t.Cleanup(func() { replaceForTest(fixture()) })
+	setSpells(procRows())
+	t.Cleanup(func() { setSpells(fixture()) })
 }
 
 // The proc managers are all a resolved trigger needs off the character, and one with no weapons
