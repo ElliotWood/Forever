@@ -25,6 +25,21 @@ var helpfulTargets = []dbcenums.ImplicitTarget{
 	dbcenums.TARGET_UNIT_TARGET_CHAINHEAL_ALLY, dbcenums.TARGET_UNIT_CASTER_AREA_RAID, dbcenums.TARGET_UNIT_TARGET_RAID,
 }
 
+// ImplicitTarget values that name an enemy unit, or a point or area chosen on one.
+var enemyTargets = []dbcenums.ImplicitTarget{
+	dbcenums.TARGET_UNIT_NEARBY_ENEMY, dbcenums.TARGET_UNIT_TARGET_ENEMY, dbcenums.TARGET_UNIT_SRC_AREA_ENEMY,
+	dbcenums.TARGET_UNIT_DEST_AREA_ENEMY, dbcenums.TARGET_UNIT_CONE_ENEMY_24, dbcenums.TARGET_DEST_DYNOBJ_ENEMY,
+	dbcenums.TARGET_DEST_TARGET_ENEMY, dbcenums.TARGET_UNIT_CONE_180_DEG_ENEMY, dbcenums.TARGET_UNIT_CONE_CASTER_TO_DEST_ENEMY,
+	dbcenums.TARGET_UNIT_SRC_AREA_FURTHEST_ENEMY, dbcenums.TARGET_UNIT_AND_DEST_LAST_ENEMY,
+	dbcenums.TARGET_UNIT_CASTER_AREA_ENEMY_CLUMP, dbcenums.TARGET_DEST_CASTER_ENEMY_CLUMP_CENTROID,
+	dbcenums.TARGET_UNIT_RECT_CASTER_ENEMY, dbcenums.TARGET_UNIT_LINE_CASTER_TO_DEST_ENEMY,
+}
+
+// Whether either of the effect's implicit targets is an enemy.
+func (e *Effect) HitsAnEnemy() bool {
+	return slices.Contains(enemyTargets, e.Target[0]) || slices.Contains(enemyTargets, e.Target[1])
+}
+
 // What the client states about a spell, as the fields core registers it through. The caller adds the
 // proc mask, ApplyEffects and anything the client does not carry to the returned value before handing
 // it to RegisterSpell: the resolver fills the row's own fields and nothing else.

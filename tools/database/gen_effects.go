@@ -991,7 +991,7 @@ func routeOnUse(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instance *db
 			routing.Unsupported = append(routing.Unsupported, fmt.Sprintf("the direct damage is %v rather than an amount", direct.Type))
 		}
 		for _, e := range []*spelldata.Effect{direct, periodic} {
-			if e != spelldata.NilEffect && !hitsAnEnemy(e) {
+			if e != spelldata.NilEffect && !e.HitsAnEnemy() {
 				routing.Unsupported = append(routing.Unsupported, fmt.Sprintf("the damage lands on implicit target %d, not an enemy", e.Target[0]))
 			}
 		}
@@ -1016,10 +1016,6 @@ func castsOnUse(parsed *proto.UIItem, spellID int, instance *dbc.DBC) bool {
 	return slices.ContainsFunc(instance.ItemEffectsByParentID[int(parsed.Id)], func(e dbc.ItemEffect) bool {
 		return e.TriggerType == dbc.ITEM_SPELLTRIGGER_ON_USE && e.SpellID == spellID
 	})
-}
-
-func hitsAnEnemy(e *spelldata.Effect) bool {
-	return strings.Contains(e.Target[0].String(), "ENEMY") || strings.Contains(e.Target[1].String(), "ENEMY")
 }
 
 func onUseSummary(s *spelldata.Spell, modelled ...*spelldata.Effect) string {
