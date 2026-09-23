@@ -115,6 +115,48 @@ func TestOnUseRoutesFromTheSpellItCasts(t *testing.T) {
 	}
 }
 
+// An on-use whose spell raises the wearer's speeds registers as a speed buff, every speed effect of
+// its row modelled.
+func TestOnUseSpeedBuffRoutesAsASpeedBuff(t *testing.T) {
+	inRepositoryRoot(t)
+	instance := dbc.GetDBC()
+
+	for _, tc := range []struct {
+		itemID  int
+		spellID int32
+		summary string
+	}{
+		{19339, 23723, "on use: 23723 (A_MOD_CASTING_SPEED_NOT_STACK)"},                      // Mind Quickening Gem
+		{19343, 23733, "on use: 23733 (A_MOD_CASTING_SPEED_NOT_STACK, A_MOD_MELEE_HASTE_3)"}, // Scrolls of Blinding Light
+		{22954, 28866, "on use: 28866 (A_MOD_MELEE_HASTE_3, A_MOD_RANGED_HASTE)"},            // Kiss of the Spider
+	} {
+		item := instance.Items[tc.itemID]
+		parsed := item.ToUIItem()
+		parsed.ItemEffects = dbc.MergeItemEffectsForAllStates(parsed)
+		i := slices.IndexFunc(parsed.ItemEffects, func(e *proto.ItemEffect) bool { return e.BuffId == tc.spellID && e.GetOnUse() != nil })
+		if i < 0 {
+			t.Fatalf("item %d carries no on-use effect on %d", tc.itemID, tc.spellID)
+		}
+
+		groups := map[string]Group{}
+		if got := TryParseOnUseEffect(parsed, parsed.ItemEffects[i], instance, groups); got != EffectParseResultSuccess {
+			t.Errorf("item %d parsed as %v, want registered", tc.itemID, got)
+			continue
+		}
+
+		entries := groups["Speed"].Entries
+		if len(entries) != 1 {
+			t.Fatalf("item %d: %d entries in the Speed group, want 1", tc.itemID, len(entries))
+		}
+		r := entries[0].Proc
+		if !entries[0].Supported || !r.Speed || r.Damage || r.Heal || r.TriggerSpellID != int(tc.spellID) ||
+			r.OnUseConstructor() != "NewSpellDataSpeedOnUse" || r.Summary != tc.summary {
+			t.Errorf("item %d: routing %+v, supported %v; want %d registered through NewSpellDataSpeedOnUse with %q",
+				tc.itemID, r, entries[0].Supported, tc.spellID, tc.summary)
+		}
+	}
+}
+
 // Aegis of Preservation 19345 registers its 500 armor and lists the heal on every hit taken, 23781,
 // that its buff 23780 procs.
 func TestOnUseStatBuffListsTheProcItCarries(t *testing.T) {

@@ -122,6 +122,8 @@ type ProcRouting struct {
 	Heal bool
 	// The same for a spell that shields the wearer with an absorb.
 	Absorb bool
+	// The same for an on-use spell that raises the wearer's speeds.
+	Speed bool
 	// Empty when the rows state enough to build the listener.
 	Unsupported []string
 	// What the rows resolve to, for the reader of the generated file.
@@ -1033,6 +1035,8 @@ func parseOnUseSpell(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instanc
 		groupName = "Heals"
 	case routing.Absorb:
 		groupName = "Absorbs"
+	case routing.Speed:
+		groupName = "Speed"
 	}
 	grp := groupMap[groupName]
 	grp.Name = groupName
@@ -1054,8 +1058,8 @@ func parseOnUseSpell(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instanc
 }
 
 // The spell an on-use casts, read from the store the way the sim reads it: damage on the enemy it is
-// used on, or a heal or an absorb on the wearer. What else the row does - a root, a stun - is left
-// out, and the summary names it.
+// used on, a heal or an absorb on the wearer, or a buff raising the wearer's speeds. What else the row
+// does - a root, a stun - is left out, and the summary names it.
 func routeOnUse(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instance *dbc.DBC) *ProcRouting {
 	spellID := int(itemEffect.BuffId)
 	routing := &ProcRouting{TriggerSpellID: spellID}
@@ -1089,6 +1093,12 @@ func routeOnUse(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instance *db
 		routing.Absorb = true
 		routing.Summary = onUseSummary(s, absorb)
 		routing.Unsupported = append(routing.Unsupported, absorbUnsupported(s)...)
+	case len(s.SpeedEffects()) > 0:
+		routing.Speed = true
+		routing.Summary = onUseSummary(s, s.SpeedEffects()...)
+		if s.DurationMs <= 0 {
+			routing.Unsupported = append(routing.Unsupported, "the speed buff states no duration")
+		}
 	default:
 		routing.Unsupported = append(routing.Unsupported,
 			fmt.Sprintf("%d deals no damage and heals no one (%s)", spellID, spellEffectKinds(instance, spellID)))
@@ -1147,6 +1157,8 @@ func (r *ProcRouting) OnUseConstructor() string {
 		return "NewSpellDataHealOnUse"
 	case r.Absorb:
 		return "NewSpellDataAbsorbOnUse"
+	case r.Speed:
+		return "NewSpellDataSpeedOnUse"
 	default:
 		return "NewSimpleStatActive"
 	}
