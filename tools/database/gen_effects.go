@@ -298,35 +298,12 @@ func absorbLinkedDamage(absorb *spelldata.Spell) []int32 {
 	return damage
 }
 
-// The heal spell a proc casts: the spell itself, or one it triggers.
-func procHealSpell(spellID int32) int32 {
-	return findProcSpell(spellID, func(s *spelldata.Spell) bool { return s.ProcHealEffect() != spelldata.NilEffect }, map[int32]bool{})
+func heals(s *spelldata.Spell) bool {
+	return s.ProcHealEffect() != spelldata.NilEffect
 }
 
-// The same for the spell applying an absorb.
-func procAbsorbSpell(spellID int32) int32 {
-	return findProcSpell(spellID, func(s *spelldata.Spell) bool { return s.AbsorbEffect() != spelldata.NilEffect }, map[int32]bool{})
-}
-
-func findProcSpell(spellID int32, casts func(*spelldata.Spell) bool, seen map[int32]bool) int32 {
-	s := spelldata.Find(spellID)
-	if s == spelldata.Nil || seen[spellID] {
-		return 0
-	}
-	seen[spellID] = true
-
-	if casts(s) {
-		return spellID
-	}
-	for i := range s.Effects {
-		if s.Effects[i].TriggerID == 0 {
-			continue
-		}
-		if found := findProcSpell(s.Effects[i].TriggerID, casts, seen); found != 0 {
-			return found
-		}
-	}
-	return 0
+func absorbs(s *spelldata.Spell) bool {
+	return s.AbsorbEffect() != spelldata.NilEffect
 }
 
 // The buff the proc applies has to last for something: an aura of no duration is one the sim
@@ -937,7 +914,7 @@ func TryParseProcEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, inst
 
 			// The same for an effect that heals the wearer.
 			if !grantsStats && !entry.DealsDamage {
-				if heal := procHealSpell(itemEffect.BuffId); heal != 0 {
+				if heal := dbc.ResolveTriggered(int(itemEffect.BuffId), heals); heal != 0 {
 					entry.Proc = routeItemProc(parsed, itemEffect, renderedTooltip)
 					if entry.Proc != nil {
 						entry.Proc.asHeal(heal)
@@ -949,7 +926,7 @@ func TryParseProcEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, inst
 
 			// The same for an effect that shields the wearer.
 			if !grantsStats && !entry.DealsDamage && !entry.Heals {
-				if absorb := procAbsorbSpell(itemEffect.BuffId); absorb != 0 {
+				if absorb := dbc.ResolveTriggered(int(itemEffect.BuffId), absorbs); absorb != 0 {
 					entry.Proc = routeItemProc(parsed, itemEffect, renderedTooltip)
 					if entry.Proc != nil {
 						entry.Proc.asAbsorb(absorb)
@@ -1494,8 +1471,8 @@ func routeEnchantSlot(slot dbc.EnchantProcSlot, instance *dbc.DBC, grantTooltip 
 	}
 
 	damage := dbc.ResolveDamageEffect(slot.SpellID)
-	heal := procHealSpell(int32(slot.SpellID))
-	absorb := procAbsorbSpell(int32(slot.SpellID))
+	heal := dbc.ResolveTriggered(slot.SpellID, heals)
+	absorb := dbc.ResolveTriggered(slot.SpellID, absorbs)
 	switch {
 	case hasStats, multipliesStats:
 		routing.requireABuffDuration()
