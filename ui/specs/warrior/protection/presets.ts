@@ -71,4 +71,5 @@ export const GEAR_LAUNCH = PresetUtils.makePresetGear('Launch', LaunchGear);
 export const GEAR_P0_BIS = PresetUtils.makePresetGear('Pre-BiS', P0BisGear);
 export const GEAR_P1_BIS = PresetUtils.makePresetGear('P1 BiS', P1BisGear);
 export const DEFAULT_GEAR = GEAR_LAUNCH;
+export const BUILD_TANKY = PresetUtils.makePresetBuild('Tanky', { gear: DEFAULT_GEAR, talents: ProtectionTalents, rotation: ROTATION_PRESET_PROTECTION });
 export const GEAR_PRESETS = [GEAR_LAUNCH, GEAR_P0_BIS, GEAR_P1_BIS];

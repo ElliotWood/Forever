@@ -161,6 +161,7 @@ export default defineSpec<Spec.SpecProtectionWarrior>({
 		rotations: [Presets.ROTATION_PRESET_PROTECTION, Presets.ROTATION_PRESET_NO_RECK, Presets.ROTATION_PRESET_RECK],
 		// Preset gear configurations that the user can quickly select.
 		gear: Presets.GEAR_PRESETS,
+		builds: [Presets.BUILD_TANKY],
 	},
 
 	autoRotation: (_player: Player<Spec.SpecProtectionWarrior>): APLRotation => {

@@ -1,7 +1,7 @@
 import * as OtherInputs from '@features/settings/model/other_inputs';
 import { StatCapType } from '@generated/proto/api';
 import { APLRotation } from '@generated/proto/apl';
-import { Debuffs, IndividualBuffs, ItemSlot, PartyBuffs, PseudoStat, RaidBuffs, Spec, Stat, TristateEffect } from '@generated/proto/common';
+import { Debuffs, IndividualBuffs, ItemSlot, PartyBuffs, PseudoStat, RaidBuffs, Spec, Stat, TristateEffect, WeaponType } from '@generated/proto/common';
 import * as Mechanics from '@sim/constants/mechanics';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
@@ -92,7 +92,7 @@ export default defineSpec<Spec.SpecRogue>({
 		// Default consumes settings.
 		consumables: Presets.DefaultConsumables,
 		// Default talents.
-		talents: Presets.CombatTalents.data,
+		talents: Presets.DefaultTalents.data,
 		// Default spec-specific settings.
 		specOptions: Presets.DefaultOptions,
 		// Default raid/party buffs settings.
@@ -139,15 +139,23 @@ export default defineSpec<Spec.SpecRogue>({
 	presets: {
 		epWeights: [],
 		// Preset talents that the user can quickly select.
-		talents: [Presets.CombatTalents, Presets.AssassinationTalents, Presets.SubtletyTalents],
+		talents: Presets.TALENT_PRESETS,
 		// Preset rotations that the user can quickly select.
-		rotations: [Presets.ROTATION_PRESET_COMBAT, Presets.ROTATION_PRESET_MUTILATE, Presets.ROTATION_PRESET_HEMORRHAGE],
+		rotations: Presets.ROTATION_PRESETS,
 		// Preset gear configurations that the user can quickly select.
 		gear: Presets.GEAR_PRESETS,
+		builds: Presets.BUILD_PRESETS,
 	},
 
-	autoRotation: (_player: Player<Spec.SpecRogue>): APLRotation => {
-		return Presets.ROTATION_PRESET_COMBAT.rotation.rotation!;
+	// Master's: daggers get Mutilate, Hemorrhage or Backstab by talents, anything else Sinister Strike.
+	autoRotation: (player: Player<Spec.SpecRogue>): APLRotation => {
+		const talents = player.getTalents();
+		if (player.getEquippedItem(ItemSlot.ItemSlotMainHand)?.item.weaponType === WeaponType.WeaponTypeDagger) {
+			if (talents.mutilate) return Presets.ROTATION_PRESET_MUTILATE.rotation.rotation!;
+			if (talents.hemorrhage) return Presets.ROTATION_PRESET_HEMORRHAGE.rotation.rotation!;
+			return Presets.ROTATION_PRESET_BACKSTAB.rotation.rotation!;
+		}
+		return Presets.ROTATION_PRESET_SINISTER_STRIKE.rotation.rotation!;
 	},
 
 	reforge: {},

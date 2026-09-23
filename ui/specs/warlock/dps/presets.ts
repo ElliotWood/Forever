@@ -146,8 +146,9 @@ export const BuildShadowAndFlame = PresetUtils.makePresetBuild('Shadow and Flame
 export const BuildPresets = [BuildDemonicPact, BuildDeepAffliction, BuildDSRuinPandemic, BuildShadowAndFlame];
 
 // Our Forever sim's gear presets (master ui/<spec>/gear_sets).
+export const GEAR_BLANK = PresetUtils.makePresetGear('Blank', { items: [] });
 export const GEAR_LAUNCH = PresetUtils.makePresetGear('Launch', LaunchGear);
-export const GEAR_PREBIS = PresetUtils.makePresetGear('Pre-BiS', PrebisGear);
+export const GEAR_PREBIS = PresetUtils.makePresetGear('Pre-BIS', PrebisGear);
 export const GEAR_MC = PresetUtils.makePresetGear('MC', McGear);
 export const DEFAULT_GEAR = GEAR_PREBIS;
-export const GEAR_PRESETS = [GEAR_LAUNCH, GEAR_PREBIS, GEAR_MC];
+export const GEAR_PRESETS = [GEAR_BLANK, GEAR_LAUNCH, GEAR_PREBIS, GEAR_MC];
