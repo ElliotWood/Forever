@@ -195,14 +195,34 @@ func applyRaceEffects(agent Agent) {
 		// Blood Fury
 		actionID := ActionID{SpellID: 20572}
 		bloodFuryStats := []stats.Stat{stats.AttackPower, stats.RangedAttackPower, stats.SpellDamage, stats.HealingPower}
+		bloodFuryDeps := make([]*stats.StatDependency, len(bloodFuryStats))
+		for i, stat := range bloodFuryStats {
+			bloodFuryDeps[i] = character.NewDynamicMultiplyStat(stat, 1.1)
+		}
+
+		toggleBloodFury := func(aura *Aura, sim *Simulation, toggle func(*Simulation, *stats.StatDependency)) {
+			before := character.stats
+			for _, dep := range bloodFuryDeps {
+				toggle(sim, dep)
+			}
+
+			change := character.stats.Subtract(before)
+			for i := range character.OnTemporaryStatsChanges {
+				character.OnTemporaryStatsChanges[i](sim, aura, change)
+			}
+		}
+
 		bloodFuryAura := character.RegisterAura(Aura{
 			Label:    "Blood Fury",
 			ActionID: actionID,
 			Duration: time.Second * 15,
+			OnGain: func(aura *Aura, sim *Simulation) {
+				toggleBloodFury(aura, sim, character.EnableBuildPhaseStatDep)
+			},
+			OnExpire: func(aura *Aura, sim *Simulation) {
+				toggleBloodFury(aura, sim, character.DisableBuildPhaseStatDep)
+			},
 		})
-		for _, stat := range bloodFuryStats {
-			bloodFuryAura.AttachStatDependency(character.NewDynamicMultiplyStat(stat, 1.1))
-		}
 
 		bloodFuryCD := Cooldown{
 			Timer:    character.NewTimer(),
