@@ -117,33 +117,18 @@ func (s *Spell) ProcHealEffect() *Effect {
 	if e := s.firstOfType(dbcenums.E_HEAL_PCT, dbcenums.E_HEAL); e != NilEffect {
 		return e
 	}
-	for i := range s.Effects {
-		if e := &s.Effects[i]; e.Type == dbcenums.E_APPLY_AURA && e.Aura == dbcenums.A_PERIODIC_HEAL {
-			return e
-		}
-	}
-	return NilEffect
+	return s.FirstAura(dbcenums.A_PERIODIC_HEAL)
 }
 
 // The A_PERIODIC_DAMAGE aura the spell applies, or NilEffect where it applies none.
 func (s *Spell) PeriodicDamageEffect() *Effect {
-	for i := range s.Effects {
-		if e := &s.Effects[i]; e.Type == dbcenums.E_APPLY_AURA && e.Aura == dbcenums.A_PERIODIC_DAMAGE {
-			return e
-		}
-	}
-	return NilEffect
+	return s.FirstAura(dbcenums.A_PERIODIC_DAMAGE)
 }
 
 // The A_SCHOOL_ABSORB aura the spell applies, or NilEffect where it applies none. Its Misc is the mask
 // of the schools it absorbs, in core.SpellSchool's bits.
 func (s *Spell) AbsorbEffect() *Effect {
-	for i := range s.Effects {
-		if e := &s.Effects[i]; e.Type == dbcenums.E_APPLY_AURA && e.Aura == dbcenums.A_SCHOOL_ABSORB {
-			return e
-		}
-	}
-	return NilEffect
+	return s.FirstAura(dbcenums.A_SCHOOL_ABSORB)
 }
 
 func (s *Spell) EnergizeEffect() *Effect {
@@ -157,12 +142,7 @@ func (s *Spell) ProcEnergizeEffect() *Effect {
 	if e := s.EnergizeEffect(); e != NilEffect {
 		return e
 	}
-	for i := range s.Effects {
-		if e := &s.Effects[i]; e.Type == dbcenums.E_APPLY_AURA && e.Aura == dbcenums.A_PERIODIC_ENERGIZE {
-			return e
-		}
-	}
-	return NilEffect
+	return s.FirstAura(dbcenums.A_PERIODIC_ENERGIZE)
 }
 
 // The effect that ticks: an aura application whose aura carries a per-tick value, which is damage,
@@ -188,6 +168,15 @@ func (s *Spell) firstOfType(types ...dbcenums.SpellEffectType) *Effect {
 			if s.Effects[i].Type == t {
 				return &s.Effects[i]
 			}
+		}
+	}
+	return NilEffect
+}
+
+func (s *Spell) FirstAura(auras ...dbcenums.EffectAuraType) *Effect {
+	for i := range s.Effects {
+		if e := &s.Effects[i]; e.Type == dbcenums.E_APPLY_AURA && slices.Contains(auras, e.Aura) {
+			return e
 		}
 	}
 	return NilEffect

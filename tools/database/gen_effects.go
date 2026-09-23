@@ -262,9 +262,7 @@ func absorbUnsupported(absorb *spelldata.Spell) []string {
 	if effect.Target[0] != dbcenums.TARGET_UNIT_CASTER {
 		unsupported = append(unsupported, fmt.Sprintf("the absorb lands on implicit target %d, not the wearer", effect.Target[0]))
 	}
-	if effect.BasePoints >= scriptedAbsorbAmount && slices.ContainsFunc(absorb.Effects, func(e spelldata.Effect) bool {
-		return e.Type == dbcenums.E_APPLY_AURA && e.Aura == dbcenums.A_DUMMY
-	}) {
+	if effect.BasePoints >= scriptedAbsorbAmount && absorb.FirstAura(dbcenums.A_DUMMY) != spelldata.NilEffect {
 		unsupported = append(unsupported, fmt.Sprintf(
 			"the absorb of %.0f beside an A_DUMMY absorbs only the spells a script names, which the client does not list", effect.BasePoints))
 	}
@@ -1148,12 +1146,7 @@ func TryParseOnUseEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, ins
 // The spell an A_PROC_TRIGGER_SPELL on the buff casts, or 0. The flat on-use grants the buff's stats
 // and nothing it procs: Aegis of Preservation 23780's heal on every hit taken, 23781.
 func buffProcTrigger(buffID int32) int32 {
-	for _, e := range spelldata.Find(buffID).Effects {
-		if e.Type == dbcenums.E_APPLY_AURA && e.Aura == dbcenums.A_PROC_TRIGGER_SPELL {
-			return e.TriggerID
-		}
-	}
-	return 0
+	return spelldata.Find(buffID).FirstAura(dbcenums.A_PROC_TRIGGER_SPELL).TriggerID
 }
 
 // An on-use with no stats to grant, resolved from the spell it casts. One the sim cannot build from
@@ -1355,9 +1348,7 @@ var itemAuraKinds = []dbcenums.EffectAuraType{
 }
 
 func appliesAnItemAura(s *spelldata.Spell) bool {
-	return slices.ContainsFunc(s.Effects, func(e spelldata.Effect) bool {
-		return e.Type == dbcenums.E_APPLY_AURA && slices.Contains(itemAuraKinds, e.Aura)
-	})
+	return s.FirstAura(itemAuraKinds...) != spelldata.NilEffect
 }
 
 func allEffects(s *spelldata.Spell) []*spelldata.Effect {
