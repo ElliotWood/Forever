@@ -20,6 +20,9 @@ const RATING_WEIGHTED_PERCENT_PSEUDO_STATS = [
 	PseudoStat.PseudoStatDodgePercent,
 	PseudoStat.PseudoStatParryPercent,
 	PseudoStat.PseudoStatBlockPercent,
+	PseudoStat.PseudoStatMeleeHastePercent,
+	PseudoStat.PseudoStatRangedHastePercent,
+	PseudoStat.PseudoStatSpellHastePercent,
 ];
 
 // A ranged percent is the total the character sheet shows, melee share included. Valued at a rating's
@@ -583,6 +586,10 @@ export class Stats {
 			const meleeShare = RANGED_TOTAL_MELEE_SHARE.get(idx);
 			if (meleeShare !== undefined) {
 				value -= this.pseudoStats[meleeShare];
+			}
+			// Melee and ranged haste are separate speeds, but one haste rating raises both.
+			if (idx === PseudoStat.PseudoStatRangedHastePercent) {
+				value = Math.max(0, value - this.pseudoStats[PseudoStat.PseudoStatMeleeHastePercent]);
 			}
 			const rangedTotal = MELEE_SHARE_RANGED_TOTAL.get(idx);
 			if (value === 0 || (rangedTotal !== undefined && epWeights.pseudoStats[rangedTotal] !== 0)) {

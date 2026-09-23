@@ -70,3 +70,27 @@ describe('Player.computeEnchantEP on percent pseudo stats', () => {
 		expect(enchantEP(2586, { [PseudoStat.PseudoStatMeleeHitPercent]: 1, [PseudoStat.PseudoStatRangedHitPercent]: 1 }, hunterWeights)).toBeCloseTo(5);
 	});
 });
+
+describe('Player.computeEnchantEP on haste pseudo stats', () => {
+	const hasteWeights = Stats.fromMap({ [Stat.StatMeleeHasteRating]: 2, [Stat.StatSpellHasteRating]: 3 }, {});
+	const enchantEP = (effectId: number, pseudoStats: Partial<Record<PseudoStat, number>>) =>
+		computeEnchantEP(Enchant.create({ effectId, pseudoStats: Stats.fromMap({}, pseudoStats).toProto().pseudoStats }), undefined, undefined, hasteWeights);
+
+	it('values 34 Weapon Counterweight at the melee haste rating weight', () => {
+		expect(enchantEP(34, { [PseudoStat.PseudoStatMeleeHastePercent]: 3 })).toBeCloseTo(3 * Mechanics.PHYSICAL_HASTE_RATING_PER_HASTE_PERCENT * 2);
+	});
+
+	it("counts 931 Enchant Gloves - Minor Haste's melee and ranged haste once, and its cast speed at the spell haste weight", () => {
+		expect(
+			enchantEP(931, {
+				[PseudoStat.PseudoStatMeleeHastePercent]: 1,
+				[PseudoStat.PseudoStatRangedHastePercent]: 1,
+				[PseudoStat.PseudoStatSpellHastePercent]: 1,
+			}),
+		).toBeCloseTo(Mechanics.PHYSICAL_HASTE_RATING_PER_HASTE_PERCENT * 2 + Mechanics.SPELL_HASTE_RATING_PER_HASTE_PERCENT * 3);
+	});
+
+	it('values ranged haste beyond the melee haste beside it', () => {
+		expect(enchantEP(1, { [PseudoStat.PseudoStatRangedHastePercent]: 2 })).toBeCloseTo(2 * Mechanics.PHYSICAL_HASTE_RATING_PER_HASTE_PERCENT * 2);
+	});
+});
