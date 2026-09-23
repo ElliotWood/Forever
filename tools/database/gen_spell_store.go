@@ -4,7 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 	"go/format"
-	"sort"
+	"maps"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -29,7 +30,7 @@ func renderStoreFile(rows []storeSpell, curves map[int32][][]float64, namer *ran
 	b.WriteString("}\n\n")
 
 	b.WriteString("var generatedCurves = map[int32][][]float64{\n")
-	for _, id := range sortedCurveIDs(curves) {
+	for _, id := range slices.Sorted(maps.Keys(curves)) {
 		var rows []string
 		for _, row := range curves[id] {
 			values := make([]string, len(row))
@@ -49,15 +50,6 @@ func renderStoreFile(rows []storeSpell, curves map[int32][][]float64, namer *ran
 		return nil, fmt.Errorf("the generated store does not parse, refusing to write it: %w", err)
 	}
 	return out, nil
-}
-
-func sortedCurveIDs(curves map[int32][][]float64) []int32 {
-	ids := make([]int32, 0, len(curves))
-	for id := range curves {
-		ids = append(ids, id)
-	}
-	sort.Slice(ids, func(i, j int) bool { return ids[i] < ids[j] })
-	return ids
 }
 
 // One row per line, with its effects and powers under it: a field the client leaves at zero is left
@@ -420,14 +412,18 @@ func renderStore(in *storeInputs, namer *rankEnumNamer) ([]byte, error) {
 		return nil, err
 	}
 	ids := reachableSpells(tables, roots)
+	inStore := map[int32]bool{}
+	for _, id := range ids {
+		inStore[id] = true
+	}
 
-	linkHandTriggers(tables, ids)
+	linkHandTriggers(tables, inStore)
 
-	curves := storeCurves(tables, in.TraitNodes, in.TraitPoints, ids)
+	curves := storeCurves(tables, in.TraitNodes, in.TraitPoints, inStore)
 
 	effects := 0
 	for _, id := range ids {
-		effects += len(tables.effects[id])
+		effects += len(tables.Effects[id])
 	}
 	fmt.Fprintf(progress, "spelldata: %d roots, %d reachable spells, %d effects\n", len(roots), len(ids), effects)
 
@@ -446,12 +442,7 @@ func renderStore(in *storeInputs, namer *rankEnumNamer) ([]byte, error) {
 // The trigger edges the client's server-side handlers make and the data does not state, written
 // onto the driver's effect so that Drivers() reaches the triggered spell the way it does for a
 // stated edge.
-func linkHandTriggers(t *spellTables, ids []int32) {
-	inStore := map[int32]bool{}
-	for _, id := range ids {
-		inStore[id] = true
-	}
-
+func linkHandTriggers(t *spellTables, inStore map[int32]bool) {
 	for driver, triggered := range handTriggers {
 		if !inStore[driver] {
 			continue
@@ -466,7 +457,7 @@ func linkHandTriggers(t *spellTables, ids []int32) {
 }
 
 func linkHandTrigger(t *spellTables, driver int32, triggered int32) {
-	effects := t.effects[driver]
+	effects := t.Effects[driver]
 	for _, e := range effects {
 		if e.TriggerID == triggered {
 			return
@@ -500,12 +491,7 @@ func linkHandTrigger(t *spellTables, driver int32, triggered int32) {
 // points instead: that is the number the class table states for it, and writing it into the row
 // rather than into a curve is what makes Find(id) and Talent(id, 1).Rank(1) agree about it.
 func storeCurves(t *spellTables, nodes []traitNode, points map[int32]map[int32]map[int32]float64,
-	ids []int32) map[int32][][]float64 {
-	inStore := map[int32]bool{}
-	for _, id := range ids {
-		inStore[id] = true
-	}
-
+	inStore map[int32]bool) map[int32][][]float64 {
 	curves := map[int32][][]float64{}
 	pricedBy := map[int32]int32{}
 
@@ -533,7 +519,7 @@ func storeCurves(t *spellTables, nodes []traitNode, points map[int32]map[int32]m
 			}
 		}
 
-		rows := curveRows(t.effects[node.SpellID], priced, node.MaxRanks)
+		rows := curveRows(t.Effects[node.SpellID], priced, node.MaxRanks)
 		if len(rows) == 0 {
 			continue
 		}
@@ -544,7 +530,7 @@ func storeCurves(t *spellTables, nodes []traitNode, points map[int32]map[int32]m
 		// first tree by id is the one kept, which is what the class tables generate from, and a
 		// disagreement is named on stderr rather than resolved silently.
 		if seen, ok := pricedBy[node.SpellID]; ok {
-			if !sameCurves(pricedRows[node.SpellID], rows) {
+			if !slices.EqualFunc(pricedRows[node.SpellID], rows, slices.Equal) {
 				fmt.Fprintf(progress,
 					"spelldata: talent definitions %d and %d price spell %d differently, keeping %d\n",
 					seen, node.DefinitionID, node.SpellID, seen)
@@ -555,7 +541,7 @@ func storeCurves(t *spellTables, nodes []traitNode, points map[int32]map[int32]m
 		pricedRows[node.SpellID] = rows
 
 		if node.MaxRanks == 1 {
-			bakeRank(t.effects[node.SpellID], rows)
+			bakeRank(t.Effects[node.SpellID], rows)
 			continue
 		}
 		curves[node.SpellID] = rows
@@ -577,7 +563,7 @@ func traitPoints(db *sql.DB, trees map[int]int) ([]traitNode, map[int32]map[int3
 	var all []traitNode
 	points := map[int32]map[int32]map[int32]float64{}
 
-	for _, treeID := range sortedTreeIDs(trees) {
+	for _, treeID := range slices.Sorted(maps.Values(trees)) {
 		nodes, err := traitNodes(db, treeID)
 		if err != nil {
 			return nil, nil, err
@@ -657,30 +643,4 @@ func curveRows(effects []storeEffect, priced map[int32]map[int32]float64, maxRan
 		rows[position] = row
 	}
 	return rows
-}
-
-func sameCurves(a, b [][]float64) bool {
-	if len(a) != len(b) {
-		return false
-	}
-	for i := range a {
-		if len(a[i]) != len(b[i]) {
-			return false
-		}
-		for j := range a[i] {
-			if a[i][j] != b[i][j] {
-				return false
-			}
-		}
-	}
-	return true
-}
-
-func sortedTreeIDs(trees map[int]int) []int {
-	ids := make([]int, 0, len(trees))
-	for _, tree := range trees {
-		ids = append(ids, tree)
-	}
-	sort.Ints(ids)
-	return ids
 }

@@ -15,13 +15,12 @@ import (
 	"bytes"
 	"io"
 	"os"
-	"path/filepath"
 	"strings"
 	"testing"
 )
 
-// The generator reads its paths from the repository root - the enum names out of sim/core/dbcenums,
-// the extra ids out of the store's own source - and a test runs in its own package's directory.
+// The generator reads its paths from the repository root - the captured inputs, and the proc audit's
+// list beside this file - and a test runs in its own package's directory.
 const repositoryRoot = "../.."
 
 func TestStoreRegeneratesFromTheCommittedInputs(t *testing.T) {
@@ -57,21 +56,9 @@ func TestStoreRegeneratesFromTheCommittedInputs(t *testing.T) {
 func inRepositoryRoot(t *testing.T) {
 	t.Helper()
 
-	cwd, err := os.Getwd()
-	if err != nil {
-		t.Fatalf("%v", err)
-	}
-	if err := os.Chdir(filepath.Join(cwd, repositoryRoot)); err != nil {
-		t.Fatalf("%v", err)
-	}
-
+	t.Chdir(repositoryRoot)
 	progress = io.Discard
-	t.Cleanup(func() {
-		progress = os.Stderr
-		if err := os.Chdir(cwd); err != nil {
-			t.Fatalf("%v", err)
-		}
-	})
+	t.Cleanup(func() { progress = os.Stderr })
 }
 
 // The first line the two differ on, so a diff of megabytes reports as one row.

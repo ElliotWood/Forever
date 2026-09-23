@@ -30,15 +30,17 @@ var tooltipEffectChance = regexp.MustCompile(`\$[ms]([123])%\s+chance`)
 
 // Reads the proc shape off the tooltip and the aura columns and writes it onto the row.
 func applyTooltipHints(t *spellTables, s *storeSpell) {
-	description := t.descriptions[s.ID]
+	description := t.Descriptions[s.ID]
+
+	ownChance := tooltipOwnChance.MatchString(description)
 
 	s.ProcHint = procTooltipHints(description)
-	s.ProcChanceSource, s.ProcChanceEffect = procChanceSource(description, s)
-	s.tooltipStatesChance = tooltipOwnChance.MatchString(description) || s.ProcChanceSource == procChanceEffectN
+	s.ProcChanceSource, s.ProcChanceEffect = procChanceSource(description, ownChance, s)
+	s.tooltipStatesChance = ownChance || s.ProcChanceSource == procChanceEffectN
 }
 
-func procChanceSource(description string, s *storeSpell) (storeProcChanceSource, int8) {
-	if tooltipOwnChance.MatchString(description) {
+func procChanceSource(description string, ownChance bool, s *storeSpell) (storeProcChanceSource, int8) {
+	if ownChance {
 		return procChanceColumn, 0
 	}
 

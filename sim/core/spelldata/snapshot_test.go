@@ -6,6 +6,7 @@ package spelldata
 // number says so here instead of in a sim result.
 
 import (
+	"slices"
 	"strings"
 	"testing"
 )
@@ -26,11 +27,7 @@ const gappedIndexRows = 46
 // swaps the fixture in for the whole package.
 func withGeneratedStore(t *testing.T) {
 	t.Helper()
-	install(generatedSpells, generatedCurves)
-	t.Cleanup(func() {
-		setSpells(fixture())
-		curves = map[int32][][]float64{}
-	})
+	t.Cleanup(generatedStore())
 }
 
 func TestGeneratedStoreShape(t *testing.T) {
@@ -169,7 +166,7 @@ func TestGeneratedHandLink(t *testing.T) {
 	for _, s := range MustFind(20230).Triggered() {
 		ids = append(ids, s.ID)
 	}
-	if !contains(ids, 20240) {
+	if !slices.Contains(ids, 20240) {
 		t.Errorf("Retaliation triggers %v, want the counterattack 20240 among them", ids)
 	}
 }
@@ -231,15 +228,6 @@ func TestGeneratedStoreMisses(t *testing.T) {
 func drives(s *Spell, id int32) bool {
 	for _, driver := range s.Drivers() {
 		if driver.ID == id {
-			return true
-		}
-	}
-	return false
-}
-
-func contains(ids []int32, id int32) bool {
-	for _, got := range ids {
-		if got == id {
 			return true
 		}
 	}

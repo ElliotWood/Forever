@@ -82,6 +82,13 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
+// Rows for one test, with the package's own fixture put back afterwards.
+func withRows(t *testing.T, rows []Spell) {
+	t.Helper()
+	setSpells(rows)
+	t.Cleanup(func() { setSpells(fixture()) })
+}
+
 func TestFindMisses(t *testing.T) {
 	if Find(0) != Nil {
 		t.Fatalf("Find(0) = %v, want Nil", Find(0))

@@ -79,12 +79,6 @@ func parseRows() []Spell {
 	}
 }
 
-func withParseRows(t *testing.T) {
-	t.Helper()
-	setSpells(parseRows())
-	t.Cleanup(func() { setSpells(fixture()) })
-}
-
 // A character with its pseudo-stats and dependencies in place, which is what a stat buff and a
 // multiplier need under them.
 func parseCharacter(player *proto.Player) *core.Character {
@@ -123,7 +117,7 @@ func appliedKinds(p *Parsed) []string {
 }
 
 func TestParseStaticBuildsTheModTable(t *testing.T) {
-	withParseRows(t)
+	withRows(t, parseRows())
 	character := parseWarrior()
 	character.EnableRageBar(core.RageBarOptions{})
 
@@ -157,7 +151,7 @@ func TestParseStaticBuildsTheModTable(t *testing.T) {
 
 // The same cost modifier on a mana bar is the client's own number.
 func TestParseStaticCostOnAManaBar(t *testing.T) {
-	withParseRows(t)
+	withRows(t, parseRows())
 	character := parseCharacter(&proto.Player{
 		Class: proto.Class_ClassMage,
 		Spec:  &proto.Player_Mage{Mage: &proto.Mage{}},
@@ -172,7 +166,7 @@ func TestParseStaticCostOnAManaBar(t *testing.T) {
 
 // A mod reaches the spells its own effect names and no others.
 func TestParseStaticCarriesTheClassFlags(t *testing.T) {
-	withParseRows(t)
+	withRows(t, parseRows())
 	character := parseWarrior()
 	character.EnableRageBar(core.RageBarOptions{})
 
@@ -191,7 +185,7 @@ func TestParseStaticCarriesTheClassFlags(t *testing.T) {
 
 // An effect naming no spells at all means every spell of the caster's family.
 func TestParseStaticFallsBackToTheWholeFamily(t *testing.T) {
-	withParseRows(t)
+	withRows(t, parseRows())
 	character := parseWarrior()
 
 	family := parseSpell(character, 2200, parseOtherMask)
@@ -214,7 +208,7 @@ func TestParseStaticFallsBackToTheWholeFamily(t *testing.T) {
 // The client states the same bonus twice on a talent that raises a spell and its dot, and one
 // SpellMod_DamageDone_Flat already reaches the ticks as well as the hit.
 func TestParseFoldsTheDotModifier(t *testing.T) {
-	withParseRows(t)
+	withRows(t, parseRows())
 	character := parseWarrior()
 
 	parsed := ParseStatic(character, Find(1100))
@@ -231,7 +225,7 @@ func TestParseFoldsTheDotModifier(t *testing.T) {
 
 // A dot modifier the spell states no matching hit modifier for stands on its own.
 func TestParseKeepsAnUnpairedDotModifier(t *testing.T) {
-	withParseRows(t)
+	withRows(t, parseRows())
 	character := parseWarrior()
 
 	row := *Find(1100)
@@ -245,7 +239,7 @@ func TestParseKeepsAnUnpairedDotModifier(t *testing.T) {
 }
 
 func TestParseReadsOnlyTheNamedEffects(t *testing.T) {
-	withParseRows(t)
+	withRows(t, parseRows())
 	character := parseWarrior()
 	character.EnableRageBar(core.RageBarOptions{})
 
@@ -265,7 +259,7 @@ func TestParseReadsOnlyTheNamedEffects(t *testing.T) {
 
 // A conditional parse attaches everything and turns it on only while the condition holds.
 func TestParseConditionalAndRefresh(t *testing.T) {
-	withParseRows(t)
+	withRows(t, parseRows())
 	character := parseWarrior()
 
 	baseAttackPower := character.GetStat(stats.AttackPower)
@@ -310,7 +304,7 @@ func TestParseConditionalAndRefresh(t *testing.T) {
 
 // The proc effect is the one a port still has to wire, and the report names it.
 func TestParseSkipsWhatTheTableDoesNotKnow(t *testing.T) {
-	withParseRows(t)
+	withRows(t, parseRows())
 	character := parseWarrior()
 
 	parsed := ParseStatic(character, Find(1400))
@@ -322,7 +316,7 @@ func TestParseSkipsWhatTheTableDoesNotKnow(t *testing.T) {
 
 // A rank the character does not have is the store's empty row, which attaches nothing.
 func TestParseNilSpell(t *testing.T) {
-	withParseRows(t)
+	withRows(t, parseRows())
 	character := parseWarrior()
 
 	parsed := ParseStatic(character, Nil)
@@ -337,7 +331,7 @@ func TestParseNilSpell(t *testing.T) {
 }
 
 func TestParseEffectsFollowsTheAuraAndItsStacks(t *testing.T) {
-	withParseRows(t)
+	withRows(t, parseRows())
 	sim := &core.Simulation{}
 	character := parseWarrior()
 
@@ -376,7 +370,7 @@ func TestParseEffectsFollowsTheAuraAndItsStacks(t *testing.T) {
 // A row that states charges rather than cumulative stacks is worth its value once, however many
 // charges the aura carries.
 func TestParseEffectsChargesAreNotStacks(t *testing.T) {
-	withParseRows(t)
+	withRows(t, parseRows())
 	sim := &core.Simulation{}
 	character := parseWarrior()
 
@@ -398,7 +392,7 @@ func TestParseEffectsChargesAreNotStacks(t *testing.T) {
 // The rows whose value cannot follow the stacks are skipped on a stacking aura rather than attached
 // at one stack, unless the caller says the value does not follow them.
 func TestParseEffectsSkipsWhatCannotFollowTheStacks(t *testing.T) {
-	withParseRows(t)
+	withRows(t, parseRows())
 	character := parseWarrior()
 
 	row := *Find(1300)
@@ -418,7 +412,7 @@ func TestParseEffectsSkipsWhatCannotFollowTheStacks(t *testing.T) {
 // The aura every rank of a family points at takes a duration modifier once, however many ranks the
 // modifier's mask names.
 func TestParseStaticDurationModOnASharedAura(t *testing.T) {
-	withParseRows(t)
+	withRows(t, parseRows())
 	character := parseWarrior()
 
 	buff := character.RegisterAura(core.Aura{Label: "Shared Buff", Duration: time.Second * 10})
@@ -449,7 +443,7 @@ func TestParseStaticDurationModOnASharedAura(t *testing.T) {
 // haste rows run through ParseEffects, since the speeds they multiply need the Simulation an aura's
 // gain hands over.
 func TestEveryTableRow(t *testing.T) {
-	withParseRows(t)
+	withRows(t, parseRows())
 
 	const (
 		flat = dbcenums.A_ADD_FLAT_MODIFIER
@@ -600,7 +594,7 @@ func oneEffectRow(aura dbcenums.EffectAuraType, misc int32, points float64) *Spe
 // Each stat the table writes is stored in the units core reads it in, and those units differ: a
 // rating, a percentage point and a fraction all come out of a client percentage.
 func TestParseStaticStatConventions(t *testing.T) {
-	withParseRows(t)
+	withRows(t, parseRows())
 
 	dodge := parseWarrior()
 	ParseStatic(dodge, oneEffectRow(dbcenums.A_MOD_DODGE_PERCENT, 0, 5))
@@ -639,7 +633,7 @@ func TestParseStaticStatConventions(t *testing.T) {
 
 // The armor modifier scales the equipment share of the stat, which is what the tooltip states.
 func TestParseStaticScalesEquippedArmor(t *testing.T) {
-	withParseRows(t)
+	withRows(t, parseRows())
 
 	character := parseCharacter(&proto.Player{
 		Class:      proto.Class_ClassWarrior,
@@ -666,7 +660,7 @@ func bonusArmor(amount float64) []float64 {
 
 // A parse narrowed to the dot modifier alone has no hit modifier to fold it into.
 func TestParseFoldsOnlyIntoAHitModifierItReads(t *testing.T) {
-	withParseRows(t)
+	withRows(t, parseRows())
 	character := parseWarrior()
 
 	parsed := ParseStatic(character, Find(1100), Effects(2))
@@ -678,7 +672,7 @@ func TestParseFoldsOnlyIntoAHitModifierItReads(t *testing.T) {
 
 // A cooldown multiplier cannot follow the stacks any more than the other multiplier rows can.
 func TestParseSkipsACooldownMultiplierOnAStackingRow(t *testing.T) {
-	withParseRows(t)
+	withRows(t, parseRows())
 	character := parseWarrior()
 
 	row := oneEffectRow(dbcenums.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_COOLDOWN), -20)
@@ -694,7 +688,7 @@ func TestParseSkipsACooldownMultiplierOnAStackingRow(t *testing.T) {
 // An aura that is already up when it is parsed takes what the rows say at once, except for the rows
 // that read a Simulation to act.
 func TestParseEffectsCatchesUpAnActiveAura(t *testing.T) {
-	withParseRows(t)
+	withRows(t, parseRows())
 	sim := &core.Simulation{}
 	character := parseWarrior()
 	spell := parseSpell(character, 2500, parseTargetMask)
@@ -725,7 +719,7 @@ func TestParseEffectsCatchesUpAnActiveAura(t *testing.T) {
 // A debuff sits on the enemy, and its amount is still the caster's: the value scales by the
 // character's level, not by the level of the unit the aura is on.
 func TestParseEffectsScalesByTheCharactersLevel(t *testing.T) {
-	withParseRows(t)
+	withRows(t, parseRows())
 	character := parseWarrior()
 
 	row := &Spell{ID: 6100, Name: "Enemy Debuff", DurationMs: 30000,
@@ -748,7 +742,7 @@ func TestParseEffectsScalesByTheCharactersLevel(t *testing.T) {
 // A multiplier of zero or less cannot be taken back off: expiry divides by it. The row is reported
 // the way an unmapped one is rather than leaving the field at zero or at an infinity.
 func TestParseSkipsANonPositiveMultiplier(t *testing.T) {
-	withParseRows(t)
+	withRows(t, parseRows())
 	character := parseWarrior()
 
 	row := &Spell{ID: 6200, Name: "Not There", DurationMs: 10000,

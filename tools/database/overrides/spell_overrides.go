@@ -71,9 +71,8 @@ type Override struct {
 }
 
 // The item procs whose rate the client keeps outside the spell data. Their ProcChance column reads
-// the 100 or 101 sentinel, which the store would otherwise take for "fires on every hit", and the
-// rates are the ones tools/database/dbc/maps.go MapItemIdToPPM carries for the same items - the
-// three of that list Forever ships. None has been measured on this server.
+// the 100 or 101 sentinel, which the store would otherwise take for "fires on every hit". Each rate is
+// a carry-over, as its Source says; none has been measured on this server.
 var Spells = []Override{
 	{16928, PPM, 1, "Annihilator: ProcChance 101 sentinel; TBC 1 PPM, unverified on Forever", "tbc-carryover"},
 	{23686, PPM, 1, "Darkmoon Card: Maelstrom: column reads 100, tooltip says 'Chance to strike'", "tbc-carryover"},

@@ -41,24 +41,8 @@ import (
 const spellStoreInputsPath = "assets/db_inputs/spell_store_inputs.json"
 
 type storeInputs struct {
-	Names        map[int32]string
-	Subtexts     map[int32]string
-	Descriptions map[int32]string
-
-	Misc         map[int32]miscRow
-	Levels       map[int32]levelsRow
-	Cooldowns    map[int32]cooldownRow
-	Categories   map[int32]categoryRow
-	AuraOptions  map[int32]auraOptionRow
-	ClassOptions map[int32]core.ClassFlags
-	Interrupts   map[int32]interruptRow
-	Shapeshift   map[int32]uint64
-	Targets      map[int32]int16
-	Equipped     map[int32]equippedRow
-
-	Labels  map[int32][]int16
-	Powers  map[int32][]storePower
-	Effects map[int32][]storeEffect
+	// The client rows, whose fields encode first and under their own names.
+	spellTables
 
 	Roots []int32
 
@@ -76,33 +60,17 @@ type storeInputs struct {
 
 // The tables the generator reads, from the captured rows.
 //
-// The effects are cloned because linkHandTriggers writes the client's missing trigger edges into
-// them: sharing the slice would put those edges back into what is written out, and the regeneration
-// would then read a hand link it is supposed to be re-deriving. Nothing else is written through.
+// The effects are cloned because two passes write into them: linkHandTriggers adds the client's
+// missing trigger edges, and storeCurves bakes a one-rank talent's value into its base points.
+// Sharing the slices would put both back into what is written out, and the regeneration would then
+// read an answer it is supposed to re-derive. Nothing else is written through.
 func (in *storeInputs) tables() *spellTables {
-	effects := make(map[int32][]storeEffect, len(in.Effects))
+	t := in.spellTables
+	t.Effects = make(map[int32][]storeEffect, len(in.Effects))
 	for id, rows := range in.Effects {
-		effects[id] = slices.Clone(rows)
+		t.Effects[id] = slices.Clone(rows)
 	}
-
-	return &spellTables{
-		names:        in.Names,
-		subtexts:     in.Subtexts,
-		descriptions: in.Descriptions,
-		misc:         in.Misc,
-		levels:       in.Levels,
-		cooldowns:    in.Cooldowns,
-		categories:   in.Categories,
-		auraOptions:  in.AuraOptions,
-		classOptions: in.ClassOptions,
-		interrupts:   in.Interrupts,
-		shapeshift:   in.Shapeshift,
-		targets:      in.Targets,
-		equipped:     in.Equipped,
-		labels:       in.Labels,
-		powers:       in.Powers,
-		effects:      effects,
-	}
+	return &t
 }
 
 // The rows of the store's own ids, and every name in the build. Restricting the rest to those ids is
@@ -110,45 +78,47 @@ func (in *storeInputs) tables() *spellTables {
 func captureStoreInputs(t *spellTables, roots []int32, ids []int32,
 	nodes []traitNode, points map[int32]map[int32]map[int32]float64) *storeInputs {
 	in := &storeInputs{
-		Names:        t.names,
-		Subtexts:     map[int32]string{},
-		Descriptions: map[int32]string{},
-		Misc:         map[int32]miscRow{},
-		Levels:       map[int32]levelsRow{},
-		Cooldowns:    map[int32]cooldownRow{},
-		Categories:   map[int32]categoryRow{},
-		AuraOptions:  map[int32]auraOptionRow{},
-		ClassOptions: map[int32]core.ClassFlags{},
-		Interrupts:   map[int32]interruptRow{},
-		Shapeshift:   map[int32]uint64{},
-		Targets:      map[int32]int16{},
-		Equipped:     map[int32]equippedRow{},
-		Labels:       map[int32][]int16{},
-		Powers:       map[int32][]storePower{},
-		Effects:      map[int32][]storeEffect{},
-		Roots:        roots,
-		TraitNodes:   nodes,
-		TraitPoints:  points,
+		spellTables: spellTables{
+			Names:        t.Names,
+			Subtexts:     map[int32]string{},
+			Descriptions: map[int32]string{},
+			Misc:         map[int32]miscRow{},
+			Levels:       map[int32]levelsRow{},
+			Cooldowns:    map[int32]cooldownRow{},
+			Categories:   map[int32]categoryRow{},
+			AuraOptions:  map[int32]auraOptionRow{},
+			ClassOptions: map[int32]core.ClassFlags{},
+			Interrupts:   map[int32]interruptRow{},
+			Shapeshift:   map[int32]uint64{},
+			Targets:      map[int32]int16{},
+			Equipped:     map[int32]equippedRow{},
+			Labels:       map[int32][]int16{},
+			Powers:       map[int32][]storePower{},
+			Effects:      map[int32][]storeEffect{},
+		},
+		Roots:       roots,
+		TraitNodes:  nodes,
+		TraitPoints: points,
 	}
 
 	for _, id := range ids {
-		keepString(in.Subtexts, id, t.subtexts[id])
-		keepString(in.Descriptions, id, t.descriptions[id])
+		keepString(in.Subtexts, id, t.Subtexts[id])
+		keepString(in.Descriptions, id, t.Descriptions[id])
 
-		keepValue(in.Misc, id, t.misc)
-		keepValue(in.Levels, id, t.levels)
-		keepValue(in.Cooldowns, id, t.cooldowns)
-		keepValue(in.Categories, id, t.categories)
-		keepValue(in.AuraOptions, id, t.auraOptions)
-		keepValue(in.ClassOptions, id, t.classOptions)
-		keepValue(in.Interrupts, id, t.interrupts)
-		keepValue(in.Shapeshift, id, t.shapeshift)
-		keepValue(in.Targets, id, t.targets)
-		keepValue(in.Equipped, id, t.equipped)
+		keepValue(in.Misc, id, t.Misc)
+		keepValue(in.Levels, id, t.Levels)
+		keepValue(in.Cooldowns, id, t.Cooldowns)
+		keepValue(in.Categories, id, t.Categories)
+		keepValue(in.AuraOptions, id, t.AuraOptions)
+		keepValue(in.ClassOptions, id, t.ClassOptions)
+		keepValue(in.Interrupts, id, t.Interrupts)
+		keepValue(in.Shapeshift, id, t.Shapeshift)
+		keepValue(in.Targets, id, t.Targets)
+		keepValue(in.Equipped, id, t.Equipped)
 
-		keepSlice(in.Labels, id, t.labels)
-		keepSlice(in.Powers, id, t.powers)
-		keepSlice(in.Effects, id, t.effects)
+		keepSlice(in.Labels, id, t.Labels)
+		keepSlice(in.Powers, id, t.Powers)
+		keepSlice(in.Effects, id, t.Effects)
 	}
 	return in
 }

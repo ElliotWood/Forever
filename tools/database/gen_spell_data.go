@@ -1138,7 +1138,7 @@ func (row generatedRow) hasValue() bool {
 // Every file the generator writes, by the path it is written to, rendered and none written: what
 // happens to them is writeSpellDataFiles' business, and -check's business is that nothing does.
 func renderSpellDataFiles(helper *DBHelper) (map[string][]byte, *storeInputs, error) {
-	if err := RequireSpellCastTimes(helper.db); err != nil {
+	if err := RequireSpellCastTimes(helper); err != nil {
 		return nil, nil, err
 	}
 
