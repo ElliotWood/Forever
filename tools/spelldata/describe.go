@@ -162,10 +162,10 @@ func refList(s *spelldata.Spell) []string {
 
 // A SpellAuraRestrictions caster aura by id, named where the store carries it.
 func spellRef(id int32) string {
-	if name := spelldata.Find(id).Name; name != "" {
-		return fmt.Sprintf("%d %s", id, name)
+	if s := spelldata.Find(id); s != spelldata.Nil {
+		return fmt.Sprintf("%d %s", s.ID, s.Name)
 	}
-	return fmt.Sprintf("%d", id)
+	return fmt.Sprint(id)
 }
 
 func labelList(s *spelldata.Spell) string {
