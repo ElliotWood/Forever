@@ -305,6 +305,9 @@ func dpmForMask(character *core.Character, source effectSource, ppm float64, mas
 	}
 
 	if mask != core.ProcMaskUnknown {
+		if source.isWeaponEnchant() {
+			return character.NewDynamicLegacyProcForEnchantWithMask(source.id, ppm, mask)
+		}
 		return character.NewLegacyPPMManager(ppm, mask)
 	}
 
@@ -523,7 +526,7 @@ func weaponProcShape(cfg SpellDataProc) spelldata.ProcOpt {
 // data - no row carries a SpellProcsPerMinuteID - so an item's reaches the sim through its effect
 // entry, and the store carries one only where an override put it there. Either way the manager is
 // built here rather than by the resolver, since only the effect knows which weapon or enchant slot
-// a rate with no proc mask has to be measured against.
+// the rate has to be measured against.
 func spellDataProcRate(source effectSource, row *spelldata.Spell, proc *proto.ProcEffect) spelldata.ProcOpt {
 	return func(character *core.Character, trigger *core.ProcTrigger) {
 		ppm := proc.GetPpm()
@@ -1340,6 +1343,26 @@ func (s effectSource) registerWeaponEnchantBuff(character *core.Character, procA
 	}
 
 	character.ItemSwap.RegisterWeaponEnchantBuff(procAura.Aura, s.id)
+}
+
+// A shield or held-in-off-hand enchant shares the weapon type but sits on no weapon.
+func (s effectSource) isWeaponEnchant() bool {
+	if !s.isEnchant {
+		return false
+	}
+
+	ench := core.GetEnchantByEffectID(s.id)
+	if ench == nil {
+		return false
+	}
+
+	switch ench.Type {
+	case proto.ItemType_ItemTypeRanged:
+		return true
+	case proto.ItemType_ItemTypeWeapon:
+		return ench.EnchantType != proto.EnchantType_EnchantTypeShield && ench.EnchantType != proto.EnchantType_EnchantTypeOffHand
+	}
+	return false
 }
 
 func (s effectSource) registerProc(character *core.Character, triggerAura *core.Aura, slots []proto.ItemSlot) {

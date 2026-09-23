@@ -589,15 +589,23 @@ the spell it is routed through - the `TriggerSpellID` of its commented-out regis
   item).
 - An equip aura (Effect 3): the aura carrying the proc trigger - Revelation's 1248806 - not the spell it
   triggers (1248808) nor the grant (1248805). Revelation stays refused all the same: its effect entry
-  resolves no stats. The rate is measured on the aura's own proc mask (`NewLegacyPPMManager`, which
-  prices every mask but the off hand's and the ranged one's off the main hand's speed), so an aura whose
-  flags decode to no mask stays refused as `no proc mask to measure its rate on`.
+  resolves no stats. The rate is measured on the aura's own proc mask, so an aura whose flags decode to
+  no mask stays refused as `no proc mask to measure its rate on`.
+
+A rate follows the weapon the enchant sits on. A weapon enchant, ranged ones included
+(`NewDynamicLegacyProcForEnchantWithMask`), rolls its melee and ranged hits only on the hand carrying
+it, at that weapon's speed, and its spell hits at the enchanted weapon's speed - the main hand's where
+both hands carry it; an item swap moves all of it with the weapon. An enchant on no weapon - armor, a
+cloak, a shield or a held-in-off-hand item - is priced off the main hand (`NewLegacyPPMManager`, which
+prices every mask but the off hand's and the ranged one's at the main hand's speed).
 
 Where a combat spell and an aura apply the same spell (Crusader), the slot whose row states a rate is
 the one kept, so the override goes on the combat spell to keep it the combat spell. After adding a row,
 run `gen_spelldata` and then `gen_db`, which classifies the procs out of the store compiled into it.
 `TestEnchantProcRoutingTakesAPPMOverride` in `tools/database` and `TestSpellDataProcTakesAPPMOverride`
 in `sim/common/shared` pin both halves on those three rows with a rate that exists only in the test.
+`TestEnchantAuraPPMFollowsItsWeapon` beside the latter pins the routing by slot, and
+`TestEnchantPPMFollowsTheEnchantedWeapon` in `sim/core` the move across an item swap.
 
 `overrides.AreaBonuses` is the second table in the same file, for an effect whose tooltip says it is
 doubled in some kind of area while the client states no companion row for it ("This effect is doubled
