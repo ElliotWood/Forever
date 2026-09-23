@@ -1144,10 +1144,7 @@ func renderSpellDataFiles(helper *DBHelper) (map[string][]byte, *storeInputs, er
 
 	// Rendered in full before anything is written, so a class that fails validation cannot leave half
 	// the packages regenerated and half stale.
-	namer, err := newRankEnumNamer()
-	if err != nil {
-		return nil, nil, err
-	}
+	namer := newRankEnumNamer()
 
 	// One tree per class, picked the same way the talent protos pick it, so the rank caps here and the
 	// ones the sim's Talents message carries are the same numbers.

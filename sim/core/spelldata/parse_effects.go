@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"slices"
-	"strings"
 
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/dbcenums"
@@ -287,7 +286,7 @@ func report(s *Spell, pos int, e *Effect) {
 
 // The client's name for an aura the parser skipped, or its number where the client names none.
 func auraName(a dbcenums.EffectAuraType) string {
-	if name := a.String(); !strings.HasPrefix(name, "EffectAuraType(") {
+	if name, ok := dbcenums.Named(a); ok {
 		return name
 	}
 	return fmt.Sprintf("A_%d", a)

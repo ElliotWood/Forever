@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/spelldata"
 )
 
@@ -211,9 +212,9 @@ var configFields = []configField{
 	{name: "SpellSchool", read: func(c *core.SpellConfig) string { return nonZero(c.SpellSchool, core.SpellSchool.String) }},
 	{name: "DefenseType", read: func(c *core.SpellConfig) string { return nonZero(c.DefenseType, core.DefenseType.String) }},
 	{name: "Flags", bits: func(c *core.SpellConfig) uint64 { return uint64(c.Flags) },
-		bitName: func(bit uint64) (string, bool) { return stringerName(core.SpellFlag(bit)) }},
+		bitName: func(bit uint64) (string, bool) { return dbcenums.Named(core.SpellFlag(bit)) }},
 	{name: "ProcMask", bits: func(c *core.SpellConfig) uint64 { return uint64(c.ProcMask) },
-		bitName: func(bit uint64) (string, bool) { return stringerName(core.ProcMask(bit)) }},
+		bitName: func(bit uint64) (string, bool) { return dbcenums.Named(core.ProcMask(bit)) }},
 	{name: "Cast.DefaultCast.CastTime", read: func(c *core.SpellConfig) string { return nonZero(c.Cast.DefaultCast.CastTime, durationText) }},
 	{name: "Cast.DefaultCast.GCD", read: func(c *core.SpellConfig) string { return nonZero(c.Cast.DefaultCast.GCD, durationText) }},
 	{name: "Cast.DefaultCast.NonEmpty", read: func(c *core.SpellConfig) string { return nonZero(c.Cast.DefaultCast.NonEmpty, boolText) }},

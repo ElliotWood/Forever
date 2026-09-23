@@ -13,29 +13,23 @@ import (
 )
 
 func effectTypeName(t dbcenums.SpellEffectType) string {
-	if name, ok := stringerName(t); ok {
+	if name, ok := dbcenums.Named(t); ok {
 		return name
 	}
 	return fmt.Sprintf("E_%d", t)
 }
 
 func auraName(a dbcenums.EffectAuraType) string {
-	if name, ok := stringerName(a); ok {
+	if name, ok := dbcenums.Named(a); ok {
 		return name
 	}
 	return fmt.Sprintf("A_%d", a)
 }
 
-// A stringer names a value it has no constant for as `Type(n)`, which no constant name contains.
-func stringerName(v fmt.Stringer) (string, bool) {
-	name := v.String()
-	return name, !strings.Contains(name, "(")
-}
-
 // The op an A_ADD_FLAT_MODIFIER or A_ADD_PCT_MODIFIER names in its misc value, or its number where
 // dbcenums names none.
 func spellModOpName(misc int32) string {
-	if name, ok := stringerName(dbcenums.SpellModOp(misc)); ok {
+	if name, ok := dbcenums.Named(dbcenums.SpellModOp(misc)); ok {
 		return name
 	}
 	return fmt.Sprintf("op %d", misc)

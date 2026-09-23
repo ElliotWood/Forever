@@ -12,7 +12,7 @@ import (
 // Every name the printer states for a constant: the stringer's for a typed enum, the declaration's for
 // the PROC_FLAG_ bits and SPELLMOD_ ops, and a number where neither has one.
 func TestConstantNames(t *testing.T) {
-	spellFlag := func(bit uint64) (string, bool) { return stringerName(core.SpellFlag(bit)) }
+	spellFlag := func(bit uint64) (string, bool) { return dbcenums.Named(core.SpellFlag(bit)) }
 	if got := strings.Join(setBits(uint64(core.SpellFlagAPL|core.SpellFlagMeleeMetrics), spellFlag), " | "); got != "SpellFlagMeleeMetrics | SpellFlagAPL" {
 		t.Errorf("the flag bits read %q", got)
 	}

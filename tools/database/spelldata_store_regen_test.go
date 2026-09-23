@@ -32,12 +32,7 @@ func TestStoreRegeneratesFromTheCommittedInputs(t *testing.T) {
 		t.Fatalf("%v", err)
 	}
 
-	namer, err := newRankEnumNamer()
-	if err != nil {
-		t.Fatalf("reading the spell enum names: %v", err)
-	}
-
-	rendered, err := renderStore(inputs, namer)
+	rendered, err := renderStore(inputs, newRankEnumNamer())
 	if err != nil {
 		t.Fatalf("rendering the store: %v", err)
 	}
