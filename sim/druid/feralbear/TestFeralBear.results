@@ -179,6 +179,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralBear-AllItems-BurstofKnowledge-11832"
+ value: {
+  dps: 117.16756
+  tps: 129.45441
+  dtps: 1231.5233
+ }
+}
+dps_results: {
  key: "TestFeralBear-AllItems-CadaverousGarb"
  value: {
   dps: 136.73498
@@ -215,6 +223,22 @@ dps_results: {
  value: {
   dps: 117.16756
   tps: 129.45441
+  dtps: 1231.5233
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-DarkmoonCard:Heroism-19287"
+ value: {
+  dps: 117.16756
+  tps: 129.45441
+  dtps: 1231.5233
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-DarkmoonCard:Maelstrom-19289"
+ value: {
+  dps: 126.49149
+  tps: 138.77835
   dtps: 1231.5233
  }
 }
@@ -315,6 +339,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralBear-AllItems-EssenceofthePureFlame-18815"
+ value: {
+  dps: 122.6148
+  tps: 134.90166
+  dtps: 1231.5233
+ }
+}
+dps_results: {
  key: "TestFeralBear-AllItems-EyeofMoam-21473"
  value: {
   dps: 117.16756
@@ -379,6 +411,22 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralBear-AllItems-Headmaster'sCharge-13937"
+ value: {
+  dps: 135.44479
+  tps: 147.58343
+  dtps: 1144.98906
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-HeartofWyrmthalak-22321"
+ value: {
+  dps: 119.94871
+  tps: 132.23557
+  dtps: 1231.5233
+ }
+}
+dps_results: {
  key: "TestFeralBear-AllItems-HeartoftheScale-13164"
  value: {
   dps: 117.16756
@@ -403,6 +451,22 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralBear-AllItems-IdolofBrutality-23198"
+ value: {
+  dps: 117.16756
+  tps: 129.45441
+  dtps: 1231.5233
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-IdolofFerocity-22397"
+ value: {
+  dps: 117.16756
+  tps: 129.45441
+  dtps: 1231.5233
+ }
+}
+dps_results: {
  key: "TestFeralBear-AllItems-IdoloftheMoon-23197"
  value: {
   dps: 117.16756
@@ -416,6 +480,14 @@ dps_results: {
   dps: 117.37799
   tps: 129.72798
   dtps: 1190.17937
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-Ironfoe-11684"
+ value: {
+  dps: 133.82669
+  tps: 145.58855
+  dtps: 1129.06839
  }
 }
 dps_results: {
@@ -491,6 +563,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralBear-AllItems-Naglering-11669"
+ value: {
+  dps: 118.163
+  tps: 130.44986
+  dtps: 1218.98066
+ }
+}
+dps_results: {
  key: "TestFeralBear-AllItems-NecropileRaiment"
  value: {
   dps: 117.57769
@@ -520,6 +600,14 @@ dps_results: {
   dps: 117.37799
   tps: 129.72798
   dtps: 1204.17123
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-SecondWind-11819"
+ value: {
+  dps: 117.16756
+  tps: 129.45441
+  dtps: 1231.5233
  }
 }
 dps_results: {
@@ -616,6 +704,14 @@ dps_results: {
   dps: 125.79291
   tps: 137.93429
   dtps: 1119.45642
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-Sulfuras,HandofRagnaros-17182"
+ value: {
+  dps: 154.65791
+  tps: 166.56977
+  dtps: 1147.14951
  }
 }
 dps_results: {

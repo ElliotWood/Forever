@@ -213,6 +213,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-BurstofKnowledge-11832"
+ value: {
+  dps: 324.5758
+  tps: 765.45332
+  dtps: 878.34509
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-CadaverousGarb"
  value: {
   dps: 351.76783
@@ -277,6 +285,22 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-DarkmoonCard:Heroism-19287"
+ value: {
+  dps: 324.4885
+  tps: 765.19526
+  dtps: 878.34509
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-DarkmoonCard:Maelstrom-19289"
+ value: {
+  dps: 329.65629
+  tps: 773.51462
+  dtps: 878.34509
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-DeadlyScope-663"
  value: {
   dps: 324.5758
@@ -317,6 +341,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-Dragon'sCall-10847"
+ value: {
+  dps: 324.5758
+  tps: 765.45332
+  dtps: 878.34509
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-DreadmistRaiment"
  value: {
   dps: 325.15123
@@ -333,6 +365,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-DrillborerDisk-17066"
+ value: {
+  dps: 330.72642
+  tps: 774.38449
+  dtps: 879.30346
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-Earthstrike-21180"
  value: {
   dps: 329.81881
@@ -341,11 +381,27 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-EbonHiltofMarduk-14576"
+ value: {
+  dps: 313.81302
+  tps: 725.71053
+  dtps: 882.06104
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-EnchantWeapon-IcyChill-1894"
  value: {
   dps: 289.27562
   tps: 699.83927
   dtps: 873.523
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-EssenceofthePureFlame-18815"
+ value: {
+  dps: 328.55852
+  tps: 770.22464
+  dtps: 878.34509
  }
 }
 dps_results: {
@@ -453,6 +509,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-HeartofWyrmthalak-22321"
+ value: {
+  dps: 326.54883
+  tps: 768.16708
+  dtps: 878.34509
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-HeartoftheScale-13164"
  value: {
   dps: 324.5758
@@ -522,6 +586,14 @@ dps_results: {
   dps: 324.5758
   tps: 765.45332
   dtps: 852.36076
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-Ironfoe-11684"
+ value: {
+  dps: 348.58917
+  tps: 800.55504
+  dtps: 883.76396
  }
 }
 dps_results: {
@@ -613,11 +685,27 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-Naglering-11669"
+ value: {
+  dps: 323.91921
+  tps: 762.25216
+  dtps: 870.0974
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-NecropileRaiment"
  value: {
   dps: 325.42217
   tps: 762.26951
   dtps: 845.28897
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-Omokk'sGirthRestrainer-13959"
+ value: {
+  dps: 331.6758
+  tps: 768.3108
+  dtps: 846.88392
  }
 }
 dps_results: {
@@ -653,6 +741,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-RazorGauntlets-18326"
+ value: {
+  dps: 327.34506
+  tps: 768.41053
+  dtps: 843.14113
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-RegaliaofUndeadCleansing"
  value: {
   dps: 325.03267
@@ -674,6 +770,14 @@ dps_results: {
   dps: 325.39343
   tps: 765.9319
   dtps: 879.2387
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-SecondWind-11819"
+ value: {
+  dps: 324.5758
+  tps: 765.45332
+  dtps: 878.34509
  }
 }
 dps_results: {

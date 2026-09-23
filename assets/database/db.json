@@ -13450,6 +13450,7 @@
 {"id":10894,"name":"Shadow Word: Pain","icon":"spell_shadow_shadowwordpain","rank":8,"hasBuff":true},
 {"id":10933,"name":"Smite","icon":"spell_holy_holysmite","rank":7},
 {"id":10934,"name":"Smite","icon":"spell_holy_holysmite","rank":8},
+{"id":10938,"name":"Power Word: Fortitude","icon":"spell_holy_wordfortitude","rank":6,"hasBuff":true},
 {"id":10945,"name":"Mind Blast","icon":"spell_shadow_unholyfrenzy","rank":7},
 {"id":10946,"name":"Mind Blast","icon":"spell_shadow_unholyfrenzy","rank":8},
 {"id":10947,"name":"Mind Blast","icon":"spell_shadow_unholyfrenzy","rank":9},
