@@ -9,6 +9,8 @@ import (
 
 var chargeRank = spellData.Charge.ByID(11578)
 
+var vanguardChargeRank = chargeRank.OverriddenBy(spellData.Vanguard.Highest())
+
 func (warrior *Warrior) registerCharge() {
 	actionID := core.ActionID{SpellID: chargeRank.ID}
 	metrics := warrior.NewRageMetrics(actionID)
@@ -16,11 +18,14 @@ func (warrior *Warrior) registerCharge() {
 	chargeRage := chargeRank.EnergizeEffect().Tenths() + spellData.ImprovedCharge.TenthsAt(warrior.Talents.ImprovedCharge)
 
 	config := spelldata.SpellConfig(&warrior.Unit, chargeRank, spelldata.Flags(core.SpellFlagAPL))
+	if warrior.Talents.Vanguard {
+		config.CastRequirement = vanguardChargeRank.CastRequirement()
+	}
 
 	aura := warrior.registerDashAura("Charge", actionID, config.Cast.CD.Duration, nil)
 
 	config.ExtraCastCondition = func(sim *core.Simulation, target *core.Unit) bool {
-		return sim.CurrentTime < 0 && (warrior.StanceMatches(BattleStance) || (warrior.Talents.Vanguard && warrior.StanceMatches(DefensiveStance)))
+		return sim.CurrentTime < 0
 	}
 
 	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
