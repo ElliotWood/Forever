@@ -107,6 +107,9 @@ func RegisterAllOnUseCds() {
 	// shared.NewSimpleStatActive(260824) // Gnomish Poultryizer - https://www.wowhead.com/forever/spell=1270941
 	// unsupported: 1296664 deals no damage and heals no one (A_MOD_CHARM)
 	// shared.NewSimpleStatActive(269741) // Scented Runewood Brooch - https://www.wowhead.com/forever/spell=1296664
+	// on use: 1291097 (A_SCHOOL_ABSORB)
+	// unsupported: the damage of 1291099 (Sigmoid Revenge) the absorb's row names is not simulated
+	// shared.NewSpellDataAbsorbOnUse(272437) // Adaptive Combat Assistant - https://www.wowhead.com/forever/spell=1291097
 	// unsupported: 1291101 deals no damage and heals no one (A_MOD_CRIT_PCT)
 	// shared.NewSimpleStatActive(272438) // Weakness Analyzer - https://www.wowhead.com/forever/spell=1291101
 	// unsupported: 1291105 deals no damage and heals no one (A_MOD_BLOCK_PERCENT)
@@ -141,8 +144,6 @@ func RegisterAllOnUseCds() {
 	shared.NewSpellDataAbsorbOnUse(21117) // Talisman of Arathor - https://www.wowhead.com/forever/spell=25746
 	// on use: 29506 (A_SCHOOL_ABSORB)
 	shared.NewSpellDataAbsorbOnUse(23558) // The Burrower's Shell - https://www.wowhead.com/forever/spell=29506
-	// on use: 1291097 (A_SCHOOL_ABSORB)
-	shared.NewSpellDataAbsorbOnUse(272437) // Adaptive Combat Assistant - https://www.wowhead.com/forever/spell=1291097
 
 	// Agility / Intellect / Spirit / Stamina / Strength
 	shared.NewSimpleStatActive(270226) // Golden Banana - https://www.wowhead.com/forever/spell=1287571

@@ -2267,6 +2267,12 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
+		272437, // Adaptive Combat Assistant
+		[
+			"Absorbs 450 damage for 15s. If this shield expires before 15s, 100 Nature damage will be dealt to all enemies in melee range.", // 1291097 - https://www.wowhead.com/forever/spell=1291097
+		]
+	],
+	[
 		272438, // Weakness Analyzer
 		[
 			"Increases your critical strike chance with all spells and attacks by 5% for 20s or until you deal a non-periodic critical effect.", // 1291101 - https://www.wowhead.com/forever/spell=1291101

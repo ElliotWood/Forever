@@ -4850,7 +4850,7 @@ func RegisterAllProcs() {
 	// 2% chance when struck in melee to gain a holy shield, absorbing 216 damage for 15s. This chance is doubled
 	// in Wasteland and Haunted areas.
 	// https://www.wowhead.com/forever/spell=10368
-	// trigger 8397 (effect 1's chance, core.CallbackOnSpellHitTaken, core.ProcMaskMeleeMHAuto | core.ProcMaskMeleeOHAuto | core.ProcMaskMeleeMHSpecial | core.ProcMaskMeleeOHSpecial) -> buff 10368
+	// trigger 8397 (4%, the column over effect 1's 2%, core.CallbackOnSpellHitTaken, core.ProcMaskMeleeMHAuto | core.ProcMaskMeleeOHAuto | core.ProcMaskMeleeMHSpecial | core.ProcMaskMeleeOHSpecial) -> buff 10368
 	shared.NewSpellDataAbsorbProc(shared.SpellDataProc{TriggerSpellID: 8397, BuffSpellID: 10368},
 		[]shared.ItemVariant{
 			{ItemID: 11302, ItemName: "Uther's Strength"},
