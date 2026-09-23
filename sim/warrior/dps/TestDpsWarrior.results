@@ -118,6 +118,15 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestDpsWarrior-AllItems-Enchant2HWeapon-GrandArcanist-7941"
+ value: {
+  dps: 552.96374
+  tps: 316.01678
+  dtps: 6.98593
+  hps: 23.89281
+ }
+}
+dps_results: {
  key: "TestDpsWarrior-AllItems-Enchant:FieryBlaze-36"
  value: {
   dps: 554.90955
@@ -149,6 +158,15 @@ dps_results: {
  value: {
   dps: 561.16598
   tps: 320.61004
+  dtps: 6.98593
+  hps: 23.89281
+ }
+}
+dps_results: {
+ key: "TestDpsWarrior-AllItems-EnchantWeapon-GrandSorcerer-7942"
+ value: {
+  dps: 552.96374
+  tps: 316.01678
   dtps: 6.98593
   hps: 23.89281
  }
