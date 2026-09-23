@@ -1,7 +1,6 @@
 import type { ConsumableStatOption } from '@features/settings/model/consumables';
 import * as ConsumablesInputs from '@features/settings/model/consumables';
 import type { Stat } from '@generated/proto/common';
-import i18n from '@i18n/config';
 import { usePlayer } from '@sim/context/SimHostContext';
 import type { Player } from '@sim/player/player';
 import { Database } from '@sim/proto/database';
@@ -55,13 +54,15 @@ export const ConsumesPicker = ({
 					<div data-testid="consumes-flasks">
 						<IconEnumPicker modObject={player} config={configs.flask} />
 					</div>
-					<span className="flex w-6 items-center justify-center">{i18n.t('settings_tab.consumables.elixirs.separator')}</span>
 					<div className="empty:hidden" data-testid="consumes-battle-elixirs">
 						<IconEnumPicker modObject={player} config={configs.battleElixir} />
 					</div>
 					<div className="empty:hidden" data-testid="consumes-guardian-elixirs">
 						<IconEnumPicker modObject={player} config={configs.guardianElixir} />
 					</div>
+					<IconEnumPicker modObject={player} config={configs.spellPowerElixir} />
+					<IconEnumPicker modObject={player} config={configs.schoolElixir} />
+					<IconEnumPicker modObject={player} config={configs.defenseElixir} />
 				</PickerGroup>
 			</ConsumeRow>
 			<ConsumeRow name="food">
@@ -94,6 +95,17 @@ export const ConsumesPicker = ({
 			<ConsumeRow name="drums" hidden={!encounterConsumes}>
 				<PickerGroup variant="icons" className="justify-end" data-testid="consumes-drums">
 					<IconEnumPicker modObject={player} config={configs.drums} />
+				</PickerGroup>
+			</ConsumeRow>
+			<ConsumeRow
+				name="buffs"
+				configs={[configs.strengthBuff, configs.attackPowerBuff, configs.zanza, configs.alcohol, ConsumablesInputs.DragonbreathChili]}>
+				<PickerGroup variant="icons" className="justify-end" data-testid="consumes-buffs">
+					<IconEnumPicker modObject={player} config={configs.strengthBuff} />
+					<IconEnumPicker modObject={player} config={configs.attackPowerBuff} />
+					<IconEnumPicker modObject={player} config={configs.zanza} />
+					<IconEnumPicker modObject={player} config={configs.alcohol} />
+					<IconPicker modObject={player} config={ConsumablesInputs.DragonbreathChili} />
 				</PickerGroup>
 			</ConsumeRow>
 			<ConsumeRow

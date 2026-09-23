@@ -954,6 +954,9 @@ func LoadAndWriteConsumables(dbHelper *DBHelper, inputsDir string) ([]dbc.Consum
 	for _, id := range ConsumableAllowList {
 		allowListStrs = append(allowListStrs, strconv.FormatInt(int64(id), 10))
 	}
+	for id := range ClassicConsumableTypes {
+		allowListStrs = append(allowListStrs, strconv.FormatInt(int64(id), 10))
+	}
 	additionalConsumesQuery := "OR i.ID = " + strings.Join(allowListStrs, " OR i.ID = ")
 
 	query := `
@@ -1000,6 +1003,9 @@ func LoadAndWriteConsumables(dbHelper *DBHelper, inputsDir string) ([]dbc.Consum
 	consumables, err := LoadRows(dbHelper.db, query, ScanConsumable)
 	if err != nil {
 		return nil, fmt.Errorf("error loading consumables: %w", err)
+	}
+	for i := range consumables {
+		consumables[i].TypeOverride = ClassicConsumableTypes[int32(consumables[i].Id)]
 	}
 
 	fmt.Println("Loaded Consumables:", len(consumables))

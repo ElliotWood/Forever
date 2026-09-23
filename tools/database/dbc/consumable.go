@@ -3,6 +3,7 @@ package dbc
 import (
 	"slices"
 
+	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/stats"
 )
@@ -19,9 +20,10 @@ type Consumable struct {
 	SpellCategoryFlags       int             // Spell category flags
 	ItemEffects              []int           // Item effect IDs
 	ElixirType               int
-	Duration                 int // In milliseconds
-	CooldownDuration         int // In milliseconds
-	CategoryCooldownDuration int // In milliseconds
+	Duration                 int                  // In milliseconds
+	CooldownDuration         int                  // In milliseconds
+	CategoryCooldownDuration int                  // In milliseconds
+	TypeOverride             proto.ConsumableType // Classic items the client does not type (overrides.go)
 }
 
 func (c *Consumable) ToMap() map[string]interface{} {
@@ -55,6 +57,9 @@ func (c *Consumable) ToProto() *proto.Consumable {
 	}
 }
 func (c *Consumable) GetConsumableType() proto.ConsumableType {
+	if c.TypeOverride != proto.ConsumableType_ConsumableTypeUnknown {
+		return c.TypeOverride
+	}
 	if c.SubClassId == ELIXIR {
 		switch c.ElixirType {
 		case 1:
@@ -135,12 +140,43 @@ func (consumable *Consumable) GetStatModifiers() *stats.Stats {
 		if effect.ID != 0 {
 			if spellEffects, ok := dbcInstance.SpellEffects[effect.SpellID]; ok {
 				for _, spellEffect := range spellEffects {
-					if stat, ok := spellEffect.ParseStatEffect(spellEffect.Coefficient != 0, 0); ok {
-						stats.AddInplace(&stat)
-					}
+					stat := consumableEffectStats(spellEffect, 0)
+					stats.AddInplace(&stat)
 				}
 			}
 		}
 	}
 	return stats
+}
+
+// A consumable effect's stats, following what Classic and Forever consumables do beyond a plain
+// stat aura: Forever's well fed buffs (a 10 s periodic trigger whose value the triggered aura takes
+// from the food), triggered buffs (Blessed Sunfruit), +crit% (Elixir of the Mongoose, Grilled
+// Squid) and +max mana (Flask of Distilled Wisdom). Kept here rather than in ParseStatEffect so
+// item and enchant parsing is unchanged.
+func consumableEffectStats(effect SpellEffect, depth int) stats.Stats {
+	value := effect.EffectBasePoints + effect.EffectDieSides
+	switch {
+	case depth < 2 && effect.EffectAura == A_PERIODIC_TRIGGER_SPELL_WITH_VALUE && effect.EffectAuraPeriod == 10000:
+		total := stats.Stats{}
+		for _, sub := range dbcInstance.SpellEffectsInOrder(effect.EffectTriggerSpell) {
+			sub.EffectBasePoints, sub.EffectDieSides = value, 0
+			s := consumableEffectStats(sub, depth+1)
+			total.AddInplace(&s)
+		}
+		return total
+	case depth < 2 && effect.EffectType == E_TRIGGER_SPELL:
+		total := stats.Stats{}
+		for _, sub := range dbcInstance.SpellEffectsInOrder(effect.EffectTriggerSpell) {
+			s := consumableEffectStats(sub, depth+1)
+			total.AddInplace(&s)
+		}
+		return total
+	case effect.EffectAura == A_MOD_CRIT_PCT && effect.EffectType == E_APPLY_AURA:
+		return stats.Stats{proto.Stat_StatMeleeCritRating: value * core.PhysicalCritRatingPerCritPercent}
+	case effect.EffectAura == A_MOD_MAX_POWER && effect.EffectMiscValues[0] == POWER_TYPE_MANA:
+		return stats.Stats{proto.Stat_StatMana: value}
+	}
+	s, _ := effect.ParseStatEffect(effect.Coefficient != 0, 0)
+	return s
 }

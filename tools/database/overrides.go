@@ -148,6 +148,61 @@ var ConsumableAllowList = []int32{
 	23381, // Chipped Power Core
 	5206,  // Bogling Root
 }
+
+// Classic consumables and the picker each goes in. The client has no battle/guardian split for
+// them, and most sit below the loader's level-50 floor, so without this list the sim silently
+// treats them as empty. The set is master's consumables picker plus its world buffs.
+var ClassicConsumableTypes = map[int32]proto.ConsumableType{
+	// Potions
+	1710: proto.ConsumableType_ConsumableTypePotion, 3928: proto.ConsumableType_ConsumableTypePotion,
+	13446: proto.ConsumableType_ConsumableTypePotion, 3827: proto.ConsumableType_ConsumableTypePotion,
+	6149: proto.ConsumableType_ConsumableTypePotion, 13443: proto.ConsumableType_ConsumableTypePotion,
+	13444: proto.ConsumableType_ConsumableTypePotion, 13442: proto.ConsumableType_ConsumableTypePotion,
+	5633: proto.ConsumableType_ConsumableTypePotion, 5631: proto.ConsumableType_ConsumableTypePotion,
+	9036: proto.ConsumableType_ConsumableTypePotion, 13461: proto.ConsumableType_ConsumableTypePotion,
+	13457: proto.ConsumableType_ConsumableTypePotion, 13456: proto.ConsumableType_ConsumableTypePotion,
+	13460: proto.ConsumableType_ConsumableTypePotion, 13458: proto.ConsumableType_ConsumableTypePotion,
+	13459: proto.ConsumableType_ConsumableTypePotion, 13455: proto.ConsumableType_ConsumableTypePotion,
+	4623: proto.ConsumableType_ConsumableTypePotion,
+	// Flasks
+	13510: proto.ConsumableType_ConsumableTypeFlask, 13511: proto.ConsumableType_ConsumableTypeFlask,
+	13512: proto.ConsumableType_ConsumableTypeFlask, 13513: proto.ConsumableType_ConsumableTypeFlask,
+	// Food
+	21023: proto.ConsumableType_ConsumableTypeFood, 13928: proto.ConsumableType_ConsumableTypeFood,
+	20452: proto.ConsumableType_ConsumableTypeFood, 18254: proto.ConsumableType_ConsumableTypeFood,
+	13810: proto.ConsumableType_ConsumableTypeFood, 13813: proto.ConsumableType_ConsumableTypeFood,
+	13931: proto.ConsumableType_ConsumableTypeFood, 18045: proto.ConsumableType_ConsumableTypeFood,
+	21217: proto.ConsumableType_ConsumableTypeFood, 13851: proto.ConsumableType_ConsumableTypeFood,
+	21072: proto.ConsumableType_ConsumableTypeFood,
+	// Battle elixir slot: agility elixirs
+	13452: proto.ConsumableType_ConsumableTypeBattleElixir, 9187: proto.ConsumableType_ConsumableTypeBattleElixir,
+	8949: proto.ConsumableType_ConsumableTypeBattleElixir, 3390: proto.ConsumableType_ConsumableTypeBattleElixir,
+	// Spell power elixirs
+	13454: proto.ConsumableType_ConsumableTypeSpellPowerElixir, 9155: proto.ConsumableType_ConsumableTypeSpellPowerElixir,
+	// Guardian elixir slot: health and mana regen (Forever adds the Greater Mageblood Elixir)
+	3825: proto.ConsumableType_ConsumableTypeGuardianElixir, 2458: proto.ConsumableType_ConsumableTypeGuardianElixir,
+	20007: proto.ConsumableType_ConsumableTypeGuardianElixir, 250341: proto.ConsumableType_ConsumableTypeGuardianElixir,
+	// Armor elixirs
+	13445: proto.ConsumableType_ConsumableTypeDefenseElixir, 8951: proto.ConsumableType_ConsumableTypeDefenseElixir,
+	3389: proto.ConsumableType_ConsumableTypeDefenseElixir, 5997: proto.ConsumableType_ConsumableTypeDefenseElixir,
+	// School power elixirs
+	21546: proto.ConsumableType_ConsumableTypeSchoolElixir, 6373: proto.ConsumableType_ConsumableTypeSchoolElixir,
+	17708: proto.ConsumableType_ConsumableTypeSchoolElixir, 9264: proto.ConsumableType_ConsumableTypeSchoolElixir,
+	250343: proto.ConsumableType_ConsumableTypeSchoolElixir, // Forever's Elixir of Nature Power
+	// Strength: Juju Power, Elixir of Giants, Elixir of Ogre's Strength
+	12451: proto.ConsumableType_ConsumableTypeStrengthBuff, 9206: proto.ConsumableType_ConsumableTypeStrengthBuff,
+	3391: proto.ConsumableType_ConsumableTypeStrengthBuff,
+	// Attack power: Juju Might, Winterfall Firewater
+	12460: proto.ConsumableType_ConsumableTypeAttackPowerBuff, 12820: proto.ConsumableType_ConsumableTypeAttackPowerBuff,
+	// Blasted Lands and Zanza buffs
+	8410: proto.ConsumableType_ConsumableTypeZanza, 8412: proto.ConsumableType_ConsumableTypeZanza,
+	8423: proto.ConsumableType_ConsumableTypeZanza, 8424: proto.ConsumableType_ConsumableTypeZanza,
+	8411: proto.ConsumableType_ConsumableTypeZanza, 20079: proto.ConsumableType_ConsumableTypeZanza,
+	// Alcohol: Rumsey Rum Black Label/Dark/Light, Gordok Green Grog, Kreeg's Stout Beatdown
+	21151: proto.ConsumableType_ConsumableTypeAlcohol, 21114: proto.ConsumableType_ConsumableTypeAlcohol,
+	20709: proto.ConsumableType_ConsumableTypeAlcohol, 18269: proto.ConsumableType_ConsumableTypeAlcohol,
+	18284: proto.ConsumableType_ConsumableTypeAlcohol,
+}
 var ConsumableDenyList = []int32{}
 
 // Raid buffs / debuffs

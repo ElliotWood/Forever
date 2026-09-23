@@ -44,12 +44,15 @@ export const DefaultDebuffs = Debuffs.create({
 	curseOfElements: TristateEffect.TristateEffectRegular,
 });
 
-// Master's Juju Power/Might and Elixir of Firepower/Frost Power and Cerebral Cortex Compound
-// have no slot here (one battle and one guardian elixir).
+// Master's consumables, as the Forever client's items; one school elixir (Fire Power).
 export const DefaultConsumables = ConsumesSpec.create({
 	flaskId: 13512, // Flask of Supreme Power
-	battleElixirId: 13454, // Greater Arcane Elixir
+	spellPowerElixirId: 13454, // Greater Arcane Elixir
+	schoolElixirId: 6373, // Elixir of Fire Power
 	guardianElixirId: 20007, // Mageblood Elixir
+	strengthBuffId: 12451, // Juju Power
+	attackPowerBuffId: 12460, // Juju Might
+	zanzaId: 8423, // Cerebral Cortex Compound
 	foodId: 18254, // Runn Tum Tuber Surprise
 	potId: 13444, // Major Mana Potion
 	conjuredId: 12662, // Demonic Rune

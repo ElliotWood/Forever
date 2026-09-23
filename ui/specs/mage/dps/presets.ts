@@ -54,16 +54,18 @@ export const OtherDefaults = {
 	race: Race.RaceTroll,
 };
 
-// Master's consumables by item. One battle and one guardian elixir here, so master's Elixir of
-// Greater Firepower / Frost Power and Cerebral Cortex Compound have no slot.
+// Master's consumables, as the Forever client's items. Master's Greater Firepower is item 21546,
+// which the Forever client makes an Elixir of Holy Power; the Frost default takes Frost Power.
 export const DefaultConsumables = ConsumesSpec.create({
 	flaskId: 13512, // Flask of Supreme Power
-	battleElixirId: 13454, // Greater Arcane Elixir
+	spellPowerElixirId: 13454, // Greater Arcane Elixir
+	schoolElixirId: 17708, // Elixir of Frost Power
 	guardianElixirId: 20007, // Mageblood Elixir
+	zanzaId: 8423, // Cerebral Cortex Compound
 	foodId: 18254, // Runn Tum Tuber Surprise
-	mhImbueId: 20749, // Brilliant Wizard Oil
 	potId: 13444, // Major Mana Potion
 	conjuredId: 12662, // Demonic Rune
+	mhImbueId: 20749, // Brilliant Wizard Oil
 });
 
 export const DefaultRaidBuffs = RaidBuffs.create({

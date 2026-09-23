@@ -605,6 +605,15 @@ message ConsumesSpec {
 	repeated int32 potions = 22;
 	// Contains all available conjured items
 	repeated int32 conjured_items = 23;
+	// Classic buffs that stack beside the battle and guardian elixirs (master's Consumes categories).
+	int32 strength_buff_id = 26;
+	int32 attack_power_buff_id = 27;
+	int32 zanza_id = 28;
+	int32 alcohol_id = 29;
+	int32 school_elixir_id = 30;
+	int32 defense_elixir_id = 31;
+	bool dragonbreath_chili = 32;
+	int32 spell_power_elixir_id = 33;
 }
 
 enum MobType {
@@ -753,6 +762,13 @@ enum ConsumableType {
 	ConsumableTypePetFood = 9;
 	ConsumableTypeOther = 10;
 	ConsumableTypeHerb = 11;
+	ConsumableTypeStrengthBuff = 12;
+	ConsumableTypeAttackPowerBuff = 13;
+	ConsumableTypeZanza = 14;
+	ConsumableTypeAlcohol = 15;
+	ConsumableTypeSchoolElixir = 16;
+	ConsumableTypeDefenseElixir = 17;
+	ConsumableTypeSpellPowerElixir = 18;
 }
 
 

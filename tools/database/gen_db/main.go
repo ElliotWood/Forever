@@ -524,7 +524,7 @@ func ApplyGlobalFilters(db *database.WowDatabase) {
 	})
 
 	db.Consumables = core.FilterMap(db.Consumables, func(_ int32, consumable *proto.Consumable) bool {
-		if slices.Contains(database.ConsumableAllowList, consumable.Id) {
+		if _, classic := database.ClassicConsumableTypes[consumable.Id]; classic || slices.Contains(database.ConsumableAllowList, consumable.Id) {
 			return true
 		}
 		if slices.Contains(database.ConsumableDenyList, consumable.Id) {

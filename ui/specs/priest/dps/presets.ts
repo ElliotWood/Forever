@@ -30,12 +30,14 @@ export const DefaultOptions = Options.create({
 
 export const ShadowConsumables = ConsumesSpec.create({
 	flaskId: 13512, // Flask of Supreme Power
-	battleElixirId: 13454, // Greater Arcane Elixir
+	spellPowerElixirId: 13454, // Greater Arcane Elixir
+	schoolElixirId: 9264, // Elixir of Shadow Power
 	guardianElixirId: 20007, // Mageblood Elixir
+	zanzaId: 8423, // Cerebral Cortex Compound
 	foodId: 18254, // Runn Tum Tuber Surprise
-	mhImbueId: 20749, // Brilliant Wizard Oil
 	potId: 13444, // Major Mana Potion
 	conjuredId: 12662, // Demonic Rune
+	mhImbueId: 20749, // Brilliant Wizard Oil
 });
 export const SmiteConsumables = ShadowConsumables;
 

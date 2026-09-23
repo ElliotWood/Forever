@@ -58,11 +58,17 @@ export const DefaultDebuffs = Debuffs.create({
 	sunderArmor: true,
 });
 
-// Master's Juju Power/Might, Dragonbreath Chili, Ground Scorpok Assay and Windfury have no slot here.
+// Master's consumables, as the Forever client's items; Windfury is a totem here, not an imbue.
 export const DefaultConsumables = ConsumesSpec.create({
 	flaskId: 13512, // Flask of Supreme Power
 	battleElixirId: 13452, // Elixir of the Mongoose
+	spellPowerElixirId: 13454, // Greater Arcane Elixir
 	guardianElixirId: 20007, // Mageblood Elixir
+	strengthBuffId: 12451, // Juju Power
+	attackPowerBuffId: 12460, // Juju Might
+	zanzaId: 8412, // Ground Scorpok Assay
+	alcoholId: 21151, // Rumsey Rum Black Label
+	dragonbreathChili: true,
 	foodId: 20452, // Smoked Desert Dumplings
 	potId: 13444, // Major Mana Potion
 	conjuredId: 12662, // Demonic Rune

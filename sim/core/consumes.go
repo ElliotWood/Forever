@@ -92,6 +92,18 @@ func applyConsumeEffects(agent Agent, partyBuffs *proto.PartyBuffs) {
 		character.AddStats(food.Stats)
 	}
 
+	// Classic buffs that stack beside the elixirs: jujus, Blasted Lands/Zanza, alcohol, the
+	// school power and armor elixirs. Their stats come from the client like every other consumable.
+	for _, id := range []int32{consumables.StrengthBuffId, consumables.AttackPowerBuffId, consumables.ZanzaId,
+		consumables.AlcoholId, consumables.SpellPowerElixirId, consumables.SchoolElixirId, consumables.DefenseElixirId} {
+		if id != 0 {
+			character.AddStats(GetConsumableByID(id).Stats)
+		}
+	}
+	if consumables.DragonbreathChili {
+		registerDragonbreathChili(character)
+	}
+
 	// Static Imbues
 	if consumables.MhImbueId != 0 && partyBuffs.WindfuryTotem == proto.TristateEffect_TristateEffectMissing {
 		registerStaticImbue(agent, consumables.MhImbueId)
@@ -152,6 +164,38 @@ func applyConsumeEffects(agent Agent, partyBuffs *proto.PartyBuffs) {
 	registerConjuredCD(agent, consumables)
 	registerExplosivesCD(agent, consumables, drumsBombsSharedTimer)
 	registerDrumsCD(agent, consumables, drumsBombsSharedTimer)
+}
+
+// Dragonbreath Chili (12217): its aura (15852) has a 5% chance, 10 s cooldown, on landed melee
+// hits to cast 15851, 65 Fire damage (+-12.3%, SP coefficient 1) on every enemy - all client values.
+func registerDragonbreathChili(character *Character) {
+	procSpell := character.RegisterSpell(SpellConfig{
+		ActionID:         ActionID{SpellID: 15851},
+		SpellSchool:      SpellSchoolFire,
+		DefenseType:      DefenseTypeMagic,
+		ProcMask:         ProcMaskSpellDamageProc,
+		Flags:            SpellFlagNoOnCastComplete | SpellFlagPassiveSpell,
+		DamageMultiplier: 1,
+		ThreatMultiplier: 1,
+		BonusCoefficient: 1,
+		ApplyEffects: func(sim *Simulation, _ *Unit, spell *Spell) {
+			for _, aoeTarget := range sim.Encounter.ActiveTargetUnits {
+				spell.CalcAndDealDamage(sim, aoeTarget, sim.Roll(57, 73), spell.OutcomeMagicHitAndCrit)
+			}
+		},
+	})
+	character.MakeProcTriggerAura(ProcTrigger{
+		Name:       "Dragonbreath Chili",
+		ActionID:   ActionID{SpellID: 15852},
+		Callback:   CallbackOnSpellHitDealt,
+		ProcMask:   ProcMaskMelee,
+		Outcome:    OutcomeLanded,
+		ProcChance: 0.05,
+		ICD:        time.Second * 10,
+		Handler: func(sim *Simulation, _ *Spell, result *SpellResult) {
+			procSpell.Cast(sim, result.Target)
+		},
+	})
 }
 
 var PotionAuraTag = "Potion"
@@ -666,6 +710,7 @@ func (character *Character) newFelIronBombSpell(sharedTimer *Timer) *Spell {
 func (character *Character) newCrystalChargeSpell(sharedTimer *Timer) *Spell {
 	return character.GetOrRegisterSpell(character.newBasicExplosiveSpellConfig(sharedTimer, CrystalChargeActionID, SpellSchoolFire, 383, 517, 0, 0, Cooldown{}))
 }
+
 // Dense Dynamite (item 18641, spell 23063): 400 Fire, variance 0.3 (340-460), 1s cast, missile speed 14.
 func (character *Character) newDenseDynamiteSpell(sharedTimer *Timer) *Spell {
 	return character.GetOrRegisterSpell(character.newBasicExplosiveSpellConfig(sharedTimer, DenseDynamiteActionID, SpellSchoolFire, 340, 460, 14, time.Second, Cooldown{}))

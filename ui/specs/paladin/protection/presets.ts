@@ -25,13 +25,19 @@ export const DefaultOptions = ProtectionPaladinOptions.create({
 
 // Defaults below are what master's ui/protection_paladin opens with (currentSettings on a fresh
 // profile); its raid-wide Battle Shout is a party buff here, its personal Blessing of Sanctuary
-// the individual one. Juju Power/Might, R.O.I.D.S., Dragonbreath Chili, Rumsey Rum, Greater Arcane
-// Elixir and Elixir of Fortitude have no slot here; Tender Wolf Steak, Greater Stoneshield, Superior
-// Defense are not in this db.
+// the individual one. Master's Greater Firepower (21546) is Forever's Elixir of Holy Power.
 export const DefaultConsumables = ConsumesSpec.create({
 	flaskId: 13510, // Flask of the Titans
 	battleElixirId: 13452, // Elixir of the Mongoose
-	guardianElixirId: 13445, // Elixir of Superior Defense
+	spellPowerElixirId: 13454, // Greater Arcane Elixir
+	schoolElixirId: 21546, // Elixir of Holy Power
+	guardianElixirId: 3825, // Elixir of Lesser Fortitude
+	defenseElixirId: 13445, // Elixir of Greater Defense
+	strengthBuffId: 12451, // Juju Power
+	attackPowerBuffId: 12460, // Juju Might
+	zanzaId: 8410, // R.O.I.D.S.
+	alcoholId: 21151, // Rumsey Rum Black Label
+	dragonbreathChili: true,
 	foodId: 18045, // Tender Wolf Steak
 	potId: 13455, // Greater Stoneshield Potion
 	conjuredId: 12662, // Demonic Rune

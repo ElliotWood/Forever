@@ -46,11 +46,12 @@ export const DefaultDebuffs = Debuffs.create({
 
 export const DefaultConsumables = ConsumesSpec.create({
 	flaskId: 13512, // Flask of Supreme Power
-	battleElixirId: 13454, // Greater Arcane Elixir
+	spellPowerElixirId: 13454, // Greater Arcane Elixir
 	guardianElixirId: 20007, // Mageblood Elixir
+	zanzaId: 8423, // Cerebral Cortex Compound
 	foodId: 18254, // Runn Tum Tuber Surprise
-	mhImbueId: 20749, // Brilliant Wizard Oil
 	potId: 13444, // Major Mana Potion
+	mhImbueId: 20749, // Brilliant Wizard Oil
 });
 
 export const OtherDefaults = {
