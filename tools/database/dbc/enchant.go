@@ -121,13 +121,12 @@ func (enchant *Enchant) ToProto() *proto.UIEnchant {
 		if enchant.SubClassMask == ITEM_SUBCLASS_BIT_WEAPON_STAFF {
 			// Staff only.
 			uiEnchant.EnchantType = proto.EnchantType_EnchantTypeStaff
+		} else if enchant.SubClassMask != 0 && enchant.SubClassMask&^allTwoHandMask == 0 {
+			// Two-handed weapons only, whichever of them the mask names.
+			uiEnchant.EnchantType = proto.EnchantType_EnchantTypeTwoHand
 		}
 		if enchant.SubClassMask == rangedMask {
 			uiEnchant.Type = proto.ItemType_ItemTypeRanged
-		}
-		if enchant.SubClassMask == allTwoHandMask || enchant.SubClassMask == twoHandNoSpearMask {
-			// Two-handed weapon.
-			uiEnchant.EnchantType = proto.EnchantType_EnchantTypeTwoHand
 		}
 	} else {
 		// Process non-weapon enchants.

@@ -130,12 +130,35 @@ func TestEnchantSlot(t *testing.T) {
 		{7659, "Enchant Off-Hand - Superior Intellect", proto.ItemType_ItemTypeWeapon, proto.EnchantType_EnchantTypeOffHand},
 		{7660, "Enchant Off-Hand - Excellent Spirit", proto.ItemType_ItemTypeWeapon, proto.EnchantType_EnchantTypeOffHand},
 		{7661, "Enchant Off-Hand - Wisdom", proto.ItemType_ItemTypeWeapon, proto.EnchantType_EnchantTypeOffHand},
+		{34, "Weapon Counterweight", proto.ItemType_ItemTypeWeapon, proto.EnchantType_EnchantTypeTwoHand},
+		{963, "Enchant 2H Weapon - Greater Impact", proto.ItemType_ItemTypeWeapon, proto.EnchantType_EnchantTypeTwoHand},
+		{1897, "Enchant Weapon - Superior Striking", proto.ItemType_ItemTypeWeapon, proto.EnchantType_EnchantTypeNormal},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			enchant := enchantByName(t, tc.effectID, tc.name)
 			if enchant.Type != tc.itemType || enchant.EnchantType != tc.enchantType || len(enchant.ExtraTypes) != 0 {
 				t.Errorf("type %v, enchant type %v, extra types %v; want %v, %v, none",
 					enchant.Type, enchant.EnchantType, enchant.ExtraTypes, tc.itemType, tc.enchantType)
+			}
+		})
+	}
+}
+
+func TestWeaponEnchantSubclassType(t *testing.T) {
+	for _, tc := range []struct {
+		name         string
+		subClassMask int
+		want         proto.EnchantType
+	}{
+		{"staff alone", dbc.ITEM_SUBCLASS_BIT_WEAPON_STAFF, proto.EnchantType_EnchantTypeStaff},
+		{"two-hand axe, mace, polearm and sword", 354, proto.EnchantType_EnchantTypeTwoHand},
+		{"two-hand sword and one-hand sword", dbc.ITEM_SUBCLASS_BIT_WEAPON_SWORD_2H | dbc.ITEM_SUBCLASS_BIT_WEAPON_SWORD_1H, proto.EnchantType_EnchantTypeNormal},
+		{"any weapon", 0, proto.EnchantType_EnchantTypeNormal},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			enchant := dbc.Enchant{IsWeaponEnchant: true, SubClassMask: tc.subClassMask}
+			if got := enchant.ToProto().EnchantType; got != tc.want {
+				t.Errorf("enchant type %v, want %v", got, tc.want)
 			}
 		})
 	}
