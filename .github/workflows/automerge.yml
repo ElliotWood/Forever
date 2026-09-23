@@ -27,6 +27,11 @@ jobs:
                   pr=$(gh pr list --head "$BRANCH" --base master --state open --json number,headRefOid,labels \
                     --jq ".[] | select(.headRefOid == \"$SHA\") | select([.labels[].name] | index(\"hold\") | not) | .number")
                   [ -z "$pr" ] && { echo "nothing to merge (closed, newer commit, or on hold)"; exit 0; }
-                  gh pr merge "$pr" --squash --delete-branch --match-head-commit "$SHA"
-                  # A GITHUB_TOKEN merge does not fire push workflows, so start the deploy by hand.
+                  # upstream-merge/* carries shared history with wowsims/forever; squashing it defeats the point.
+                  method=--squash
+                  [[ "$BRANCH" == upstream-merge/* ]] && method=--merge
+                  gh pr merge "$pr" "$method" --delete-branch --match-head-commit "$SHA"
+                  # A GITHUB_TOKEN merge fires neither push nor pull_request workflows, so start the
+                  # deploy and the changelog by hand.
                   gh workflow run deploy.yml --ref master
+                  gh workflow run update_changelog.yml --ref master
