@@ -168,17 +168,20 @@ func (r *ProcRouting) asDamage(damageSpellID int32) {
 func (r *ProcRouting) asHeal(healSpellID int32) {
 	r.Heal = true
 	r.BuffSpellID = int(healSpellID)
+	r.Unsupported = append(r.Unsupported, healUnsupported(spelldata.Find(healSpellID))...)
+	r.Summary = procSummary(r.TriggerSpellID, spelldata.Find(int32(r.TriggerSpellID)), r.BuffSpellID)
+}
 
-	heal := spelldata.Find(healSpellID)
+func healUnsupported(heal *spelldata.Spell) []string {
+	var unsupported []string
 	effect := heal.ProcHealEffect()
 	if effect.Target[0] != dbcenums.TARGET_UNIT_CASTER {
-		r.Unsupported = append(r.Unsupported, fmt.Sprintf("the heal lands on implicit target %d, not the wearer", effect.Target[0]))
+		unsupported = append(unsupported, fmt.Sprintf("the heal lands on implicit target %d, not the wearer", effect.Target[0]))
 	}
 	if effect.Aura == dbcenums.A_PERIODIC_HEAL && (effect.PeriodMs <= 0 || heal.DurationMs <= 0) {
-		r.Unsupported = append(r.Unsupported, "the heal over time states no period or no duration to tick over")
+		unsupported = append(unsupported, "the heal over time states no period or no duration to tick over")
 	}
-
-	r.Summary = procSummary(r.TriggerSpellID, spelldata.Find(int32(r.TriggerSpellID)), r.BuffSpellID)
+	return unsupported
 }
 
 // The heal spell a proc casts: the spell itself, or one it triggers.
@@ -937,11 +940,16 @@ func parseOnUseSpell(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instanc
 		Proc:        routing,
 		Supported:   routing.Supported(),
 		DealsDamage: routing.Damage,
+		Heals:       routing.Heal,
 	}
 
 	groupName := ""
-	if entry.Supported {
+	switch {
+	case !entry.Supported:
+	case routing.Damage:
 		groupName = "Damage"
+	case routing.Heal:
+		groupName = "Heals"
 	}
 	grp := groupMap[groupName]
 	grp.Name = groupName
@@ -963,12 +971,13 @@ func parseOnUseSpell(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instanc
 }
 
 // The spell an on-use casts, read from the store the way the sim reads it: damage on the enemy it is
-// used on. What else the row does - a root, a stun - is left out, and the summary names it.
+// used on, or a heal on the wearer. What else the row does - a root, a stun - is left out, and the
+// summary names it.
 func routeOnUse(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instance *dbc.DBC) *ProcRouting {
 	spellID := int(itemEffect.BuffId)
 	routing := &ProcRouting{TriggerSpellID: spellID}
 	s := spelldata.Find(itemEffect.BuffId)
-	direct, periodic := s.DamageEffect(), s.PeriodicDamageEffect()
+	direct, periodic, heal := s.DamageEffect(), s.PeriodicDamageEffect(), s.ProcHealEffect()
 
 	switch {
 	case !castsOnUse(parsed, spellID, instance):
@@ -989,9 +998,13 @@ func routeOnUse(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instance *db
 		if periodic != spelldata.NilEffect && (periodic.PeriodMs <= 0 || s.DurationMs <= 0) {
 			routing.Unsupported = append(routing.Unsupported, "the damage over time states no period or no duration to tick over")
 		}
+	case heal != spelldata.NilEffect:
+		routing.Heal = true
+		routing.Summary = onUseSummary(s, heal)
+		routing.Unsupported = append(routing.Unsupported, healUnsupported(s)...)
 	default:
 		routing.Unsupported = append(routing.Unsupported,
-			fmt.Sprintf("%d deals no damage (%s)", spellID, spellEffectKinds(instance, spellID)))
+			fmt.Sprintf("%d deals no damage and heals no one (%s)", spellID, spellEffectKinds(instance, spellID)))
 	}
 
 	return routing
@@ -1041,13 +1054,17 @@ func itemEffectTooltip(parsed *proto.UIItem, itemEffect *proto.ItemEffect, insta
 	return instance.Spells[int(itemEffect.BuffId)].NameLang
 }
 
-// The constructor an on-use routed from its spell registers through. A refused one that deals no
-// damage names the stat constructor in its commented call.
+// The constructor an on-use routed from its spell registers through. A refused one that is neither
+// damage nor a heal names the stat constructor in its commented call.
 func (r *ProcRouting) OnUseConstructor() string {
-	if r.Damage {
+	switch {
+	case r.Damage:
 		return "NewSpellDataDamageOnUse"
+	case r.Heal:
+		return "NewSpellDataHealOnUse"
+	default:
+		return "NewSimpleStatActive"
 	}
-	return "NewSimpleStatActive"
 }
 
 func TryParseEnchantEffect(enchant *proto.UIEnchant, slots []dbc.EnchantProcSlot, groupMapProc map[string]Group, instance *dbc.DBC, enchantSpellEffects map[int]*dbc.SpellEffect) EffectParseResult {

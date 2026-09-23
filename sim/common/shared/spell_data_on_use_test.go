@@ -172,6 +172,50 @@ func offCooldown(sim *core.Simulation, spell *core.Spell) bool {
 	return core.BothTimersReady(spell.CD.Timer, spell.SharedCD.Timer, sim)
 }
 
+// Gem-studded Leather Belt 4262's on-use, 9163, heals the wearer for 300 with a 0.5 spread.
+func TestOnUseHealsTheWearer(t *testing.T) {
+	const itemID int32 = 991005
+	const heal int32 = 9163
+	sim, caster := newOnUseSim(t, NewSpellDataHealOnUse, map[int32]*proto.ItemEffect{itemID: testOnUse(heal, 300000, 0, 0)})
+	spell := onUseSpell(t, caster, itemID)
+
+	if got := caster.GetInitialMajorCooldown(spell.ActionID); !got.Type.Matches(core.CooldownTypeSurvival) || !spell.Flags.Matches(core.SpellFlagHelpful) {
+		t.Errorf("the heal is a major cooldown of type %v, helpful %v; want a survival one cast on the wearer",
+			got.Type, spell.Flags.Matches(core.SpellFlagHelpful))
+	}
+
+	effect := spelldata.MustFind(heal).ProcHealEffect()
+	before := caster.CurrentHealth()
+	spell.Cast(sim, &caster.Unit)
+	if got, low, high := caster.CurrentHealth()-before, effect.Min(caster.Level), effect.Max(caster.Level); got < low || got > high {
+		t.Errorf("the heal was %v, want %v to %v", got, low, high)
+	}
+	if offCooldown(sim, spell) {
+		t.Errorf("the heal could be used again inside its 5 min cooldown")
+	}
+}
+
+// Furbolg Medicine Pouch 16768's on-use, 20631, heals the wearer 100 every 1 s for 10 s.
+func TestOnUseHotHealsTheWearerOverTime(t *testing.T) {
+	const itemID int32 = 991006
+	sim, caster := newOnUseSim(t, NewSpellDataHealOnUse, map[int32]*proto.ItemEffect{itemID: testOnUse(20631, 1200000, 0, 0)})
+	spell := onUseSpell(t, caster, itemID)
+
+	spell.Cast(sim, &caster.Unit)
+	start := sim.CurrentTime
+	for tick := 1; tick <= 10; tick++ {
+		if got := healedUntil(t, sim, caster, start, time.Duration(tick)*time.Second); got != 100 {
+			t.Errorf("tick %d healed %v, want 100", tick, got)
+		}
+	}
+	if spell.SelfHot().IsActive() {
+		t.Errorf("the heal over time is still up after its 10 s")
+	}
+	if got := spell.SpellMetrics[caster.UnitIndex].TotalHealing; got != 1000 {
+		t.Errorf("healing metrics = %v, want the ten ticks' 1000", got)
+	}
+}
+
 // Helm of Fire 8348's on-use, 10578, deals 331 with a spread and applies 33 every 2 s for 8 s with it.
 func TestOnUseDealsItsDirectDamageAndItsDamageOverTime(t *testing.T) {
 	const itemID int32 = 991007

@@ -1015,6 +1015,11 @@ func NewSpellDataDamageOnUse(itemID int32) {
 	registerSpellDataOnUse(itemID, core.CooldownTypeDPS, spellDataProcDamageSpell)
 }
 
+// An on-use item whose spell heals the wearer, at once or over time.
+func NewSpellDataHealOnUse(itemID int32) {
+	registerSpellDataOnUse(itemID, core.CooldownTypeSurvival, spellDataProcHealSpell)
+}
+
 // The spell a proc of the same row would cast, used from the item instead: it is the item's action,
 // counts its casts, and runs on the item's cooldowns rather than the row's.
 func registerSpellDataOnUse(itemID int32, cdType core.CooldownType, spellConfig func(*core.Character, *spelldata.Spell) core.SpellConfig) {

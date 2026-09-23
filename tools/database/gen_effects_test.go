@@ -61,8 +61,9 @@ func TestChanceOnHitHotRoutesAsAHealAndStatesNoRate(t *testing.T) {
 	}
 }
 
-// An on-use with no stats routes from the spell it casts: damage on the enemy it is used on
-// registers, a spell that deals none is refused with the reason and listed.
+// An on-use with no stats routes from the spell it casts: damage on the enemy it is used on or a heal
+// on the wearer registers, a heal on anyone else or a spell that does neither is refused with the
+// reason and listed.
 func TestOnUseRoutesFromTheSpellItCasts(t *testing.T) {
 	inRepositoryRoot(t)
 	instance := dbc.GetDBC()
@@ -76,8 +77,13 @@ func TestOnUseRoutesFromTheSpellItCasts(t *testing.T) {
 		reasons []string
 	}{
 		{219345, 443265, EffectParseResultSuccess, true, false, nil}, // Infernal Lasso: A_PERIODIC_DAMAGE, and a root it leaves out
+		{16768, 20631, EffectParseResultSuccess, false, true, nil},   // Furbolg Medicine Pouch: A_PERIODIC_HEAL on the wearer
+		{18637, 23064, EffectParseResultRefused, false, true,
+			[]string{"the heal lands on implicit target 21, not the wearer"}}, // Major Recombobulator
+		{14153, 18386, EffectParseResultRefused, false, true,
+			[]string{"the heal lands on implicit target 5, not the wearer"}}, // Robe of the Void, on the pet
 		{7734, 14537, EffectParseResultRefused, false, false,
-			[]string{"14537 deals no damage (E_DUMMY)"}}, // Six Demon Bag
+			[]string{"14537 deals no damage and heals no one (E_DUMMY)"}}, // Six Demon Bag
 	} {
 		item := instance.Items[tc.itemID]
 		parsed := item.ToUIItem()
