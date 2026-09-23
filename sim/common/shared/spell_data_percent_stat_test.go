@@ -1,0 +1,173 @@
+package shared
+
+import (
+	"testing"
+	"time"
+
+	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/simsignals"
+	"github.com/wowsims/forever/sim/core/spelldata"
+	"github.com/wowsims/forever/sim/core/stats"
+)
+
+const (
+	insightWeaponID  int32 = 990951
+	insightEnchantID int32 = 990952
+	testBoltID       int32 = 990953
+)
+
+func init() {
+	core.RegisterAgentFactory(
+		proto.Player_ElementalShaman{},
+		proto.Spec_SpecElementalShaman,
+		func(character *core.Character, _ *proto.Player, _ *proto.Raid) core.Agent {
+			return &testCaster{Character: *character}
+		},
+		func(player *proto.Player, spec interface{}) {
+			player.Spec = spec.(*proto.Player_ElementalShaman)
+		},
+	)
+}
+
+type testCaster struct {
+	core.Character
+	bolt *core.Spell
+}
+
+func (c *testCaster) GetCharacter() *core.Character       { return &c.Character }
+func (c *testCaster) ApplyTalents()                       {}
+func (c *testCaster) Reset(_ *core.Simulation)            {}
+func (c *testCaster) OnGCDReady(_ *core.Simulation)       {}
+func (c *testCaster) OnEncounterStart(_ *core.Simulation) {}
+
+func (c *testCaster) Initialize() {
+	c.bolt = c.RegisterSpell(core.SpellConfig{
+		ActionID:         core.ActionID{SpellID: testBoltID},
+		SpellSchool:      core.SpellSchoolArcane,
+		ProcMask:         core.ProcMaskSpellDamage,
+		DamageMultiplier: 1,
+		ThreatMultiplier: 1,
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			spell.CalcAndDealDamage(sim, target, 100, spell.OutcomeAlwaysHit)
+		},
+	})
+}
+
+// Insight 8216's rows on a weapon enchant: trigger 1248758 hears spell damage and heals at 35% with a
+// 45 s lockout, and its buff 1299796 doubles Spirit for 10 s, on top of whatever Spirit the caster
+// gains while it is up.
+func TestInsightMultipliesSpirit(t *testing.T) {
+	weapon := testOneHander(insightWeaponID)
+	core.AddToDatabase(&proto.SimDatabase{
+		Items: []*proto.SimItem{weapon},
+		Enchants: []*proto.SimEnchant{{EffectId: insightEnchantID, Name: "Test Insight",
+			Type: proto.ItemType_ItemTypeWeapon}},
+	})
+	registerSpellDataProc(SpellDataProc{Name: "Test Insight", EnchantID: insightEnchantID,
+		TriggerSpellID: 1248758, BuffSpellID: 1299796})
+
+	cfg := SpellDataProc{Name: "Test Insight", EnchantID: insightEnchantID, TriggerSpellID: 1248758,
+		BuffSpellID: 1299796}
+	listener := spellDataTrigger(newTestAgent().character, cfg, cfg.effectSource(),
+		spelldata.MustFind(1248758), spelldata.MustFind(1299796), nil, nil)
+	if want := core.CallbackOnSpellHitDealt | core.CallbackOnHealDealt; listener.Callback != want {
+		t.Errorf("callback = %v, want %v", listener.Callback, want)
+	}
+	if want := core.ProcMaskSpellDamage | core.ProcMaskSpellHealing; listener.ProcMask != want {
+		t.Errorf("proc mask = %v, want %v", listener.ProcMask, want)
+	}
+	if listener.ProcChance != 0.35 || listener.DPM != nil {
+		t.Errorf("chance = %v with manager %v, want a stated 0.35 and no rate", listener.ProcChance, listener.DPM)
+	}
+
+	items := make([]*proto.ItemSpec, proto.ItemSlot_ItemSlotMainHand+1)
+	for i := range items {
+		items[i] = &proto.ItemSpec{}
+	}
+	items[proto.ItemSlot_ItemSlotMainHand] = &proto.ItemSpec{Id: insightWeaponID, Enchant: insightEnchantID}
+
+	sim := core.NewSim(&proto.RaidSimRequest{
+		SimOptions: &proto.SimOptions{RandomSeed: 1},
+		Raid: &proto.Raid{Parties: []*proto.Party{{
+			Players: []*proto.Player{{
+				Name:      "Caster",
+				Class:     proto.Class_ClassShaman,
+				Race:      proto.Race_RaceTroll,
+				Buffs:     &proto.IndividualBuffs{},
+				Spec:      &proto.Player_ElementalShaman{},
+				Equipment: &proto.EquipmentSpec{Items: items},
+			}},
+			Buffs: &proto.PartyBuffs{},
+		}}},
+		Encounter: &proto.Encounter{
+			Targets:  []*proto.Target{{Name: "target", Level: 60, MobType: proto.MobType_MobTypeDemon}},
+			Duration: 180,
+		},
+	}, simsignals.CreateSignals())
+	sim.Reset()
+
+	caster := sim.Raid.Parties[0].Players[0].(*testCaster)
+	target := sim.Encounter.ActiveTargetUnits[0]
+	insight := caster.GetAura("Test Insight Proc")
+	if insight == nil {
+		t.Fatal("no Insight buff on the caster")
+	}
+	if insight.Duration != 10*time.Second {
+		t.Errorf("buff duration = %v, want 1299796's 10s", insight.Duration)
+	}
+
+	var heard []stats.Stats
+	caster.OnTemporaryStatsChanges = append(caster.OnTemporaryStatsChanges, func(_ *core.Simulation, aura *core.Aura, change stats.Stats) {
+		if aura == insight {
+			heard = append(heard, change)
+		}
+	})
+
+	spirit := caster.GetStat(stats.Spirit)
+	if spirit <= 0 {
+		t.Fatalf("Spirit is %v before Insight, nothing for 100%% to show on", spirit)
+	}
+
+	// A proc's handler runs one spell batch window after the hit, so each cast is followed by a step.
+	castAndStep := func() {
+		caster.bolt.Cast(sim, target)
+		sim.Step()
+	}
+
+	casts := 0
+	for !insight.IsActive() {
+		if casts++; casts > 100 {
+			t.Fatal("100 spell hits and Insight never procced")
+		}
+		castAndStep()
+	}
+	procTime := sim.CurrentTime
+	if got := caster.GetStat(stats.Spirit); got != 2*spirit {
+		t.Errorf("Spirit with Insight = %v, want twice %v", got, spirit)
+	}
+
+	caster.AddStatsDynamic(sim, stats.Stats{stats.Spirit: 50})
+	if got := caster.GetStat(stats.Spirit); got != 2*(spirit+50) {
+		t.Errorf("Spirit with Insight after 50 more = %v, want twice %v", got, spirit+50)
+	}
+	caster.AddStatsDynamic(sim, stats.Stats{stats.Spirit: -50})
+
+	insight.Deactivate(sim)
+	if got := caster.GetStat(stats.Spirit); got != spirit {
+		t.Errorf("Spirit after Insight = %v, want %v", got, spirit)
+	}
+	if len(heard) != 2 || heard[0][stats.Spirit] != spirit || heard[1][stats.Spirit] != -spirit {
+		t.Errorf("temporary stats heard %v, want +%v Spirit on gain and -%v on expire", heard, spirit, spirit)
+	}
+
+	for range 100 {
+		castAndStep()
+	}
+	if sim.CurrentTime-procTime >= 45*time.Second {
+		t.Fatalf("the casts ran %v past the proc, not inside the lockout", sim.CurrentTime-procTime)
+	}
+	if insight.IsActive() {
+		t.Error("Insight procced again inside its 45s lockout")
+	}
+}

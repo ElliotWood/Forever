@@ -2854,12 +2854,6 @@ export const MISSING_ENCHANT_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
-		8216, // Enchant Weapon - Insight
-		[
-			"Permanently enchant a Melee Weapon to have a chance to grant Insight when you cast a spell, increasing Spirit by 100% for 10s.", // 1248758 - https://www.wowhead.com/forever/spell=1248758
-		]
-	],
-	[
 		8217, // Enchant Weapon - Revelation
 		[
 			"Permanently enchant a Melee Weapon to have a chance to trigger Revelation when a non-periodic spell fails to critically strike. Revelation grants 100% increased critical strike chance to the next spell cast. Revelation's chance to trigger is diminished as your critical strike chance increases.", // 1248806 - https://www.wowhead.com/forever/spell=1248806

@@ -533,6 +533,13 @@ the sim's item level scaling lives. `IsWeaponProc` states the one shape no row d
 casts a chance-on-hit effect off the weapon's hit without consulting a proc mask, and there the 100/101
 sentinel is never a rate.
 
+A buff the client states as a percentage of a stat (`A_MOD_PERCENT_STAT`, misc the stat index, -1 all
+five) has no effect entry, which carries flat stats only. `spelldata.PercentStats` reads the multipliers
+off the buff's row, and the buff multiplies the stat through a dynamic stat dependency, reporting what
+it adds and removes to the temporary stats listeners: Insight 8216's 1299796 doubles Spirit for 10 s.
+The generator routes an enchant slot to it. An item effect with no flat stats is dropped before the
+generator routes it, so an item proc of this shape is not emitted; the client has none.
+
 An enchant's procs are read one per slot of its `SpellItemEnchantment` row that casts a combat spell
 (Effect 1) or hangs an equip aura off a hit (Effect 3), and at most one of them registers. A combat spell's chance, where the client states
 one, is on the enchantment rather than on the spell - `EffectPointsMin`, Fiery Blaze's 15 - and

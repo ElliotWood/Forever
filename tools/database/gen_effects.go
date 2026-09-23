@@ -935,12 +935,25 @@ func statesNoRate(routing *ProcRouting) bool {
 }
 
 // One slot's proc. The trigger is the slot's spell; the buff is what the shipped entry says it
-// applies, where it resolves stats, and otherwise the spell it deals damage through.
+// applies, where it resolves stats, the spell the slot applies where that multiplies stats, and
+// otherwise the spell it deals damage through.
 func routeEnchantSlot(slot dbc.EnchantProcSlot, instance *dbc.DBC, grantTooltip string) *ProcRouting {
+	applied := slot.AppliesSpellID
+	if applied == 0 {
+		applied = slot.SpellID
+	}
+
+	// A buff stated as a percentage of a stat resolves no flat stats: the sim reads the multipliers
+	// off the buff's own row.
 	effect, hasStats := dbc.EnchantSlotEffect(slot.SpellID)
+	multipliesStats := !hasStats && len(spelldata.PercentStats(spelldata.Find(int32(applied)), 0)) > 0
+
 	buffSpellID := slot.SpellID
-	if hasStats {
+	switch {
+	case hasStats:
 		buffSpellID = int(effect.BuffId)
+	case multipliesStats:
+		buffSpellID = applied
 	}
 
 	routing := routeProc(slot.SpellID, buffSpellID, slot.IsCombatSpell)
@@ -953,7 +966,7 @@ func routeEnchantSlot(slot dbc.EnchantProcSlot, instance *dbc.DBC, grantTooltip 
 
 	damage := dbc.ResolveDamageEffect(slot.SpellID)
 	switch {
-	case hasStats:
+	case hasStats, multipliesStats:
 		routing.requireABuffDuration()
 	case damage != nil:
 		routing.asDamage(int32(damage.SpellID))
@@ -962,10 +975,6 @@ func routeEnchantSlot(slot dbc.EnchantProcSlot, instance *dbc.DBC, grantTooltip 
 				fmt.Sprintf("the damage spell hits %s (TargetCreatureType %d) only", creatureTypeNames(mask), mask))
 		}
 	default:
-		applied := slot.AppliesSpellID
-		if applied == 0 {
-			applied = slot.SpellID
-		}
 		routing.Unsupported = append(routing.Unsupported,
 			fmt.Sprintf("the enchant's effect entry resolves no stats from %d (%s)", applied, spellEffectKinds(instance, applied)))
 	}

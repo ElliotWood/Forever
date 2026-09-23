@@ -260,21 +260,6 @@ func RegisterAllEnchants() {
 	//       This can be ignored if the effect has already been implemented.
 	//       With next db run the item will be removed if implemented.
 	//
-	// Permanently enchant a Melee Weapon to have a chance to grant Insight when you cast a spell, increasing
-	// Spirit by 100% for 10s.
-	// https://www.wowhead.com/forever/spell=1248757
-	// unsupported: the enchant's effect entry resolves no stats from 1299796 (A_MOD_PERCENT_STAT)
-	// trigger 1248758 (35%, core.CallbackOnSpellHitDealt | core.CallbackOnHealDealt, core.ProcMaskSpellDamage | core.ProcMaskSpellHealing)
-	// shared.NewSpellDataProc(shared.SpellDataProc{
-	//	Name:           "Enchant Weapon - Insight",
-	//	EnchantID:      8216,
-	//	TriggerSpellID: 1248758,
-	// }, nil)
-
-	// TODO: Manual implementation required
-	//       This can be ignored if the effect has already been implemented.
-	//       With next db run the item will be removed if implemented.
-	//
 	// Permanently enchant a Melee Weapon to have a chance to trigger Revelation when a non-periodic spell fails
 	// to critically strike. Revelation grants 100% increased critical strike chance to the next spell cast.
 	// Revelation's chance to trigger is diminished as your critical strike chance increases.
@@ -364,5 +349,16 @@ func RegisterAllEnchants() {
 		EnchantID:      7942,
 		TriggerSpellID: 1231163,
 		BuffSpellID:    1231162,
+	}, nil)
+
+	// Permanently enchant a Melee Weapon to have a chance to grant Insight when you cast a spell, increasing
+	// Spirit by 100% for 10s.
+	// https://www.wowhead.com/forever/spell=1248757
+	// trigger 1248758 (35%, core.CallbackOnSpellHitDealt | core.CallbackOnHealDealt, core.ProcMaskSpellDamage | core.ProcMaskSpellHealing) -> buff 1299796
+	shared.NewSpellDataProc(shared.SpellDataProc{
+		Name:           "Enchant Weapon - Insight",
+		EnchantID:      8216,
+		TriggerSpellID: 1248758,
+		BuffSpellID:    1299796,
 	}, nil)
 }

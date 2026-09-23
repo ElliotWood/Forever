@@ -477,7 +477,7 @@ func applySpellDataProc(agent core.Agent, cfg SpellDataProc, source effectSource
 	eligibleSlots := source.eligibleSlots(character)
 
 	effect := source.procEffects()[buff.ID]
-	if effect == nil {
+	if effect == nil && len(spelldata.PercentStats(buff, character.Level)) == 0 {
 		panic(fmt.Sprintf("Error getting proc effects for item/enchant %v", source.id))
 	}
 
@@ -590,12 +590,19 @@ func spellDataProcAura(character *core.Character, cfg SpellDataProc, trigger *sp
 	// A trinket whose trigger opens a window and whose stats accumulate on a second aura inside it
 	// resolves no stats on the aura the trigger applies, so building one here would grant nothing at
 	// all. That shape needs the window machinery in factory_StatBonusEffect.
-	if effect.StackingAura != nil {
+	if effect.GetStackingAura() != nil {
 		panic(fmt.Sprintf("%s (%d): a proc whose stats live on an accumulating aura needs the stacking constructor", cfg.Name, cfg.ItemID))
 	}
 
 	aura := spelldata.AuraConfig(buff, spelldata.Label(cfg.Name+" Proc"))
 	aura.Duration = procBuffDuration(cfg, trigger, buff)
+
+	// An effect entry states flat stats only, so a buff the client states as a percentage of a stat
+	// has none and multiplies instead.
+	if effect == nil {
+		return statMultiplierAura(character, aura, spelldata.PercentStats(buff, character.Level))
+	}
+
 	buffStats := stats.FromProtoMap(effect.GetScalingOptions()[int32(0)].GetStats())
 
 	// The client states the count on whichever of the two rows carries the aura, and the item effect
@@ -614,6 +621,38 @@ func spellDataProcAura(character *core.Character, cfg SpellDataProc, trigger *sp
 	return character.NewTemporaryStatsAuraWrapped(aura.Label, aura.ActionID, buffStats, aura.Duration, func(config *core.Aura) {
 		config.MaxStacks = aura.MaxStacks
 	})
+}
+
+// A buff that multiplies stats through dynamic stat dependencies. The temporary stats listeners hear
+// the stats the multipliers add on gain and remove on expire, measured at that moment.
+func statMultiplierAura(character *core.Character, config core.Aura, multipliers []spelldata.StatMultiplier) *core.StatBuffAura {
+	deps := make([]*stats.StatDependency, len(multipliers))
+	buffed := make([]stats.Stat, len(multipliers))
+	for i, m := range multipliers {
+		deps[i] = character.NewDynamicMultiplyStat(m.Stat, m.Multiplier)
+		buffed[i] = m.Stat
+	}
+
+	toggle := func(aura *core.Aura, sim *core.Simulation, set func(*core.Simulation, *stats.StatDependency)) {
+		before := character.GetStats()
+		for _, dep := range deps {
+			set(sim, dep)
+		}
+
+		change := character.GetStats().Subtract(before)
+		for _, onChange := range character.OnTemporaryStatsChanges {
+			onChange(sim, aura, change)
+		}
+	}
+
+	config.OnGain = func(aura *core.Aura, sim *core.Simulation) {
+		toggle(aura, sim, character.EnableBuildPhaseStatDep)
+	}
+	config.OnExpire = func(aura *core.Aura, sim *core.Simulation) {
+		toggle(aura, sim, character.DisableBuildPhaseStatDep)
+	}
+
+	return &core.StatBuffAura{Aura: character.GetOrRegisterAura(config), BuffedStatTypes: buffed}
 }
 
 // How long the buff lasts. The client leaves it off the buff's own row on a fair few procs and states

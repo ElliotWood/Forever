@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/wowsims/forever/sim/core/spelldata"
+	"github.com/wowsims/forever/sim/core/stats"
 	"github.com/wowsims/forever/tools/database/dbc"
 )
 
@@ -39,6 +40,7 @@ func TestEnchantProcRouting(t *testing.T) {
 		}},
 		{7223, "Retricutioner: a damage shield", []want{{435901, false, 0, "A_DAMAGE_SHIELD"}}},
 		{7941, "Grand Arcanist: spell power and healing register, the mana beside them is not a stat", []want{{1231152, false, 0, ""}}},
+		{8216, "Insight: 35%, a buff that multiplies Spirit", []want{{1248758, false, 0, ""}}},
 		{8217, "Revelation: 100 beside 'a chance to trigger'", []want{{1248806, false, 0, spelldata.ReasonStatesNoRate}}},
 		{8721, "Recovery: 100 beside a cooldown, which is a rate; the heal is not a buff", []want{{1248761, false, 0, "E_HEAL_PCT"}}},
 	} {
@@ -117,6 +119,25 @@ func TestEnchantProcRoutingTakesAPPMOverride(t *testing.T) {
 				t.Errorf("unsupported = %v with the override, want %v", after.Unsupported, want)
 			}
 		})
+	}
+}
+
+// Insight's effect entry resolves no flat stats, so the slot names the buff its equip aura applies,
+// 1299796, whose row multiplies Spirit by 2.
+func TestEnchantPercentStatBuffIsTheAppliedSpell(t *testing.T) {
+	inRepositoryRoot(t)
+	instance := dbc.GetDBC()
+	grants := enchantGrantEffects(instance.SpellEffectsById)
+
+	enchant := instance.EnchantsByEffectId[8216]
+	got := routeEnchantProcs(enchant.ProcSlots(), instance, renderSpellTooltip(instance, grants[8216].SpellID))
+	if len(got) != 1 || got[0].TriggerSpellID != 1248758 || got[0].BuffSpellID != 1299796 {
+		t.Fatalf("routings %v, want one from 1248758 to 1299796", got)
+	}
+
+	want := []spelldata.StatMultiplier{{Stat: stats.Spirit, Multiplier: 2}}
+	if got := spelldata.PercentStats(spelldata.Find(1299796), 60); !slices.Equal(got, want) {
+		t.Errorf("multipliers %v, want %v", got, want)
 	}
 }
 
