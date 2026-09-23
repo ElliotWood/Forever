@@ -9,7 +9,7 @@ import { type ReactNode, useId } from 'react';
 import { ENCHANT_NOTICES, ITEM_INFO_NOTICES, ITEM_NOTICES } from '../../item_notices';
 
 export interface ItemNoticeIconProps {
-	itemId: number;
+	itemId?: number;
 	enchantId?: number;
 	additionalNotice?: ReactNode;
 }
@@ -19,11 +19,11 @@ export const ItemNoticeIcon = ({ itemId, enchantId, additionalNotice }: ItemNoti
 	const tooltipId = useId();
 	const spec = player.getSpec();
 
-	const itemNotice = ITEM_NOTICES.get(itemId);
+	const itemNotice = itemId ? ITEM_NOTICES.get(itemId) : undefined;
 	const ownNotice = itemNotice?.[spec] || itemNotice?.[Spec.SpecUnknown];
 	const enchantNotice = enchantId ? ENCHANT_NOTICES.get(enchantId) : undefined;
 	const ownEnchantNotice = enchantNotice?.[spec] || enchantNotice?.[Spec.SpecUnknown];
-	const infoNotice = ITEM_INFO_NOTICES.get(itemId);
+	const infoNotice = itemId ? ITEM_INFO_NOTICES.get(itemId) : undefined;
 
 	if (!ownNotice && !ownEnchantNotice && !additionalNotice && !infoNotice) return null;
 
