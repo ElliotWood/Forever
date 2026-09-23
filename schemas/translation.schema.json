@@ -131,13 +131,10 @@
 						},
 						"4": {
 							"type": "string"
-						},
-						"5": {
-							"type": "string"
 						}
 					},
 					"additionalProperties": false,
-					"required": ["1", "2", "3", "4", "5"]
+					"required": ["1", "2", "3", "4"]
 				},
 				"phase_names": {
 					"type": "object",
@@ -153,13 +150,10 @@
 						},
 						"4": {
 							"type": "string"
-						},
-						"5": {
-							"type": "string"
 						}
 					},
 					"additionalProperties": false,
-					"required": ["1", "2", "3", "4", "5"]
+					"required": ["1", "2", "3", "4"]
 				},
 				"tanks": {
 					"type": "object",
@@ -2559,10 +2553,20 @@
 							},
 							"additionalProperties": false,
 							"required": ["title"]
+						},
+						"buffs": {
+							"type": "object",
+							"properties": {
+								"title": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false,
+							"required": ["title"]
 						}
 					},
 					"additionalProperties": false,
-					"required": ["title", "potions", "elixirs", "food", "engineering", "pet", "imbue", "drums", "scrolls", "miscellaneous"]
+					"required": ["title", "potions", "elixirs", "food", "engineering", "pet", "imbue", "drums", "scrolls", "buffs", "miscellaneous"]
 				},
 				"encounter": {
 					"type": "object",
