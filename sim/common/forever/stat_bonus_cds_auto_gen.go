@@ -16,8 +16,6 @@ func RegisterAllOnUseCds() {
 	// shared.NewSimpleStatActive(4130) // Smotts' Compass - https://www.wowhead.com/forever/spell=1317740
 	// unsupported: 14537 deals no damage and heals no one (E_DUMMY)
 	// shared.NewSimpleStatActive(7734) // Six Demon Bag - https://www.wowhead.com/forever/spell=14537
-	// unsupported: 10618 deals no damage and heals no one (A_SCHOOL_ABSORB)
-	// shared.NewSimpleStatActive(8367) // Dragonscale Breastplate - https://www.wowhead.com/forever/spell=10618
 	// unsupported: 18364 deals no damage and heals no one (A_PERIODIC_TRIGGER_SPELL)
 	// shared.NewSimpleStatActive(14134) // Cloak of Fire - https://www.wowhead.com/forever/spell=18364
 	// unsupported: 18385 deals no damage and heals no one (E_ENERGIZE)
@@ -25,10 +23,9 @@ func RegisterAllOnUseCds() {
 	// on use: 18386 (E_HEAL)
 	// unsupported: the heal lands on implicit target 5, not the wearer
 	// shared.NewSpellDataHealOnUse(14153) // Robe of the Void - https://www.wowhead.com/forever/spell=18386
-	// unsupported: 21956 deals no damage and heals no one (A_SCHOOL_ABSORB)
-	// shared.NewSimpleStatActive(17759) // Mark of Resolution - https://www.wowhead.com/forever/spell=21956
-	// unsupported: 1287808 deals no damage and heals no one (A_SCHOOL_ABSORB, A_DUMMY)
-	// shared.NewSimpleStatActive(18406) // Onyxia Blood Talisman - https://www.wowhead.com/forever/spell=1287808
+	// on use: 1287808 (A_SCHOOL_ABSORB); not simulated: A_DUMMY
+	// unsupported: the absorb of 10000000000 beside an A_DUMMY absorbs only the spells a script names, which the client does not list
+	// shared.NewSpellDataAbsorbOnUse(18406) // Onyxia Blood Talisman - https://www.wowhead.com/forever/spell=1287808
 	// unsupported: 23131 deals no damage and heals no one (A_REFLECT_SPELLS_SCHOOL)
 	// shared.NewSimpleStatActive(18634) // Gyrofreeze Ice Reflector - https://www.wowhead.com/forever/spell=23131
 	// on use: 23064 (E_HEAL); not simulated: E_DISPEL_MECHANIC, E_ENERGIZE
@@ -40,8 +37,6 @@ func RegisterAllOnUseCds() {
 	// shared.NewSimpleStatActive(18639) // Ultra-Flash Shadow Reflector - https://www.wowhead.com/forever/spell=23132
 	// unsupported: 23453 deals no damage and heals no one (E_DUMMY)
 	// shared.NewSimpleStatActive(18986) // Ultrasafe Transporter: Gadgetzan - https://www.wowhead.com/forever/spell=23453
-	// unsupported: 23506 deals no damage and heals no one (A_SCHOOL_ABSORB)
-	// shared.NewSimpleStatActive(19024) // Arena Grand Master - https://www.wowhead.com/forever/spell=23506
 	// unsupported: 23595 deals no damage and heals no one (E_DISPEL_MECHANIC)
 	// shared.NewSimpleStatActive(19141) // Luffa - https://www.wowhead.com/forever/spell=23595
 	// unsupported: 23721 deals no damage and heals no one (A_PROC_TRIGGER_SPELL)
@@ -80,16 +75,8 @@ func RegisterAllOnUseCds() {
 	// shared.NewSimpleStatActive(19958) // Hazza'rah's Charm of Healing - https://www.wowhead.com/forever/spell=24546
 	// unsupported: 24544 deals no damage and heals no one (A_ADD_FLAT_MODIFIER, A_ADD_PCT_MODIFIER)
 	// shared.NewSimpleStatActive(19959) // Hazza'rah's Charm of Magic - https://www.wowhead.com/forever/spell=24544
-	// unsupported: 23991 deals no damage and heals no one (A_SCHOOL_ABSORB)
-	// shared.NewSimpleStatActive(20071) // Talisman of Arathor - https://www.wowhead.com/forever/spell=23991
-	// unsupported: 23991 deals no damage and heals no one (A_SCHOOL_ABSORB)
-	// shared.NewSimpleStatActive(20072) // Defiler's Talisman - https://www.wowhead.com/forever/spell=23991
 	// unsupported: 24884 deals no damage and heals no one (A_PERIODIC_ENERGIZE)
 	// shared.NewSimpleStatActive(20525) // Earthen Sigil - https://www.wowhead.com/forever/spell=24884
-	// unsupported: 25746 deals no damage and heals no one (A_SCHOOL_ABSORB)
-	// shared.NewSimpleStatActive(21115) // Defiler's Talisman - https://www.wowhead.com/forever/spell=25746
-	// unsupported: 25746 deals no damage and heals no one (A_SCHOOL_ABSORB)
-	// shared.NewSimpleStatActive(21117) // Talisman of Arathor - https://www.wowhead.com/forever/spell=25746
 	// unsupported: 25892 deals no damage and heals no one (E_THREAT)
 	// shared.NewSimpleStatActive(21181) // Grace of Earth - https://www.wowhead.com/forever/spell=25892
 	// unsupported: 26168 deals no damage and heals no one (A_DAMAGE_SHIELD)
@@ -108,8 +95,6 @@ func RegisterAllOnUseCds() {
 	// shared.NewSimpleStatActive(23027) // Warmth of Forgiveness - https://www.wowhead.com/forever/spell=28760
 	// unsupported: 28773 deals no damage and heals no one (A_MOD_BLOCK_VALUE_FLAT)
 	// shared.NewSimpleStatActive(23040) // Glyph of Deflection - https://www.wowhead.com/forever/spell=28773
-	// unsupported: 29506 deals no damage and heals no one (A_SCHOOL_ABSORB)
-	// shared.NewSimpleStatActive(23558) // The Burrower's Shell - https://www.wowhead.com/forever/spell=29506
 	// unsupported: 1306267 deals no damage and heals no one (E_FORCE_CAST_2)
 	// shared.NewSimpleStatActive(221315) // Traveler's Symbols - https://www.wowhead.com/forever/spell=1306267
 	// unsupported: 23453 deals no damage and heals no one (E_DUMMY)
@@ -122,8 +107,6 @@ func RegisterAllOnUseCds() {
 	// shared.NewSimpleStatActive(260824) // Gnomish Poultryizer - https://www.wowhead.com/forever/spell=1270941
 	// unsupported: 1296664 deals no damage and heals no one (A_MOD_CHARM)
 	// shared.NewSimpleStatActive(269741) // Scented Runewood Brooch - https://www.wowhead.com/forever/spell=1296664
-	// unsupported: 1291097 deals no damage and heals no one (A_SCHOOL_ABSORB)
-	// shared.NewSimpleStatActive(272437) // Adaptive Combat Assistant - https://www.wowhead.com/forever/spell=1291097
 	// unsupported: 1291101 deals no damage and heals no one (A_MOD_CRIT_PCT)
 	// shared.NewSimpleStatActive(272438) // Weakness Analyzer - https://www.wowhead.com/forever/spell=1291101
 	// unsupported: 1291105 deals no damage and heals no one (A_MOD_BLOCK_PERCENT)
@@ -140,6 +123,26 @@ func RegisterAllOnUseCds() {
 	// shared.NewSimpleStatActive(275729) // Rusty Propeller Blade - https://www.wowhead.com/forever/spell=1297762
 	// unsupported: 1299440 deals no damage and heals no one (A_MOD_FEAR)
 	// shared.NewSimpleStatActive(276337) // Thaelemaches' Talisman - https://www.wowhead.com/forever/spell=1299440
+
+	// Absorbs
+	// on use: 10618 (A_SCHOOL_ABSORB)
+	shared.NewSpellDataAbsorbOnUse(8367) // Dragonscale Breastplate - https://www.wowhead.com/forever/spell=10618
+	// on use: 21956 (A_SCHOOL_ABSORB)
+	shared.NewSpellDataAbsorbOnUse(17759) // Mark of Resolution - https://www.wowhead.com/forever/spell=21956
+	// on use: 23506 (A_SCHOOL_ABSORB)
+	shared.NewSpellDataAbsorbOnUse(19024) // Arena Grand Master - https://www.wowhead.com/forever/spell=23506
+	// on use: 23991 (A_SCHOOL_ABSORB)
+	shared.NewSpellDataAbsorbOnUse(20071) // Talisman of Arathor - https://www.wowhead.com/forever/spell=23991
+	// on use: 23991 (A_SCHOOL_ABSORB)
+	shared.NewSpellDataAbsorbOnUse(20072) // Defiler's Talisman - https://www.wowhead.com/forever/spell=23991
+	// on use: 25746 (A_SCHOOL_ABSORB)
+	shared.NewSpellDataAbsorbOnUse(21115) // Defiler's Talisman - https://www.wowhead.com/forever/spell=25746
+	// on use: 25746 (A_SCHOOL_ABSORB)
+	shared.NewSpellDataAbsorbOnUse(21117) // Talisman of Arathor - https://www.wowhead.com/forever/spell=25746
+	// on use: 29506 (A_SCHOOL_ABSORB)
+	shared.NewSpellDataAbsorbOnUse(23558) // The Burrower's Shell - https://www.wowhead.com/forever/spell=29506
+	// on use: 1291097 (A_SCHOOL_ABSORB)
+	shared.NewSpellDataAbsorbOnUse(272437) // Adaptive Combat Assistant - https://www.wowhead.com/forever/spell=1291097
 
 	// Agility / Intellect / Spirit / Stamina / Strength
 	shared.NewSimpleStatActive(270226) // Golden Banana - https://www.wowhead.com/forever/spell=1287571

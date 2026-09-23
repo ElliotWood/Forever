@@ -52,12 +52,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
-		8367, // Dragonscale Breastplate
-		[
-			"Absorbs 600 magical damage. Lasts 2min.", // 10618 - https://www.wowhead.com/forever/spell=10618
-		]
-	],
-	[
 		8708, // Hammer of Expertise
 		[
 			"Deal 112 Fire damage. Deals 3 times as much damage to Earth Elementals, Fire Elementals, and Mountain Giants.", // 1317432 - https://www.wowhead.com/forever/spell=1317432
@@ -73,12 +67,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		9651, // Gryphon Rider's Stormhammer
 		[
 			"Blasts a target for 91 Nature damage.", // 18081 - https://www.wowhead.com/forever/spell=18081
-		]
-	],
-	[
-		11302, // Uther's Strength
-		[
-			"2% chance when struck in melee to gain a holy shield, absorbing 216 damage for 15s. This chance is doubled in Wasteland and Haunted areas.", // 10368 - https://www.wowhead.com/forever/spell=10368
 		]
 	],
 	[
@@ -455,12 +443,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
-		17759, // Mark of Resolution
-		[
-			"Absorbs 780 Physical damage. Lasts 10s.", // 21956 - https://www.wowhead.com/forever/spell=21956
-		]
-	],
-	[
 		18355, // Ferra's Collar
 		[
 			"Increases the damage done by your pets by 4%.", // 22854 - https://www.wowhead.com/forever/spell=22854
@@ -523,7 +505,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 	[
 		19024, // Arena Grand Master
 		[
-			"Absorbs 1080 damage. Lasts 20s.", // 23506 - https://www.wowhead.com/forever/spell=23506
 			"Reduces your damage taken by 6% in the Battle Ring and The Maul.", // 1318318 - https://www.wowhead.com/forever/spell=1318318
 		]
 	],
@@ -804,18 +785,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
-		20071, // Talisman of Arathor
-		[
-			"Absorbs 616 physical damage. Lasts 15s.", // 23991 - https://www.wowhead.com/forever/spell=23991
-		]
-	],
-	[
-		20072, // Defiler's Talisman
-		[
-			"Absorbs 616 physical damage. Lasts 15s.", // 23991 - https://www.wowhead.com/forever/spell=23991
-		]
-	],
-	[
 		20091, // Highlander's Chain Greaves
 		[
 			"Run speed increased slightly.", // 23990 - https://www.wowhead.com/forever/spell=23990
@@ -945,18 +914,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		20525, // Earthen Sigil
 		[
 			"Restores 400 mana over 10s.", // 24884 - https://www.wowhead.com/forever/spell=24884
-		]
-	],
-	[
-		21115, // Defiler's Talisman
-		[
-			"Absorbs 504 physical damage. Lasts 15s.", // 25746 - https://www.wowhead.com/forever/spell=25746
-		]
-	],
-	[
-		21117, // Talisman of Arathor
-		[
-			"Absorbs 504 physical damage. Lasts 15s.", // 25746 - https://www.wowhead.com/forever/spell=25746
 		]
 	],
 	[
@@ -1185,12 +1142,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		23290, // Knight-Lieutenant's Silk Handwraps
 		[
 			"Increases the damage absorbed by your Mana Shield by 285.", // 23037 - https://www.wowhead.com/forever/spell=23037
-		]
-	],
-	[
-		23558, // The Burrower's Shell
-		[
-			"Absorbs 900 damage. Lasts 20s.", // 29506 - https://www.wowhead.com/forever/spell=29506
 		]
 	],
 	[
@@ -2316,12 +2267,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
-		272437, // Adaptive Combat Assistant
-		[
-			"Absorbs 450 damage for 15s. If this shield expires before 15s, 100 Nature damage will be dealt to all enemies in melee range.", // 1291097 - https://www.wowhead.com/forever/spell=1291097
-		]
-	],
-	[
 		272438, // Weakness Analyzer
 		[
 			"Increases your critical strike chance with all spells and attacks by 5% for 20s or until you deal a non-periodic critical effect.", // 1291101 - https://www.wowhead.com/forever/spell=1291101
@@ -2740,18 +2685,6 @@ export const MISSING_ENCHANT_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
-		44, // Enchant Chest - Minor Absorption
-		[
-			"Enchant a piece of chest armor so it has a 2% chance per hit of giving you 10 points of damage absorption. Cannot occur more often than once every 5 sec.", // 7445 - https://www.wowhead.com/forever/spell=7445
-		]
-	],
-	[
-		63, // Enchant Chest - Lesser Absorption
-		[
-			"Enchant a piece of chest armor so it has a 5% chance per hit of giving you 25 points of damage absorption. Cannot occur more often than once every 5 sec.", // 7446 - https://www.wowhead.com/forever/spell=7446
-		]
-	],
-	[
 		463, // Mithril Shield Spike
 		[
 			"Attaches a Mithril Spike to your shield that deals damage every time you block with it.", // 9782 - https://www.wowhead.com/forever/spell=9782
@@ -2827,12 +2760,6 @@ export const MISSING_ENCHANT_EFFECTS = new Map<number, string[]>([
 		8217, // Enchant Weapon - Revelation
 		[
 			"Permanently enchant a Melee Weapon to have a chance to trigger Revelation when a non-periodic spell fails to critically strike. Revelation grants 100% increased critical strike chance to the next spell cast. Revelation's chance to trigger is diminished as your critical strike chance increases.", // 1248806 - https://www.wowhead.com/forever/spell=1248806
-		]
-	],
-	[
-		8220, // Enchant Chest - Absorption
-		[
-			"Enchant a piece of chest armor so it has a 25% chance per hit of giving you 50 points of damage absorption. Cannot occur more often than once every 5 sec.", // 1249072 - https://www.wowhead.com/forever/spell=1249072
 		]
 	],
 	[

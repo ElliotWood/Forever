@@ -53,12 +53,10 @@ func RegisterAllProcs() {
 	//
 	// Protects the caster with a holy shield.
 	// https://www.wowhead.com/forever/spell=9800
-	// shared.NewProcStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
-	//	Callback:           core.CallbackEmpty,
-	//	ProcMask:           core.ProcMaskUnknown,
-	//	Outcome:            core.OutcomeEmpty,
-	//	RequireDamageDealt: false
-	// }, []shared.ItemVariant{
+	// unsupported: states no rate
+	// trigger 9800 (every time, core.CallbackEmpty, core.ProcMaskUnknown)
+	// shared.NewSpellDataAbsorbProc(shared.SpellDataProc{TriggerSpellID: 9800, BuffSpellID: 9800, IsWeaponProc: true},
+	//	[]shared.ItemVariant{
 	//	{ItemID: 7960, ItemName: "Truesilver Champion"},
 	// })
 
@@ -95,12 +93,10 @@ func RegisterAllProcs() {
 	//
 	// Shields the wielder from physical damage, absorbing 84 damage. Lasts 20s.
 	// https://www.wowhead.com/forever/spell=11657
-	// shared.NewProcStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
-	//	Callback:           core.CallbackEmpty,
-	//	ProcMask:           core.ProcMaskUnknown,
-	//	Outcome:            core.OutcomeEmpty,
-	//	RequireDamageDealt: false
-	// }, []shared.ItemVariant{
+	// unsupported: states no rate
+	// trigger 11657 (0%, core.CallbackEmpty, core.ProcMaskUnknown)
+	// shared.NewSpellDataAbsorbProc(shared.SpellDataProc{TriggerSpellID: 11657, BuffSpellID: 11657, IsWeaponProc: true},
+	//	[]shared.ItemVariant{
 	//	{ItemID: 9380, ItemName: "Jang'thraze the Protector"},
 	// })
 
@@ -115,22 +111,6 @@ func RegisterAllProcs() {
 	// shared.NewSpellDataDamageProc(shared.SpellDataProc{TriggerSpellID: 18081, BuffSpellID: 18081, IsWeaponProc: true},
 	//	[]shared.ItemVariant{
 	//	{ItemID: 9651, ItemName: "Gryphon Rider's Stormhammer"},
-	// })
-
-	// TODO: Manual implementation required
-	//       This can be ignored if the effect has already been implemented.
-	//       With next db run the item will be removed if implemented.
-	//
-	// 2% chance when struck in melee to gain a holy shield, absorbing 216 damage for 15s. This chance is doubled
-	// in Wasteland and Haunted areas.
-	// https://www.wowhead.com/forever/spell=10368
-	// shared.NewProcStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
-	//	Callback:           core.CallbackEmpty,
-	//	ProcMask:           core.ProcMaskUnknown,
-	//	Outcome:            core.OutcomeEmpty,
-	//	RequireDamageDealt: false
-	// }, []shared.ItemVariant{
-	//	{ItemID: 11302, ItemName: "Uther's Strength"},
 	// })
 
 	// TODO: Manual implementation required
@@ -4866,6 +4846,15 @@ func RegisterAllProcs() {
 	// }, []shared.ItemVariant{
 	//	{ItemID: 285281, ItemName: "Arcanite Blacksmith Hammer"},
 	// })
+
+	// 2% chance when struck in melee to gain a holy shield, absorbing 216 damage for 15s. This chance is doubled
+	// in Wasteland and Haunted areas.
+	// https://www.wowhead.com/forever/spell=10368
+	// trigger 8397 (effect 1's chance, core.CallbackOnSpellHitTaken, core.ProcMaskMeleeMHAuto | core.ProcMaskMeleeOHAuto | core.ProcMaskMeleeMHSpecial | core.ProcMaskMeleeOHSpecial) -> buff 10368
+	shared.NewSpellDataAbsorbProc(shared.SpellDataProc{TriggerSpellID: 8397, BuffSpellID: 10368},
+		[]shared.ItemVariant{
+			{ItemID: 11302, ItemName: "Uther's Strength"},
+		})
 
 	// Adds 4 Fire damage to your weapon attack.
 	// https://www.wowhead.com/forever/spell=7714

@@ -28,36 +28,6 @@ func RegisterAllEnchants() {
 	//       This can be ignored if the effect has already been implemented.
 	//       With next db run the item will be removed if implemented.
 	//
-	// Enchant a piece of chest armor so it has a 2% chance per hit of giving you 10 points of damage absorption.
-	// Cannot occur more often than once every 5 sec.
-	// https://www.wowhead.com/forever/spell=7426
-	// unsupported: the enchant's effect entry resolves no stats from 7423 (A_SCHOOL_ABSORB)
-	// trigger 7445 (2%, core.CallbackOnSpellHitTaken, core.ProcMaskMeleeMHAuto | core.ProcMaskMeleeOHAuto | core.ProcMaskMeleeMHSpecial | core.ProcMaskMeleeOHSpecial)
-	// shared.NewSpellDataProc(shared.SpellDataProc{
-	//	Name:           "Enchant Chest - Minor Absorption",
-	//	EnchantID:      44,
-	//	TriggerSpellID: 7445,
-	// }, nil)
-
-	// TODO: Manual implementation required
-	//       This can be ignored if the effect has already been implemented.
-	//       With next db run the item will be removed if implemented.
-	//
-	// Enchant a piece of chest armor so it has a 5% chance per hit of giving you 25 points of damage absorption.
-	// Cannot occur more often than once every 5 sec.
-	// https://www.wowhead.com/forever/spell=13538
-	// unsupported: the enchant's effect entry resolves no stats from 7447 (A_SCHOOL_ABSORB)
-	// trigger 7446 (5%, core.CallbackOnSpellHitTaken, core.ProcMaskMeleeMHAuto | core.ProcMaskMeleeOHAuto | core.ProcMaskMeleeMHSpecial | core.ProcMaskMeleeOHSpecial)
-	// shared.NewSpellDataProc(shared.SpellDataProc{
-	//	Name:           "Enchant Chest - Lesser Absorption",
-	//	EnchantID:      63,
-	//	TriggerSpellID: 7446,
-	// }, nil)
-
-	// TODO: Manual implementation required
-	//       This can be ignored if the effect has already been implemented.
-	//       With next db run the item will be removed if implemented.
-	//
 	// Attaches a Mithril Spike to your shield that deals damage every time you block with it.
 	// https://www.wowhead.com/forever/spell=9781
 	// unsupported: an outcome the proc mask has no bit for; the damage spell's row states no damage
@@ -277,21 +247,6 @@ func RegisterAllEnchants() {
 	//       This can be ignored if the effect has already been implemented.
 	//       With next db run the item will be removed if implemented.
 	//
-	// Enchant a piece of chest armor so it has a 25% chance per hit of giving you 50 points of damage absorption.
-	// Cannot occur more often than once every 5 sec.
-	// https://www.wowhead.com/forever/spell=1249071
-	// unsupported: the enchant's effect entry resolves no stats from 1249073 (A_SCHOOL_ABSORB)
-	// trigger 1249072 (25%, core.CallbackOnSpellHitTaken, core.ProcMaskMeleeMHAuto | core.ProcMaskMeleeOHAuto | core.ProcMaskMeleeMHSpecial | core.ProcMaskMeleeOHSpecial)
-	// shared.NewSpellDataProc(shared.SpellDataProc{
-	//	Name:           "Enchant Chest - Absorption",
-	//	EnchantID:      8220,
-	//	TriggerSpellID: 1249072,
-	// }, nil)
-
-	// TODO: Manual implementation required
-	//       This can be ignored if the effect has already been implemented.
-	//       With next db run the item will be removed if implemented.
-	//
 	// Permanently enchant a pair of gloves to give a small chance to acquire Death Lotus when gathering any
 	// herb in Hyjal.
 	// https://www.wowhead.com/forever/spell=1294054
@@ -313,6 +268,28 @@ func RegisterAllEnchants() {
 		BuffSpellID:    6297,
 		IsWeaponProc:   true,
 		ProcChancePct:  15,
+	}, nil)
+
+	// Enchant a piece of chest armor so it has a 2% chance per hit of giving you 10 points of damage absorption.
+	// Cannot occur more often than once every 5 sec.
+	// https://www.wowhead.com/forever/spell=7426
+	// trigger 7445 (2%, core.CallbackOnSpellHitTaken, core.ProcMaskMeleeMHAuto | core.ProcMaskMeleeOHAuto | core.ProcMaskMeleeMHSpecial | core.ProcMaskMeleeOHSpecial) -> buff 7423
+	shared.NewSpellDataAbsorbProc(shared.SpellDataProc{
+		Name:           "Enchant Chest - Minor Absorption",
+		EnchantID:      44,
+		TriggerSpellID: 7445,
+		BuffSpellID:    7423,
+	}, nil)
+
+	// Enchant a piece of chest armor so it has a 5% chance per hit of giving you 25 points of damage absorption.
+	// Cannot occur more often than once every 5 sec.
+	// https://www.wowhead.com/forever/spell=13538
+	// trigger 7446 (5%, core.CallbackOnSpellHitTaken, core.ProcMaskMeleeMHAuto | core.ProcMaskMeleeOHAuto | core.ProcMaskMeleeMHSpecial | core.ProcMaskMeleeOHSpecial) -> buff 7447
+	shared.NewSpellDataAbsorbProc(shared.SpellDataProc{
+		Name:           "Enchant Chest - Lesser Absorption",
+		EnchantID:      63,
+		TriggerSpellID: 7446,
+		BuffSpellID:    7447,
 	}, nil)
 
 	// Permanently enchant a two-handed melee weapon so that often when striking with a spell it restores 400
@@ -346,6 +323,17 @@ func RegisterAllEnchants() {
 		EnchantID:      8216,
 		TriggerSpellID: 1248758,
 		BuffSpellID:    1299796,
+	}, nil)
+
+	// Enchant a piece of chest armor so it has a 25% chance per hit of giving you 50 points of damage absorption.
+	// Cannot occur more often than once every 5 sec.
+	// https://www.wowhead.com/forever/spell=1249071
+	// trigger 1249072 (25%, core.CallbackOnSpellHitTaken, core.ProcMaskMeleeMHAuto | core.ProcMaskMeleeOHAuto | core.ProcMaskMeleeMHSpecial | core.ProcMaskMeleeOHSpecial) -> buff 1249073
+	shared.NewSpellDataAbsorbProc(shared.SpellDataProc{
+		Name:           "Enchant Chest - Absorption",
+		EnchantID:      8220,
+		TriggerSpellID: 1249072,
+		BuffSpellID:    1249073,
 	}, nil)
 
 	// Permanently enchant a Melee Weapon to trigger Recovery when you are Parried or Dodged, healing you for
