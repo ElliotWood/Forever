@@ -11,8 +11,12 @@ import (
 func (warlock *Warlock) registerCurseOfElements() {
 	rank := spellData.CurseOfTheElements.HighestRank()
 
+	// Untagged (caster 0), not tagged with our raid index: the APLs ask for aura 27228 on the target,
+	// which only an untagged aura answers. Tagged, every warlock but the raid's first never saw its
+	// own curse and recast it every GCD (the rankings raid had all four builds at ~10 DPS). One Curse
+	// of the Elements per target is also the game's rule, so the warlocks of a raid share it.
 	warlock.CurseOfElementsAuras = warlock.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-		return core.CurseOfElementsAura(target, warlock.Index, 0)
+		return core.CurseOfElementsAura(target, 0, 0)
 	})
 
 	warlock.CurseOfElements = warlock.RegisterSpell(core.SpellConfig{
