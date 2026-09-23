@@ -168,6 +168,25 @@ func (spell *Spell) OutcomeTickPhysicalCrit(sim *Simulation, result *SpellResult
 	}
 }
 
+// A tick of a damage over time whose hit was rolled when it was applied: only the spell crit.
+func (spell *Spell) OutcomeTickMagicCrit(sim *Simulation, result *SpellResult, attackTable *AttackTable) {
+	isPartialResist := result.DidResist()
+	if spell.MagicCritCheck(sim, result.Target) {
+		result.Outcome = OutcomeCrit
+		result.Damage *= spell.CritDamageMultiplier(attackTable)
+		spell.SpellMetrics[result.Target.UnitIndex].CritTicks++
+		if isPartialResist {
+			spell.SpellMetrics[result.Target.UnitIndex].ResistedCritTicks++
+		}
+	} else {
+		result.Outcome = OutcomeHit
+		spell.SpellMetrics[result.Target.UnitIndex].Ticks++
+		if isPartialResist {
+			spell.SpellMetrics[result.Target.UnitIndex].ResistedTicks++
+		}
+	}
+}
+
 // A heal tick rolls no hit, only the healing crit.
 func (spell *Spell) OutcomeTickHealingCrit(sim *Simulation, result *SpellResult, attackTable *AttackTable) {
 	if spell.HealingCritCheck(sim) {
