@@ -85,7 +85,7 @@ func isProcEffect(e *storeEffect) bool {
 	if e == nil {
 		return false
 	}
-	aura := dbcenums.EffectAuraType(e.Aura)
+	aura := e.Aura
 	return aura == dbcenums.A_PROC_TRIGGER_SPELL || aura == dbcenums.A_PROC_TRIGGER_SPELL_WITH_VALUE ||
 		aura == dbcenums.A_DUMMY
 }
@@ -95,7 +95,7 @@ func isProcEffect(e *storeEffect) bool {
 // Missiles all carry one, and none of them is a proc.
 func (s *storeSpell) triggersAProc() bool {
 	for i := range s.Effects {
-		aura := dbcenums.EffectAuraType(s.Effects[i].Aura)
+		aura := s.Effects[i].Aura
 		if aura == dbcenums.A_PROC_TRIGGER_SPELL || aura == dbcenums.A_PROC_TRIGGER_SPELL_WITH_VALUE {
 			return true
 		}

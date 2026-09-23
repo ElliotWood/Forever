@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/tools/database/overrides"
 )
 
@@ -151,7 +152,7 @@ func formatStoreRow(s storeSpell, namer *rankEnumNamer) string {
 	if s.FlatThreat != 0 {
 		add("FlatThreat: %s", num32(s.FlatThreat))
 	}
-	if !s.ClassFlags.isZero() {
+	if !s.ClassFlags.IsZero() {
 		add("ClassFlags: %s", formatClassFlags(s.ClassFlags))
 	}
 	if words := hexWords(s.AuraInterrupt[:]); words != "" {
@@ -281,7 +282,7 @@ func formatStoreEffect(e storeEffect, namer *rankEnumNamer) string {
 	if e.Misc2 != 0 {
 		add("Misc2: %d", e.Misc2)
 	}
-	if !e.ClassFlags.isZero() {
+	if !e.ClassFlags.IsZero() {
 		add("ClassFlags: %s", formatClassFlags(e.ClassFlags))
 	}
 	if e.TriggerID != 0 {
@@ -332,7 +333,7 @@ func formatStorePower(p storePower) string {
 
 // The family is the namespace the mask words are read in, so a mask alone is never emitted without
 // one; the client states the mask in decimal, which is how the sim's talent code names it.
-func formatClassFlags(f storeClassFlags) string {
+func formatClassFlags(f core.ClassFlags) string {
 	var words []string
 	for i, word := range f.Mask {
 		if word != 0 {

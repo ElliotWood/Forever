@@ -6,6 +6,7 @@ import (
 	"sort"
 
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/dbcenums"
 )
 
 // The store's rows as the generator builds them: the fields sim/core/spelldata.Spell, .Effect and
@@ -26,7 +27,7 @@ type storeSpell struct {
 	Name string
 	Rank string
 
-	School uint8
+	School core.SpellSchool
 	Speed  float64
 	Attr   [17]uint32
 
@@ -53,7 +54,7 @@ type storeSpell struct {
 	// A flat threat bonus for a spell the client states no E_THREAT effect on, from an override.
 	FlatThreat float64
 
-	ClassFlags storeClassFlags
+	ClassFlags core.ClassFlags
 
 	AuraInterrupt, ChannelInterrupt [2]uint32
 
@@ -84,22 +85,12 @@ type storeSpell struct {
 	overrideNotes       []string
 }
 
-// core.ClassFlags: the family a spell belongs to and the four mask words naming it.
-type storeClassFlags struct {
-	Family int32
-	Mask   [4]uint32
-}
-
-func (f storeClassFlags) isZero() bool {
-	return f.Family == 0 && f.Mask == [4]uint32{}
-}
-
 type storeEffect struct {
 	ID, SpellID int32
 	Index       uint8
 
-	Type int32
-	Aura int32
+	Type dbcenums.SpellEffectType
+	Aura dbcenums.EffectAuraType
 
 	BasePoints float64
 	PPL        float64
@@ -120,7 +111,7 @@ type storeEffect struct {
 
 	Misc, Misc2 int32
 
-	ClassFlags storeClassFlags
+	ClassFlags core.ClassFlags
 
 	TriggerID int32
 
@@ -162,7 +153,7 @@ type spellTables struct {
 	cooldowns    map[int32]cooldownRow
 	categories   map[int32]categoryRow
 	auraOptions  map[int32]auraOptionRow
-	classOptions map[int32]storeClassFlags
+	classOptions map[int32]core.ClassFlags
 	interrupts   map[int32]interruptRow
 	shapeshift   map[int32]uint64
 	targets      map[int32]int16
@@ -175,7 +166,7 @@ type spellTables struct {
 
 type miscRow struct {
 	Attr                   [17]uint32
-	School                 uint8
+	School                 core.SpellSchool
 	Speed                  float64
 	CastTimeMs, DurationMs int32
 	MinRange, MaxRange     float64
@@ -224,7 +215,7 @@ func loadSpellTables(db *sql.DB) (*spellTables, error) {
 		cooldowns:    map[int32]cooldownRow{},
 		categories:   map[int32]categoryRow{},
 		auraOptions:  map[int32]auraOptionRow{},
-		classOptions: map[int32]storeClassFlags{},
+		classOptions: map[int32]core.ClassFlags{},
 		interrupts:   map[int32]interruptRow{},
 		shapeshift:   map[int32]uint64{},
 		targets:      map[int32]int16{},
@@ -336,7 +327,7 @@ func (t *spellTables) row(id int32) storeSpell {
 	s.Effects = make([]storeEffect, len(t.effects[id]))
 	copy(s.Effects, t.effects[id])
 	for i := range s.Effects {
-		if !s.Effects[i].ClassFlags.isZero() {
+		if !s.Effects[i].ClassFlags.IsZero() {
 			s.Effects[i].ClassFlags.Family = s.ClassFlags.Family
 		}
 		s.Effects[i].SpellLevel, s.Effects[i].MaxLevel = s.SpellLevel, s.MaxLevel
@@ -403,7 +394,7 @@ func (t *spellTables) loadMisc(db *sql.DB) error {
 		for i, word := range attr {
 			m.Attr[i] = uint32(word)
 		}
-		m.School = uint8(school)
+		m.School = core.SpellSchool(school)
 		return t.putMisc(id, m)
 	})
 }
@@ -505,7 +496,7 @@ func (t *spellTables) loadClassOptions(db *sql.DB) error {
 		       COALESCE(SpellClassMask_1, 0), COALESCE(SpellClassMask_2, 0), COALESCE(SpellClassMask_3, 0)
 		FROM SpellClassOptions ORDER BY SpellID`, func(rows *sql.Rows) error {
 		var id int32
-		var f storeClassFlags
+		var f core.ClassFlags
 		var mask [4]int64
 		if err := rows.Scan(&id, &f.Family, &mask[0], &mask[1], &mask[2], &mask[3]); err != nil {
 			return err

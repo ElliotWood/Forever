@@ -155,12 +155,12 @@ func (n *rankEnumNamer) Aura(value dbcenums.EffectAuraType) string {
 // The store's rows name the same two enums, through the package that declares them. A value the
 // client data carries and dbcenums has not named keeps its number, marked so a reader is not left
 // looking for a constant.
-func (n *rankEnumNamer) storeEffect(value int32) string {
-	return n.storeName("SpellEffectType", value)
+func (n *rankEnumNamer) storeEffect(value dbcenums.SpellEffectType) string {
+	return n.storeName("SpellEffectType", int32(value))
 }
 
-func (n *rankEnumNamer) storeAura(value int32) string {
-	return n.storeName("EffectAuraType", value)
+func (n *rankEnumNamer) storeAura(value dbcenums.EffectAuraType) string {
+	return n.storeName("EffectAuraType", int32(value))
 }
 
 func (n *rankEnumNamer) storeName(dbcType string, value int32) string {

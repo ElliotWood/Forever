@@ -7,6 +7,7 @@ import (
 	"os"
 	"slices"
 
+	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/tools/database/dbc"
 )
 
@@ -49,7 +50,7 @@ type storeInputs struct {
 	Cooldowns    map[int32]cooldownRow
 	Categories   map[int32]categoryRow
 	AuraOptions  map[int32]auraOptionRow
-	ClassOptions map[int32]storeClassFlags
+	ClassOptions map[int32]core.ClassFlags
 	Interrupts   map[int32]interruptRow
 	Shapeshift   map[int32]uint64
 	Targets      map[int32]int16
@@ -117,7 +118,7 @@ func captureStoreInputs(t *spellTables, roots []int32, ids []int32,
 		Cooldowns:    map[int32]cooldownRow{},
 		Categories:   map[int32]categoryRow{},
 		AuraOptions:  map[int32]auraOptionRow{},
-		ClassOptions: map[int32]storeClassFlags{},
+		ClassOptions: map[int32]core.ClassFlags{},
 		Interrupts:   map[int32]interruptRow{},
 		Shapeshift:   map[int32]uint64{},
 		Targets:      map[int32]int16{},

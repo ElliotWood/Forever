@@ -6,7 +6,6 @@ import (
 
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/dbcenums"
-	"github.com/wowsims/forever/tools/database/dbc"
 	"github.com/wowsims/forever/tools/database/overrides"
 )
 
@@ -65,7 +64,7 @@ func applyOverride(s *storeSpell, o overrides.Override) error {
 
 	case overrides.FlatThreat:
 		for i := range s.Effects {
-			if IsThreatEffect(dbc.SpellEffectType(s.Effects[i].Type)) {
+			if IsThreatEffect(s.Effects[i].Type) {
 				return fmt.Errorf("spell %d now states threat on effect %d, so its hand-supplied flat threat is stale",
 					s.ID, s.Effects[i].Index)
 			}
@@ -133,7 +132,7 @@ func (s *storeSpell) directEffect() *storeEffect {
 		if e.PeriodMs != 0 {
 			continue
 		}
-		effect := dbc.SpellEffectType(e.Type)
+		effect := e.Type
 		if effect == dbcenums.E_SCHOOL_DAMAGE || effect == dbcenums.E_HEAL || IsWeaponDamageEffect(effect) {
 			return e
 		}
@@ -146,8 +145,7 @@ func (s *storeSpell) directEffect() *storeEffect {
 func (s *storeSpell) periodicEffect() *storeEffect {
 	for i := range s.Effects {
 		e := &s.Effects[i]
-		if IsPeriodicAura(dbc.EffectAuraType(e.Aura)) ||
-			(dbc.SpellEffectType(e.Type) == dbcenums.E_SCHOOL_DAMAGE && e.PeriodMs > 0) {
+		if IsPeriodicAura(e.Aura) || (e.Type == dbcenums.E_SCHOOL_DAMAGE && e.PeriodMs > 0) {
 			return e
 		}
 	}
