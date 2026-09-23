@@ -856,7 +856,9 @@ func ThunderClapAura(target *Unit) *Aura {
 		ActionID: ActionID{SpellID: 11581},
 		Duration: time.Second * 30,
 	})
-	AtkSpeedReductionEffect(aura, 1/0.8)
+	// Client 11581 (aura 319, -20): "increasing the time between their attacks by 20%", so swings
+	// take 1.2x as long (TBC's 1/0.8 made them 1.25x).
+	AtkSpeedReductionEffect(aura, 1.2)
 	return aura
 }
 

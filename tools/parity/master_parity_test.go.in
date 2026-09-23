@@ -39,6 +39,7 @@ type parityResult struct {
 	Auras   map[string]float64 `json:"auras"`
 	Oom     float64            `json:"oom"`
 	Dtps    float64            `json:"dtps"`
+	Boss    map[string]float64 `json:"boss"`
 	Error   string             `json:"error,omitempty"`
 }
 
@@ -244,6 +245,7 @@ func runParitySpec(spec paritySpec, profile map[string]float64, iterations int32
 		Casts:   casts,
 		Auras:   auraUptimes(result.RaidMetrics.Parties[0].Players[0]),
 		Oom:     result.RaidMetrics.Parties[0].Players[0].SecondsOomAvg,
+		Boss:    bossOutcomes(result.EncounterMetrics, iterations),
 		Dtps:    result.RaidMetrics.Parties[0].Players[0].Dtps.Avg,
 		Stats: map[string]float64{
 			"ap": s[stats.AttackPower], "rap": s[stats.RangedAttackPower], "sd": s[stats.SpellDamage],
@@ -354,4 +356,26 @@ func envInt(k string, d int) int {
 		return v
 	}
 	return d
+}
+
+// The boss's attacks on the tank per fight: each outcome's count and damage, for a DTPS gap.
+func bossOutcomes(em *proto.EncounterMetrics, iterations int32) map[string]float64 {
+	out := map[string]float64{}
+	for _, t := range em.Targets {
+		for _, a := range t.Actions {
+			key := fmt.Sprintf("spell %d", a.Id.GetSpellId())
+			if a.Id.GetSpellId() == 0 {
+				key = a.Id.GetOtherId().String()
+			}
+			for _, x := range a.Targets {
+				for k, v := range map[string]float64{"casts": float64(x.Casts), "hits": float64(x.Hits), "crits": float64(x.Crits),
+					"crushes": float64(x.Crushes), "misses": float64(x.Misses), "dodges": float64(x.Dodges), "parries": float64(x.Parries),
+					"blocks": float64(x.Blocks), "blockedCrits": float64(x.BlockedCrits), "damage": x.Damage, "blockDamage": x.BlockDamage,
+					"crushDamage": x.CrushDamage, "critDamage": x.CritDamage} {
+					out[key+" "+k] += v / float64(iterations)
+				}
+			}
+		}
+	}
+	return out
 }

@@ -47,6 +47,7 @@ type parityResult struct {
 	Auras   map[string]float64 `json:"auras"`
 	Oom     float64            `json:"oom"`
 	Dtps    float64            `json:"dtps"`
+	Boss    map[string]float64 `json:"boss"`
 	Error   string             `json:"error,omitempty"`
 	// For ARENA_OUT only: damage per spell id, and auto attacks.
 	Damage       map[string]float64 `json:"-"`
@@ -184,6 +185,7 @@ func TestParity(t *testing.T) {
 		fmt.Printf("%-20s %9.1f %9.1f %8s   %s\n", spec.Name, m.Dps, n.Dps, gap, detail)
 		if os.Getenv("PARITY_DETAIL") != "" {
 			printActions(m, n)
+			printBoss(m, n)
 		}
 	}
 }
@@ -332,6 +334,7 @@ func runSpecWithGear(spec paritySpec, profile map[string]float64, iterations int
 		Casts:        casts,
 		Auras:        auraUptimes(result.RaidMetrics.Parties[0].Players[0]),
 		Oom:          result.RaidMetrics.Parties[0].Players[0].SecondsOomAvg,
+		Boss:    bossOutcomes(result.EncounterMetrics, iterations),
 		Dtps:         result.RaidMetrics.Parties[0].Players[0].Dtps.Avg,
 		Stats: map[string]float64{
 			"ap": s[stats.AttackPower], "rap": s[stats.RangedAttackPower], "sd": s[stats.SpellDamage],
@@ -491,4 +494,42 @@ func envInt(k string, d int) int {
 		return v
 	}
 	return d
+}
+
+// The boss's attacks on the tank per fight: each outcome's count and damage, for a DTPS gap.
+func bossOutcomes(em *proto.EncounterMetrics, iterations int32) map[string]float64 {
+	out := map[string]float64{}
+	for _, t := range em.Targets {
+		for _, a := range t.Actions {
+			key := fmt.Sprintf("spell %d", a.Id.GetSpellId())
+			if a.Id.GetSpellId() == 0 {
+				key = a.Id.GetOtherId().String()
+			}
+			for _, x := range a.Targets {
+				for k, v := range map[string]float64{"casts": float64(x.Casts), "hits": float64(x.Hits), "crits": float64(x.Crits),
+					"crushes": float64(x.Crushes), "misses": float64(x.Misses), "dodges": float64(x.Dodges), "parries": float64(x.Parries),
+					"blocks": float64(x.Blocks), "blockedCrits": float64(x.BlockedCrits), "damage": x.Damage, "blockDamage": x.BlockDamage,
+					"crushDamage": x.CrushDamage, "critDamage": x.CritDamage} {
+					out[key+" "+k] += v / float64(iterations)
+				}
+			}
+		}
+	}
+	return out
+}
+
+func printBoss(mr, nr parityResult) {
+	keys := []string{}
+	for k := range mr.Boss {
+		keys = append(keys, k)
+	}
+	for k := range nr.Boss {
+		if _, ok := mr.Boss[k]; !ok {
+			keys = append(keys, k)
+		}
+	}
+	sort.Strings(keys)
+	for _, k := range keys {
+		fmt.Printf("    boss %-32s %10.2f %10.2f\n", k, mr.Boss[k], nr.Boss[k])
+	}
 }
