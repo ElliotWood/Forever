@@ -167,6 +167,12 @@ func TestShippedOverridesAreWellFormed(t *testing.T) {
 	if len(seen) == 0 {
 		t.Error("the override table is empty, so nothing above checked anything")
 	}
+
+	for _, extra := range overrides.ExtraSpells {
+		if extra.Reason == "" || extra.Source == "" {
+			t.Errorf("extra spell %d states reason %q and source %q", extra.SpellID, extra.Reason, extra.Source)
+		}
+	}
 }
 
 func TestAreaBonusesBakeOntoTheRow(t *testing.T) {

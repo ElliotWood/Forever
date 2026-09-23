@@ -42,16 +42,14 @@ func spellModOpName(misc int32) string {
 	return fmt.Sprintf("op %d", misc)
 }
 
-// The bits of SpellAuraOptions.ProcTypeMask by name. Word 1 carries no named bit, so anything set
-// there reads as the word's own hex.
+// The bits of SpellAuraOptions.ProcTypeMask by name, word 0 then word 1.
 func procFlagNames(flags [2]uint32) []string {
 	out := setBits(uint64(flags[0]), func(bit uint64) (string, bool) {
 		return constName(procFlagConsts, int64(bit))
 	})
-	if flags[1] != 0 {
-		out = append(out, fmt.Sprintf("word1 %#x", flags[1]))
-	}
-	return out
+	return append(out, setBits(uint64(flags[1]), func(bit uint64) (string, bool) {
+		return constName(procFlag2Consts, int64(bit))
+	})...)
 }
 
 // The bits a mask sets, lowest first, each by its name or as `bit 0x…` where it has none.

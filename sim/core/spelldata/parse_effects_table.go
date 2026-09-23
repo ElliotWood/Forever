@@ -11,26 +11,50 @@ import (
 
 // What a modifier aura applies to, in the client's index order. sim/common/shared/spell_data_talents.go
 // is their other home until the generated family tables retire; this package cannot import that one,
-// since it imports this one. Only the ops the table below knows are declared here.
+// since it imports this one. Every op is declared, under TrinityCore's 3.3.5 names up to 30 and its
+// current ones above; the table below knows some of them.
 const (
-	SPELLMOD_DAMAGE             int32 = 0
-	SPELLMOD_DURATION           int32 = 1
-	SPELLMOD_THREAT             int32 = 2
-	SPELLMOD_EFFECT1            int32 = 3
-	SPELLMOD_CHARGES            int32 = 4
-	SPELLMOD_RANGE              int32 = 5
-	SPELLMOD_CRITICAL_CHANCE    int32 = 7
-	SPELLMOD_ALL_EFFECTS        int32 = 8
-	SPELLMOD_CASTING_TIME       int32 = 10
-	SPELLMOD_COOLDOWN           int32 = 11
-	SPELLMOD_EFFECT2            int32 = 12
-	SPELLMOD_COST               int32 = 14
-	SPELLMOD_CRIT_DAMAGE_BONUS  int32 = 15
-	SPELLMOD_RESIST_MISS_CHANCE int32 = 16
-	SPELLMOD_CHANCE_OF_SUCCESS  int32 = 18
-	SPELLMOD_GLOBAL_COOLDOWN    int32 = 21
-	SPELLMOD_DOT                int32 = 22
-	SPELLMOD_EFFECT3            int32 = 23
+	SPELLMOD_DAMAGE                    int32 = 0
+	SPELLMOD_DURATION                  int32 = 1
+	SPELLMOD_THREAT                    int32 = 2
+	SPELLMOD_EFFECT1                   int32 = 3
+	SPELLMOD_CHARGES                   int32 = 4
+	SPELLMOD_RANGE                     int32 = 5
+	SPELLMOD_RADIUS                    int32 = 6
+	SPELLMOD_CRITICAL_CHANCE           int32 = 7
+	SPELLMOD_ALL_EFFECTS               int32 = 8
+	SPELLMOD_NOT_LOSE_CASTING_TIME     int32 = 9
+	SPELLMOD_CASTING_TIME              int32 = 10
+	SPELLMOD_COOLDOWN                  int32 = 11
+	SPELLMOD_EFFECT2                   int32 = 12
+	SPELLMOD_IGNORE_ARMOR              int32 = 13
+	SPELLMOD_COST                      int32 = 14
+	SPELLMOD_CRIT_DAMAGE_BONUS         int32 = 15
+	SPELLMOD_RESIST_MISS_CHANCE        int32 = 16
+	SPELLMOD_JUMP_TARGETS              int32 = 17
+	SPELLMOD_CHANCE_OF_SUCCESS         int32 = 18
+	SPELLMOD_ACTIVATION_TIME           int32 = 19
+	SPELLMOD_DAMAGE_MULTIPLIER         int32 = 20
+	SPELLMOD_GLOBAL_COOLDOWN           int32 = 21
+	SPELLMOD_DOT                       int32 = 22
+	SPELLMOD_EFFECT3                   int32 = 23
+	SPELLMOD_BONUS_MULTIPLIER          int32 = 24
+	SPELLMOD_TRIGGER_DAMAGE            int32 = 25
+	SPELLMOD_PROC_PER_MINUTE           int32 = 26
+	SPELLMOD_VALUE_MULTIPLIER          int32 = 27
+	SPELLMOD_RESIST_DISPEL_CHANCE      int32 = 28
+	SPELLMOD_CRIT_DAMAGE_BONUS_2       int32 = 29
+	SPELLMOD_SPELL_COST_REFUND_ON_FAIL int32 = 30
+	SPELLMOD_DOSES                     int32 = 31
+	SPELLMOD_EFFECT4                   int32 = 32
+	SPELLMOD_EFFECT5                   int32 = 33
+	SPELLMOD_COST2                     int32 = 34
+	SPELLMOD_JUMP_DISTANCE             int32 = 35
+	SPELLMOD_AREATRIGGER_MAX_SUMMONS   int32 = 36
+	SPELLMOD_MAX_AURA_STACKS           int32 = 37
+	SPELLMOD_PROC_COOLDOWN             int32 = 38
+	SPELLMOD_COST3                     int32 = 39
+	SPELLMOD_MAX_TARGETS               int32 = 40
 )
 
 // The misc values the stat and school auras key on.

@@ -8,6 +8,7 @@ package shared
 
 // What the effect does - E_SCHOOL_DAMAGE, E_APPLY_AURA.
 const (
+	E_NONE                  SpellDataEffectKind = 0
 	E_INSTAKILL             SpellDataEffectKind = 1
 	E_SCHOOL_DAMAGE         SpellDataEffectKind = 2
 	E_DUMMY                 SpellDataEffectKind = 3
@@ -28,6 +29,7 @@ const (
 	E_ENERGIZE_PCT          SpellDataEffectKind = 137
 	E_UPDATE_PLAYER_PHASE   SpellDataEffectKind = 167
 	E_CREATE_AREATRIGGER    SpellDataEffectKind = 179
+	E_329                   SpellDataEffectKind = 329
 )
 
 // Which aura it applies, when the effect is E_APPLY_AURA.

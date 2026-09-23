@@ -3,29 +3,22 @@ package database
 import (
 	"database/sql"
 	"fmt"
-	"go/ast"
-	"go/parser"
-	"go/token"
 	"sort"
 	"strconv"
 	"strings"
 
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/dbcenums"
+	"github.com/wowsims/forever/tools/database/overrides"
 )
-
-// Where the store's hand-kept extra ids live. Parsed out of the source rather than read off the
-// package: the ids a render is built from are then the ones the committed file states, so adding one
-// without regenerating fails the check instead of passing it.
-const extraIDsPath = "sim/core/spelldata/extra_ids.go"
 
 // The spells the sim can reach without anything naming them first: everything the nine class files
 // are built from, and every spell an item, an enchant or a set bonus casts. What those spells trigger
 // is reached from here by reachableSpells.
 //
-// The store's own extra ids are not here: they are read out of sim/core/spelldata/extra_ids.go while
-// the store is rendered, so that adding one and forgetting to regenerate fails the regeneration check
-// instead of passing it - see withExtraIDs.
+// The hand-kept extra spells are not here: they are added while the store is rendered, so that adding
+// one and forgetting to regenerate fails the regeneration check instead of passing it - see
+// withExtraIDs.
 // The gear half is returned on its own as well: it is the universe the proc audit asks its question
 // over, and which query a root came from cannot be recovered from the merged list.
 func storeRoots(db *sql.DB, t *spellTables, ladderIDs []int32) (roots []int32, gear []int32, err error) {
@@ -104,22 +97,21 @@ func siblingSpells(db *sql.DB, ids []int32) ([]int32, error) {
 	return siblings, err
 }
 
-// The store's hand-kept extra ids, added to the captured roots while the store is rendered rather
-// than while the client tables are read: the ids live in the store's own source, so resolving them
-// here is what makes an id added without a regeneration show up as a row the committed store lacks.
+// The hand-kept extra spells, added to the captured roots while the store is rendered rather than
+// while the client tables are read, so an entry added without a regeneration shows up as a row the
+// committed store lacks.
 func withExtraIDs(t *spellTables, roots []int32) ([]int32, error) {
-	extras, err := parseExtraIDs()
-	if err != nil {
-		return nil, err
-	}
-
-	// A hand-kept id this build does not name is dropped like any other unnamed id, and unlike an
-	// item effect pointing at a spell the client retired, it was written down on purpose.
-	for _, id := range extras {
-		if _, named := t.names[id]; !named {
-			fmt.Fprintf(progress, "spelldata: %s names %d, which is no spell in this client, so the store does not carry it\n",
-				extraIDsPath, id)
+	extras := make([]int32, 0, len(overrides.ExtraSpells))
+	for _, extra := range overrides.ExtraSpells {
+		if extra.Reason == "" {
+			return nil, fmt.Errorf("the extra spell %d states no reason", extra.SpellID)
 		}
+		// Dropped like any other unnamed id, but said out loud: it was written down on purpose.
+		if _, named := t.names[extra.SpellID]; !named {
+			fmt.Fprintf(progress, "spelldata: extra spell %d is no spell in this client, so the store does not carry it\n",
+				extra.SpellID)
+		}
+		extras = append(extras, extra.SpellID)
 	}
 
 	return namedIDs(t, roots, extras), nil
@@ -240,44 +232,6 @@ func spellEdges(t *spellTables, id int32) []int32 {
 	}
 	next = append(next, handTriggers[id]...)
 	return append(next, t.referencedIDs(id)...)
-}
-
-// The store's ExtraIDs, read out of its source: a Go program cannot ask a package for the values of
-// a variable it does not import.
-func parseExtraIDs() ([]int32, error) {
-	fset := token.NewFileSet()
-	file, err := parser.ParseFile(fset, extraIDsPath, nil, 0)
-	if err != nil {
-		return nil, fmt.Errorf("parsing %s: %w", extraIDsPath, err)
-	}
-
-	var ids []int32
-	found := false
-	ast.Inspect(file, func(n ast.Node) bool {
-		vs, ok := n.(*ast.ValueSpec)
-		if !ok || len(vs.Names) != 1 || vs.Names[0].Name != "ExtraIDs" || len(vs.Values) != 1 {
-			return true
-		}
-		lit, ok := vs.Values[0].(*ast.CompositeLit)
-		if !ok {
-			return true
-		}
-		found = true
-		for _, elt := range lit.Elts {
-			id, ok := constInt(elt)
-			if !ok {
-				fmt.Fprintf(progress, "spelldata: %s:%d is not a literal id, so the store does not carry it\n",
-					extraIDsPath, fset.Position(elt.Pos()).Line)
-				continue
-			}
-			ids = append(ids, id)
-		}
-		return false
-	})
-	if !found {
-		return nil, fmt.Errorf("%s declares no ExtraIDs slice", extraIDsPath)
-	}
-	return ids, nil
 }
 
 func parseSpellID(s string) int32 {

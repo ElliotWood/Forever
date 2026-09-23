@@ -5940,7 +5940,7 @@ func RegisterAllProcs() {
 
 	// 2% chance on successful spellcast to increase your Spirit by 150 for 15s.
 	// https://www.wowhead.com/forever/spell=23684
-	// trigger 23688 (2%, core.CallbackOnCastComplete, core.ProcMaskSpellDamage) -> buff 23684
+	// trigger 23688 (2%, core.CallbackOnCastComplete, core.ProcMaskSpellDamage | core.ProcMaskSpellHealing) -> buff 23684
 	shared.NewSpellDataProc(shared.SpellDataProc{TriggerSpellID: 23688, BuffSpellID: 23684},
 		[]shared.ItemVariant{
 			{ItemID: 19288, ItemName: "Darkmoon Card: Blue Dragon"},

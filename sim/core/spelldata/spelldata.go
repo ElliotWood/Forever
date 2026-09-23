@@ -25,9 +25,8 @@ type Spell struct {
 	// Spell.NameSubtext_lang: "Rank 4" on a ranked spell, empty on everything else.
 	Rank string
 
-	// SpellMisc.SchoolMask. core.SpellSchool holds the same bit values - see sim/core/flags.go - so
-	// SpellSchool() converts without translating.
-	School uint8
+	// SpellMisc.SchoolMask, which core.SpellSchool states in the same bits.
+	School core.SpellSchool
 
 	// SpellMisc.Speed: how fast the missile flies, in yards per second. Zero hits on cast.
 	Speed float32

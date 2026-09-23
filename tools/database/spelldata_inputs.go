@@ -29,9 +29,9 @@ import (
 //
 // Everything else is left to be re-derived from the above: the closure, the hand links, the talent
 // curves, the tooltip hints, the overrides and the rows themselves. That is what makes the
-// regeneration a check on the generator rather than a copy of its answer. The store's own extra ids
-// are re-read from extra_ids.go while rendering for the same reason - adding one without
-// regenerating renders a row the committed store does not carry, and the check fails.
+// regeneration a check on the generator rather than a copy of its answer. The hand-kept extra spells
+// are added while rendering for the same reason - adding one without regenerating renders a row the
+// committed store does not carry, and the check fails.
 
 // Beside the client extraction rather than in it: assets/db_inputs/dbc is gitignored, being tens of
 // megabytes rebuilt by `make db`, and this file has to be committed for the check to run without a

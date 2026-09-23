@@ -2,8 +2,7 @@ package spelldata
 
 import "github.com/wowsims/forever/sim/core/dbcenums"
 
-// A word past the end of the client's 17 reads as unset rather than panicking, so an attribute the
-// store does not carry never takes a caller down.
+// Whether the spell sets bit in Attributes[word]. A word outside the client's 17 reads as unset.
 func (s *Spell) HasAttr(word int, bit uint32) bool {
 	if word < 0 || word >= len(s.Attr) {
 		return false
