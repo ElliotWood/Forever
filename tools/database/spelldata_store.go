@@ -63,7 +63,8 @@ type storeSpell struct {
 
 	StanceMask uint64
 
-	MaxTargets int16
+	MaxTargets         int16
+	TargetCreatureType int32
 
 	RequiredAreas int32
 
@@ -157,6 +158,7 @@ type spellTables struct {
 	Interrupts   map[int32]interruptRow
 	Shapeshift   map[int32]uint64
 	Targets      map[int32]int16
+	CreatureType map[int32]int32
 	Requirements map[int32]int32
 	Equipped     map[int32]equippedRow
 
@@ -224,6 +226,7 @@ func loadSpellTables(db *sql.DB) (*spellTables, error) {
 		Interrupts:   map[int32]interruptRow{},
 		Shapeshift:   map[int32]uint64{},
 		Targets:      map[int32]int16{},
+		CreatureType: map[int32]int32{},
 		Requirements: map[int32]int32{},
 		Equipped:     map[int32]equippedRow{},
 		Labels:       map[int32][]int16{},
@@ -282,6 +285,7 @@ func (t *spellTables) row(id int32) storeSpell {
 
 	s.StanceMask = t.Shapeshift[id]
 	s.MaxTargets = t.Targets[id]
+	s.TargetCreatureType = t.CreatureType[id]
 	s.RequiredAreas = t.Requirements[id]
 
 	e := t.Equipped[id]
@@ -501,14 +505,21 @@ func (t *spellTables) loadShapeshift(db *sql.DB) error {
 
 func (t *spellTables) loadTargetRestrictions(db *sql.DB) error {
 	return eachRow(db, `
-		SELECT SpellID, COALESCE(MaxTargets, 0)
+		SELECT SpellID, COALESCE(MaxTargets, 0), COALESCE(TargetCreatureType, 0)
 		FROM SpellTargetRestrictions WHERE DifficultyID = 0 ORDER BY SpellID`, func(rows *sql.Rows) error {
 		var id int32
 		var maxTargets int16
-		if err := rows.Scan(&id, &maxTargets); err != nil {
+		var creatureType int32
+		if err := rows.Scan(&id, &maxTargets, &creatureType); err != nil {
 			return err
 		}
-		return putOnce(t.Targets, id, maxTargets, "SpellTargetRestrictions rows at difficulty 0")
+		if err := putOnce(t.Targets, id, maxTargets, "SpellTargetRestrictions rows at difficulty 0"); err != nil {
+			return err
+		}
+		if creatureType != 0 {
+			t.CreatureType[id] = creatureType
+		}
+		return nil
 	})
 }
 

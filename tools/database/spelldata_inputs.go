@@ -90,6 +90,7 @@ func captureStoreInputs(t *spellTables, roots []int32, ids []int32,
 			Interrupts:   map[int32]interruptRow{},
 			Shapeshift:   map[int32]uint64{},
 			Targets:      map[int32]int16{},
+			CreatureType: map[int32]int32{},
 			Requirements: map[int32]int32{},
 			Equipped:     map[int32]equippedRow{},
 			Labels:       map[int32][]int16{},
@@ -114,6 +115,7 @@ func captureStoreInputs(t *spellTables, roots []int32, ids []int32,
 		keepValue(in.Interrupts, id, t.Interrupts)
 		keepValue(in.Shapeshift, id, t.Shapeshift)
 		keepValue(in.Targets, id, t.Targets)
+		keepValue(in.CreatureType, id, t.CreatureType)
 		keepValue(in.Requirements, id, t.Requirements)
 		keepValue(in.Equipped, id, t.Equipped)
 
