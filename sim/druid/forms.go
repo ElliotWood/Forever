@@ -201,7 +201,7 @@ func (druid *Druid) registerCatFormSpell() {
 	// The TBC implementation, kept for the port:
 	// druid.CatForm = druid.RegisterSpell(core.SpellConfig{
 	// 	ActionID:        core.ActionID{SpellID: 768},
-	// 	CastRequirement: core.CastRequirement{NotShapeshifted: true}.Excluding(dbcenums.FORM_MOONKIN_FORM),
+	// 	CastRequirement: spellData.CatForm.Highest().CastRequirement(),
 	// 	ClassSpellMask:  DruidSpellCatForm,
 	// 	Flags:           core.SpellFlagNoOnCastComplete | core.SpellFlagAPL,
 	//
@@ -323,7 +323,7 @@ func (druid *Druid) registerBearFormSpell() {
 	//
 	// druid.BearForm = druid.RegisterSpell(core.SpellConfig{
 	// 	ActionID:        actionID,
-	// 	CastRequirement: core.CastRequirement{NotShapeshifted: true}.Excluding(dbcenums.FORM_MOONKIN_FORM),
+	// 	CastRequirement: spellData.DireBearForm.Highest().CastRequirement(),
 	// 	ClassSpellMask:  DruidSpellBearForm,
 	// 	Flags:           core.SpellFlagNoOnCastComplete | core.SpellFlagAPL,
 	//
@@ -414,7 +414,7 @@ func (druid *Druid) RegisterMoonkinFormSpell() {
 	//
 	// druid.MoonkinForm = druid.RegisterSpell(core.SpellConfig{
 	// ActionID:        core.ActionID{SpellID: 24858},
-	// CastRequirement: spelldata.MustFind(24858).CastRequirement(),
+	// CastRequirement: spellData.MoonkinForm.Highest().CastRequirement(),
 	// Flags:           core.SpellFlagNoOnCastComplete | core.SpellFlagAPL,
 	//
 	// ManaCost: core.ManaCostOptions{
