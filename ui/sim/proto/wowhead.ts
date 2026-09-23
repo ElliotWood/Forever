@@ -89,20 +89,39 @@ export type WowheadTooltipSpellParams = {
 // the domain, and every url built from it, follows. The literal-union key means
 // an unmapped id is a compile error rather than a `.../undefined/...` url.
 const WOWHEAD_EXPANSIONS = {
+	4: 'classic',
 	5: 'tbc',
 	15: 'mop-classic',
 	16: 'forever',
 } as const;
+type WowheadExpansionEnv = keyof typeof WOWHEAD_EXPANSIONS;
 
-export const WOWHEAD_EXPANSION_ENV: keyof typeof WOWHEAD_EXPANSIONS = 16;
+export const WOWHEAD_EXPANSION_ENV: WowheadExpansionEnv = 16;
 export const WOWHEAD_DOMAIN = WOWHEAD_EXPANSIONS[WOWHEAD_EXPANSION_ENV];
+
+// Wowhead's Forever data only has the items and spells it has seen change: Classic items
+// like Truestrike Shoulders 404 there. Master asks Classic Era (env 4) for everything, which
+// 404s on what Forever added (items past 25000, spells past 100000, a few reused Classic ids).
+// So Classic Era for what Classic had, Forever for the rest. Checked 2026-09-23 against every
+// tooltip the 19 spec pages ask for on load: the only 404s left are TBC ids neither one has.
+const FOREVER_ONLY_SPELLS = new Set([14084]); // Improved Distract
+const wowheadEnvFor = (entity: WowheadEntity, id: number): WowheadExpansionEnv => {
+	if (entity === 'item') return id < 25000 ? 4 : WOWHEAD_EXPANSION_ENV;
+	if (entity === 'spell') return id < 100000 && !FOREVER_ONLY_SPELLS.has(id) ? 4 : WOWHEAD_EXPANSION_ENV;
+	return WOWHEAD_EXPANSION_ENV;
+};
+export const wowheadTooltipDomain = (entity: WowheadEntity, id: number) => {
+	const env = wowheadEnvFor(entity, id);
+	return { env, domain: WOWHEAD_EXPANSIONS[env] };
+};
 
 export const buildWowheadTooltipDataset = async (options: WowheadTooltipItemParams | WowheadTooltipSpellParams) => {
 	const lang = getLang();
 	const params = new URLSearchParams();
 	const langPrefix = lang && lang != 'en' ? lang + '.' : '';
-	params.set('domain', `${langPrefix}${WOWHEAD_DOMAIN}`);
-	params.set('dataEnv', String(WOWHEAD_EXPANSION_ENV));
+	const { env, domain } = 'spellId' in options ? wowheadTooltipDomain('spell', options.spellId) : wowheadTooltipDomain('item', options.itemId);
+	params.set('domain', `${langPrefix}${domain}`);
+	params.set('dataEnv', String(env));
 
 	params.set('lvl', String(options.level || CHARACTER_LEVEL));
 
@@ -156,9 +175,8 @@ export function getWowheadLanguagePrefix(): string {
 }
 
 // Every wowhead link this app builds hangs off one of these. The entity links
-// keep the bare host they have always used; the gear planner page is the `www.`
+// keep the bare host they have always used (domain per id, see wowheadTooltipDomain); the gear planner page is the `www.`
 // form we show to users verbatim in the importer.
-export const WOWHEAD_BASE_URL = `https://wowhead.com/${WOWHEAD_DOMAIN}`;
 export const WOWHEAD_GEAR_PLANNER_URL = `https://www.wowhead.com/${WOWHEAD_DOMAIN}/gear-planner`;
 export const WOWHEAD_ICON_BASE_URL = 'https://wow.zamimg.com/images/wow/icons';
 
@@ -167,7 +185,7 @@ type WowheadEntity = 'item' | 'spell' | 'quest' | 'npc' | 'zone';
 // `https://wowhead.com/<domain>/<lang>/<entity>=<id>` — the language segment
 // is empty for English.
 export function wowheadEntityUrl(entity: WowheadEntity, id: number, rank = 0, definitionId = 0): string {
-	const url = `${WOWHEAD_BASE_URL}/${getWowheadLanguagePrefix()}${entity}=${id}`;
+	const url = `https://wowhead.com/${wowheadTooltipDomain(entity, id).domain}/${getWowheadLanguagePrefix()}${entity}=${id}`;
 	const params = new URLSearchParams();
 	if (definitionId > 0) params.set('def', String(definitionId));
 	if (rank > 0) params.set('rank', String(rank));

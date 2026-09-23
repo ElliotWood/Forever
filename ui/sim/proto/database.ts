@@ -22,7 +22,7 @@ import { Gear, ItemSwapGear } from './gear';
 import { gemEligibleForSocket, gemMatchesSocket } from './gems';
 import { getEligibleEnchantSlots, getEligibleItemSlots } from './items';
 import { Stats } from './stats';
-import { WOWHEAD_DOMAIN, WOWHEAD_EXPANSION_ENV } from './wowhead';
+import { wowheadTooltipDomain } from './wowhead';
 
 const dbUrlJson = '/forever/assets/database/db.json';
 const dbUrlBin = '/forever/assets/database/db.bin';
@@ -423,11 +423,14 @@ export class Database {
 	private static async getWowheadSpellTooltipData(id: number): Promise<IconData> {
 		return Database.getWowheadTooltipData(id, 'spell');
 	}
-	private static async getWowheadTooltipData(id: number, tooltipPostfix: string): Promise<IconData> {
-		const params = new URLSearchParams({ lvl: String(CHARACTER_LEVEL), dataEnv: String(WOWHEAD_EXPANSION_ENV) });
-		const url = `https://nether.wowhead.com/${WOWHEAD_DOMAIN}/tooltip/${tooltipPostfix}/${id}?${params}`;
+	private static async getWowheadTooltipData(id: number, tooltipPostfix: 'item' | 'spell'): Promise<IconData> {
+		if (!id) return IconData.create(); // nothing to ask for (an unset action id); Wowhead 404s on 0
+		const { env, domain } = wowheadTooltipDomain(tooltipPostfix, id);
+		const params = new URLSearchParams({ lvl: String(CHARACTER_LEVEL), dataEnv: String(env) });
+		const url = `https://nether.wowhead.com/${domain}/tooltip/${tooltipPostfix}/${id}?${params}`;
 		try {
 			const response = await fetch(url);
+			if (!response.ok) return IconData.create();
 			const json = await response.json();
 			let reportedRank = 0;
 			if (tooltipPostfix === 'spell') {
