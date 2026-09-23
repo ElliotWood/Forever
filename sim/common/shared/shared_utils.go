@@ -1250,6 +1250,14 @@ func spellDataOnUseSpeedSpell(character *core.Character, row *spelldata.Spell) c
 // global cooldown the row states. The player casts it, so it is not a proc: its hits and heals reach
 // the listeners and its cast completes like any other.
 func registerSpellDataOnUse(itemID int32, cdType core.CooldownType, spellConfig func(*core.Character, *spelldata.Spell) core.SpellConfig) {
+	registerSpellDataOnUseCooldown(itemID, func(character *core.Character, row *spelldata.Spell) (core.SpellConfig, core.MajorCooldown, bool) {
+		return spellConfig(character, row), core.MajorCooldown{Type: cdType}, true
+	})
+}
+
+// The same, where the row decides the cooldown the manager files the spell under and when it uses it,
+// or that the character has nothing to use it for.
+func registerSpellDataOnUseCooldown(itemID int32, onUse func(*core.Character, *spelldata.Spell) (core.SpellConfig, core.MajorCooldown, bool)) {
 	// Soft fail to allow for overrides for bad effects
 	if core.HasItemEffect(itemID) {
 		return
@@ -1260,19 +1268,20 @@ func registerSpellDataOnUse(itemID int32, cdType core.CooldownType, spellConfig 
 
 		for _, itemEffect := range onUseEffectsFor(itemID) {
 			row := spelldata.MustFind(itemEffect.BuffId)
-			config := spellConfig(character, row)
+			config, cooldown, ok := onUse(character, row)
+			if !ok {
+				continue
+			}
 			config.ActionID = core.ActionID{ItemID: itemID}
 
-			onUse := onUseCast(character, itemEffect)
+			itemCast := onUseCast(character, itemEffect)
 			config.Cast = spelldata.Cast(row)
-			config.Cast.CD, config.Cast.SharedCD = onUse.CD, onUse.SharedCD
+			config.Cast.CD, config.Cast.SharedCD = itemCast.CD, itemCast.SharedCD
 			config.Flags &^= core.SpellFlagPassiveSpell | core.SpellFlagNoOnCastComplete |
 				core.SpellFlagNoOnDamageDealt | core.SpellFlagProc
 
-			character.AddMajorCooldown(core.MajorCooldown{
-				Spell: character.RegisterSpell(config),
-				Type:  cdType,
-			})
+			cooldown.Spell = character.RegisterSpell(config)
+			character.AddMajorCooldown(cooldown)
 		}
 	})
 }

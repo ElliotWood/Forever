@@ -11,70 +11,51 @@ import (
 // bar does not register it. The cooldown manager uses it once the whole gain fits under the bar's
 // maximum.
 func NewSpellDataEnergizeOnUse(itemID int32) {
-	// Soft fail to allow for overrides for bad effects
-	if core.HasItemEffect(itemID) {
-		return
-	}
-
-	core.NewItemEffect(itemID, func(agent core.Agent) {
-		character := agent.GetCharacter()
-
-		for _, itemEffect := range onUseEffectsFor(itemID) {
-			row := spelldata.MustFind(itemEffect.BuffId)
-			effect := row.ProcEnergizeEffect()
-			power := dbcenums.PowerType(effect.Misc)
-			bar, ok := energizedBarOf(character, power, core.ActionID{ItemID: itemID})
-			if !ok {
-				continue
-			}
-
-			amount := func(sim *core.Simulation) float64 {
-				gain := effect.Roll(sim, character.Level)
-				if power.InTenths() {
-					gain /= 10
-				}
-				return gain
-			}
-
-			config := spelldata.SpellConfig(&character.Unit, row)
-			config.ActionID = core.ActionID{ItemID: itemID}
-
-			onUse := onUseCast(character, itemEffect)
-			config.Cast = spelldata.Cast(row)
-			config.Cast.CD, config.Cast.SharedCD = onUse.CD, onUse.SharedCD
-			config.Flags &^= core.SpellFlagPassiveSpell | core.SpellFlagNoOnCastComplete |
-				core.SpellFlagNoOnDamageDealt | core.SpellFlagProc
-
-			ticks := 1.0
-			if effect.Aura == dbcenums.A_PERIODIC_ENERGIZE {
-				config.Hot = spelldata.DotConfig(row, effect)
-				config.Hot.SelfOnly = true
-				config.Hot.OnTick = func(sim *core.Simulation, _ *core.Unit, _ *core.Dot) {
-					bar.add(sim, amount(sim), bar.metrics)
-				}
-				config.ApplyEffects = func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
-					spell.SelfHot().Apply(sim)
-				}
-				ticks = float64(config.Hot.NumberOfTicks)
-			} else {
-				config.ApplyEffects = func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
-					bar.add(sim, amount(sim), bar.metrics)
-				}
-			}
-
-			whole := effect.Max(character.Level) * ticks
-			if power.InTenths() {
-				whole /= 10
-			}
-
-			character.AddMajorCooldown(core.MajorCooldown{
-				Spell: character.RegisterSpell(config),
-				Type:  bar.cdType,
-				ShouldActivate: func(_ *core.Simulation, _ *core.Character) bool {
-					return bar.room() >= whole
-				},
-			})
+	registerSpellDataOnUseCooldown(itemID, func(character *core.Character, row *spelldata.Spell) (core.SpellConfig, core.MajorCooldown, bool) {
+		effect := row.ProcEnergizeEffect()
+		power := dbcenums.PowerType(effect.Misc)
+		bar, ok := energizedBarOf(character, power, core.ActionID{ItemID: itemID})
+		if !ok {
+			return core.SpellConfig{}, core.MajorCooldown{}, false
 		}
+
+		amount := func(sim *core.Simulation) float64 {
+			gain := effect.Roll(sim, character.Level)
+			if power.InTenths() {
+				gain /= 10
+			}
+			return gain
+		}
+
+		config := spelldata.SpellConfig(&character.Unit, row)
+		ticks := 1.0
+		if effect.Aura == dbcenums.A_PERIODIC_ENERGIZE {
+			config.Hot = spelldata.DotConfig(row, effect)
+			config.Hot.SelfOnly = true
+			config.Hot.OnTick = func(sim *core.Simulation, _ *core.Unit, _ *core.Dot) {
+				bar.add(sim, amount(sim), bar.metrics)
+			}
+			config.ApplyEffects = func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
+				spell.SelfHot().Apply(sim)
+			}
+			ticks = float64(config.Hot.NumberOfTicks)
+		} else {
+			config.ApplyEffects = func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
+				bar.add(sim, amount(sim), bar.metrics)
+			}
+		}
+
+		whole := effect.Max(character.Level) * ticks
+		if power.InTenths() {
+			whole /= 10
+		}
+
+		return config, core.MajorCooldown{
+			Type: bar.cdType,
+			ShouldActivate: func(_ *core.Simulation, _ *core.Character) bool {
+				return bar.room() >= whole
+			},
+		}, true
 	})
 }
 
