@@ -13,21 +13,21 @@ const withSoftCaps = () => {
 		statCaps: new Stats().withStat(Stat.StatArmorPenetration, 1400),
 		softCapBreakpoints: [StatCap.fromStat(Stat.StatArmorPenetration, { breakpoints: [1400], capType: StatCapType.TypeSoftCap, postCapEPs: [0] })],
 	};
-	const settings = new ReforgeSettings({ sim: { store: createSimStore(), getPhase: () => Phase.Phase3 }, storeKey: 1 } as any, defaults as any);
+	const settings = new ReforgeSettings({ sim: { store: createSimStore(), getPhase: () => Phase.Tier2 }, storeKey: 1 } as any, defaults as any);
 	settings.applyDefaults();
 	return settings;
 };
 
 describe('ReforgeSettings.applyPreset', () => {
 	// What a preset build actually carries: the gem phase and nothing else.
-	const gemPhaseOnly = ReforgeSettingsProto.create({ maxGemPhase: Phase.Phase1 });
+	const gemPhaseOnly = ReforgeSettingsProto.create({ maxGemPhase: Phase.Launch });
 
 	it('applies the fields the preset sets', () => {
 		const settings = withSoftCaps();
 
 		settings.applyPreset(gemPhaseOnly);
 
-		expect(settings.getMaxGemPhase()).toBe(Phase.Phase1);
+		expect(settings.getMaxGemPhase()).toBe(Phase.Launch);
 	});
 
 	// The regression: `fromProto` is full-replace, so a preset that only names a gem phase
@@ -45,10 +45,10 @@ describe('ReforgeSettings.applyPreset', () => {
 		const settings = withSoftCaps();
 		settings.setUseCustomEPValues(false);
 
-		settings.applyPreset(ReforgeSettingsProto.create({ maxGemPhase: Phase.Phase2, useCustomEpValues: true }));
+		settings.applyPreset(ReforgeSettingsProto.create({ maxGemPhase: Phase.Tier1, useCustomEpValues: true }));
 
 		expect(settings.useCustomEPValues).toBe(true);
-		expect(settings.getMaxGemPhase()).toBe(Phase.Phase2);
+		expect(settings.getMaxGemPhase()).toBe(Phase.Tier1);
 	});
 
 	// `create()` seeds repeated fields to `[]`, so a truthiness guard here fires on every preset.

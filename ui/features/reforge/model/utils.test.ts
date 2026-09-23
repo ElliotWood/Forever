@@ -121,7 +121,7 @@ describe('stat cap unit conversions', () => {
 });
 
 describe('gemPhaseValues', () => {
-	it('lists TBC’s five phases, ascending', () => {
-		expect(gemPhaseValues()).toEqual([1, 2, 3, 4, 5]);
+	it('lists Forever’s four tiers, ascending', () => {
+		expect(gemPhaseValues()).toEqual([1, 2, 3, 4]);
 	});
 });

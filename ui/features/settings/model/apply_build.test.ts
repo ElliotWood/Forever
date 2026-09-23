@@ -97,7 +97,7 @@ describe('applyBuild player timings', () => {
 describe('applyBuild reforge settings', () => {
 	// Preset builds carry a partial; fromProto is the full-replace deserialization path.
 	it('merges the preset instead of replacing every field', () => {
-		const reforgeSettings = ReforgeSettingsProto.create({ maxGemPhase: Phase.Phase1 });
+		const reforgeSettings = ReforgeSettingsProto.create({ maxGemPhase: Phase.Launch });
 
 		applyBuild({ name: 'P1', reforgeSettings }, host());
 

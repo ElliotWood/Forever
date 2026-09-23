@@ -104,12 +104,12 @@ describe('PresetConfigurationPicker', () => {
 	});
 });
 
-// TBC-only: a spec whose builds carry a phase gets the tab bar, and only the chosen phase's chips.
+// A spec whose builds carry a phase gets the tab bar, and only the chosen phase's chips.
 describe('PresetConfigurationPicker, grouped by phase', () => {
 	const phased = [
-		{ name: 'P1', gear: {}, phase: 1 },
-		{ name: 'P3a', gear: {}, phase: 3, group: 'Beast Mastery' },
-		{ name: 'P3b', gear: {}, phase: 3, group: 'Survival' },
+		{ name: 'La', gear: {}, phase: 1, group: 'Beast Mastery' },
+		{ name: 'Lb', gear: {}, phase: 1, group: 'Survival' },
+		{ name: 'T1', gear: {}, phase: 2 },
 	];
 
 	it('leaves an unphased spec on the flat picker', () => {
@@ -122,18 +122,18 @@ describe('PresetConfigurationPicker, grouped by phase', () => {
 	it('shows one tab per phase and only the current phase\u2019s chips', () => {
 		const { container } = setup(phased);
 
-		expect(phaseTabs(container).map(tab => tab.textContent)).toEqual(['common.phase_names.1', 'common.phase_names.3']);
-		// CURRENT_PHASE is 3, and it is among the builds' phases, so that tab opens selected.
-		expect(phaseTabs(container).map(tab => tab.hasAttribute('data-active'))).toEqual([false, true]);
-		expect(chips(container).map(chip => chip.textContent)).toEqual(['P3a', 'P3b']);
+		expect(phaseTabs(container).map(tab => tab.textContent)).toEqual(['common.phase_names.1', 'common.phase_names.2']);
+		// CURRENT_PHASE is Launch (1), and it is among the builds' phases, so that tab opens selected.
+		expect(phaseTabs(container).map(tab => tab.hasAttribute('data-active'))).toEqual([true, false]);
+		expect(chips(container).map(chip => chip.textContent)).toEqual(['La', 'Lb']);
 	});
 
 	it('switches the visible chips when another phase tab is clicked', () => {
 		const { container } = setup(phased);
 
-		fireEvent.click(phaseTabs(container)[0]);
+		fireEvent.click(phaseTabs(container)[1]);
 
-		expect(chips(container).map(chip => chip.textContent)).toEqual(['P1']);
+		expect(chips(container).map(chip => chip.textContent)).toEqual(['T1']);
 	});
 
 	it('labels the groups only when there is more than one', () => {
@@ -148,9 +148,9 @@ describe('PresetConfigurationPicker, grouped by phase', () => {
 
 		expect(window.localStorage.getItem('spec__presetFilters__')).toBeNull();
 
-		fireEvent.click(phaseTabs(container)[0]);
+		fireEvent.click(phaseTabs(container)[1]);
 
-		expect(JSON.parse(window.localStorage.getItem('spec__presetFilters__')!)).toEqual({ phase: 1 });
+		expect(JSON.parse(window.localStorage.getItem('spec__presetFilters__')!)).toEqual({ phase: 2 });
 	});
 
 	// Applying a build from another phase jumps the bar to it, so the chip that was just clicked
@@ -158,10 +158,10 @@ describe('PresetConfigurationPicker, grouped by phase', () => {
 	it('follows the applied build to its phase', () => {
 		const { container } = setup(phased);
 
-		fireEvent.click(phaseTabs(container)[0]);
+		fireEvent.click(phaseTabs(container)[1]);
 		fireEvent.click(chips(container)[0].querySelector('[data-testid="saved-data-set-name"]')!);
 
 		expect(applyBuild).toHaveBeenCalledTimes(1);
-		expect(JSON.parse(window.localStorage.getItem('spec__presetFilters__')!)).toEqual({ phase: 1 });
+		expect(JSON.parse(window.localStorage.getItem('spec__presetFilters__')!)).toEqual({ phase: 2 });
 	});
 });

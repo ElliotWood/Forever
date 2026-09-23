@@ -205,7 +205,7 @@ export class ReforgeSettings {
 			this.setFrozenItemSlots(proto.frozenItemSlots);
 			this.setBreakpointLimits(Stats.fromProto(proto.breakpointLimits));
 			this.setDisableUniqueGems(proto.disableUniqueGems);
-			this.setMaxGemPhase(proto.maxGemPhase || Phase.Phase1);
+			this.setMaxGemPhase(proto.maxGemPhase || Phase.Launch);
 			this.setMaxGemQuality(proto.maxGemQuality || ItemQuality.ItemQualityEpic);
 		});
 	}
