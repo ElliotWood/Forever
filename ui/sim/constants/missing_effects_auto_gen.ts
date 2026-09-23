@@ -2128,6 +2128,12 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
+		260205, // Highborne Research Tablet
+		[
+			"Chance on hit to deal 75 Arcane damage. Deals 2 times as much damage to Naga and Satyrs.", // 1265634 - https://www.wowhead.com/forever/spell=1265634
+		]
+	],
+	[
 		260819, // EZ-Thro Field Transporter: Gadgetzan
 		[
 			"Safely transport yourself to Gadgetzan in Tanaris! Emphasis on Safe! Yup, nothing bad could ever happen while using this device!", // 23453 - https://www.wowhead.com/forever/spell=23453
@@ -2547,6 +2553,12 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		275441, // Cremation Longbow
 		[
 			"Cremate the target for 56 Fire damage.", // 1297921 - https://www.wowhead.com/forever/spell=1297921
+		]
+	],
+	[
+		275630, // Depleted Eye of Influence
+		[
+			"Chance on harmful spell cast to reduce target enemy's attack power by 60 for 30s. ", // 1297082 - https://www.wowhead.com/forever/spell=1297082
 		]
 	],
 	[

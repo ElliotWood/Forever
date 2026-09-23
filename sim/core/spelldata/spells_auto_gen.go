@@ -16564,7 +16564,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 699098, SpellID: 21741, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PERIODIC_TRIGGER_SPELL, SpellLevel: 60, SPCoef: 1, PvpMult: 1, PeriodMs: 3000, TriggerID: 21740, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
-	{ID: 21747, Name: "Lawbringer", School: 1, Attr: [17]uint32{0: 0x40040, 15: 0x2000}, SpellLevel: 60, DurationMs: -1, ProcChance: 100, ProcFlags: [2]uint32{0: 0x14}, RefIDs: []int32{23544}, ProcChanceSource: ProcChanceAlways, ProcHint: core.ProcHintHeals,
+	{ID: 21747, Name: "Lawbringer", School: 1, Attr: [17]uint32{0: 0x40040, 15: 0x2000}, SpellLevel: 60, DurationMs: -1, ProcChance: 100, ProcFlags: [2]uint32{0: 0x14}, RefIDs: []int32{23544}, ProcChanceSource: ProcChancePPM, ProcHint: core.ProcHintHeals,
 		Effects: []Effect{
 			{ID: 699125, SpellID: 21747, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_SPELL, SpellLevel: 60, SPCoef: 1, PvpMult: 1, TriggerID: 23544, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
@@ -19036,7 +19036,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 703985, SpellID: 27418, Type: dbcenums.E_HEAL, BasePoints: 110, Variance: 0.4000000059604645, SpellLevel: 50, PvpMult: 1, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
-	{ID: 27419, Name: "Warrior's Resolve", School: 2, Attr: [17]uint32{0: 0xc0, 15: 0x2000}, SpellLevel: 50, DurationMs: -1, StartRecoveryCategory: 133, ProcChance: 100, ProcFlags: [2]uint32{0: 0x4}, RefIDs: []int32{27418}, ProcChanceSource: ProcChanceAlways, ProcHint: core.ProcHintHeals,
+	{ID: 27419, Name: "Warrior's Resolve", School: 2, Attr: [17]uint32{0: 0xc0, 15: 0x2000}, SpellLevel: 50, DurationMs: -1, StartRecoveryCategory: 133, ProcChance: 100, ProcFlags: [2]uint32{0: 0x4}, RefIDs: []int32{27418}, ProcChanceSource: ProcChancePPM, ProcHint: core.ProcHintHeals,
 		Effects: []Effect{
 			{ID: 704274, SpellID: 27419, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_SPELL, SpellLevel: 50, SPCoef: 1, PvpMult: 1, TriggerID: 27418, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
@@ -19152,7 +19152,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 704637, SpellID: 27786, Type: dbcenums.E_ENERGIZE, BasePoints: 200, SpellLevel: 60, SPCoef: 1, PvpMult: 1, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
-	{ID: 27787, Name: "Rogue Armor Energize", School: 1, Attr: [17]uint32{0: 0xc0, 15: 0x2000}, SpellLevel: 60, ProcChance: 100, ProcFlags: [2]uint32{0: 0x4}, ClassFlags: core.ClassFlags{Family: 10}, Labels: []int16{20}, ProcChanceSource: ProcChanceAlways,
+	{ID: 27787, Name: "Rogue Armor Energize", School: 1, Attr: [17]uint32{0: 0xc0, 15: 0x2000}, SpellLevel: 60, ProcChance: 100, ProcFlags: [2]uint32{0: 0x4}, ClassFlags: core.ClassFlags{Family: 10}, Labels: []int16{20}, ProcChanceSource: ProcChancePPM,
 		Effects: []Effect{
 			{ID: 704546, SpellID: 27787, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_SPELL, BasePoints: 1, SpellLevel: 60, PvpMult: 1, TriggerID: 27788, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
@@ -24363,7 +24363,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1150584, SpellID: 450585, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_SPELL, BasePoints: 300, SpellLevel: 60, SPCoef: 1, PvpMult: 1, TriggerID: 450583, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
-	{ID: 450587, Name: "S03 - Warrior Armor Heal Trigger - Battlegear of Valor", School: 2, Attr: [17]uint32{0: 0xc0, 15: 0x2000}, SpellLevel: 50, StartRecoveryCategory: 133, ProcChance: 100, ProcFlags: [2]uint32{0: 0x4}, RefIDs: []int32{450589}, ProcChanceSource: ProcChanceAlways, ProcHint: core.ProcHintHeals,
+	{ID: 450587, Name: "S03 - Warrior Armor Heal Trigger - Battlegear of Valor", School: 2, Attr: [17]uint32{0: 0xc0, 15: 0x2000}, SpellLevel: 50, StartRecoveryCategory: 133, ProcChance: 100, ProcFlags: [2]uint32{0: 0x4}, RefIDs: []int32{450589}, ProcChanceSource: ProcChancePPM, ProcHint: core.ProcHintHeals,
 		Effects: []Effect{
 			{ID: 1150590, SpellID: 450587, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_SPELL, SpellLevel: 50, SPCoef: 1, PvpMult: 1, TriggerID: 450589, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
@@ -24376,11 +24376,11 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1150619, SpellID: 450608, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_DUMMY, BasePoints: 5, SpellLevel: 50, SPCoef: 1, PvpMult: 1, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
-	{ID: 450625, Name: "Item - Crusader's Wrath Proc - Lightforge Armor", School: 1, Attr: [17]uint32{0: 0xc0, 15: 0x2000}, SpellLevel: 60, ProcChance: 100, ProcFlags: [2]uint32{0: 0x14004}, ClassFlags: core.ClassFlags{Family: 10}, RefIDs: []int32{27499}, ProcChanceSource: ProcChanceAlways, ProcHint: core.ProcHintCastTrigger | core.ProcHintHeals,
+	{ID: 450625, Name: "Item - Crusader's Wrath Proc - Lightforge Armor", School: 1, Attr: [17]uint32{0: 0xc0, 15: 0x2000}, SpellLevel: 60, ProcChance: 100, ProcFlags: [2]uint32{0: 0x14004}, ClassFlags: core.ClassFlags{Family: 10}, RefIDs: []int32{27499}, ProcChanceSource: ProcChancePPM, ProcHint: core.ProcHintCastTrigger | core.ProcHintHeals,
 		Effects: []Effect{
 			{ID: 1150643, SpellID: 450625, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_SPELL, SpellLevel: 60, PvpMult: 1, TriggerID: 27499, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
-	{ID: 450626, Name: "Item - The Furious Storm Proc", School: 1, Attr: [17]uint32{0: 0xc0, 15: 0x2000}, SpellLevel: 60, ProcChance: 100, ProcFlags: [2]uint32{0: 0x14004}, ClassFlags: core.ClassFlags{Family: 10}, RefIDs: []int32{27499}, ProcChanceSource: ProcChanceAlways, ProcHint: core.ProcHintCastTrigger | core.ProcHintHeals,
+	{ID: 450626, Name: "Item - The Furious Storm Proc", School: 1, Attr: [17]uint32{0: 0xc0, 15: 0x2000}, SpellLevel: 60, ProcChance: 100, ProcFlags: [2]uint32{0: 0x14004}, ClassFlags: core.ClassFlags{Family: 10}, RefIDs: []int32{27499}, ProcChanceSource: ProcChancePPM, ProcHint: core.ProcHintCastTrigger | core.ProcHintHeals,
 		Effects: []Effect{
 			{ID: 1150644, SpellID: 450626, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_SPELL, SpellLevel: 60, PvpMult: 1, TriggerID: 27775, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
@@ -30408,7 +30408,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1311159, SpellID: 1291663, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PERIODIC_DAMAGE, BasePoints: 7, SpellLevel: 10, MaxLevel: 10, PvpMult: 1, PeriodMs: 3000, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{6, 0}},
 		}},
-	{ID: 1291686, Name: "Firebelch", School: 1, Attr: [17]uint32{0: 0x1c0, 15: 0x2000}, SpellLevel: 1, ProcChance: 100, ProcFlags: [2]uint32{0: 0x40}, ICDMs: 10, RefIDs: []int32{1291662}, ProcChanceSource: ProcChanceAlways,
+	{ID: 1291686, Name: "Firebelch", School: 1, Attr: [17]uint32{0: 0x1c0, 15: 0x2000}, SpellLevel: 1, ProcChance: 100, ProcFlags: [2]uint32{0: 0x40}, ICDMs: 10, RefIDs: []int32{1291662}, ProcChanceSource: ProcChancePPM,
 		Effects: []Effect{
 			{ID: 1311224, SpellID: 1291686, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_SPELL, SpellLevel: 1, PvpMult: 1, TriggerID: 1291662, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
@@ -30918,7 +30918,7 @@ var generatedSpells = []Spell{
 			{ID: 1319980, SpellID: 1297082, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_ATTACK_POWER, BasePoints: -60, SpellLevel: 1, PvpMult: 1, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{6, 0}},
 			{ID: 1319981, SpellID: 1297082, Index: 1, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_RANGED_ATTACK_POWER, BasePoints: -60, SpellLevel: 1, PvpMult: 1, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{6, 0}},
 		}},
-	{ID: 1297085, Name: "Eye of Influence", School: 1, Attr: [17]uint32{0: 0x1c0, 15: 0x2000}, SpellLevel: 60, ProcChance: 100, ProcFlags: [2]uint32{0: 0x10000}, RefIDs: []int32{1297082}, ProcChanceSource: ProcChanceAlways,
+	{ID: 1297085, Name: "Eye of Influence", School: 1, Attr: [17]uint32{0: 0x1c0, 15: 0x2000}, SpellLevel: 60, ProcChance: 100, ProcFlags: [2]uint32{0: 0x10000}, RefIDs: []int32{1297082}, ProcChanceSource: ProcChancePPM,
 		Effects: []Effect{
 			{ID: 1319985, SpellID: 1297085, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_SPELL, SpellLevel: 60, PvpMult: 1, TriggerID: 1297082, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
@@ -31321,7 +31321,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1326047, SpellID: 1301096, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_RATING, BasePoints: 12, SpellLevel: 1, PvpMult: 1, Misc: 8388608, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
-	{ID: 1301123, Name: "Roar of the Crowd", School: 1, Attr: [17]uint32{0: 0x40, 15: 0x2000}, SpellLevel: 53, MaxRange: 100, ProcChance: 100, ProcFlags: [2]uint32{0: 0x14}, RefIDs: []int32{1301124}, ProcChanceSource: ProcChanceAlways,
+	{ID: 1301123, Name: "Roar of the Crowd", School: 1, Attr: [17]uint32{0: 0x40, 15: 0x2000}, SpellLevel: 53, MaxRange: 100, ProcChance: 100, ProcFlags: [2]uint32{0: 0x14}, RefIDs: []int32{1301124}, ProcChanceSource: ProcChancePPM,
 		Effects: []Effect{
 			{ID: 1326087, SpellID: 1301123, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_SPELL, BasePoints: 5, SpellLevel: 53, PvpMult: 1, TriggerID: 1301124, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 			{ID: 1326088, SpellID: 1301123, Index: 1, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_DUMMY, BasePoints: 2, SpellLevel: 53, PvpMult: 1, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
@@ -32312,7 +32312,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1350103, SpellID: 1317038, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_STAT, BasePoints: 20, SpellLevel: 60, PvpMult: 1, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
-	{ID: 1317039, Name: "Now you're making me angry", School: 1, Attr: [17]uint32{0: 0xc0, 1: 0x10000000, 15: 0x2000}, SpellLevel: 60, DefenseType: 1, ProcChance: 100, ProcFlags: [2]uint32{0: 0x14}, ICDMs: 100, RefIDs: []int32{1317040}, ProcChanceSource: ProcChanceAlways,
+	{ID: 1317039, Name: "Now you're making me angry", School: 1, Attr: [17]uint32{0: 0xc0, 1: 0x10000000, 15: 0x2000}, SpellLevel: 60, DefenseType: 1, ProcChance: 100, ProcFlags: [2]uint32{0: 0x14}, ICDMs: 100, RefIDs: []int32{1317040}, ProcChanceSource: ProcChancePPM,
 		Effects: []Effect{
 			{ID: 1350104, SpellID: 1317039, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_SPELL, SpellLevel: 60, PvpMult: 1, TriggerID: 1309323, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
@@ -32482,7 +32482,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1351443, SpellID: 1318132, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_POWER_REGEN, BasePoints: 10, PvpMult: 1, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
-	{ID: 1318159, Name: "Ancient Power", School: 1, Attr: [17]uint32{0: 0x40, 15: 0x2000}, SpellLevel: 60, ProcChance: 100, ProcFlags: [2]uint32{0: 0x10154}, RefIDs: []int32{1265634}, ProcChanceSource: ProcChanceAlways,
+	{ID: 1318159, Name: "Ancient Power", School: 1, Attr: [17]uint32{0: 0x40, 15: 0x2000}, SpellLevel: 60, ProcChance: 100, ProcFlags: [2]uint32{0: 0x10154}, RefIDs: []int32{1265634}, ProcChanceSource: ProcChancePPM,
 		Effects: []Effect{
 			{ID: 1351486, SpellID: 1318159, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_SPELL, BasePoints: 2, SpellLevel: 60, PvpMult: 1, TriggerID: 1265634, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},

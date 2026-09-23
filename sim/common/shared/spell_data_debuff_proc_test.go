@@ -194,13 +194,14 @@ func TestAnnihilatorShattersTheTargetsArmor(t *testing.T) {
 }
 
 // Depleted Eye of Influence 275630's Eye of Influence 1297082 states A_MOD_ATTACK_POWER and
-// A_MOD_RANGED_ATTACK_POWER -60 on the enemy for 30 s, off the harmful spells its wearer casts.
+// A_MOD_RANGED_ATTACK_POWER -60 on the enemy for 30 s, off the harmful spells its wearer casts. Its
+// trigger 1297085 states no rate, so the test hands it a 100% chance.
 func TestEyeOfInfluenceLowersTheTargetsAttackPower(t *testing.T) {
 	const itemID, trigger, debuff int32 = 991408, 1297085, 1297082
 	core.AddToDatabase(&proto.SimDatabase{Items: []*proto.SimItem{{Id: itemID, Name: "Test Eye",
 		Type: proto.ItemType_ItemTypeNeck, ScalingOptions: map[int32]*proto.ScalingItemProperties{0: {}}}}})
 	registerSpellDataDebuffProc(SpellDataProc{Name: "Test Eye", ItemID: itemID, TriggerSpellID: trigger,
-		BuffSpellID: debuff})
+		BuffSpellID: debuff, ProcChancePct: 100})
 
 	items := testHands(&proto.ItemSpec{}, &proto.ItemSpec{})
 	items[proto.ItemSlot_ItemSlotNeck] = &proto.ItemSpec{Id: itemID}

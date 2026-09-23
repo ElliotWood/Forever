@@ -1697,9 +1697,10 @@ func attackAvoidedHints(tooltip string) core.ProcHint {
 	return hints
 }
 
-// A tooltip stating that the effect only happens sometimes. Where the data pairs that with a 100%
-// rate, the real rate is the one thing the data does not carry.
-var statedChanceMatcher = regexp.MustCompile(`(?i)chance (to|of|when)|has a chance`)
+// A tooltip stating that the effect only happens sometimes: "a chance to", "Chance on hit", "Chance on
+// harmful spell cast". Where the data pairs that with a 100% rate, the real rate is the one thing the
+// data does not carry.
+var statedChanceMatcher = regexp.MustCompile(`(?i)chance (to|of|when|on)|has a chance`)
 
 // What a sentence names as feeding the proc. A clause stating a chance says nothing about a rate
 // unless it also says what the chance is rolled on or what it does: Force Reactive Disk's "This also

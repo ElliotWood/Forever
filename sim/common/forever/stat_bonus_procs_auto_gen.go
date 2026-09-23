@@ -3809,6 +3809,19 @@ func RegisterAllProcs() {
 	//       This can be ignored if the effect has already been implemented.
 	//       With next db run the item will be removed if implemented.
 	//
+	// Chance on hit to deal 75 Arcane damage. Deals 2 times as much damage to Naga and Satyrs.
+	// https://www.wowhead.com/forever/spell=1265634
+	// unsupported: states no rate
+	// trigger 1318159 (no stated rate, core.CallbackOnSpellHitDealt, core.ProcMaskMeleeMHAuto | core.ProcMaskMeleeOHAuto | core.ProcMaskMeleeMHSpecial | core.ProcMaskMeleeOHSpecial | core.ProcMaskRangedAuto | core.ProcMaskRangedSpecial | core.ProcMaskSpellDamage) -> buff 1265634
+	// shared.NewSpellDataDamageProc(shared.SpellDataProc{TriggerSpellID: 1318159, BuffSpellID: 1265634},
+	//	[]shared.ItemVariant{
+	//	{ItemID: 260205, ItemName: "Highborne Research Tablet"},
+	// })
+
+	// TODO: Manual implementation required
+	//       This can be ignored if the effect has already been implemented.
+	//       With next db run the item will be removed if implemented.
+	//
 	// https://www.wowhead.com/forever/spell=1318514
 	// shared.NewProcStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
 	//	Callback:           core.CallbackEmpty,
@@ -4706,6 +4719,20 @@ func RegisterAllProcs() {
 	//       This can be ignored if the effect has already been implemented.
 	//       With next db run the item will be removed if implemented.
 	//
+	// Chance on harmful spell cast to reduce target enemy's attack power by 60 for 30s.
+	//
+	// https://www.wowhead.com/forever/spell=1297082
+	// unsupported: states no rate
+	// trigger 1297085 (no stated rate, core.CallbackOnCastComplete, core.ProcMaskSpellDamage) -> buff 1297082
+	// shared.NewSpellDataDebuffProc(shared.SpellDataProc{TriggerSpellID: 1297085, BuffSpellID: 1297082},
+	//	[]shared.ItemVariant{
+	//	{ItemID: 275630, ItemName: "Depleted Eye of Influence"},
+	// })
+
+	// TODO: Manual implementation required
+	//       This can be ignored if the effect has already been implemented.
+	//       With next db run the item will be removed if implemented.
+	//
 	// Heals wielder of 182 damage over 14s.
 	// https://www.wowhead.com/forever/spell=1297357
 	// unsupported: states no rate
@@ -4946,14 +4973,6 @@ func RegisterAllProcs() {
 			{ItemID: 234588, ItemName: "Grand Marshal's Aegis -  - "},
 		})
 
-	// Chance on hit to deal 75 Arcane damage. Deals 2 times as much damage to Naga and Satyrs.
-	// https://www.wowhead.com/forever/spell=1265634
-	// trigger 1318159 (every time, core.CallbackOnSpellHitDealt, core.ProcMaskMeleeMHAuto | core.ProcMaskMeleeOHAuto | core.ProcMaskMeleeMHSpecial | core.ProcMaskMeleeOHSpecial | core.ProcMaskRangedAuto | core.ProcMaskRangedSpecial | core.ProcMaskSpellDamage) -> buff 1265634
-	shared.NewSpellDataDamageProc(shared.SpellDataProc{TriggerSpellID: 1318159, BuffSpellID: 1265634},
-		[]shared.ItemVariant{
-			{ItemID: 260205, ItemName: "Highborne Research Tablet"},
-		})
-
 	// When struck in combat has a 5% chance of inflicting 50 Nature damage to the attacker.
 	// https://www.wowhead.com/forever/spell=16782
 	// trigger 13959 (5%, core.CallbackOnSpellHitTaken, core.ProcMaskMeleeMHAuto | core.ProcMaskMeleeOHAuto | core.ProcMaskMeleeMHSpecial | core.ProcMaskMeleeOHSpecial | core.ProcMaskRangedAuto | core.ProcMaskRangedSpecial) -> buff 16782
@@ -4968,15 +4987,6 @@ func RegisterAllProcs() {
 	shared.NewSpellDataDamageProc(shared.SpellDataProc{TriggerSpellID: 13959, BuffSpellID: 16782},
 		[]shared.ItemVariant{
 			{ItemID: 272838, ItemName: "Premier Grand Marshal's Aegis"},
-		})
-
-	// Chance on harmful spell cast to reduce target enemy's attack power by 60 for 30s.
-	//
-	// https://www.wowhead.com/forever/spell=1297082
-	// trigger 1297085 (every time, core.CallbackOnCastComplete, core.ProcMaskSpellDamage) -> buff 1297082
-	shared.NewSpellDataDebuffProc(shared.SpellDataProc{TriggerSpellID: 1297085, BuffSpellID: 1297082},
-		[]shared.ItemVariant{
-			{ItemID: 275630, ItemName: "Depleted Eye of Influence"},
 		})
 
 	// Thrown attacks explode on impact, causing 21 Fire damage to nearby enemies.
