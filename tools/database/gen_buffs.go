@@ -73,9 +73,6 @@ type ResolvedBuff struct {
 	TalentSpellID  int32
 	TalentPosition int32
 
-	// DurationFromCast says the aura states no duration and the cast times it.
-	DurationFromCast bool
-
 	ScopeFromClient buffmanifest.BuffScope
 
 	DBName string
@@ -192,7 +189,6 @@ func loadBuffSpell(t *spellTables, row *ResolvedBuff) error {
 		return nil
 	}
 	if row.DurationMs <= 0 && row.CastSpellID != row.SpellID {
-		row.DurationFromCast = true
 		row.DurationMs = cast.DurationMs
 	}
 	if row.DurationMs <= 0 {
@@ -271,13 +267,12 @@ func parseBuff(row *ResolvedBuff) {
 	row.Applied = parsed.Applied
 	row.LeftOut = parsed.SkippedNotes(row.Spell)
 
-	switch row.Kind {
-	case buffmanifest.KindDamageShield:
+	switch {
+	case row.Kind == buffmanifest.KindDamageShield:
 		if !row.hasDamageShield() {
 			row.unsupported("no A_DAMAGE_SHIELD effect on spell %d", row.SpellID)
 		}
-	case buffmanifest.KindExternalCD, buffmanifest.KindProc, buffmanifest.KindManual,
-		buffmanifest.KindDebuffUptime:
+	case isDriverKind(row.Kind):
 		// Driver kinds: the hand-written driver decides what the numbers mean.
 	default:
 		if len(row.Applied) > 0 {
@@ -468,11 +463,19 @@ func compiledProtoType(spec buffmanifest.BuffSpec) (string, error) {
 }
 
 // Whether a manifest category names a resistance school, which is the category
-// spelldata.SchoolResistances puts that school's stat into anyway. The names
-// are sim/core's ResistanceCategory* constants.
+// spelldata.SchoolResistances puts that school's stat into anyway.
 func isSchoolResistanceCategory(category string) bool {
 	switch category {
-	case "ResistanceArcane", "ResistanceFire", "ResistanceFrost", "ResistanceNature", "ResistanceShadow":
+	case core.ResistanceCategoryArcane, core.ResistanceCategoryFire, core.ResistanceCategoryFrost,
+		core.ResistanceCategoryNature, core.ResistanceCategoryShadow:
+		return true
+	}
+	return false
+}
+
+func isDriverKind(kind buffmanifest.BuffKind) bool {
+	switch kind {
+	case buffmanifest.KindExternalCD, buffmanifest.KindProc, buffmanifest.KindManual, buffmanifest.KindDebuffUptime:
 		return true
 	}
 	return false
@@ -742,7 +745,7 @@ func buffMetaFields(row ResolvedBuff, rendered buffRow) string {
 	var b strings.Builder
 	fmt.Fprintf(&b, "Label: %q,\n", rendered.Label)
 	fmt.Fprintf(&b, "Spell: %s,\n", rendered.SpellVar)
-	if row.CastSpellID != row.SpellID && (row.DurationFromCast || row.CooldownMs > 0) {
+	if row.CastSpellID != row.SpellID && row.CooldownMs > 0 {
 		fmt.Fprintf(&b, "Cast: spelldata.MustFind(%d),\n", row.CastSpellID)
 	}
 	if rendered.CategoryVar != "" {
@@ -816,10 +819,7 @@ func buffApply(row ResolvedBuff) (string, string, bool) {
 
 	var body string
 	switch {
-	case row.Driver,
-		row.Kind == buffmanifest.KindExternalCD, row.Kind == buffmanifest.KindProc,
-		row.Kind == buffmanifest.KindManual, row.Kind == buffmanifest.KindDebuffUptime,
-		row.Kind == buffmanifest.KindItemCount:
+	case row.Driver, isDriverKind(row.Kind), row.Kind == buffmanifest.KindItemCount:
 		scope := field
 		if row.Scope == buffmanifest.ScopeDebuff {
 			scope = "debuffs, raid"

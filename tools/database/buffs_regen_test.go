@@ -5,12 +5,8 @@ package database
 // No client database: the buffs render from the same capture the store does, so this runs in CI.
 
 import (
-	"bytes"
 	"fmt"
 	"maps"
-	"os"
-	"strconv"
-	"strings"
 	"testing"
 
 	"github.com/wowsims/forever/tools/database/buffmanifest"
@@ -20,11 +16,7 @@ func resolveCommittedBuffs(t *testing.T) []ResolvedBuff {
 	t.Helper()
 	inRepositoryRoot(t)
 
-	inputs, err := readStoreInputs(spellStoreInputsPath)
-	if err != nil {
-		t.Fatalf("%v", err)
-	}
-	rows, err := resolveBuffManifest(inputs)
+	rows, err := resolveBuffManifest(committedInputs(t))
 	if err != nil {
 		t.Fatalf("resolving the manifest: %v", err)
 	}
@@ -34,25 +26,12 @@ func resolveCommittedBuffs(t *testing.T) []ResolvedBuff {
 func TestBuffFilesRegenerateFromTheCommittedInputs(t *testing.T) {
 	inRepositoryRoot(t)
 
-	inputs, err := readStoreInputs(spellStoreInputsPath)
-	if err != nil {
-		t.Fatalf("%v", err)
-	}
-	files, err := renderBuffOutputs(inputs)
+	files, err := renderBuffOutputs(committedInputs(t))
 	if err != nil {
 		t.Fatalf("rendering the buff files: %v", err)
 	}
-
 	for name, rendered := range files {
-		committed, err := os.ReadFile(name)
-		if err != nil {
-			t.Errorf("reading %s: %v", name, err)
-			continue
-		}
-		if !bytes.Equal(committed, rendered) {
-			t.Errorf("%s is not what the committed inputs render, regenerate with `go run ./tools/database/gen_spelldata`:\n%s",
-				name, unifiedBuffDiff(string(committed), string(rendered)))
-		}
+		assertRendersCommitted(t, name, rendered)
 	}
 }
 
@@ -170,33 +149,4 @@ var pinnedCategories = map[string]string{
 	"frost_resistance_aura":       "FrostResistanceAura",
 	"shadow_resistance_aura":      "ShadowResistanceAura",
 	"devotion_aura":               "DevotionAura",
-}
-
-// The first differing line of each file with a little context, which is all a
-// reader needs to see whether the generated file or the manifest moved.
-func unifiedBuffDiff(committed string, rendered string) string {
-	committedLines := strings.Split(committed, "\n")
-	renderedLines := strings.Split(rendered, "\n")
-
-	var b strings.Builder
-	for i := 0; i < max(len(committedLines), len(renderedLines)); i++ {
-		var left, right string
-		if i < len(committedLines) {
-			left = committedLines[i]
-		}
-		if i < len(renderedLines) {
-			right = renderedLines[i]
-		}
-		if left == right {
-			continue
-		}
-		b.WriteString("@@ line " + strconv.Itoa(i+1) + " @@\n")
-		b.WriteString("-" + left + "\n")
-		b.WriteString("+" + right + "\n")
-		if b.Len() > 4000 {
-			b.WriteString("... truncated\n")
-			break
-		}
-	}
-	return b.String()
 }

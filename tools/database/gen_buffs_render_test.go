@@ -58,8 +58,7 @@ func syntheticBuffRows() []ResolvedBuff {
 				Proto: buffmanifest.ProtoInt32, Kind: buffmanifest.KindExternalCD,
 				Go: "SynthManaTide", Name: "Mana Tide Totem", Category: "ManaTideTotem",
 			},
-			SpellID: 17360, CastSpellID: 17359, DurationMs: 12000, CooldownMs: 300000,
-			DurationFromCast: true, Supported: true,
+			SpellID: 17360, CastSpellID: 17359, DurationMs: 12000, CooldownMs: 300000, Supported: true,
 			Spell: spell(17360, core.SpellSchoolNature, 0, mana),
 		},
 		{
@@ -281,9 +280,10 @@ func TestRenderedBuffFilesMatchTheFixtures(t *testing.T) {
 			t.Fatalf("reading %s: %v", fixture, err)
 		}
 		if string(committed) != string(rendered) {
-			t.Errorf("%s no longer matches what the generator emits, "+
-				"rewrite it with `UPDATE_BUFF_FIXTURES=1 go test ./tools/database/`:\n%s",
-				fixture, unifiedBuffDiff(string(committed), string(rendered)))
+			line, want, got := firstDifference(committed, rendered)
+			t.Errorf("%s no longer matches what the generator emits, from line %d:\n  committed: %s\n  rendered:  %s\n"+
+				"rewrite it with `UPDATE_BUFF_FIXTURES=1 go test ./tools/database/`",
+				fixture, line, want, got)
 		}
 	}
 }
