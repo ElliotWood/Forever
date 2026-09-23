@@ -65,6 +65,15 @@ func testHands(mainHand, offHand *proto.ItemSpec) []*proto.ItemSpec {
 }
 
 func newTestCasterSim(equipped, swapped []*proto.ItemSpec) *core.Simulation {
+	return newTestCasterSimAgainst(equipped, swapped, 1)
+}
+
+func newTestCasterSimAgainst(equipped, swapped []*proto.ItemSpec, targetCount int) *core.Simulation {
+	targets := make([]*proto.Target, targetCount)
+	for i := range targets {
+		targets[i] = &proto.Target{Name: "target", Level: 60, MobType: proto.MobType_MobTypeDemon}
+	}
+
 	player := &proto.Player{
 		Name:      "Caster",
 		Class:     proto.Class_ClassShaman,
@@ -85,7 +94,7 @@ func newTestCasterSim(equipped, swapped []*proto.ItemSpec) *core.Simulation {
 			Buffs:   &proto.PartyBuffs{},
 		}}},
 		Encounter: &proto.Encounter{
-			Targets:  []*proto.Target{{Name: "target", Level: 60, MobType: proto.MobType_MobTypeDemon}},
+			Targets:  targets,
 			Duration: 180,
 		},
 	}, simsignals.CreateSignals())

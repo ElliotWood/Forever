@@ -799,8 +799,14 @@ func spellDataProcDamageSpell(character *core.Character, damage *spelldata.Spell
 
 	periodic := damage.PeriodicDamageEffect()
 	if periodic == spelldata.NilEffect {
+		multiTarget := effect.HitsAnArea() || effect.ChainTargets > 1
 		config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			spell.CalcAndDealDamage(sim, target, effect.Roll(sim, character.Level), GetOutcome(spell, outcome))
+			if !multiTarget {
+				spell.CalcAndDealDamage(sim, target, effect.Roll(sim, character.Level), GetOutcome(spell, outcome))
+				return
+			}
+			calcMultiTargetDamage(sim, spell, target, damage, effect, character.Level, GetOutcome(spell, outcome))
+			spell.DealBatchedAoeDamage(sim)
 		}
 		return config
 	}
@@ -818,6 +824,50 @@ func spellDataProcDamageSpell(character *core.Character, damage *spelldata.Spell
 	}
 
 	return config
+}
+
+// The damage of an effect that reaches more than its target, for DealBatchedAoeDamage: every enemy in
+// its area, or the row's MaxTargets of them from the target out; or a chain of ChainTargets keeping
+// ChainAmp of the damage at each jump. A split row rolls once and divides the roll evenly among the
+// targets it reaches. Otherwise each target rolls its own, and an uncapped area takes the encounter's
+// AoE cap the way an explosive does.
+func calcMultiTargetDamage(sim *core.Simulation, spell *core.Spell, target *core.Unit, row *spelldata.Spell, effect *spelldata.Effect, level int32, outcome core.OutcomeApplier) {
+	roll := func(sim *core.Simulation, _ *core.Spell) float64 {
+		return effect.Roll(sim, level)
+	}
+
+	if !effect.HitsAnArea() {
+		keep := 1.0
+		spell.CalcCleaveDamageWithVariance(sim, target, int32(effect.ChainTargets), outcome, func(sim *core.Simulation, spell *core.Spell) float64 {
+			damage := roll(sim, spell) * keep
+			keep *= float64(effect.ChainAmp)
+			return damage
+		})
+		return
+	}
+
+	capped := row.MaxTargets > 0
+	if row.SplitsDamage {
+		reached := sim.Environment.ActiveTargetCount()
+		if capped {
+			reached = min(reached, int32(row.MaxTargets))
+		}
+		share := roll(sim, spell) / float64(reached)
+		if capped {
+			spell.CalcCleaveDamage(sim, target, int32(row.MaxTargets), share, outcome)
+		} else {
+			spell.CalcAoeDamage(sim, share, outcome)
+		}
+		return
+	}
+
+	if capped {
+		spell.CalcCleaveDamageWithVariance(sim, target, int32(row.MaxTargets), outcome, roll)
+		return
+	}
+	spell.CalcAoeDamageWithVariance(sim, outcome, func(sim *core.Simulation, spell *core.Spell) float64 {
+		return roll(sim, spell) * sim.Encounter.AOECapMultiplier()
+	})
 }
 
 // Which multipliers and metrics bucket the damage belongs in. The row's defense type decides, since

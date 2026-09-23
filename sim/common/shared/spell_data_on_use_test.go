@@ -37,6 +37,11 @@ func newOnUseSim(t *testing.T, register func(int32), trinkets map[int32]*proto.I
 
 func newOnUseSimWearing(t *testing.T, register func(int32), trinkets map[int32]*proto.ItemEffect, neck *proto.ItemSpec) (*core.Simulation, *testCaster) {
 	t.Helper()
+	return newOnUseSimAgainst(t, register, trinkets, neck, 1)
+}
+
+func newOnUseSimAgainst(t *testing.T, register func(int32), trinkets map[int32]*proto.ItemEffect, neck *proto.ItemSpec, targetCount int) (*core.Simulation, *testCaster) {
+	t.Helper()
 	items := make([]*proto.ItemSpec, proto.ItemSlot_ItemSlotTrinket2+1)
 	for i := range items {
 		items[i] = &proto.ItemSpec{}
@@ -53,7 +58,7 @@ func newOnUseSimWearing(t *testing.T, register func(int32), trinkets map[int32]*
 		slot++
 	}
 
-	sim := newTestCasterSim(items, nil)
+	sim := newTestCasterSimAgainst(items, nil, targetCount)
 	caster := sim.Raid.Parties[0].Players[0].(*testCaster)
 	caster.AddStatsDynamic(sim, stats.Stats{
 		stats.SpellHitPercent:  100,
