@@ -31,7 +31,7 @@ export const ItemNoticeIcon = ({ itemId, additionalNotice }: ItemNoticeIconProps
 			<button
 				type="button"
 				aria-label={i18n.t(warns ? 'common.list_picker.warnings' : 'common.list_picker.additional_information')}
-				className={clsx(noticeIconClass(warns ? 'warning' : 'info'), 'fa-xl mr-2')}
+				className={clsx(noticeIconClass(warns ? 'warning' : 'info'), 'fa-xl fa-fw mr-2')}
 				{...tooltipAnchorProps(tooltipId)}
 			/>
 			<Tooltip
