@@ -72,9 +72,6 @@ func exprMarkdown(result *exprResult, hover chainHover) string {
 		}
 		fmt.Fprintf(&md, "`%s` = **%s**\n\n", label, result.value)
 		fmt.Fprintf(&md, "`%s`\n\n", result.trail)
-		if hover.name == "" && result.doc != "" {
-			fmt.Fprintf(&md, "%s\n\n", result.doc)
-		}
 		c.writeMarkdown(&md)
 	}
 	return md.String()

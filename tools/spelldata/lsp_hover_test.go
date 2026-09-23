@@ -229,7 +229,6 @@ func (warrior *Warrior) makeStanceSpell() {
 func TestHoverInsideExpression(t *testing.T) {
 	wantHover(t, stancesGo, "ValueAt(1)", 2,
 		"`ValueAt(1)` = **10**\n\n`spellData.TacticalMastery.ValueAt(1)`",
-		"The rank's only effect",
 		"| 1 ▶ | a dummy aura holding 10<br>")
 	wantHover(t, stancesGo, "split :=", 2, "`EffectN(1)` = **effect 1** of 20662 Execute (Rank 5)")
 	wantHover(t, stancesGo, "\t\tEffectN(1)", 4, "`EffectN(1)` = **effect 1** of 20662 Execute (Rank 5)")
@@ -245,8 +244,11 @@ func TestHoverSegments(t *testing.T) {
 	markdown := wantHover(t, executeGo, "Average(core", 2,
 		"`Average(60)` = **600**",
 		"`spellData.Execute.Highest().EffectN(1).Average(60)`",
-		"The amount at a caster level",
 		"| 1 ▶ |")
+	// The editor's Go server shows the accessor's doc beside this hover already.
+	if strings.Contains(markdown, "The amount at a caster level") {
+		t.Errorf("the call's hover repeats the accessor's doc:\n%s", markdown)
+	}
 	if again := wantHover(t, executeGo, "core.CharacterLevel", 2); again != markdown {
 		t.Errorf("the argument hovers differently from its call:\n%s", again)
 	}
