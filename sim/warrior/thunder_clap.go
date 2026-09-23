@@ -12,7 +12,9 @@ func (warrior *Warrior) registerThunderClap() {
 	auras := warrior.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
 		// The priority below rescales core's flat 20% for the Conqueror's set bonus.
 		return core.ThunderClapAura(target).ApplyOnGain(func(aura *core.Aura, sim *core.Simulation) {
-			speedMultiplier := 1 / (1 + thunderClapSlow*(1+warrior.thunderClapEffectBonus))
+			// The slow is -20 (a fraction of -0.2) and adds to the time between attacks; Conqueror's
+			// 5 piece (26110, all effects +50%) makes it 30%.
+			speedMultiplier := 1 - thunderClapSlow*(1+warrior.thunderClapEffectBonus)
 			if ee := aura.ExclusiveEffects[0]; ee.Priority != speedMultiplier {
 				ee.SetPriority(sim, speedMultiplier)
 			}
