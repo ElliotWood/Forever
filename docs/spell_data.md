@@ -231,9 +231,6 @@ leaves everything else to the caller:
 var pummelRank = spellData.Pummel.ByID(6554)
 
 config := spelldata.SpellConfig(&warrior.Unit, pummelRank, spelldata.Melee(core.ProcMaskMeleeMHSpecial))
-config.ExtraCastCondition = func(sim *core.Simulation, target *core.Unit) bool {
-	return warrior.StanceMatches(BerserkerStance)
-}
 config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) { /* ... */ }
 warrior.RegisterSpell(config)
 ```
@@ -242,7 +239,9 @@ What the row fills: the `ActionID`, `Rank` (from "Rank 4", which is what flips `
 UI), `SpellSchool`, `DefenseType`, `ClassFlags`, `MissileSpeed`, `MinRange`/`MaxRange`, the cast - cast
 time, the GCD where the row sits in the global cooldown category, its own cooldown and the category one
 it shares - and the cost out of the first bar it states, with rage divided off the 0-1000 bar and the
-refund the Discount Power On Miss attribute states. `Flags` gets what the attributes and targets say:
+refund the Discount Power On Miss attribute states. `CastRequirement` gets the forms and caster auras
+the client requires (see below), which is why Pummel needs no Berserker Stance condition. `Flags` gets
+what the attributes and targets say:
 `SpellFlagPassiveSpell`, `SpellFlagChanneled`, `SpellFlagSuppressWeaponProcs` and `SpellFlagHelpful`.
 
 A bleed row also fills the damage and threat multipliers with 1.
@@ -253,16 +252,44 @@ What it does not: `ApplyEffects`, `ProcMask`, the multipliers on any other row, 
 is needed for the cooldown timers, so a config is built where the sim has a character rather than at
 package init.
 
-|               |                                                                                                                                                                |
-| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Melee(mask)` | the proc mask, `SpellFlagMeleeMetrics` and `SpellFlagAPL`, damage and threat multipliers of 1, and `IgnoreHaste`                                               |
-| `Magic(mask)` | the proc mask, `SpellFlagAPL`, the multipliers, and `BonusCoefficient` from the damage effect's spell power share - the heal's where the spell damages nothing |
-| `Proc()`      | `SpellFlagPassiveSpell` and `SpellFlagNoOnCastComplete`, clears `SpellFlagAPL`, and empties the cast - cast time, GCD, cooldowns - and every cost              |
-| `Flags(f)`    | ors in flags the client does not state                                                                                                                         |
-| `Tag(n)`      | splits one spell id into several actions                                                                                                                       |
+|               |                                                                                                                                                                        |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Melee(mask)` | the proc mask, `SpellFlagMeleeMetrics` and `SpellFlagAPL`, damage and threat multipliers of 1, and `IgnoreHaste`                                                       |
+| `Magic(mask)` | the proc mask, `SpellFlagAPL`, the multipliers, and `BonusCoefficient` from the damage effect's spell power share - the heal's where the spell damages nothing         |
+| `Proc()`      | `SpellFlagPassiveSpell` and `SpellFlagNoOnCastComplete`, clears `SpellFlagAPL`, and empties the cast - cast time, GCD, cooldowns - every cost and the cast requirement |
+| `Flags(f)`    | ors in flags the client does not state                                                                                                                                 |
+| `Tag(n)`      | splits one spell id into several actions                                                                                                                               |
 
 The row is filled first and the options run on top in the order given, so an option sees what the row
 put there.
+
+### Where a spell can be cast
+
+`core.CastRequirement` is what the client requires of the caster's form and auras, and core refuses a
+cast, `CanCast` and `CanQueue` that break it ("wrong form", "missing caster aura", "excluded caster
+aura"). It reads four client sources: `SpellShapeshift`'s mask and exclude mask (`StanceMask`,
+`StanceExclude`), `SpellAuraRestrictions` (`CasterAura`, `ExcludeCasterAura` - Tiger's Fury states its
+Cat Form requirement there, not in a mask), the not-shapeshifted and castable-in-caster-form attribute
+bits, and `SpellShapeshiftForm`'s stance flag (`dbcenums.ShapeshiftForm.IsStance`, generated into
+`sim/core/dbcenums/forms_auto_gen.go`).
+
+For the caster's form `f`: an excluded form refuses; a form in the mask allows; in a shapeshift that is
+not a stance (Cat, Bear) a spell with a mask or the not-shapeshifted bit is refused; with no form or in
+a stance (the warrior's, Moonkin, Tree) a spell with a mask is refused unless it is castable in caster
+form. A required caster aura must then be active on the caster, matched by `ActionID.SpellID`.
+
+The class reports its form in `Unit.ShapeshiftForm` - the warrior's `setStance`, the druid's `setForm` -
+and nothing else. A unit that sets `Unit.AutoUnshift` (the druid, to `ClearForm`) casts a spell its form
+refuses but no form allows by leaving the form first, once, after every other check passed.
+
+- A class that reads the store by hand takes `row.CastRequirement()`.
+- A hand-built spell with no row states it by hand: `core.InForms(dbcenums.FORM_BATTLE_STANCE)`, with
+  `.Excluding(...)` and `.OrCasterForm()`, or the struct literal for the attribute bits.
+- A talent that swaps a spell on the action bar (`A_OVERRIDE_ACTIONBAR_SPELLS`) swaps its row too:
+  Vanguard's Charge takes `chargeRank.OverriddenBy(spellData.Vanguard.Highest()).CastRequirement()`,
+  whose row allows Defensive Stance.
+- A form spell (subtext "Shapeshift") is a single-rank ladder like a warrior stance, so
+  `spellData.CatForm` exists.
 
 ### The three shapes a registration takes
 
