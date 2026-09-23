@@ -1,7 +1,6 @@
 package shared
 
 import (
-	"math"
 	"testing"
 	"time"
 
@@ -204,10 +203,6 @@ func dealt(sim *core.Simulation, spell *core.Spell, target *core.Unit) float64 {
 	return spell.SpellMetrics[target.UnitIndex].TotalDamage - before
 }
 
-func near(got, want float64) bool {
-	return math.Abs(got-want) < 1e-6
-}
-
 // Natural Alignment Crystal raises the wearer's spell damage and healing by 20% and its spells' mana
 // cost by 20% for 20 s, and leaves a physical hit alone.
 func TestNaturalAlignmentCrystal(t *testing.T) {
@@ -225,16 +220,16 @@ func TestNaturalAlignmentCrystal(t *testing.T) {
 
 	check := func(when string, bolt, healing, cost float64) {
 		t.Helper()
-		if got := dealt(sim, tester.bolt, target); !near(got, bolt) {
+		if got := dealt(sim, tester.bolt, target); !core.WithinToleranceFloat64(bolt, got, 1e-6) {
 			t.Errorf("%s: the arcane bolt dealt %v, want %v", when, got, bolt)
 		}
-		if got := dealt(sim, tester.strike, target); !near(got, 100) {
+		if got := dealt(sim, tester.strike, target); !core.WithinToleranceFloat64(100, got, 1e-6) {
 			t.Errorf("%s: the physical strike dealt %v, want 100", when, got)
 		}
-		if got := tester.PseudoStats.HealingDealtMultiplier; !near(got, healing) {
+		if got := tester.PseudoStats.HealingDealtMultiplier; !core.WithinToleranceFloat64(healing, got, 1e-6) {
 			t.Errorf("%s: healing dealt multiplier %v, want %v", when, got, healing)
 		}
-		if got := tester.manaBolt.Cost.GetCurrentCost(); !near(got, cost) {
+		if got := tester.manaBolt.Cost.GetCurrentCost(); !core.WithinToleranceFloat64(cost, got, 1e-6) {
 			t.Errorf("%s: the mana bolt costs %v, want %v", when, got, cost)
 		}
 	}
@@ -273,13 +268,13 @@ func TestObsidianMailTunicReducesAMagicHitByTen(t *testing.T) {
 	)
 	wearer, attacker := auraTesterAt(sim, 0), auraTesterAt(sim, 1)
 
-	if got := dealt(sim, attacker.bolt, &wearer.Unit); !near(got, 90) {
+	if got := dealt(sim, attacker.bolt, &wearer.Unit); !core.WithinToleranceFloat64(90, got, 1e-6) {
 		t.Errorf("an arcane bolt on the wearer dealt %v, want 90", got)
 	}
-	if got := dealt(sim, attacker.strike, &wearer.Unit); !near(got, 100) {
+	if got := dealt(sim, attacker.strike, &wearer.Unit); !core.WithinToleranceFloat64(100, got, 1e-6) {
 		t.Errorf("a physical strike on the wearer dealt %v, want 100", got)
 	}
-	if got := dealt(sim, wearer.bolt, &attacker.Unit); !near(got, 100) {
+	if got := dealt(sim, wearer.bolt, &attacker.Unit); !core.WithinToleranceFloat64(100, got, 1e-6) {
 		t.Errorf("the wearer's arcane bolt on someone else dealt %v, want 100", got)
 	}
 }
@@ -305,7 +300,7 @@ func TestEquipAuraAppliesOnlyInItsArea(t *testing.T) {
 			shaman("Attacker", nil),
 		)
 		wearer, attacker := auraTesterAt(sim, 0), auraTesterAt(sim, 1)
-		if got := dealt(sim, attacker.bolt, &wearer.Unit); !near(got, c.want) {
+		if got := dealt(sim, attacker.bolt, &wearer.Unit); !core.WithinToleranceFloat64(c.want, got, 1e-6) {
 			t.Errorf("in %v an arcane bolt on the wearer dealt %v, want %v", c.areas, got, c.want)
 		}
 	}
@@ -328,13 +323,13 @@ func TestBeastmastersBootsRaiseThePetsDamage(t *testing.T) {
 	owner, bare, petless := auraTesterAt(sim, 0), auraTesterAt(sim, 1), auraTesterAt(sim, 2)
 
 	bareClaw := dealt(sim, bare.pet.claw, target)
-	if got := dealt(sim, owner.pet.claw, target); !near(got, 1.03*bareClaw) {
+	if got := dealt(sim, owner.pet.claw, target); !core.WithinToleranceFloat64(1.03*bareClaw, got, 1e-6) {
 		t.Errorf("the pet of the wearer clawed for %v, want 3%% over the %v of a pet without", got, bareClaw)
 	}
-	if got := dealt(sim, owner.strike, target); !near(got, 100) {
+	if got := dealt(sim, owner.strike, target); !core.WithinToleranceFloat64(100, got, 1e-6) {
 		t.Errorf("the wearer's own strike dealt %v, want the 100 a pet aura leaves alone", got)
 	}
-	if got := dealt(sim, petless.strike, target); !near(got, 100) {
+	if got := dealt(sim, petless.strike, target); !core.WithinToleranceFloat64(100, got, 1e-6) {
 		t.Errorf("a wearer with no pet struck for %v, want 100", got)
 	}
 	if got := owner.pet.GetStat(stats.Armor); got != bare.pet.GetStat(stats.Armor) {
@@ -365,7 +360,7 @@ func TestNightfallRaisesTheTargetsSpellDamageTaken(t *testing.T) {
 	wielder, caster := auraTesterAt(sim, 0), auraTesterAt(sim, 1)
 	target := sim.Encounter.ActiveTargetUnits[0]
 
-	if got := dealt(sim, caster.bolt, target); !near(got, 100) {
+	if got := dealt(sim, caster.bolt, target); !core.WithinToleranceFloat64(100, got, 1e-6) {
 		t.Fatalf("before the proc a second caster's bolt dealt %v, want 100", got)
 	}
 
@@ -376,13 +371,13 @@ func TestNightfallRaisesTheTargetsSpellDamageTaken(t *testing.T) {
 		t.Fatalf("a strike at 100%% chance put no Spell Vulnerability on the target")
 	}
 
-	if got := dealt(sim, caster.bolt, target); !near(got, 115) {
+	if got := dealt(sim, caster.bolt, target); !core.WithinToleranceFloat64(115, got, 1e-6) {
 		t.Errorf("with the debuff up a second caster's bolt dealt %v, want 115", got)
 	}
-	if got := dealt(sim, wielder.bolt, target); !near(got, 115) {
+	if got := dealt(sim, wielder.bolt, target); !core.WithinToleranceFloat64(115, got, 1e-6) {
 		t.Errorf("with the debuff up the wielder's bolt dealt %v, want 115", got)
 	}
-	if got := dealt(sim, caster.strike, target); !near(got, 100) {
+	if got := dealt(sim, caster.strike, target); !core.WithinToleranceFloat64(100, got, 1e-6) {
 		t.Errorf("with the debuff up a physical strike dealt %v, want 100", got)
 	}
 
@@ -390,7 +385,7 @@ func TestNightfallRaisesTheTargetsSpellDamageTaken(t *testing.T) {
 	if debuff.IsActive() {
 		t.Errorf("Spell Vulnerability is still up after its 5 s")
 	}
-	if got := dealt(sim, caster.bolt, target); !near(got, 100) {
+	if got := dealt(sim, caster.bolt, target); !core.WithinToleranceFloat64(100, got, 1e-6) {
 		t.Errorf("after the debuff a second caster's bolt dealt %v, want 100", got)
 	}
 }
@@ -416,18 +411,18 @@ func TestSwordOfZealAddsPhysicalDamageAndArmor(t *testing.T) {
 
 	strikeAndStep(t, sim, wielder, target)
 	procTime := sim.CurrentTime
-	if got := wielder.GetStat(stats.Armor) - armor; !near(got, 150) {
+	if got := wielder.GetStat(stats.Armor) - armor; !core.WithinToleranceFloat64(150, got, 1e-6) {
 		t.Errorf("Zeal added %v armor, want 150", got)
 	}
-	if got := dealt(sim, wielder.strike, target); !near(got, 110) {
+	if got := dealt(sim, wielder.strike, target); !core.WithinToleranceFloat64(110, got, 1e-6) {
 		t.Errorf("with Zeal up a physical strike dealt %v, want 110", got)
 	}
-	if got := dealt(sim, wielder.bolt, target); !near(got, 100) {
+	if got := dealt(sim, wielder.bolt, target); !core.WithinToleranceFloat64(100, got, 1e-6) {
 		t.Errorf("with Zeal up an arcane bolt dealt %v, want 100", got)
 	}
 
 	stepPast(t, sim, procTime+15*time.Second-time.Millisecond)
-	if got := wielder.GetStat(stats.Armor) - armor; !near(got, 150) {
+	if got := wielder.GetStat(stats.Armor) - armor; !core.WithinToleranceFloat64(150, got, 1e-6) {
 		t.Errorf("Zeal's armor is %v just before its 15 s run out, want 150", got)
 	}
 	// The strike above procced again, a batch window after it landed.
@@ -435,7 +430,7 @@ func TestSwordOfZealAddsPhysicalDamageAndArmor(t *testing.T) {
 	if got := wielder.GetStat(stats.Armor) - armor; got != 0 {
 		t.Errorf("Zeal's armor is %v after its 15 s, want none", got)
 	}
-	if got := dealt(sim, wielder.bolt, target); !near(got, 100) {
+	if got := dealt(sim, wielder.bolt, target); !core.WithinToleranceFloat64(100, got, 1e-6) {
 		t.Errorf("after Zeal an arcane bolt dealt %v, want 100", got)
 	}
 }

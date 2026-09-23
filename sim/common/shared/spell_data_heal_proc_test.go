@@ -111,10 +111,7 @@ func TestProcHealCritsUnlessTheRowRulesItOut(t *testing.T) {
 		t.Errorf("at 100%% spell crit the heal was %v, want the critical %v", got, want)
 	}
 
-	row := spelldata.MustFind(recoveryHeal)
-	original := *row
-	row.Attr[dbcenums.ATTR_INDEX_EX_2] |= dbcenums.ATTR_EX_2_CANT_CRIT
-	t.Cleanup(func() { *row = original })
+	editRow(t, recoveryHeal, func(s *spelldata.Spell) { s.Attr[dbcenums.ATTR_INDEX_EX_2] |= dbcenums.ATTR_EX_2_CANT_CRIT })
 
 	sim, caster, _ = newHealProcSim(t, 990975, 990976, recoveryHeal, 100)
 	want = 0.05 * caster.MaxHealth()
