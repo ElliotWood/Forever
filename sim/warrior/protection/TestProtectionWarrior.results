@@ -104,9 +104,9 @@ dps_results: {
 dps_results: {
  key: "TestProtectionWarrior-AllItems-Conqueror'sBattlegear"
  value: {
-  dps: 378.05617
-  tps: 587.16061
-  dtps: 3748.61497
+  dps: 377.30106
+  tps: 586.01296
+  dtps: 3733.47172
  }
 }
 dps_results: {
