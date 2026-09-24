@@ -335,13 +335,6 @@ var Manifest = []BuffSpec{
 		Stats: []proto.Stat{proto.Stat_StatMP5},
 	},
 	{
-		Field: "mangle", Number: 6, Scope: ScopeDebuff, Proto: ProtoBool, Kind: KindDebuffDamageTaken,
-		SpellID: 1238073,
-		Go:      "Mangle", Name: "Mangle", Owner: proto.Class_ClassDruid,
-		Category: "Mangle", SingleAura: true,
-		Notes: "SkillLineAbility resolves the name to ranks 407995/1238069/1238070/1238073, so the top rank is 1238073.",
-	},
-	{
 		Field: "curse_of_elements", Number: 4, Scope: ScopeDebuff, Proto: ProtoBool, Kind: KindDebuffDamageTaken,
 		SpellID: 1311680,
 		Go:      "CurseOfElements", Name: "Curse of the Elements", Owner: proto.Class_ClassWarlock,
@@ -419,7 +412,7 @@ var Manifest = []BuffSpec{
 		Notes: "Nature's Splendor (1223083) effect 2 extends the duration (misc 1); the field is a plain bool, so the talent is not carried.",
 	},
 	{
-		Field: "scorpid_sting", Number: 16, Scope: ScopeDebuff, Proto: ProtoBool, Kind: KindDebuffStat,
+		Field: "scorpid_sting", Number: 6, Scope: ScopeDebuff, Proto: ProtoBool, Kind: KindDebuffStat,
 		SpellID: 3043,
 		Go:      "ScorpidSting", Name: "Scorpid Sting", Owner: proto.Class_ClassHunter,
 		Stats: []proto.Stat{proto.Stat_StatStamina, proto.Stat_StatDefenseRating},

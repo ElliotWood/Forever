@@ -59,14 +59,14 @@ message IndividualBuffs {
 	bool greater_blessing_of_light = 7;
 }
 
-// Next index: 17
+// Next index: 16
 message Debuffs {
 	bool judgement_of_wisdom = 1;
 	bool judgement_of_light = 2;
 	bool judgement_of_the_crusader = 3;
 	bool curse_of_elements = 4;
 	bool gift_of_arthas = 5;
-	bool mangle = 6;
+	bool scorpid_sting = 6;
 	bool expose_armor = 7;
 	bool faerie_fire = 8;
 	bool sunder_armor = 9;
@@ -76,5 +76,4 @@ message Debuffs {
 	bool demoralizing_shout = 13;
 	bool thunder_clap = 14;
 	bool insect_swarm = 15;
-	bool scorpid_sting = 16;
 }
