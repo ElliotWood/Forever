@@ -1564,7 +1564,8 @@ func tooltipStatesAnUnknownRate(description string) bool {
 		return true
 	}
 
-	return rateWordMatcher.MatchString(cooldownWordingMatcher.ReplaceAllString(description, ""))
+	return rateWordMatcher.MatchString(description) &&
+		rateWordMatcher.MatchString(cooldownWordingMatcher.ReplaceAllString(description, ""))
 }
 
 // Wording that names the cast itself as the trigger rather than the spell landing:
