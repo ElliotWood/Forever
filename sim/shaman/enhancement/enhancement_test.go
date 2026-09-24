@@ -3,6 +3,7 @@ package enhancement
 import (
 	"testing"
 
+	"github.com/wowsims/forever/sim/arenalib"
 	"github.com/wowsims/forever/sim/common"
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
@@ -100,4 +101,24 @@ func TestStormstrikeOnlyBoostsCastersBoltsAndEarthShock(t *testing.T) {
 	if debuff.IsActive() {
 		t.Error("Earth Shock did not spend the Stormstrike charge")
 	}
+}
+
+// The arena entry for this spec. Skipped unless ARENA_OUT is set; see sim/arenalib.
+func TestArena(t *testing.T) {
+	arenalib.Run(t, arenalib.Spec{
+		Dir:   "enhancement_shaman",
+		UI:    "shaman/enhancement",
+		Class: proto.Class_ClassShaman,
+		Race:  proto.Race_RaceDwarf,
+		SpecOptions: &proto.Player_EnhancementShaman{EnhancementShaman: &proto.EnhancementShaman{
+			Options: &proto.EnhancementShaman_Options{
+				SyncType:     proto.ShamanSyncType_Auto,
+				ImbueOh:      proto.ShamanImbue_WindfuryWeapon,
+				ClassOptions: &proto.ShamanOptions{ImbueMh: proto.ShamanImbue_WindfuryWeapon},
+			},
+		}},
+		Role: arenalib.Melee,
+		// Windfury Weapon is the shaman casting on their own weapons, not a totem somebody drops.
+		ClassImbues: arenalib.ClassImbues{Windfury: true},
+	})
 }
