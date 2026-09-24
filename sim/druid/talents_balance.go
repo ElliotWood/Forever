@@ -46,12 +46,10 @@ func (druid *Druid) applyMoonfury() {
 	}
 
 	// Forever states Moonfury as +2% damage a rank to the Arcane|Nature schools (mask 72) rather
-	// than as a spell modifier; the class mask keeps it on the Balance spell list.
-	druid.AddStaticMod(core.SpellModConfig{
-		ClassMask:  DruidDamagingSpells,
-		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: spellData.Moonfury.Effect(dbcenums.A_MOD_DAMAGE_PERCENT_DONE, 72).FractionAt(druid.Talents.Moonfury),
-	})
+	// than as a spell modifier: a separate multiplier on all Arcane and Nature damage.
+	multiplier := spellData.Moonfury.Effect(dbcenums.A_MOD_DAMAGE_PERCENT_DONE, 72).MultiplierAt(druid.Talents.Moonfury)
+	druid.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexArcane] *= multiplier
+	druid.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexNature] *= multiplier
 }
 
 func (druid *Druid) applyMoonglow() {
