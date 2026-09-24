@@ -138,7 +138,7 @@ var Manifest = []BuffSpec{
 		Go:      "WindfuryTotem", Name: "Windfury Totem", AuraName: "Windfury Totem",
 		Owner: proto.Class_ClassShaman, Category: "WindfuryTotem",
 		Stats: []proto.Stat{proto.Stat_StatAttackPower},
-		Notes: "the cast family (8512/10613/10614) and the aura family (8516/10608/10610) share the name; the aura carries the proc. Improved Weapon Totems (29193) has no node in shaman tree 1082.",
+		Notes: "the cast family (8512/10613/10614) and the aura family (8516/10608/10610) share the name; the aura carries the proc. The totem's party aura 10612 shares the name too and procs 10610. Improved Weapon Totems (29193) has no node in shaman tree 1082.",
 	},
 	{
 		Field: "atiesh_druid", Number: 16, Scope: ScopeParty, Proto: ProtoInt32, Kind: KindItemCount,

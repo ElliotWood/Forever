@@ -68,7 +68,7 @@ func TestManifestAnchorsMatchTheClient(t *testing.T) {
 			}
 		}
 
-		if spec.SpellID != aura {
+		if spec.SpellID != aura && !procTriggers(db, aura, spec.SpellID) {
 			t.Errorf("%s: the manifest pins spell %d, the client resolves %d", spec.Field, spec.SpellID, aura)
 		}
 		if spec.CastID != 0 && spec.CastID != cast.SpellID {
@@ -209,6 +209,16 @@ func topRank(cands []buffCandidate, classMask int32) buffCandidate {
 		}
 	}
 	return owned[0]
+}
+
+// A party aura that only procs the pinned spell, the way Windfury Totem's 10612 hands out the
+// attack power aura 10610, names the same buff.
+func procTriggers(db *sql.DB, aura, pinned int32) bool {
+	var n int
+	err := db.QueryRow(`SELECT COUNT(*) FROM SpellEffect WHERE SpellID = ? AND EffectAura = ?
+		AND (EffectTriggerSpell = ? OR (EffectTriggerSpell = 0 AND EffectBasePointsF = ?))`,
+		aura, dbcenums.A_PROC_TRIGGER_SPELL, pinned, pinned).Scan(&n)
+	return err == nil && n > 0
 }
 
 // The aura of a totem or of a dummy passive, which the client only ties to the cast by name. The
