@@ -103,7 +103,7 @@ func TestStormstrikeOnlyBoostsCastersBoltsAndEarthShock(t *testing.T) {
 	}
 }
 
-// The arena entry for this spec. Skipped unless ARENA_OUT is set; see sim/arenalib.
+// The arena entry for this spec. Without ARENA_OUT set it only checks every build's damage against the spell manifest; see sim/arenalib.
 func TestArena(t *testing.T) {
 	arenalib.Run(t, arenalib.Spec{
 		Dir:   "enhancement_shaman",
