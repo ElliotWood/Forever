@@ -31,7 +31,6 @@ import (
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/spelldata"
 	"github.com/wowsims/forever/tools/database/buffmanifest"
-	"github.com/wowsims/forever/tools/database/dbc"
 )
 
 const buffsGenFile = "sim/core/buffs/buffs_auto_gen.go"
@@ -385,12 +384,12 @@ func clientScope(row ResolvedBuff) (buffmanifest.BuffScope, bool) {
 		case dbcenums.E_APPLY_AREA_AURA_PARTY:
 			return buffmanifest.ScopeParty, true
 		case dbcenums.E_APPLY_AURA:
-			switch dbc.ImplicitTarget(effect.Target[0]) {
-			case dbc.TARGET_UNIT_CASTER_AREA_RAID:
+			switch effect.Target[0] {
+			case dbcenums.TARGET_UNIT_CASTER_AREA_RAID:
 				return buffmanifest.ScopeRaid, true
-			case dbc.TARGET_UNIT_CASTER_AREA_PARTY:
+			case dbcenums.TARGET_UNIT_CASTER_AREA_PARTY:
 				return buffmanifest.ScopeParty, true
-			case dbc.TARGET_UNIT_TARGET_ALLY, dbc.TARGET_UNIT_TARGET_ALLY_OR_RAID:
+			case dbcenums.TARGET_UNIT_TARGET_ALLY, dbcenums.TARGET_153:
 				return buffmanifest.ScopeIndividual, true
 			}
 		}
