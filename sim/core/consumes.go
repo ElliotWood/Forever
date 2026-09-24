@@ -635,9 +635,6 @@ func registerStaticImbue(agent Agent, imbueId int32, weapon *Weapon) {
 		character.AddStat(stats.SpellCritRating, 14)
 	case 25121: // Wizard Oil
 		character.AddStat(stats.SpellDamage, 30)
-	case 16138, 16622: // Dense Sharpening Stone / Dense Weightstone
-		weapon.BaseDamageMin += imbueFlatWeaponDamage(imbueId)
-		weapon.BaseDamageMax += imbueFlatWeaponDamage(imbueId)
 	case 22756: // Elemental Sharpening Stone
 		// RangedCritPercent is the ranged offset from PhysicalCritPercent, so the melee-only
 		// crit has to be cancelled there.
@@ -660,5 +657,10 @@ func registerStaticImbue(agent Agent, imbueId int32, weapon *Weapon) {
 				})
 			}
 		})
+	}
+
+	if flat := imbueFlatWeaponDamage(imbueId); flat != 0 {
+		weapon.BaseDamageMin += flat
+		weapon.BaseDamageMax += flat
 	}
 }
