@@ -209,8 +209,9 @@ func (warlock *Warlock) applyDecimation() {
 // Searing Pain sheds 17/33/50% of its threat and arms the demon with 2/4/6 branded attacks
 // (1293695 / 1293696).
 //
-// TODO: the client writes the pet hit as a $<minDam> to $<maxDam> formula the exported tables do not
-// carry, so the 39 to 42 from the BlizzCon tooltip is kept.
+// The branded hit is the client's SpellDescriptionVariables formula for 1293696/1293697 (beta
+// 1.60.1.69977, the same text Wowhead's Forever tooltip resolves): ((level-26)*1.5)+14 to +17, plus
+// 7.8% of the warlock's Shadow spell power, so 65 to 68 at level 60.
 func (warlock *Warlock) applyDemonicBrand() {
 	if warlock.Talents.DemonicBrand == 0 {
 		return
@@ -244,7 +245,10 @@ func (warlock *Warlock) applyDemonicBrand() {
 			ThreatMultiplier: 3,
 
 			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-				spell.CalcAndDealDamage(sim, target, sim.Roll(39, 42), spell.OutcomeMagicHit)
+				levelBonus := float64(core.CharacterLevel-26) * 1.5
+				spellPower := warlock.GetStat(stats.SpellDamage) + warlock.GetStat(stats.ShadowDamage)
+				damage := sim.Roll(levelBonus+14, levelBonus+17) + 0.078*spellPower
+				spell.CalcAndDealDamage(sim, target, damage, spell.OutcomeMagicHit)
 			},
 		})
 
