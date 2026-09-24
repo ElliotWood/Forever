@@ -5532,11 +5532,11 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 687004, SpellID: 9778, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_SPELL, BasePoints: 1, SpellLevel: 60, PvpMult: 1, TriggerID: 9777, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
-	{ID: 9782, Name: "Mithril Shield Spike", School: 1, Attr: [17]uint32{1: 0x10000000, 15: 0x2000}, SpellLevel: 60, DurationMs: -1, CooldownMs: 5000, ProcChance: 100, ProcFlags: [2]uint32{0: 0x28}, ProcChanceSource: ProcChanceAlways,
+	{ID: 9782, Name: "Mithril Shield Spike", School: 1, Attr: [17]uint32{1: 0x10000000, 15: 0x2000}, SpellLevel: 60, DurationMs: -1, CooldownMs: 5000, ProcChance: 100, ProcFlags: [2]uint32{0: 0x28}, ProcChanceSource: ProcChanceAlways, ProcHint: core.ProcHintOutcomeTaken,
 		Effects: []Effect{
 			{ID: 687588, SpellID: 9782, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_DAMAGE, BasePoints: 18, Variance: 0.2222222238779068, SpellLevel: 60, PvpMult: 1, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
-	{ID: 9784, Name: "Iron Shield Spike", School: 1, Attr: [17]uint32{1: 0x10000000, 15: 0x2000}, SpellLevel: 60, DurationMs: -1, CooldownMs: 5000, ProcChance: 100, ProcFlags: [2]uint32{0: 0x28}, ProcChanceSource: ProcChanceAlways,
+	{ID: 9784, Name: "Iron Shield Spike", School: 1, Attr: [17]uint32{1: 0x10000000, 15: 0x2000}, SpellLevel: 60, DurationMs: -1, CooldownMs: 5000, ProcChance: 100, ProcFlags: [2]uint32{0: 0x28}, ProcChanceSource: ProcChanceAlways, ProcHint: core.ProcHintOutcomeTaken,
 		Effects: []Effect{
 			{ID: 687590, SpellID: 9784, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_DAMAGE, BasePoints: 10, Variance: 0.4000000059604645, SpellLevel: 60, PvpMult: 1, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
@@ -12011,7 +12011,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 692452, SpellID: 16621, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_DAMAGE_IMMUNITY, SpellLevel: 60, SPCoef: 1, PvpMult: 1, Misc: 1, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
-	{ID: 16624, Name: "Thorium Shield Spike", School: 1, Attr: [17]uint32{1: 0x10000000, 15: 0x2000}, SpellLevel: 60, DurationMs: -1, CooldownMs: 5000, ProcChance: 100, ProcFlags: [2]uint32{0: 0x28}, ProcChanceSource: ProcChanceAlways,
+	{ID: 16624, Name: "Thorium Shield Spike", School: 1, Attr: [17]uint32{1: 0x10000000, 15: 0x2000}, SpellLevel: 60, DurationMs: -1, CooldownMs: 5000, ProcChance: 100, ProcFlags: [2]uint32{0: 0x28}, ProcChanceSource: ProcChanceAlways, ProcHint: core.ProcHintOutcomeTaken,
 		Effects: []Effect{
 			{ID: 694084, SpellID: 16624, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_DAMAGE, BasePoints: 25, Variance: 0.4000000059604645, SpellLevel: 60, PvpMult: 1, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
@@ -17376,7 +17376,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 699570, SpellID: 23688, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_SPELL, BasePoints: 100, SpellLevel: 60, SPCoef: 1, PvpMult: 1, TriggerID: 23684, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
-	{ID: 23689, Name: "Heroism", School: 2, Attr: [17]uint32{0: 0xc0, 15: 0x2000}, SpellLevel: 50, DurationMs: -1, StartRecoveryCategory: 133, ProcChance: 100, ProcFlags: [2]uint32{0: 0x14}, RefIDs: []int32{23682}, ProcChanceSource: ProcChanceAlways, ProcHint: core.ProcHintHeals,
+	{ID: 23689, Name: "Heroism", School: 2, Attr: [17]uint32{0: 0xc0, 15: 0x2000}, SpellLevel: 50, DurationMs: -1, StartRecoveryCategory: 133, ProcChance: 100, ProcFlags: [2]uint32{0: 0x14}, RefIDs: []int32{23682}, ProcChanceSource: ProcChancePPM, ProcHint: core.ProcHintHeals,
 		Effects: []Effect{
 			{ID: 700322, SpellID: 23689, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_SPELL, SpellLevel: 50, SPCoef: 1, PvpMult: 1, TriggerID: 23682, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
@@ -23615,7 +23615,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1125500, SpellID: 435097, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_SPELL, SpellLevel: 60, PvpMult: 1, TriggerID: 408953, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
-	{ID: 435467, Name: "Dismantle", School: 126, Attr: [17]uint32{0: 0xc0, 15: 0x2000}, SpellLevel: 60, DefenseType: 1, ProcChance: 100, ProcFlags: [2]uint32{0: 0x154}, ProcChanceSource: ProcChanceAlways,
+	{ID: 435467, Name: "Dismantle", School: 126, Attr: [17]uint32{0: 0xc0, 15: 0x2000}, SpellLevel: 60, DefenseType: 1, ProcChance: 100, ProcFlags: [2]uint32{0: 0x154}, ProcChanceSource: ProcChancePPM,
 		Effects: []Effect{
 			{ID: 1126093, SpellID: 435467, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_SPELL, BasePoints: 10, SpellLevel: 60, PvpMult: 1, TriggerID: 439164, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
@@ -24778,7 +24778,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1163334, SpellID: 457820, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_DUMMY, BasePoints: 10, SpellLevel: 1, PvpMult: 1, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
-	{ID: 458112, Name: "Crusader", School: 8, Attr: [17]uint32{0: 0x40, 15: 0x2000}, SpellLevel: 1, ProcChance: 100, ProcFlags: [2]uint32{0: 0x14}, ClassFlags: core.ClassFlags{Family: 7}, ProcChanceSource: ProcChanceAlways,
+	{ID: 458112, Name: "Crusader", School: 8, Attr: [17]uint32{0: 0x40, 15: 0x2000}, SpellLevel: 1, ProcChance: 100, ProcFlags: [2]uint32{0: 0x14}, ClassFlags: core.ClassFlags{Family: 7}, ProcChanceSource: ProcChancePPM,
 		Effects: []Effect{
 			{ID: 1163878, SpellID: 458112, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_SPELL, SpellLevel: 1, SPCoef: 1, PvpMult: 1, TriggerID: 20007, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
@@ -28803,7 +28803,7 @@ var generatedSpells = []Spell{
 			{ID: 1222982, SpellID: 1231124, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_STAT, BasePoints: 120, PvpMult: 1, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 			{ID: 1222983, SpellID: 1231124, Index: 1, Type: dbcenums.E_HEAL, BasePoints: 400, Variance: 0.25, PvpMult: 1, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
-	{ID: 1231126, Name: "Grand Crusader", School: 8, Attr: [17]uint32{0: 0x40, 15: 0x2000}, ProcChance: 100, ProcFlags: [2]uint32{0: 0x14}, ClassFlags: core.ClassFlags{Family: 7}, ProcChanceSource: ProcChanceAlways,
+	{ID: 1231126, Name: "Grand Crusader", School: 8, Attr: [17]uint32{0: 0x40, 15: 0x2000}, ProcChance: 100, ProcFlags: [2]uint32{0: 0x14}, ClassFlags: core.ClassFlags{Family: 7}, ProcChanceSource: ProcChancePPM,
 		Effects: []Effect{
 			{ID: 1222985, SpellID: 1231126, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_SPELL, SPCoef: 1, PvpMult: 1, TriggerID: 1231124, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
@@ -28857,7 +28857,7 @@ var generatedSpells = []Spell{
 			{ID: 1224628, SpellID: 1232169, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_STAT, BasePoints: 200, PvpMult: 1, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 			{ID: 1224629, SpellID: 1232169, Index: 1, Type: dbcenums.E_HEAL, BasePoints: 400, Variance: 0.25, PvpMult: 1, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
-	{ID: 1232170, Name: "Grand Inquisitor", School: 8, Attr: [17]uint32{0: 0x40, 15: 0x2000}, ProcChance: 100, ProcFlags: [2]uint32{0: 0x14}, ClassFlags: core.ClassFlags{Family: 7}, ProcChanceSource: ProcChanceAlways,
+	{ID: 1232170, Name: "Grand Inquisitor", School: 8, Attr: [17]uint32{0: 0x40, 15: 0x2000}, ProcChance: 100, ProcFlags: [2]uint32{0: 0x14}, ClassFlags: core.ClassFlags{Family: 7}, ProcChanceSource: ProcChancePPM,
 		Effects: []Effect{
 			{ID: 1224630, SpellID: 1232170, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_SPELL, SPCoef: 1, PvpMult: 1, TriggerID: 1232169, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
@@ -29333,11 +29333,11 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1251897, SpellID: 1248759, Type: dbcenums.E_HEAL_PCT, BasePoints: 5, SpellLevel: 60, PvpMult: 1, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
-	{ID: 1248761, Name: "Recovery", School: 2, Attr: [17]uint32{0: 0x10040, 3: 0x4000000, 15: 0x2000}, SpellLevel: 60, ProcChance: 100, ProcFlags: [2]uint32{0: 0x14}, ICDMs: 10000, ProcChanceSource: ProcChanceAlways,
+	{ID: 1248761, Name: "Recovery", School: 2, Attr: [17]uint32{0: 0x10040, 3: 0x4000000, 15: 0x2000}, SpellLevel: 60, ProcChance: 100, ProcFlags: [2]uint32{0: 0x14}, ICDMs: 10000, ProcChanceSource: ProcChanceAlways, ProcHint: core.ProcHintAttackDodged | core.ProcHintAttackParried,
 		Effects: []Effect{
 			{ID: 1251904, SpellID: 1248761, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_SPELL, BasePoints: 100, Variance: 0.5, SpellLevel: 60, PvpMult: 1, TriggerID: 1248759, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
-	{ID: 1248806, Name: "Revelation", School: 2, Attr: [17]uint32{0: 0x10040, 3: 0x4000000, 15: 0x2000}, SpellLevel: 60, ProcChance: 100, ProcFlags: [2]uint32{0: 0x14000}, ProcChanceSource: ProcChanceAlways,
+	{ID: 1248806, Name: "Revelation", School: 2, Attr: [17]uint32{0: 0x10040, 3: 0x4000000, 15: 0x2000}, SpellLevel: 60, ProcChance: 100, ProcFlags: [2]uint32{0: 0x14000}, ProcChanceSource: ProcChancePPM,
 		Effects: []Effect{
 			{ID: 1251972, SpellID: 1248806, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_SPELL, BasePoints: 100, Variance: 0.5, SpellLevel: 60, PvpMult: 1, TriggerID: 1248808, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
