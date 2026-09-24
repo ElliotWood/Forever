@@ -624,9 +624,9 @@ func TestGeneratedWindfuryTotemProcAppliesTheClientsAttackPower(t *testing.T) {
 	}
 }
 
-// The proc arrives with the client's 2 charges and each landed auto attack, in
-// either hand, spends one. A melee special or a missed swing spends none, and a
-// proc no auto lands on keeps its attack power for the whole second.
+// The proc holds the client's 2 charges and each landed auto attack, in either
+// hand, spends one. A melee special or a missed swing spends none, and a proc no
+// auto lands on keeps its attack power for the whole second.
 func TestGeneratedWindfuryTotemProcSpendsItsChargesOnAutoAttacks(t *testing.T) {
 	sim := setupFakeSimWithBuffs(&proto.RaidBuffs{}, &proto.PartyBuffs{WindfuryTotem: true}, &proto.IndividualBuffs{})
 	char := sim.Raid.Parties[0].Players[0].GetCharacter()
@@ -638,17 +638,22 @@ func TestGeneratedWindfuryTotemProcSpendsItsChargesOnAutoAttacks(t *testing.T) {
 	mhAuto := &core.Spell{ProcMask: core.ProcMaskMeleeMHAuto}
 	ohAuto := &core.Spell{ProcMask: core.ProcMaskMeleeOHAuto}
 	special := &core.Spell{ProcMask: core.ProcMaskMeleeMHSpecial}
-	landed := &core.SpellResult{Target: &char.Unit, Outcome: core.OutcomeHit}
+	landed := &core.SpellResult{Target: &char.Unit, Outcome: core.OutcomeHit, Damage: 100}
 	missed := &core.SpellResult{Target: &char.Unit, Outcome: core.OutcomeMiss}
 	swing := func(spell *core.Spell, result *core.SpellResult) {
 		proc.OnSpellHitDealt(proc, sim, spell, result)
 	}
 
-	before := char.GetStats()[stats.AttackPower]
-	proc.Activate(sim)
-	if got := proc.GetStacks(); got != 2 {
-		t.Fatalf("the proc arrived with %d charges, want the client's 2", got)
+	if proc.MaxStacks != 2 {
+		t.Fatalf("the proc holds %d charges, want the client's 2", proc.MaxStacks)
 	}
+	fullCharges := func() {
+		proc.Activate(sim)
+		proc.SetStacks(sim, proc.MaxStacks)
+	}
+
+	before := char.GetStats()[stats.AttackPower]
+	fullCharges()
 
 	swing(special, landed)
 	swing(mhAuto, missed)
@@ -673,7 +678,7 @@ func TestGeneratedWindfuryTotemProcSpendsItsChargesOnAutoAttacks(t *testing.T) {
 		t.Errorf("the spent proc left %v attack power behind", got-before)
 	}
 
-	proc.Activate(sim)
+	fullCharges()
 	start := sim.CurrentTime
 	swing(special, landed)
 	if !proc.IsActive() || proc.RemainingDuration(sim) != time.Second {
