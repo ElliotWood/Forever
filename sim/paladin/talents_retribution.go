@@ -7,6 +7,7 @@ import (
 	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/buffs"
+	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/stats"
 )
@@ -358,9 +359,9 @@ func (paladin *Paladin) applyInstrumentOfLaw() {
 	})
 }
 
-// Twist of Light - When you replace your Seal of Command, Seal of Righteousness, Seal of Fury, or
-// Seal of Justice with a different Seal, gain an Echo. Your next melee attack applies the replaced
-// Seal's effects, consuming the Echo.
+// Twist of Light - Reduces the mana cost of your Seal spells by 20%. When you replace your Seal of
+// Command, Seal of Righteousness, Seal of Fury, or Seal of Justice with a different Seal, gain an
+// Echo. Your next melee attack applies the replaced Seal's effects, consuming the Echo.
 //
 // Each seal leaves its own Echo (Echo of Command, of Fury, of Righteousness, of Justice): one
 // charge, no duration, consumed by the next auto attack that lands.
@@ -368,6 +369,12 @@ func (paladin *Paladin) applyTwistOfLight() {
 	if !paladin.Talents.TwistOfLight {
 		return
 	}
+
+	paladin.AddStaticMod(core.SpellModConfig{
+		ClassMask:  SpellMaskAllSeals,
+		Kind:       core.SpellMod_PowerCost_Pct,
+		FloatValue: spellData.TwistOfLight.HighestRank().Effect(shared.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_COST)).Fraction(),
+	})
 
 	paladin.echoes = map[int32]*sealEcho{}
 	for _, id := range []int32{echoOfCommandID, echoOfFuryID, echoOfRighteousnessID, echoOfJusticeID} {
