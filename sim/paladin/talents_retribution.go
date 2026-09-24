@@ -7,7 +7,6 @@ import (
 	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/buffs"
-	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/stats"
 )
@@ -373,7 +372,7 @@ func (paladin *Paladin) applyTwistOfLight() {
 	paladin.AddStaticMod(core.SpellModConfig{
 		ClassMask:  SpellMaskAllSeals,
 		Kind:       core.SpellMod_PowerCost_Pct,
-		FloatValue: spellData.TwistOfLight.HighestRank().Effect(shared.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_COST)).Fraction(),
+		FloatValue: spellData.TwistOfLight.FractionAt(1),
 	})
 
 	paladin.echoes = map[int32]*sealEcho{}

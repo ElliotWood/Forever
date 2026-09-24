@@ -18,7 +18,7 @@ func (druid *Druid) registerFeralCombatTalents() {
 
 	// Tier 4
 	druid.applyShreddingAttacks()
-	// Mangle implemented in mangle.go
+	// Primal Bite implemented in mangle.go
 	druid.applyPredatoryStrikes()
 	druid.applyBloodFrenzy()
 

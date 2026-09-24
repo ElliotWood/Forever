@@ -228,9 +228,7 @@ func (paladin *Paladin) applyHolyPower() {
 	paladin.AddStaticMod(core.SpellModConfig{
 		ClassMask: SpellMaskConsecration | SpellMaskExorcism | SpellMaskHammerOfWrath | SpellMaskHolyWrath |
 			SpellMaskHolyLight | SpellMaskFlashOfLight | SpellMaskLayOnHands | SpellMaskLightsVigil |
-			SpellMaskLightsVigilStrike | SpellMaskRetributionAura |
-			SpellMaskSealOfRighteousnessProc | SpellMaskSealOfCommandProc | SpellMaskSealOfFuryProc |
-			SpellMaskJudgementOfRighteousness | SpellMaskJudgementOfCommand | SpellMaskJudgementOfFury,
+			SpellMaskLightsVigilStrike | SpellMaskRetributionAura | SpellMaskSealProcs | SpellMaskAllJudgements,
 		Kind:       core.SpellMod_BonusCrit_Percent,
 		FloatValue: spellData.HolyPower.EffectAt(0).ValueAt(paladin.Talents.HolyPower),
 	})

@@ -1,7 +1,7 @@
 package druid
 
 // Package-level state the commented-out implementation used:
-// var mangleBearRank = spellData.Mangle.ByID(1238073)
+// var mangleBearRank = spellData.PrimalBite.ByID(1238073)
 
 // TODO: To be implemented.
 func (druid *Druid) registerMangleAuras() {
@@ -18,8 +18,8 @@ func (druid *Druid) registerMangleAuras() {
 }
 
 // TODO: To be implemented. Forever ships ONE Primal Bite -- spells 407995 and 1238069/1238070/1238073
-// on the Feral Combat line, all with ShapeshiftMask [144,0], which is Bear and Dire Bear only, and
-// with no debuff, so this is its only registrar.
+// on the Feral Combat line, all with ShapeshiftMask [144,0], which is Bear and Dire Bear only. It
+// applies no debuff.
 func (druid *Druid) registerPrimalBiteSpell() {
 	if !druid.Talents.PrimalBite {
 		return
