@@ -76,7 +76,6 @@ export const DefaultDebuffs = Debuffs.create({
 	insectSwarm: true,
 	judgementOfLight: true,
 	judgementOfWisdom: true,
-	mangle: true,
 	sunderArmor: true,
 });
 
