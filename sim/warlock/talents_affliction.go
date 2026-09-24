@@ -10,7 +10,7 @@ import (
 
 func (warlock *Warlock) registerAfflictionTalents() {
 	// Tier 1
-	warlock.applyImprovedLifeTap()
+	// Improved Life Tap: lifetap.go
 	warlock.applySuppression()
 	warlock.applyImprovedCorruption()
 
@@ -39,18 +39,6 @@ func (warlock *Warlock) registerAfflictionTalents() {
 
 	// Tier 7
 	// Wrack: wrack.go
-}
-
-func (warlock *Warlock) applyImprovedLifeTap() {
-	if warlock.Talents.ImprovedLifeTap == 0 {
-		return
-	}
-
-	warlock.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: spellData.ImprovedLifeTap.FractionAt(warlock.Talents.ImprovedLifeTap),
-		ClassMask:  WarlockSpellLifeTap,
-	})
 }
 
 // 1% hit a point on every school the warlock casts (A_MOD_SPELL_HIT_CHANCE with no family

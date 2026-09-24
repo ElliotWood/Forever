@@ -45,10 +45,11 @@ func (hunter *Hunter) registerEfficiency() {
 		return
 	}
 
-	// The tooltip reads "Shots, Stings and melee abilities".
+	// The tooltip reads "Shots, Stings and melee abilities", but 19416's class mask leaves out
+	// Sniper Shot and Strider Kick.
 	hunter.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_PowerCost_Pct_Add,
-		ClassMask:  HunterSpellsShotsAndStings | HunterSpellsMelee,
+		ClassMask:  HunterSpellsShotsAndStings | HunterSpellsMelee&^HunterSpellStriderKick,
 		FloatValue: spellData.Efficiency.Effect(dbcenums.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_COST)).FractionAt(hunter.Talents.Efficiency),
 	})
 }

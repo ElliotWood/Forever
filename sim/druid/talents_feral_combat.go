@@ -315,7 +315,7 @@ func (druid *Druid) IsBleeding(target *core.Unit) bool {
 
 // Berserk, new in Forever (client 417141): 3 minute cooldown (SpellCooldowns), and for 15 seconds
 // +100% critical strike chance on the Combo Point builders (effect 0). Its Mangle half (no
-// cooldown, up to 3 targets): the cooldown reset is in mangle.go, the cleave is not modelled.
+// cooldown, up to 3 targets) is in mangle.go.
 func (druid *Druid) applyBerserk() {
 	if !druid.Talents.Berserk {
 		return

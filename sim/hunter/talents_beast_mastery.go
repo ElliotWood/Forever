@@ -55,10 +55,12 @@ func (hunter *Hunter) registerFocusedFire() {
 		return
 	}
 
-	// The single dummy effect is the 1% per rank damage bonus. Forever drops Focused Fire's Kill
-	// Command crit bonus - there is no Kill Command.
-	hunter.PseudoStats.DamageDealtMultiplier *= spellData.FocusedFire.EffectAt(1).
-		MultiplierAt(hunter.Talents.FocusedFire)
+	// The single dummy effect is the 1% per rank damage bonus, for "you and your pet" per the
+	// 1223755 tooltip. Forever drops Focused Fire's Kill Command crit bonus - there is no Kill
+	// Command.
+	multiplier := spellData.FocusedFire.EffectAt(1).MultiplierAt(hunter.Talents.FocusedFire)
+	hunter.PseudoStats.DamageDealtMultiplier *= multiplier
+	hunter.Pet.PseudoStats.DamageDealtMultiplier *= multiplier
 }
 
 // 19616's mask names the pet passive and Summon Hawk, so the hawks take it too.

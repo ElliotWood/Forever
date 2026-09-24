@@ -79,9 +79,10 @@ func (hunter *Hunter) registerResourcefulness() {
 		return
 	}
 
+	// 440529's cost mask leaves out Strider Kick.
 	hunter.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_PowerCost_Pct_Add,
-		ClassMask:  HunterSpellsTraps | HunterSpellsMelee,
+		ClassMask:  HunterSpellsTraps | HunterSpellsMelee&^HunterSpellStriderKick,
 		FloatValue: spellData.Resourcefulness.Effect(dbcenums.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_COST)).FractionAt(hunter.Talents.Resourcefulness),
 	})
 
@@ -180,10 +181,11 @@ func (hunter *Hunter) registerPredatorsEdge() {
 		return
 	}
 
+	// 1310627's crit damage mask is the melee abilities only: no auto attacks, no hawks.
 	hunter.AddStaticMod(core.SpellModConfig{
-		Kind:        core.SpellMod_CritMultiplier_Flat,
-		DefenseType: core.DefenseTypeMelee,
-		FloatValue:  spellData.PredatorsEdge.Effect(dbcenums.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_CRIT_DAMAGE_BONUS)).FractionAt(hunter.Talents.PredatorsEdge),
+		Kind:       core.SpellMod_CritMultiplier_Flat,
+		ClassMask:  HunterSpellsMelee,
+		FloatValue: spellData.PredatorsEdge.Effect(dbcenums.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_CRIT_DAMAGE_BONUS)).FractionAt(hunter.Talents.PredatorsEdge),
 	})
 
 	hunter.AddStaticMod(core.SpellModConfig{

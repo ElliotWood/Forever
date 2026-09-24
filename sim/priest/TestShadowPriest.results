@@ -531,8 +531,8 @@ dps_results: {
 dps_results: {
  key: "TestShadowPriest-Average-Default"
  value: {
-  dps: 669.7362
-  tps: 462.42162
+  dps: 669.7191
+  tps: 462.40964
  }
 }
 dps_results: {

@@ -65,11 +65,18 @@ func (druid *Druid) applySubtlety() {
 		return
 	}
 
-	// Reduces the threat of the Arcane and Nature spells (mask 72) by 10% a rank.
+	// Reduces the threat of the Arcane and Nature spells (school mask 72) by 10% a rank: all of
+	// them, Faerie Fire's flat threat and Thorns included.
+	threatReduction := spellData.Subtlety.Effect(dbcenums.A_MOD_THREAT, 72).FractionAt(druid.Talents.Subtlety)
 	druid.AddStaticMod(core.SpellModConfig{
-		ClassMask:  DruidHealingSpells | DruidDamagingSpells,
+		School:     core.SpellSchoolArcane | core.SpellSchoolNature,
 		Kind:       core.SpellMod_ThreatMultiplier_Pct,
-		FloatValue: spellData.Subtlety.Effect(dbcenums.A_MOD_THREAT, 72).FractionAt(druid.Talents.Subtlety),
+		FloatValue: threatReduction,
+	})
+	druid.AddStaticMod(core.SpellModConfig{
+		School:     core.SpellSchoolArcane | core.SpellSchoolNature,
+		Kind:       core.SpellMod_FlatThreatBonus_Pct,
+		FloatValue: threatReduction,
 	})
 }
 
