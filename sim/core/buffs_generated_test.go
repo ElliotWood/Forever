@@ -624,6 +624,71 @@ func TestGeneratedWindfuryTotemProcAppliesTheClientsAttackPower(t *testing.T) {
 	}
 }
 
+// The proc arrives with the client's 2 charges and each landed auto attack, in
+// either hand, spends one. A melee special or a missed swing spends none, and a
+// proc no auto lands on keeps its attack power for the whole second.
+func TestGeneratedWindfuryTotemProcSpendsItsChargesOnAutoAttacks(t *testing.T) {
+	sim := setupFakeSimWithBuffs(&proto.RaidBuffs{}, &proto.PartyBuffs{WindfuryTotem: true}, &proto.IndividualBuffs{})
+	char := sim.Raid.Parties[0].Players[0].GetCharacter()
+	proc := char.GetAura("Windfury Totem (External)")
+	if proc == nil {
+		t.Fatalf("no aura is labelled %q; the unit has %v", "Windfury Totem (External)", auraLabels(char))
+	}
+
+	mhAuto := &core.Spell{ProcMask: core.ProcMaskMeleeMHAuto}
+	ohAuto := &core.Spell{ProcMask: core.ProcMaskMeleeOHAuto}
+	special := &core.Spell{ProcMask: core.ProcMaskMeleeMHSpecial}
+	landed := &core.SpellResult{Target: &char.Unit, Outcome: core.OutcomeHit}
+	missed := &core.SpellResult{Target: &char.Unit, Outcome: core.OutcomeMiss}
+	swing := func(spell *core.Spell, result *core.SpellResult) {
+		proc.OnSpellHitDealt(proc, sim, spell, result)
+	}
+
+	before := char.GetStats()[stats.AttackPower]
+	proc.Activate(sim)
+	if got := proc.GetStacks(); got != 2 {
+		t.Fatalf("the proc arrived with %d charges, want the client's 2", got)
+	}
+
+	swing(special, landed)
+	swing(mhAuto, missed)
+	if got := proc.GetStacks(); got != 2 {
+		t.Errorf("a special and a missed auto left %d charges, want both still there", got)
+	}
+
+	swing(mhAuto, landed)
+	if !proc.IsActive() || proc.GetStacks() != 1 {
+		t.Fatalf("one landed auto left the proc active %v with %d charges, want it up with 1",
+			proc.IsActive(), proc.GetStacks())
+	}
+	if got := char.GetStats()[stats.AttackPower] - before; got != 246 {
+		t.Errorf("the proc holds %v attack power on its last charge, want the client's 246", got)
+	}
+
+	swing(ohAuto, landed)
+	if proc.IsActive() {
+		t.Error("the proc is still up after its second landed auto, want the charges spent")
+	}
+	if got := char.GetStats()[stats.AttackPower]; got != before {
+		t.Errorf("the spent proc left %v attack power behind", got-before)
+	}
+
+	proc.Activate(sim)
+	start := sim.CurrentTime
+	swing(special, landed)
+	if !proc.IsActive() || proc.RemainingDuration(sim) != time.Second {
+		t.Fatalf("a proc no auto landed on is active %v with %v left, want the full second",
+			proc.IsActive(), proc.RemainingDuration(sim))
+	}
+	for proc.IsActive() && sim.CurrentTime < start+time.Second*2 {
+		sim.Step()
+	}
+	if proc.IsActive() || proc.GetStacks() != 0 {
+		t.Errorf("the lingering proc is active %v with %d charges at %v, want it gone after its second",
+			proc.IsActive(), proc.GetStacks(), sim.CurrentTime-start)
+	}
+}
+
 // A generated damage shield deals the client's damage back to whoever lands a
 // melee hit, and nothing to a spell.
 func TestGeneratedThornsStrikesBackAtAMeleeHit(t *testing.T) {

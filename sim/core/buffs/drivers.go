@@ -124,9 +124,28 @@ func driveManaTideTotems(char *core.Character, party *proto.PartyBuffs) {
 // proc lands, and the totem aura that holds the category.
 func driveWindfuryTotem(char *core.Character, _ *proto.PartyBuffs) {
 	procAura := WindfuryTotemAura(&char.Unit, false, 0)
-	// The attack power is only there for the second after a proc, so it is not
+	// The attack power is only there for a moment after a proc, so it is not
 	// part of the stats the character sheet is measured with.
 	procAura.BuildPhase = core.CharacterBuildPhaseNone
+
+	// The proc arrives with the row's charges, and each auto attack that lands
+	// while it is up spends one; a melee special spends none. The attack power
+	// stays until the charges are gone or the row's duration runs out, so a proc
+	// whose extra attack went into a Heroic Strike lasts the full duration.
+	procAura.MaxStacks = int32(windfuryTotemSpell.ProcCharges)
+	procAura.ApplyOnGain(func(aura *core.Aura, sim *core.Simulation) {
+		aura.SetStacks(sim, aura.MaxStacks)
+	})
+	procAura.AttachProcTriggerCallback(&char.Unit, core.ProcTrigger{
+		Name:               "Windfury Totem Charges",
+		Callback:           core.CallbackOnSpellHitDealt,
+		ProcMask:           core.ProcMaskMeleeWhiteHit,
+		Outcome:            core.OutcomeLanded,
+		TriggerImmediately: true,
+		Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
+			procAura.RemoveStack(sim)
+		},
+	})
 
 	var windfurySpell *core.Spell
 	procTrigger := char.MakeProcTriggerAura(core.ProcTrigger{
