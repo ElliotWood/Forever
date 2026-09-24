@@ -109,14 +109,17 @@ func (paladin *Paladin) applySpiritualFocus() {
 	})
 }
 
-// Improved Seals - Increases the damage done by your Seals and Judgements by 5/10/15%.
+// Improved Seals - Increases the damage done by your Seals and Judgements by 5/10/15%. 20224's mask
+// names the Righteousness, Command and Fury procs and judgements only; the Seal of Light heal is
+// not in it.
 func (paladin *Paladin) applyImprovedSeals() {
 	if paladin.Talents.ImprovedSeals == 0 {
 		return
 	}
 
 	paladin.AddStaticMod(core.SpellModConfig{
-		ClassMask:  SpellMaskSealProcs | SpellMaskAllJudgements,
+		ClassMask: SpellMaskSealOfRighteousnessProc | SpellMaskSealOfCommandProc | SpellMaskSealOfFuryProc |
+			SpellMaskJudgementOfRighteousness | SpellMaskJudgementOfCommand | SpellMaskJudgementOfFury,
 		Kind:       core.SpellMod_DamageDone_Flat,
 		FloatValue: spellData.ImprovedSeals.FractionAt(paladin.Talents.ImprovedSeals),
 	})

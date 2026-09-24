@@ -286,7 +286,9 @@ func (warrior *Warrior) registerBloodCraze() {
 		ActionID:    core.ActionID{SpellID: bloodCrazeHot.ID},
 		SpellSchool: core.SpellSchoolPhysical,
 		ProcMask:    core.ProcMaskSpellHealing,
-		Flags:       core.SpellFlagPassiveSpell | core.SpellFlagHelpful | core.SpellFlagNoOnCastComplete,
+		// A heal of max health: the Physical damage-done mods (Two-Handed Weapon Specialization,
+		// Enrage, Bastion) do not raise it in the client.
+		Flags: core.SpellFlagPassiveSpell | core.SpellFlagHelpful | core.SpellFlagNoOnCastComplete | core.SpellFlagNoSpellMods,
 
 		DamageMultiplier: 1,
 		ThreatMultiplier: 1,

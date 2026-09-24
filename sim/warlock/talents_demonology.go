@@ -120,9 +120,11 @@ func (warlock *Warlock) applyDemonicSacrifice() {
 		spellID, school = 18789, stats.SchoolIndexShadow
 	case proto.WarlockOptions_Succubus:
 		spellID, school = 18791, stats.SchoolIndexFire
+	case proto.WarlockOptions_Voidwalker:
+		warlock.applyFelEnergy()
+		return
 	default:
-		// The Voidwalker's mana and the Felhunter's health are regeneration, not damage; they are
-		// left out until the sim needs them.
+		// The Felhunter's health is survival only; it is left out until the sim needs it.
 		return
 	}
 
@@ -134,6 +136,29 @@ func (warlock *Warlock) applyDemonicSacrifice() {
 		ActionID: core.ActionID{SpellID: spellID},
 		Duration: row.Duration(),
 	}).AttachMultiplicativePseudoStatBuff(&warlock.PseudoStats.SchoolDamageDealtMultiplier[school], multiplier))
+}
+
+// The Voidwalker's sacrifice, Fel Energy (18792): 2% of total mana every 4 s.
+func (warlock *Warlock) applyFelEnergy() {
+	row := spellData.DemonicSacrificeTriggered.ByID(18792)
+	manaFraction := row.EffectN(1).Percent()
+	period := row.EffectN(1).Period()
+	manaMetrics := warlock.NewManaMetrics(core.ActionID{SpellID: row.ID})
+
+	core.MakePermanent(warlock.RegisterAura(core.Aura{
+		Label:    "Demonic Sacrifice",
+		ActionID: core.ActionID{SpellID: row.ID},
+		Duration: row.Duration(),
+		OnGain: func(_ *core.Aura, sim *core.Simulation) {
+			core.StartPeriodicAction(sim, core.PeriodicActionOptions{
+				Period:   period,
+				Priority: core.ActionPriorityRegen,
+				OnAction: func(sim *core.Simulation) {
+					warlock.AddMana(sim, warlock.MaxMana()*manaFraction, manaMetrics)
+				},
+			})
+		},
+	}))
 }
 
 // Shadow Bolt and Searing Pain hit 3% harder a point below 35% health, and Soul Fire casts 20% a
@@ -286,7 +311,8 @@ func (warlock *Warlock) applySoulLink() {
 	}
 }
 
-// The demon lends the warlock 33/67/100% of its level in spell power while it is out (412732).
+// 33/67/100% of the warlock's level in spell power for the warlock and the demon while it is out
+// (412732).
 func (warlock *Warlock) applyDemonicKnowledge() {
 	if warlock.Talents.DemonicKnowledge == 0 || warlock.Options.SacrificeSummon {
 		return
@@ -294,15 +320,19 @@ func (warlock *Warlock) applyDemonicKnowledge() {
 
 	bonus := spellData.DemonicKnowledge.FractionAt(warlock.Talents.DemonicKnowledge) * float64(core.CharacterLevel)
 
-	core.MakePermanent(warlock.RegisterAura(core.Aura{
+	config := core.Aura{
 		Label:    "Demonic Knowledge",
 		ActionID: core.ActionID{SpellID: 412732},
 		Duration: core.NeverExpires,
-	}).AttachStatBuff(stats.SpellDamage, bonus))
+	}
+	core.MakePermanent(warlock.RegisterAura(config).AttachStatBuff(stats.SpellDamage, bonus))
+	for _, pet := range warlock.BasePets {
+		core.MakePermanent(pet.RegisterAura(config).AttachStatBuff(stats.SpellDamage, bonus))
+	}
 }
 
 // 2% a point, on the school the demon out matches (23785): Fire for the Imp, Shadow for the
-// Succubus, damage taken for the Voidwalker and the Felhunter.
+// Succubus, damage taken for the Voidwalker and the Felhunter. Both the warlock and the demon get it.
 func (warlock *Warlock) applyMasterDemonologist() {
 	if warlock.Talents.MasterDemonologist == 0 || warlock.Options.SacrificeSummon {
 		return
@@ -310,26 +340,29 @@ func (warlock *Warlock) applyMasterDemonologist() {
 
 	fraction := spellData.MasterDemonologist.EffectAt(1).FractionAt(warlock.Talents.MasterDemonologist)
 
-	var buff *core.Aura
+	var label string
+	var tag int32
+	var school stats.SchoolIndex
 	switch warlock.Options.Summon {
 	case proto.WarlockOptions_Imp:
-		buff = warlock.RegisterAura(core.Aura{
-			Label:    "Master Demonologist (Imp)",
-			ActionID: core.ActionID{SpellID: 23785, Tag: 1},
-			Duration: core.NeverExpires,
-		}).AttachMultiplicativePseudoStatBuff(&warlock.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexFire], 1+fraction)
+		label, tag, school = "Master Demonologist (Imp)", 1, stats.SchoolIndexFire
 	case proto.WarlockOptions_Succubus:
-		buff = warlock.RegisterAura(core.Aura{
-			Label:    "Master Demonologist (Succubus)",
-			ActionID: core.ActionID{SpellID: 23785, Tag: 3},
-			Duration: core.NeverExpires,
-		}).AttachMultiplicativePseudoStatBuff(&warlock.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexShadow], 1+fraction)
+		label, tag, school = "Master Demonologist (Succubus)", 3, stats.SchoolIndexShadow
 	default:
 		// The Voidwalker's and the Felhunter's halves only cut damage taken.
 		return
 	}
 
-	warlock.MasterDemonologistAura = core.MakePermanent(buff)
+	buff := func(unit *core.Unit) *core.Aura {
+		return core.MakePermanent(unit.RegisterAura(core.Aura{
+			Label:    label,
+			ActionID: core.ActionID{SpellID: 23785, Tag: tag},
+			Duration: core.NeverExpires,
+		}).AttachMultiplicativePseudoStatBuff(&unit.PseudoStats.SchoolDamageDealtMultiplier[school], 1+fraction))
+	}
+
+	warlock.MasterDemonologistAura = buff(&warlock.Unit)
+	buff(&warlock.ActivePet.Unit)
 }
 
 // applyImprovedHealthFunnel implements Improved Health Funnel, new in Forever.

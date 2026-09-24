@@ -152,9 +152,11 @@ func (priest *Priest) applyInnerFocus() {
 		return
 	}
 
+	// The cost cut (14751 e0) covers every priest spell; the crit (e1) leaves out Mind Flay,
+	// Shadow Word: Death and Starshards.
 	rank := spellData.InnerFocus.Highest()
 	critMod := priest.AddDynamicMod(core.SpellModConfig{
-		ClassMask:  PriestSpellsAll,
+		ClassMask:  PriestSpellsAll &^ (PriestSpellMindFlay | PriestSpellShadowWordDeath | PriestSpellStarshards),
 		FloatValue: rank.Effect(dbcenums.A_ADD_FLAT_MODIFIER, int32(dbcenums.SPELLMOD_CRITICAL_CHANCE)).Average(core.CharacterLevel),
 		Kind:       core.SpellMod_BonusCrit_Percent,
 	})
