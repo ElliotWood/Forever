@@ -17,12 +17,11 @@ func (druid *Druid) registerMangleAuras() {
 	// druid.MangleAuras = druid.NewEnemyAuraArray(buffs.MangleAura)
 }
 
-// TODO: To be implemented. Forever ships ONE Mangle -- spells 407995 and 1238069/1238070/1238073
-// on the Feral Combat line, all with ShapeshiftMask [144,0], which is Bear and Dire Bear only.
-// The TBC Cat/Bear split is gone with it, so this is the only Mangle registrar and the name
-// still says "Bear" only because that is the form it is restricted to.
-func (druid *Druid) registerMangleBearSpell() {
-	if !druid.Talents.Mangle {
+// TODO: To be implemented. Forever ships ONE Primal Bite -- spells 407995 and 1238069/1238070/1238073
+// on the Feral Combat line, all with ShapeshiftMask [144,0], which is Bear and Dire Bear only, and
+// with no debuff, so this is its only registrar.
+func (druid *Druid) registerPrimalBiteSpell() {
+	if !druid.Talents.PrimalBite {
 		return
 	}
 	panic("To be implemented")

@@ -20,7 +20,7 @@ func (druid *Druid) registerFeralCombatTalents() {
 	druid.applyShreddingAttacks()
 	// Mangle implemented in mangle.go
 	druid.applyPredatoryStrikes()
-	druid.applyPrimalFury()
+	druid.applyBloodFrenzy()
 
 	// Tier 5
 	druid.applyPredatoryInstincts()
@@ -216,8 +216,8 @@ func (druid *Druid) applyShreddingAttacks() {
 }
 
 // TODO: To be implemented.
-func (druid *Druid) applyPrimalFury() {
-	if druid.Talents.PrimalFury == 0 {
+func (druid *Druid) applyBloodFrenzy() {
+	if druid.Talents.BloodFrenzy == 0 {
 		return
 	}
 

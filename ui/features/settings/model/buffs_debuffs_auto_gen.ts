@@ -256,7 +256,7 @@ export const JudgementOfWisdom = makeBooleanDebuffInput({
 export const Mangle = makeBooleanDebuffInput({
 	actionId: ActionId.fromSpellId(1238073),
 	fieldName: 'mangle',
-	label: 'Mangle',
+	label: 'Primal Bite',
 });
 
 export const CurseOfElements = makeBooleanDebuffInput({
