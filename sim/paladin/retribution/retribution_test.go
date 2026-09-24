@@ -51,6 +51,7 @@ func TestRetribution(t *testing.T) {
 			StatsToWeigh: []proto.Stat{
 				proto.Stat_StatStrength,
 				proto.Stat_StatAgility,
+				proto.Stat_StatIntellect,
 				proto.Stat_StatAttackPower,
 				proto.Stat_StatMeleeHitRating,
 				proto.Stat_StatMeleeCritRating,
