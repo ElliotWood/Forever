@@ -5,7 +5,12 @@ import (
 
 	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/stats"
 )
+
+// The spell power coefficient of the Seal of Command proc. The client carries none on 20424; this
+// is the number the Classic sim settled on.
+const sealOfCommandCoefficient = 0.29
 
 // Seal of Command (talent)
 // https://www.wowhead.com/forever/spell=20920
@@ -19,6 +24,13 @@ import (
 // The client states the stunned number and halves it otherwise. The proc spell 20424 has no
 // rank subtext and so is in no table: its 70% of weapon damage is read from the trigger row, and
 // its 0.29 coefficient and 7 procs per minute are the numbers the Classic sim carries.
+//
+// The proc is a weapon-percent effect, and the percent applies to the paladin's own spell power
+// as well as the weapon: at 27 spell power the Forever beta measured 5.5 of each proc coming from
+// spell power, 20.4%, against the 29% the coefficient states. Improved Seals raises the percent itself (the tooltip
+// reads 80% with the talent, 70 * 1.15). The Holy damage the target takes extra, Judgement of the
+// Crusader and the damage-against-mob-type gear, is added after the percent at the full
+// coefficient, so it scales at 29% whatever the talent.
 func (paladin *Paladin) registerSealOfCommand(row shared.SpellData) {
 	judgeRow := spellData.JudgementOfCommand.ByRank(row.Rank)
 
@@ -46,7 +58,7 @@ func (paladin *Paladin) registerSealOfCommand(row shared.SpellData) {
 	})
 
 	procRow := spellData.SealOfCommandTriggered.ByRank(1)
-	weaponPercent := effectAt(procRow, 0).Value / 100
+	weaponPercent := effectAt(procRow, 0).Value / 100 * spellData.ImprovedSeals.MultiplierAt(paladin.Talents.ImprovedSeals)
 	procSpell := paladin.RegisterSpell(core.SpellConfig{
 		ActionID:    core.ActionID{SpellID: procRow.SpellID},
 		SpellSchool: core.SpellSchoolHoly,
@@ -58,10 +70,17 @@ func (paladin *Paladin) registerSealOfCommand(row shared.SpellData) {
 
 		DamageMultiplier: 1,
 		ThreatMultiplier: 1,
-		BonusCoefficient: 0.29,
+		// No BonusCoefficient: the spell power goes through the weapon percent, so the proc adds
+		// it by hand below rather than letting CalcDamage add it on top.
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			baseDamage := spell.Unit.MHWeaponDamage(sim, spell.MeleeAttackPower(target)) * weaponPercent
+			weaponDamage := spell.Unit.MHWeaponDamage(sim, spell.MeleeAttackPower(target))
+			baseDamage := (weaponDamage + sealOfCommandCoefficient*spell.SpellDamage(target)) * weaponPercent
+
+			targetBonus := target.PseudoStats.SchoolBonusSpellDamage[stats.SchoolIndexHoly] +
+				spell.Unit.AttackTables[target.UnitIndex].MobTypeBonusStats[target.MobType][stats.SpellDamage]
+			baseDamage += sealOfCommandCoefficient * targetBonus
+
 			result := spell.CalcDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
 			dealAfterBatch(sim, spell, result)
 		},
