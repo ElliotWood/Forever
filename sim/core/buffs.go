@@ -362,7 +362,7 @@ func applyBuffEffects(agent Agent, raidBuffs *proto.RaidBuffs, partyBuffs *proto
 ///////////////////////////////////////////////////////////////////////////
 
 func ThornsAura(char *Character, points int32) *Aura {
-	actionID := ActionID{SpellID: 26992}
+	actionID := ActionID{SpellID: 9910} // Thorns rank 6, the Forever client's top rank
 
 	procSpell := char.RegisterSpell(SpellConfig{
 		ActionID:    actionID,
@@ -374,7 +374,7 @@ func ThornsAura(char *Character, points int32) *Aura {
 		ThreatMultiplier: 1,
 
 		ApplyEffects: func(sim *Simulation, target *Unit, spell *Spell) {
-			baseDamage := 25 * (1 + 0.25*float64(points))
+			baseDamage := 22 * (1 + 0.25*float64(points)) // 9910: 22 per hit; 25 was TBC rank 7 (26992)
 			spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMagicHit)
 		},
 	})
