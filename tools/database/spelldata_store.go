@@ -173,6 +173,9 @@ type spellTables struct {
 	// The spell granting the enchant, by each enchant equip spell that answers a hit.
 	EnchantGrants map[int32]int32
 
+	// The chance the enchantments casting a combat spell state for it, by the combat spell.
+	EnchantChances map[int32]enchantChance
+
 	// The tooltip references by spell id, filled as referencedIDs reads them: the closure asks for
 	// the same spell on every pass over the store.
 	refs map[int32][]int32
@@ -217,36 +220,42 @@ type equippedRow struct {
 	Subclass, InvTypes int32
 }
 
+type enchantChance struct {
+	Chance   uint8
+	Enchants []int32
+}
+
 // A spell's rows exist once per difficulty on a few hundred spells - 29213 caps 20 targets at
 // difficulty 0 and 10 at 186 - and difficulty 0 is the one the sim plays.
 func loadSpellTables(db *sql.DB) (*spellTables, error) {
 	t := &spellTables{
-		Names:         map[int32]string{},
-		Subtexts:      map[int32]string{},
-		Descriptions:  map[int32]string{},
-		Misc:          map[int32]miscRow{},
-		Levels:        map[int32]levelsRow{},
-		Cooldowns:     map[int32]cooldownRow{},
-		Categories:    map[int32]categoryRow{},
-		AuraOptions:   map[int32]auraOptionRow{},
-		ClassOptions:  map[int32]core.ClassFlags{},
-		Interrupts:    map[int32]interruptRow{},
-		Shapeshift:    map[int32]uint64{},
-		Targets:       map[int32]int16{},
-		CreatureType:  map[int32]int32{},
-		Requirements:  map[int32]int32{},
-		Equipped:      map[int32]equippedRow{},
-		Labels:        map[int32][]int16{},
-		Powers:        map[int32][]storePower{},
-		Effects:       map[int32][]storeEffect{},
-		EnchantGrants: map[int32]int32{},
+		Names:          map[int32]string{},
+		Subtexts:       map[int32]string{},
+		Descriptions:   map[int32]string{},
+		Misc:           map[int32]miscRow{},
+		Levels:         map[int32]levelsRow{},
+		Cooldowns:      map[int32]cooldownRow{},
+		Categories:     map[int32]categoryRow{},
+		AuraOptions:    map[int32]auraOptionRow{},
+		ClassOptions:   map[int32]core.ClassFlags{},
+		Interrupts:     map[int32]interruptRow{},
+		Shapeshift:     map[int32]uint64{},
+		Targets:        map[int32]int16{},
+		CreatureType:   map[int32]int32{},
+		Requirements:   map[int32]int32{},
+		Equipped:       map[int32]equippedRow{},
+		Labels:         map[int32][]int16{},
+		Powers:         map[int32][]storePower{},
+		Effects:        map[int32][]storeEffect{},
+		EnchantGrants:  map[int32]int32{},
+		EnchantChances: map[int32]enchantChance{},
 	}
 
 	for _, load := range []func(*sql.DB) error{
 		t.loadNames, t.loadMisc, t.loadLevels, t.loadCooldowns, t.loadCategories, t.loadAuraOptions,
 		t.loadClassOptions, t.loadInterrupts, t.loadShapeshift, t.loadTargetRestrictions,
 		t.loadCastingRequirements, t.loadEquippedItems, t.loadLabels, t.loadPowers, t.loadEffects,
-		t.loadEnchantGrants,
+		t.loadEnchantGrants, t.loadEnchantChances,
 	} {
 		if err := load(db); err != nil {
 			return nil, err
@@ -687,6 +696,34 @@ func (t *spellTables) loadEnchantGrants(db *sql.DB) error {
 			t.EnchantGrants[id] = grant
 			return nil
 		})
+}
+
+// The chance each combat spell (Effect 1) of a SpellItemEnchantment row is cast at, which the
+// enchantment states in EffectPointsMin rather than the spell in its own column: Fiery Blaze 36
+// casts 6297 at 15. Enchantments that cast one spell at two chances are an error: the store has one
+// row to state it on.
+func (t *spellTables) loadEnchantChances(db *sql.DB) error {
+	return eachRow(db, `
+		WITH slots AS (
+			SELECT ID, Effect_0 AS Effect, EffectPointsMin_0 AS Points, EffectArg_0 AS SpellID FROM SpellItemEnchantment
+			UNION ALL SELECT ID, Effect_1, EffectPointsMin_1, EffectArg_1 FROM SpellItemEnchantment
+			UNION ALL SELECT ID, Effect_2, EffectPointsMin_2, EffectArg_2 FROM SpellItemEnchantment)
+		SELECT SpellID, Points, ID FROM slots
+		WHERE Effect = 1 AND SpellID > 0 AND Points > 0
+		ORDER BY SpellID, ID`, func(rows *sql.Rows) error {
+		var id, enchant int32
+		var chance uint8
+		if err := rows.Scan(&id, &chance, &enchant); err != nil {
+			return err
+		}
+		stated, ok := t.EnchantChances[id]
+		if ok && stated.Chance != chance {
+			return fmt.Errorf("enchantments %v cast spell %d at %d%% and enchantment %d at %d%%",
+				stated.Enchants, id, stated.Chance, enchant, chance)
+		}
+		t.EnchantChances[id] = enchantChance{Chance: chance, Enchants: append(stated.Enchants, enchant)}
+		return nil
+	})
 }
 
 // The spell ids the tooltip names, in the order it names them, each once. An id no SpellName row

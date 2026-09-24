@@ -115,6 +115,52 @@ func TestProcShapeOfNamedSpells(t *testing.T) {
 	}
 }
 
+// A combat spell's roll is the one its enchantments state, whatever its own column says.
+func TestEnchantChanceOfNamedCombatSpells(t *testing.T) {
+	DatabasePath = "wowsims.db"
+	if _, err := os.Stat(DatabasePath); err != nil {
+		t.Skipf("no client database at %s - run `make db` from a local WoW install to enable this gate", DatabasePath)
+	}
+
+	helper, err := NewDBHelper()
+	if err != nil {
+		t.Fatalf("opening %s: %v", DatabasePath, err)
+	}
+	defer helper.Close()
+
+	tables, err := loadSpellTables(helper.db)
+	if err != nil {
+		t.Fatalf("loading the spell tables: %v", err)
+	}
+
+	for _, want := range []struct {
+		id     int32
+		name   string
+		chance uint8
+	}{
+		{6297, "Fiery Blaze, 15 on enchantment 36 and no column of its own", 15},
+		{11398, "Mind-numbing Poison III, 20 on enchantments 643 and 8696 beside a column of 101", 20},
+		{8516, "Windfury Totem, 20 on enchantment 1783 beside a column of 100", 20},
+	} {
+		row := tables.row(want.id)
+		applyTooltipHints(tables, &row)
+		if err := applyEnchantChance(tables, &row); err != nil {
+			t.Fatalf("%s: %v", want.name, err)
+		}
+		if row.ProcChance != want.chance || row.ProcChanceSource != procChanceColumn || row.ProcChanceEffect != 0 {
+			t.Errorf("%s: ProcChance %d from %s effect %d, want %d from the column",
+				want.name, row.ProcChance, row.ProcChanceSource, row.ProcChanceEffect, want.chance)
+		}
+	}
+
+	row := tables.row(1248758)
+	applyTooltipHints(tables, &row)
+	if err := applyEnchantChance(tables, &row); err != nil || row.ProcChance != 35 || len(row.overrideNotes) != 0 {
+		t.Errorf("Insight's equip aura 1248758 reads %d%% (%v, notes %v), want its own 35 untouched",
+			row.ProcChance, err, row.overrideNotes)
+	}
+}
+
 func TestSplitDamageOfNamedSpells(t *testing.T) {
 	DatabasePath = "wowsims.db"
 	if _, err := os.Stat(DatabasePath); err != nil {
