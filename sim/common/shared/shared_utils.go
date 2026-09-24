@@ -412,9 +412,6 @@ type SpellDataProc struct {
 	// A weapon proc's chance where the enchantment's row states it rather than the spell's:
 	// SpellItemEnchantment.EffectPointsMin on a combat spell slot.
 	ProcChancePct int32
-	// What an enchant's grant states about the trigger where the aura's own row is silent: Recovery's
-	// equip aura carries no description, and its grant reads "when you are Parried or Dodged".
-	ProcHint core.ProcHint
 }
 
 // Registers the same effect once per item that carries it. Only the highest ID is added to the test
@@ -936,7 +933,7 @@ func registerSpellDataRowProc(cfg SpellDataProc, refuses func(row *spelldata.Spe
 		return
 	}
 
-	trigger := cfg.trigger()
+	trigger := spelldata.MustFind(cfg.TriggerSpellID)
 	row := trigger
 	if cfg.BuffSpellID != 0 {
 		row = spelldata.MustFind(cfg.BuffSpellID)
@@ -1028,18 +1025,6 @@ func spellDataProcHotSpell(character *core.Character, heal *spelldata.Spell, eff
 
 func decodedCallback(s *spelldata.Spell) core.AuraCallback {
 	return core.DecodeProcTypeMask(s.ProcFlags, s.ProcHint).Callback
-}
-
-// The trigger's row with the hint the enchant's grant adds, on a copy: the store's row is shared.
-func (cfg SpellDataProc) trigger() *spelldata.Spell {
-	row := spelldata.MustFind(cfg.TriggerSpellID)
-	if cfg.ProcHint == 0 {
-		return row
-	}
-
-	hinted := *row
-	hinted.ProcHint |= cfg.ProcHint
-	return &hinted
 }
 
 func (cfg SpellDataProc) effectSource() effectSource {

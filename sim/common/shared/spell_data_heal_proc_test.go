@@ -13,12 +13,11 @@ import (
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
-// Recovery 8721's rows: the equip aura 1248761 and the 5% E_HEAL_PCT heal 1248759 it casts. The
-// hint is the one its grant 1248760 states, "when you are Parried or Dodged".
+// Recovery 8721's rows: the equip aura 1248761 and the 5% E_HEAL_PCT heal 1248759 it casts. The aura
+// carries the hint its grant 1248760 states, "when you are Parried or Dodged".
 const (
 	recoveryTrigger int32 = 1248761
 	recoveryHeal    int32 = 1248759
-	recoveryHint          = core.ProcHintAttackDodged | core.ProcHintAttackParried
 )
 
 // A caster wearing a test weapon enchanted with a heal proc on the given rows, at half health so a
@@ -31,7 +30,7 @@ func newHealProcSim(t *testing.T, weaponID, enchantID int32, healSpellID int32, 
 			Type: proto.ItemType_ItemTypeWeapon}},
 	})
 	registerSpellDataHealProc(SpellDataProc{Name: "Test Heal Enchant", EnchantID: enchantID,
-		TriggerSpellID: recoveryTrigger, BuffSpellID: healSpellID, ProcHint: recoveryHint})
+		TriggerSpellID: recoveryTrigger, BuffSpellID: healSpellID})
 
 	sim := newTestCasterSim(testHands(&proto.ItemSpec{Id: weaponID, Enchant: enchantID}, &proto.ItemSpec{}), nil)
 	caster := sim.Raid.Parties[0].Players[0].(*testCaster)
