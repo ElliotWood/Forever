@@ -55,6 +55,8 @@ type generatedEffect struct {
 	Value          float64
 	ValueMax       float64
 	ChainAmplitude float64
+	Coef           float64
+	APCoef         float64
 }
 
 type generatedAmount struct {
@@ -143,8 +145,8 @@ func fieldNameOf(spellName string) string {
 }
 
 // Every family a class can learn, from two sources: every spell in one of the class's skill lines
-// whose subtext reads "Rank N" or is empty (a single-rank ability like Whirlwind is its own rank 1),
-// and every talent in the class's tree. Nothing hand-maintained.
+// whose subtext reads "Rank N", "Shapeshift" or is empty (a single-rank ability like Whirlwind or Cat
+// Form is its own rank 1), and every talent in the class's tree. Nothing hand-maintained.
 func discoverLadders(db *sql.DB, class dbc.DbcClass, treeID int) ([]rankLadder, []string, []string, error) {
 	mask := classMaskOf(class)
 
@@ -170,7 +172,7 @@ func discoverLadders(db *sql.DB, class dbc.DbcClass, treeID int) ([]rankLadder, 
 			JOIN SkillLine sl2 ON sl2.ID = sla2.SkillLine AND sl2.CategoryID = 7
 			WHERE (sla2.ClassMask & ?) != 0
 		) OR (sla.SkillLine = ? AND sla.ClassMask = ? AND sla.AcquireMethod = ?))
-		AND (s.NameSubtext_lang LIKE 'Rank %' OR s.NameSubtext_lang = '')
+		AND (s.NameSubtext_lang LIKE 'Rank %' OR s.NameSubtext_lang IN ('', 'Shapeshift'))
 		AND sla.SkillLine NOT IN (2851, 2853)
 		AND NOT EXISTS (SELECT 1 FROM SpellEffect se WHERE se.SpellID = sla.Spell AND se.EffectAura = ?)
 		ORDER BY n.Name_lang, sla.Spell`, dbcenums.ATTR_PASSIVE, mask, dbc.SkillLineDefense, mask, acquireOnLevel, dbcenums.A_MOUNTED)
@@ -1038,7 +1040,7 @@ func buildRow(db *sql.DB, rank int32, spellID int32, mask int, points map[int32]
 		}
 		row.Effects = append(row.Effects, generatedEffect{
 			Index: e.Index, Effect: e.Effect, Aura: e.Aura, Misc: e.MiscValue, Value: min, ValueMax: max,
-			ChainAmplitude: e.ChainAmplitude,
+			ChainAmplitude: e.ChainAmplitude, Coef: e.Coefficient, APCoef: e.APCoef,
 		})
 	}
 
@@ -1206,9 +1208,19 @@ func renderSpellDataFiles(helper *DBHelper) (map[string][]byte, *storeInputs, er
 		return nil, nil, err
 	}
 
+	forms, err := loadShapeshiftForms(helper.db)
+	if err != nil {
+		return nil, nil, err
+	}
+	formsFile, err := renderFormsFile(forms)
+	if err != nil {
+		return nil, nil, err
+	}
+
 	files := map[string][]byte{
 		"sim/common/shared/spell_data_enums_auto_gen.go": enums,
 		"sim/core/spelldata/spells_auto_gen.go":          store,
+		"sim/core/dbcenums/forms_auto_gen.go":            formsFile,
 	}
 	for pkg, out := range rendered {
 		files[fmt.Sprintf("sim/%s/spell_data_auto_gen.go", pkg)] = out
@@ -1518,6 +1530,12 @@ func formatRow(row generatedRow, namer *rankEnumNamer) string {
 			}
 			if e.ChainAmplitude != 0 && e.ChainAmplitude != 1 {
 				f += ", ChainAmplitude: " + num(e.ChainAmplitude)
+			}
+			if e.Coef != 0 {
+				f += ", Coef: " + num(e.Coef)
+			}
+			if e.APCoef != 0 {
+				f += ", APCoef: " + num(e.APCoef)
 			}
 			es = append(es, f+"}")
 		}

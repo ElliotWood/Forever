@@ -98,6 +98,7 @@ func captureStoreInputs(t *spellTables, roots []int32, ids []int32,
 		keepValue(in.ClassOptions, id, t.ClassOptions)
 		keepValue(in.Interrupts, id, t.Interrupts)
 		keepValue(in.Shapeshift, id, t.Shapeshift)
+		keepValue(in.AuraRestrictions, id, t.AuraRestrictions)
 		keepValue(in.Targets, id, t.Targets)
 		keepValue(in.CreatureType, id, t.CreatureType)
 		keepValue(in.Requirements, id, t.Requirements)
