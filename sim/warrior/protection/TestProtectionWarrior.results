@@ -52,6 +52,7 @@ character_stats_results: {
   final_stats: -1
   final_stats: 11.75667
   final_stats: 12.04
+  final_stats: 0
  }
 }
 dps_results: {

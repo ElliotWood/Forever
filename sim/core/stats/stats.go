@@ -67,7 +67,7 @@ const (
 	// Stats in UnitStats proto messages, since they are not required in the
 	// database files. However, it is valuable to keep these as proper Stats
 	// in the back-end, since they are used in various stat dependencies.
-	// The units for all 9 of these are percentages (between 0 and 100).
+	// The units for all 10 of these are percentages (between 0 and 100).
 	PhysicalHitPercent
 	SpellHitPercent
 	PhysicalCritPercent
@@ -77,6 +77,7 @@ const (
 	RangedCritPercent
 	DodgePercent
 	ParryPercent
+	ReducedCritTakenPercent
 	// DO NOT add new stats here without discussing it first; new stats come
 	// with a performance penalty.
 
@@ -214,6 +215,8 @@ func (s Stat) StatName() string {
 		return "DodgePercent"
 	case ParryPercent:
 		return "ParryPercent"
+	case ReducedCritTakenPercent:
+		return "ReducedCritTakenPercent"
 	case DefenseRating:
 		return "DefenseRating"
 	case BlockRating:

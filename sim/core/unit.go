@@ -397,7 +397,7 @@ func (unit *Unit) processDynamicBonus(sim *Simulation, bonus stats.Stats) {
 	if bonus[stats.SpellHasteRating] != 0 {
 		unit.updateCastSpeed()
 	}
-	if bonus[stats.DefenseRating] != 0 || bonus[stats.ResilienceRating] != 0 {
+	if bonus[stats.ReducedCritTakenPercent] != 0 {
 		unit.updateReducedCritTakenPercent()
 	}
 
@@ -688,6 +688,8 @@ func (unit *Unit) addUniversalStatDependencies() {
 	unit.AddStatDependency(stats.DefenseRating, stats.DodgePercent, 1/DefenseRatingPerAvoidancePercent)
 	unit.AddStatDependency(stats.DefenseRating, stats.ParryPercent, 1/DefenseRatingPerAvoidancePercent)
 	unit.AddStatDependency(stats.DefenseRating, stats.BlockPercent, 1/DefenseRatingPerAvoidancePercent)
+	unit.AddFlooredStatDependency(stats.DefenseRating, stats.ReducedCritTakenPercent, DefenseRatingPerDefenseLevel, 1/DefenseRatingPerAvoidancePercent)
+	unit.AddStatDependency(stats.ResilienceRating, stats.ReducedCritTakenPercent, 1.0/ResilienceRatingPerCritReductionChance)
 }
 
 func (unit *Unit) finalize() {
@@ -709,12 +711,10 @@ func (unit *Unit) finalize() {
 	unit.updateCastSpeed()
 	unit.updateAttackSpeed()
 	unit.updateMeleeAndRangedHaste()
-	unit.updateReducedCritTakenPercent()
 	unit.initMovement()
 
 	// All stats added up to this point are part of the 'initial' stats.
 	unit.initialStatsWithoutDeps = unit.stats
-	unit.initialPseudoStats = unit.PseudoStats
 	unit.initialCastSpeed = unit.CastSpeed
 	unit.initialMeleeSwingSpeed = unit.TotalMeleeHasteMultiplier()
 	unit.initialRangedSwingSpeed = unit.TotalRangedHasteMultiplier()
@@ -723,6 +723,9 @@ func (unit *Unit) finalize() {
 	unit.initialStats = unit.ApplyStatDependencies(unit.initialStatsWithoutDeps).FloorGameStats()
 	unit.statsWithoutDeps = unit.initialStatsWithoutDeps
 	unit.stats = unit.initialStats
+
+	unit.updateReducedCritTakenPercent()
+	unit.initialPseudoStats = unit.PseudoStats
 
 	unit.AutoAttacks.finalize()
 
@@ -925,17 +928,13 @@ func (unit *Unit) GetTotalBlockChanceAsDefender(atkTable *AttackTable) float64 {
 	return math.Max(chance, 0.0)
 }
 
-func (unit *Unit) GetDefenseReduction() float64 {
-	return math.Floor(unit.stats[stats.DefenseRating]/DefenseRatingPerDefenseLevel) * MissDodgeParryBlockCritChancePerDefense / 100
-}
 func (unit *Unit) GetResilienceReduction() float64 {
 	return unit.GetStat(stats.ResilienceRating) / ResilienceRatingPerCritReductionChance / 100
 }
 
 func (unit *Unit) updateReducedCritTakenPercent() {
 	unit.PseudoStats.ReducedCritTakenPercent = unit.PseudoStats.BaseReducedCritTakenPercent +
-		unit.GetDefenseReduction() +
-		unit.GetResilienceReduction()
+		unit.stats[stats.ReducedCritTakenPercent]/100
 }
 
 func (unit *Unit) GetTotalAvoidanceChance(spell *Spell, atkTable *AttackTable) float64 {
