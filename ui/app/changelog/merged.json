@@ -1,5 +1,11 @@
 [
 	{
+		"number": 429,
+		"title": "talents: fix the 28 the client audit found wrong, plus Omen of Clarity and Spirit Weapons",
+		"mergedAt": "2026-09-24",
+		"url": "https://github.com/ElliotWood/Forever/pull/429"
+	},
+	{
 		"number": 428,
 		"title": "site: no links back to the official wowsims project - Patreon, Discord and GitHub",
 		"mergedAt": "2026-09-23",
