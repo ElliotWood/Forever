@@ -65,7 +65,6 @@ describe('scroll consumable inputs', () => {
 			expect(scroll.input.actionId!.itemId).toBe(scroll.item);
 		}
 	});
-
 });
 
 describe('weapon stone imbue options', () => {
