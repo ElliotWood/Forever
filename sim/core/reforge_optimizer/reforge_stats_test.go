@@ -103,6 +103,7 @@ func TestReforgeDodgeAndParryRatingReachTheirPercentCaps(t *testing.T) {
 
 func TestReforgeDefenseAndResilienceReachTheCritTakenCap(t *testing.T) {
 	sdm := stats.NewStatDependencyManager()
+	core.AddRatingConversions(&sdm)
 	sdm.FinalizeStatDeps()
 
 	delta := core.NewUnitStats()
@@ -111,6 +112,31 @@ func TestReforgeDefenseAndResilienceReachTheCritTakenCap(t *testing.T) {
 	resolved := resolveStatDelta(&sdm, core.NewUnitStats(), delta)
 	if got := getUnitStat(resolved, stats.UnitStatFromPseudoStat(proto.PseudoStat_PseudoStatReducedCritTakenPercent)); math.Abs(got-3) > 1e-9 {
 		t.Errorf("25 defense and the resilience for 2%% move crit taken by %v, want 3", got)
+	}
+}
+
+func TestReforgeCritTakenCountsWholeDefense(t *testing.T) {
+	sdm := stats.NewStatDependencyManager()
+	core.AddRatingConversions(&sdm)
+	sdm.FinalizeStatDeps()
+
+	critTaken := stats.UnitStatFromPseudoStat(proto.PseudoStat_PseudoStatReducedCritTakenPercent)
+	for _, test := range []struct {
+		base, delta, want float64
+	}{
+		{10, 2, 2 / core.DefenseRatingPerAvoidancePercent},
+		{10.5, 0.5, 1 / core.DefenseRatingPerAvoidancePercent},
+		{10, 0.5, 0},
+		{10.5, 2.4, 2 / core.DefenseRatingPerAvoidancePercent},
+	} {
+		baseStats := core.NewUnitStats()
+		baseStats.Stats[stats.DefenseRating] = test.base * core.DefenseRatingPerDefenseLevel
+		delta := core.NewUnitStats()
+		delta.Stats[stats.DefenseRating] = test.delta * core.DefenseRatingPerDefenseLevel
+		resolved := resolveStatDelta(&sdm, baseStats, delta)
+		if got := getUnitStat(resolved, critTaken); math.Abs(got-test.want) > 1e-9 {
+			t.Errorf("%v defense on %v moves crit taken by %v, want %v", test.delta, test.base, got, test.want)
+		}
 	}
 }
 
@@ -146,19 +172,29 @@ func TestReforgeAvoidanceRatingWeightMovesOntoItsCappedPercent(t *testing.T) {
 	}
 }
 
-func TestReforgeDefenseWeightMovesOntoCritTakenOnly(t *testing.T) {
+func TestReforgeDefenseWeightMovesOntoItsFirstCappedPercent(t *testing.T) {
 	critTaken := stats.UnitStatFromPseudoStat(proto.PseudoStat_PseudoStatReducedCritTakenPercent)
 	dodge := stats.UnitStatFromPseudoStat(proto.PseudoStat_PseudoStatDodgePercent)
-	weights := core.NewUnitStats()
-	weights.Stats[stats.DefenseRating] = 1
-	caps := setUnitStat(setUnitStat(core.NewUnitStats(), critTaken, 2), dodge, 2)
+	defenseWeight := func() core.UnitStats {
+		weights := core.NewUnitStats()
+		weights.Stats[stats.DefenseRating] = 1
+		return weights
+	}
 
-	validated := checkWeights(weights, caps, nil)
+	validated := checkWeights(defenseWeight(), setUnitStat(setUnitStat(core.NewUnitStats(), critTaken, 2), dodge, 2), nil)
 	if got := getUnitStat(validated, critTaken); got != core.DefenseRatingPerAvoidancePercent {
 		t.Errorf("crit taken weighs %v per percent, want the 25 defense one percent costs", got)
 	}
 	if got := getUnitStat(validated, dodge); got != 0 {
-		t.Errorf("Dodge%% takes weight %v from defense, want 0", got)
+		t.Errorf("Dodge%% takes weight %v from defense under a crit taken cap, want 0", got)
+	}
+
+	validated = checkWeights(defenseWeight(), setUnitStat(core.NewUnitStats(), dodge, 2), nil)
+	if got := getUnitStat(validated, dodge); got != core.DefenseRatingPerAvoidancePercent {
+		t.Errorf("Dodge%% weighs %v per percent under a dodge cap alone, want the 25 defense one percent costs", got)
+	}
+	if validated.Stats[stats.DefenseRating] != 0 {
+		t.Errorf("defense keeps weight %v, want 0", validated.Stats[stats.DefenseRating])
 	}
 }
 

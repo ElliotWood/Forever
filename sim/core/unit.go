@@ -675,21 +675,45 @@ func (unit *Unit) GetCurrentPowerBar() PowerBarType {
 	return unit.currentPowerBar
 }
 
+// A rating that converts into a percent stat at RatingPerPercent rating per percent point. Where Step
+// is non-zero the rating counts in whole steps of that size only.
+type RatingConversion struct {
+	Rating           stats.Stat
+	Percent          stats.Stat
+	RatingPerPercent float64
+	Step             float64
+}
+
+// The rating conversions every unit has, in the order the reforge optimizer tries a rating's percents.
+var RatingConversions = []RatingConversion{
+	{stats.MeleeHitRating, stats.PhysicalHitPercent, PhysicalHitRatingPerHitPercent, 0},
+	{stats.SpellHitRating, stats.SpellHitPercent, SpellHitRatingPerHitPercent, 0},
+	{stats.MeleeCritRating, stats.PhysicalCritPercent, PhysicalCritRatingPerCritPercent, 0},
+	{stats.SpellCritRating, stats.SpellCritPercent, SpellCritRatingPerCritPercent, 0},
+	{stats.DodgeRating, stats.DodgePercent, DodgeRatingPerDodgePercent, 0},
+	{stats.ParryRating, stats.ParryPercent, ParryRatingPerParryPercent, 0},
+	{stats.BlockRating, stats.BlockPercent, BlockRatingPerBlockPercent, 0},
+	{stats.DefenseRating, stats.ReducedCritTakenPercent, DefenseRatingPerAvoidancePercent, DefenseRatingPerDefenseLevel},
+	{stats.DefenseRating, stats.DodgePercent, DefenseRatingPerAvoidancePercent, 0},
+	{stats.DefenseRating, stats.ParryPercent, DefenseRatingPerAvoidancePercent, 0},
+	{stats.DefenseRating, stats.BlockPercent, DefenseRatingPerAvoidancePercent, 0},
+	{stats.ResilienceRating, stats.ReducedCritTakenPercent, ResilienceRatingPerCritReductionChance, 0},
+}
+
+func AddRatingConversions(sdm *stats.StatDependencyManager) {
+	for _, conversion := range RatingConversions {
+		if conversion.Step != 0 {
+			sdm.AddFlooredStatDependency(conversion.Rating, conversion.Percent, conversion.Step, 1/conversion.RatingPerPercent)
+		} else {
+			sdm.AddStatDependency(conversion.Rating, conversion.Percent, 1/conversion.RatingPerPercent)
+		}
+	}
+}
+
 // Stat dependencies that apply both to players/pets (represented as Character
 // structs) and to NPCs (represented as Target structs).
 func (unit *Unit) addUniversalStatDependencies() {
-	unit.AddStatDependency(stats.MeleeHitRating, stats.PhysicalHitPercent, 1/PhysicalHitRatingPerHitPercent)
-	unit.AddStatDependency(stats.SpellHitRating, stats.SpellHitPercent, 1/SpellHitRatingPerHitPercent)
-	unit.AddStatDependency(stats.MeleeCritRating, stats.PhysicalCritPercent, 1/PhysicalCritRatingPerCritPercent)
-	unit.AddStatDependency(stats.SpellCritRating, stats.SpellCritPercent, 1/SpellCritRatingPerCritPercent)
-	unit.AddStatDependency(stats.DodgeRating, stats.DodgePercent, 1/DodgeRatingPerDodgePercent)
-	unit.AddStatDependency(stats.ParryRating, stats.ParryPercent, 1/ParryRatingPerParryPercent)
-	unit.AddStatDependency(stats.BlockRating, stats.BlockPercent, 1/BlockRatingPerBlockPercent)
-	unit.AddStatDependency(stats.DefenseRating, stats.DodgePercent, 1/DefenseRatingPerAvoidancePercent)
-	unit.AddStatDependency(stats.DefenseRating, stats.ParryPercent, 1/DefenseRatingPerAvoidancePercent)
-	unit.AddStatDependency(stats.DefenseRating, stats.BlockPercent, 1/DefenseRatingPerAvoidancePercent)
-	unit.AddFlooredStatDependency(stats.DefenseRating, stats.ReducedCritTakenPercent, DefenseRatingPerDefenseLevel, 1/DefenseRatingPerAvoidancePercent)
-	unit.AddStatDependency(stats.ResilienceRating, stats.ReducedCritTakenPercent, 1.0/ResilienceRatingPerCritReductionChance)
+	AddRatingConversions(&unit.StatDependencyManager)
 }
 
 func (unit *Unit) finalize() {
