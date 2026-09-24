@@ -15,14 +15,14 @@ import (
 )
 
 func protectionWarriorRaid(gearSet string) *proto.Raid {
-	return &proto.Raid{Parties: []*proto.Party{{Players: []*proto.Player{{
+	return core.SinglePlayerRaidProto(&proto.Player{
 		Class:     proto.Class_ClassWarrior,
 		Race:      proto.Race_RaceOrc,
 		Equipment: core.GetGearSet("../../../ui/specs/warrior/protection/gear_sets", gearSet).GearSet,
 		Spec: &proto.Player_ProtectionWarrior{ProtectionWarrior: &proto.ProtectionWarrior{
 			Options: &proto.ProtectionWarrior_Options{ClassOptions: &proto.WarriorOptions{}},
 		}},
-	}}}}}
+	}, nil, nil, nil)
 }
 
 func sheetStats(t *testing.T, raid *proto.Raid) core.UnitStats {
@@ -44,25 +44,24 @@ func TestCapSpaceDeltaMatchesTheSheet(t *testing.T) {
 	parry := proto.PseudoStat_PseudoStatParryPercent
 	critTaken := proto.PseudoStat_PseudoStatReducedCritTakenPercent
 	for _, character := range []struct {
-		name               string
-		raid               *proto.Raid
-		canBlock, canParry bool
+		name  string
+		raid  *proto.Raid
+		sheet core.SheetAvoidance
 	}{
-		{"warrior with a shield", protectionWarriorRaid("preraid"), true, true},
-		{"warrior without a shield", unshielded, false, true},
+		{"warrior with a shield", protectionWarriorRaid("preraid"), core.SheetAvoidance{CanBlock: true, CanParry: true}},
+		{"warrior without a shield", unshielded, core.SheetAvoidance{CanParry: true}},
 	} {
 		t.Run(character.name, func(t *testing.T) {
-			baseResult, sdm, pseudoStats := computeReforgeStatsAndDeps(&proto.ComputeStatsRequest{Raid: protopkg.Clone(character.raid).(*proto.Raid)})
+			baseResult, sdm, sheet := computeReforgeStatsAndDeps(&proto.ComputeStatsRequest{Raid: protopkg.Clone(character.raid).(*proto.Raid)})
 			if baseResult.ErrorResult != "" {
 				t.Fatalf("ComputeStats: %s", baseResult.ErrorResult)
 			}
-			if pseudoStats.CanBlock != character.canBlock || pseudoStats.CanParry != character.canParry {
-				t.Fatalf("can block %v and parry %v, want %v and %v", pseudoStats.CanBlock, pseudoStats.CanParry, character.canBlock, character.canParry)
+			if sheet != character.sheet {
+				t.Fatalf("sheet shows %+v, want %+v", sheet, character.sheet)
 			}
 			o := &reforgeOptimizer{
 				statDeps:  sdm,
-				canBlock:  pseudoStats.CanBlock,
-				canParry:  pseudoStats.CanParry,
+				sheet:     sheet,
 				baseStats: protoToCoreUnitStats(baseResult.RaidStats.Parties[0].Players[0].FinalStats),
 			}
 
@@ -86,8 +85,8 @@ func TestCapSpaceDeltaMatchesTheSheet(t *testing.T) {
 
 				for _, pseudoStat := range []proto.PseudoStat{block, dodge, parry, critTaken} {
 					moves := slices.Contains(test.moves, pseudoStat) &&
-						(pseudoStat != block || character.canBlock) &&
-						(pseudoStat != parry || character.canParry)
+						(pseudoStat != block || sheet.CanBlock) &&
+						(pseudoStat != parry || sheet.CanParry)
 					want := getUnitStat(sheetDelta, stats.UnitStatFromPseudoStat(pseudoStat))
 					if (want != 0) != moves {
 						t.Errorf("%s moves the sheet's %s by %v", test.stat.StatName(), pseudoStat, want)

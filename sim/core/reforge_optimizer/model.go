@@ -151,12 +151,7 @@ func (o *reforgeOptimizer) applyPositiveReforgeStats(coeffs map[string]float64, 
 // passed through unscaled.
 func (o *reforgeOptimizer) resolveCapCoeffs(rawDelta stats.Stats) map[string]float64 {
 	resolved := resolveStatDelta(o.statDeps, o.baseStats, rawUnitStatsFromStats(rawDelta))
-	if !o.canBlock {
-		resolved = setUnitStat(resolved, stats.UnitStatFromPseudoStat(proto.PseudoStat_PseudoStatBlockPercent), 0)
-	}
-	if !o.canParry {
-		resolved = setUnitStat(resolved, stats.UnitStatFromPseudoStat(proto.PseudoStat_PseudoStatParryPercent), 0)
-	}
+	o.sheet.Gate(resolved.PseudoStats)
 	coeffs := map[string]float64{}
 	eachUnitStat(resolved, func(unitStat stats.UnitStat, value float64) {
 		if value != 0 {

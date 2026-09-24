@@ -174,20 +174,20 @@ func TestReforgeCapSpaceSkipsBlockAndParryTheCharacterLacks(t *testing.T) {
 	delta[stats.ParryRating] = core.ParryRatingPerParryPercent
 	delta[stats.BlockRating] = core.BlockRatingPerBlockPercent
 
-	for _, character := range []struct{ canBlock, canParry bool }{{true, true}, {false, true}, {true, false}, {false, false}} {
-		o := &reforgeOptimizer{statDeps: &sdm, baseStats: core.NewUnitStats(), canBlock: character.canBlock, canParry: character.canParry}
+	for _, sheet := range []core.SheetAvoidance{{CanBlock: true, CanParry: true}, {CanParry: true}, {CanBlock: true}, {}} {
+		o := &reforgeOptimizer{statDeps: &sdm, baseStats: core.NewUnitStats(), sheet: sheet}
 		coeffs := o.resolveCapCoeffs(delta)
 		for _, want := range []struct {
 			pseudoStat proto.PseudoStat
 			counts     bool
 		}{
 			{proto.PseudoStat_PseudoStatDodgePercent, true},
-			{proto.PseudoStat_PseudoStatBlockPercent, character.canBlock},
-			{proto.PseudoStat_PseudoStatParryPercent, character.canParry},
+			{proto.PseudoStat_PseudoStatBlockPercent, sheet.CanBlock},
+			{proto.PseudoStat_PseudoStatParryPercent, sheet.CanParry},
 		} {
 			_, counts := coeffs[pseudoStatCoeffKey(want.pseudoStat)]
 			if counts != want.counts {
-				t.Errorf("can block %v, parry %v: %s in the cap space is %v", character.canBlock, character.canParry, want.pseudoStat, counts)
+				t.Errorf("can block %v, parry %v: %s in the cap space is %v", sheet.CanBlock, sheet.CanParry, want.pseudoStat, counts)
 			}
 		}
 	}

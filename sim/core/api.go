@@ -34,9 +34,9 @@ func ComputeStatDependencies(request *proto.ComputeStatsRequest) *stats.StatDepe
 
 // ComputeStatsAndDeps combines a skip-rotation ComputeStats with ComputeStatDependencies
 // in a single NewEnvironment call. Use this when both are needed for the same raid to
-// avoid building the character environment twice. It also returns the character's
-// PseudoStats, whose CanBlock and CanParry decide whether the sheet shows block and parry.
-func ComputeStatsAndDeps(request *proto.ComputeStatsRequest) (*proto.ComputeStatsResult, *stats.StatDependencyManager, *stats.PseudoStats) {
+// avoid building the character environment twice. It also returns which of block and parry
+// the character's sheet shows.
+func ComputeStatsAndDeps(request *proto.ComputeStatsRequest) (*proto.ComputeStatsResult, *stats.StatDependencyManager, SheetAvoidance) {
 	encounter := request.Encounter
 	if encounter == nil {
 		encounter = &proto.Encounter{}
@@ -47,7 +47,7 @@ func ComputeStatsAndDeps(request *proto.ComputeStatsRequest) (*proto.ComputeStat
 		EncounterStats: encounterStats,
 	}
 	if len(env.Raid.Parties) == 0 || len(env.Raid.Parties[0].Players) == 0 {
-		return result, &stats.StatDependencyManager{}, &stats.PseudoStats{}
+		return result, &stats.StatDependencyManager{}, SheetAvoidance{}
 	}
 	character := env.Raid.Parties[0].Players[0].GetCharacter()
 	// FillPlayerStats activates build-phase auras to compute FinalStats then clears them.
@@ -55,8 +55,7 @@ func ComputeStatsAndDeps(request *proto.ComputeStatsRequest) (*proto.ComputeStat
 	// dependencies are intentionally handled separately by the reforge optimizer.
 	character.applyBuildPhaseAuras(CharacterBuildPhaseBase | CharacterBuildPhaseGear | CharacterBuildPhaseBuffs)
 	sdm := character.StatDependencyManager
-	pseudoStats := character.PseudoStats
-	return result, &sdm, &pseudoStats
+	return result, &sdm, character.sheetAvoidance()
 }
 
 /**
