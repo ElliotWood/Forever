@@ -4,6 +4,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/wowsims/forever/sim/arenalib"
 	"github.com/wowsims/forever/sim/common"
 	_ "github.com/wowsims/forever/sim/common"
 	"github.com/wowsims/forever/sim/core"
@@ -101,4 +102,19 @@ func TestHotStreakSpentByPyroblast(t *testing.T) {
 	if mage.HotStreakAura.IsActive() {
 		t.Errorf("Hot Streak still up at %v after Pyroblast finished", sim.CurrentTime)
 	}
+}
+
+// The arena entry for this spec. Skipped unless ARENA_OUT is set; see sim/arenalib.
+func TestArena(t *testing.T) {
+	arenalib.Run(t, arenalib.Spec{
+		Dir:   "mage",
+		UI:    "mage/dps",
+		Class: proto.Class_ClassMage,
+		Race:  proto.Race_RaceGnome,
+		SpecOptions: &proto.Player_Mage{Mage: &proto.Mage{Options: &proto.Mage_Options{
+			ClassOptions: &proto.MageOptions{DefaultMageArmor: proto.MageArmor_MageArmorMageArmor},
+		}}},
+		Role:               arenalib.Caster,
+		DistanceFromTarget: 30,
+	})
 }

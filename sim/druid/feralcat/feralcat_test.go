@@ -4,6 +4,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/wowsims/forever/sim/arenalib"
 	"github.com/wowsims/forever/sim/common"
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
@@ -135,4 +136,16 @@ func TestClearcastingSpentByNextCostedAbility(t *testing.T) {
 	if cat.ClearcastingAura.IsActive() {
 		t.Error("Shred did not spend Clearcasting")
 	}
+}
+
+// The arena entry for this spec. Skipped unless ARENA_OUT is set; see sim/arenalib.
+func TestArena(t *testing.T) {
+	arenalib.Run(t, arenalib.Spec{
+		Dir:         "feral_druid",
+		UI:          "druid/feralcat",
+		Class:       proto.Class_ClassDruid,
+		Race:        proto.Race_RaceTauren,
+		SpecOptions: DefaultSpecOptions,
+		Role:        arenalib.Melee,
+	})
 }
