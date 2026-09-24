@@ -233,7 +233,7 @@ const (
 
 	WarlockShadowDamage = WarlockSpellCorruption | WarlockSpellDrainLife | WarlockSpellCurseOfAgony |
 		WarlockSpellCurseOfDoom | WarlockSpellShadowBolt | WarlockSpellShadowBurn | WarlockSpellSiphonLife |
-		WarlockSpellDeathCoil | WarlockSpellDrainSoul | WarlockSpellWrack | WarlockSpellLifeTap
+		WarlockSpellDeathCoil | WarlockSpellDrainSoul | WarlockSpellWrack
 
 	WarlockPeriodicShadowDamage = WarlockSpellCorruption | WarlockSpellDrainLife | WarlockSpellCurseOfAgony |
 		WarlockSpellCurseOfDoom | WarlockSpellSiphonLife | WarlockSpellDrainSoul | WarlockSpellWrack

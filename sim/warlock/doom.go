@@ -5,19 +5,11 @@ import (
 )
 
 // Forever renamed Curse of Doom to Bane of Doom (603): one tick of 1742 after a minute, with a 4.0
-// spell power coefficient, on the bane slot.
+// spell power coefficient, on the bane slot. Amplify Curse does not reach it: 18288's mask (33792)
+// names Bane of Agony and Curse of Weakness only.
 func (warlock *Warlock) registerCurseOfDoom() {
 	rank := spellData.BaneOfDoom.Highest()
 	tick := rank.PeriodicEffect()
-	amplify := 1 + spellData.AmplifyCurse.EffectAt(1).FractionAt(1)
-
-	baseDamage := func(sim *core.Simulation) float64 {
-		if warlock.AmplifyCurseAura.IsActive() {
-			warlock.AmplifyCurseAura.Deactivate(sim)
-			return tick.Average(core.CharacterLevel) * amplify
-		}
-		return tick.Average(core.CharacterLevel)
-	}
 
 	warlock.CurseOfDoom = warlock.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: rank.ID},
@@ -53,7 +45,7 @@ func (warlock *Warlock) registerCurseOfDoom() {
 			BonusCoefficient: tick.Coeff(),
 
 			OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-				dot.Snapshot(target, baseDamage(sim))
+				dot.Snapshot(target, tick.Average(core.CharacterLevel))
 			},
 			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
 				dot.CalcAndDealPeriodicSnapshotDamage(sim, target, periodicTickOutcome(rank, dot))

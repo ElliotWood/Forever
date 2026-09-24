@@ -20,8 +20,10 @@ func (mage *Mage) registerArcaneCharges() {
 	damagePerStack := buffRank.Effect(dbcenums.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_DAMAGE)).Average(core.CharacterLevel) / 100
 	costPerStack := buffRank.Effect(dbcenums.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_COST)).Average(core.CharacterLevel) / 100
 
+	// 400573's damage mask names every mage damage spell but Arcane Blast, Arcane Missiles, Blizzard
+	// and Flamestrike, whatever its tooltip says.
 	damageMod := mage.AddDynamicMod(core.SpellModConfig{
-		ClassMask: MageSpellsAll &^ MageSpellArcaneBlast,
+		ClassMask: MageSpellsAllDamaging &^ (MageSpellArcaneBlast | MageSpellArcaneMissiles | MageSpellBlizzard | MageSpellFlamestrike),
 		Kind:      core.SpellMod_DamageDone_Flat,
 	})
 	costMod := mage.AddDynamicMod(core.SpellModConfig{

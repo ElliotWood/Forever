@@ -127,7 +127,8 @@ func (hunter *Hunter) registerImprovedTracking() {
 		return
 	}
 
-	// Everything a raid encounter can be is trackable apart from Mechanical.
+	// Everything a raid encounter can be is trackable apart from Mechanical. Damage only: 24293 has
+	// no crit damage effect.
 	multiplier := spellData.ImprovedTracking.MultiplierAt(hunter.Talents.ImprovedTracking)
 	hunter.Env.RegisterPostFinalizeEffect(func() {
 		for _, t := range hunter.Env.Encounter.AllTargets {
@@ -137,7 +138,6 @@ func (hunter *Hunter) registerImprovedTracking() {
 				proto.MobType_MobTypeUndead:
 				at := hunter.AttackTables[t.UnitIndex]
 				at.DamageDealtMultiplier *= multiplier
-				at.CritMultiplier *= multiplier
 			}
 		}
 	})

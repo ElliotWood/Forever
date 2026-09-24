@@ -148,7 +148,10 @@ func (shaman *Shaman) applySpiritWeapons() {
 	if !shaman.Talents.SpiritWeapons {
 		return
 	}
-	//TODO ? Threat related talent
+
+	// Client 16268: parry and -30% threat; its Rockbiter half (eff 1) has nothing to act on, the sim has no Rockbiter.
+	shaman.PseudoStats.CanParry = true
+	shaman.PseudoStats.ThreatMultiplier *= spellData.SpiritWeapons.Effect(dbcenums.A_MOD_THREAT, 127).MultiplierAt(1)
 }
 
 func (shaman *Shaman) applyStormstrike() {

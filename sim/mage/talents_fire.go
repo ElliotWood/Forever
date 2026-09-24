@@ -227,6 +227,12 @@ func (mage *Mage) registerHotStreak() {
 		OnStacksChange: func(_ *core.Aura, _ *core.Simulation, _ int32, newStacks int32) {
 			castTimeMod.UpdateFloatValue(-.25 * float64(newStacks))
 		},
+		OnCastComplete: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell) {
+			// 400625 carries one charge: the next Pyroblast spends every stack.
+			if spell.Matches(MageSpellPyroblast) {
+				aura.Deactivate(sim)
+			}
+		},
 	})
 
 	mage.MakeProcTriggerAura(core.ProcTrigger{

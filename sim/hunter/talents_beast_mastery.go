@@ -61,25 +61,43 @@ func (hunter *Hunter) registerFocusedFire() {
 		MultiplierAt(hunter.Talents.FocusedFire)
 }
 
+// 19616's mask names the pet passive and Summon Hawk, so the hawks take it too.
 func (hunter *Hunter) registerUnleashedFury() {
-	if hunter.Pet == nil || hunter.Talents.UnleashedFury == 0 {
+	if hunter.Talents.UnleashedFury == 0 {
 		return
 	}
 
-	hunter.Pet.PseudoStats.DamageDealtMultiplier *= spellData.UnleashedFury.
-		MultiplierAt(hunter.Talents.UnleashedFury)
+	hunter.AddStaticMod(core.SpellModConfig{
+		Kind:       core.SpellMod_DamageDone_Pct,
+		FloatValue: spellData.UnleashedFury.FractionAt(hunter.Talents.UnleashedFury),
+		ClassMask:  HunterSpellSummonHawk,
+	})
+
+	if hunter.Pet != nil {
+		hunter.Pet.PseudoStats.DamageDealtMultiplier *= spellData.UnleashedFury.
+			MultiplierAt(hunter.Talents.UnleashedFury)
+	}
 }
 
+// 19598's mask names the pet passive and Summon Hawk, so the hawks take it too.
 func (hunter *Hunter) registerFerocity() {
-	if hunter.Pet == nil || hunter.Talents.Ferocity == 0 {
+	if hunter.Talents.Ferocity == 0 {
 		return
 	}
 
 	crit := spellData.Ferocity.ValueAt(hunter.Talents.Ferocity)
-	hunter.Pet.AddStats(stats.Stats{
-		stats.PhysicalCritPercent: crit,
-		stats.SpellCritPercent:    crit,
+	hunter.AddStaticMod(core.SpellModConfig{
+		Kind:       core.SpellMod_BonusCrit_Percent,
+		FloatValue: crit,
+		ClassMask:  HunterSpellSummonHawk,
 	})
+
+	if hunter.Pet != nil {
+		hunter.Pet.AddStats(stats.Stats{
+			stats.PhysicalCritPercent: crit,
+			stats.SpellCritPercent:    crit,
+		})
+	}
 }
 
 func (hunter *Hunter) registerBestialDiscipline() {

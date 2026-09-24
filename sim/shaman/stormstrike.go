@@ -3,7 +3,6 @@ package shaman
 import (
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/dbcenums"
-	"github.com/wowsims/forever/sim/core/stats"
 )
 
 var stormstrikeRank = spellData.Stormstrike.Highest()
@@ -16,7 +15,7 @@ func (shaman *Shaman) StormstrikeDebuffAura(target *core.Unit) *core.Aura {
 		Duration:  stormstrikeRank.Duration(),
 		MaxStacks: int32(stormstrikeRank.ProcCharges),
 		OnSpellHitTaken: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			if !spell.SpellSchool.Matches(core.SpellSchoolNature) {
+			if spell.Unit != &shaman.Unit || !spell.Matches(stormstrikeSpells) {
 				return
 			}
 			if !result.Landed() || result.Damage == 0 {
@@ -25,11 +24,14 @@ func (shaman *Shaman) StormstrikeDebuffAura(target *core.Unit) *core.Aura {
 			aura.RemoveStack(sim)
 		},
 	})
-	return aura.AttachMultiplicativePseudoStatBuff(
-		&target.PseudoStats.SchoolDamageTakenMultiplier[stats.SchoolIndexNature],
-		1+stormstrikeRank.Effect(dbcenums.A_MOD_SPELL_DAMAGE_FROM_CASTER, 0).Percent(),
-	)
+	// Client 17364 (aura 271): only this shaman's Lightning Bolt, Chain Lightning and Earth Shock take the bonus.
+	multiplier := 1 + stormstrikeRank.Effect(dbcenums.A_MOD_SPELL_DAMAGE_FROM_CASTER, 0).Percent()
+	return aura.AttachDDBC(0, 1, &shaman.AttackTables, func(_ *core.Simulation, spell *core.Spell, _ *core.AttackTable) float64 {
+		return core.Ternary(spell.Matches(stormstrikeSpells), multiplier, 1)
+	})
 }
+
+const stormstrikeSpells = SpellMaskLightningBolt | SpellMaskChainLightning | SpellMaskEarthShock | SpellMaskOverload
 
 func (shaman *Shaman) newStormstrikeHitSpellConfig(spellID int32, isMH bool) core.SpellConfig {
 	var procMask core.ProcMask
