@@ -275,9 +275,6 @@ func RegisterAllEnchants() {
 			{{- if .Proc.IsWeaponProc }}
 			IsWeaponProc:   true,
 			{{- end}}
-			{{- if .Proc.ProcChancePct }}
-			ProcChancePct:  {{ .Proc.ProcChancePct }},
-			{{- end}}
 		}, nil)
 		{{- else}}
 		// unsupported: {{ .Proc.Reason }}
@@ -293,9 +290,6 @@ func RegisterAllEnchants() {
 		{{- end}}
 		{{- if .Proc.IsWeaponProc }}
 		//	IsWeaponProc:   true,
-		{{- end}}
-		{{- if .Proc.ProcChancePct }}
-		//	ProcChancePct:  {{ .Proc.ProcChancePct }},
 		{{- end}}
 		// }, nil)
 		{{- end}}

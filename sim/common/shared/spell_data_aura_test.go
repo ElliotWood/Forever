@@ -350,7 +350,8 @@ func TestNightfallRaisesTheTargetsSpellDamageTaken(t *testing.T) {
 	const itemID int32 = 992301
 	withAuraItem(itemID, proto.ItemType_ItemTypeWeapon,
 		&proto.ItemEffect{BuffId: spellVulnerability, Effect: &proto.ItemEffect_Proc{Proc: &proto.ProcEffect{}}})
-	NewSpellDataAuraProc(SpellDataProc{TriggerSpellID: spellVulnerability, IsWeaponProc: true, ProcChancePct: 100},
+	everyHit(t, spellVulnerability)
+	NewSpellDataAuraProc(SpellDataProc{TriggerSpellID: spellVulnerability, IsWeaponProc: true},
 		[]ItemVariant{{ItemID: itemID, ItemName: "Test Nightfall"}})
 
 	sim := newAuraSim(
@@ -365,10 +366,12 @@ func TestNightfallRaisesTheTargetsSpellDamageTaken(t *testing.T) {
 	}
 
 	strikeAndStep(t, sim, wielder, target)
-	procTime := sim.CurrentTime
 	debuff := target.GetAuraByID(core.ActionID{SpellID: spellVulnerability})
 	if !debuff.IsActive() {
 		t.Fatalf("a strike at 100%% chance put no Spell Vulnerability on the target")
+	}
+	if debuff.Duration != 5*time.Second {
+		t.Errorf("Spell Vulnerability lasts %v, want 5 s", debuff.Duration)
 	}
 
 	if got := dealt(sim, caster.bolt, target); !core.WithinToleranceFloat64(115, got, 1e-6) {
@@ -381,7 +384,9 @@ func TestNightfallRaisesTheTargetsSpellDamageTaken(t *testing.T) {
 		t.Errorf("with the debuff up a physical strike dealt %v, want 100", got)
 	}
 
-	stepPast(t, sim, procTime+5*time.Second+time.Millisecond)
+	// The wielder's bolt is a hit its 100% proc answers too, so the 5 s run from the refresh it lands.
+	stepPast(t, sim, sim.CurrentTime+core.SpellBatchWindow+time.Millisecond)
+	stepPast(t, sim, debuff.ExpiresAt()+time.Millisecond)
 	if debuff.IsActive() {
 		t.Errorf("Spell Vulnerability is still up after its 5 s")
 	}
@@ -401,7 +406,8 @@ func TestSwordOfZealAddsPhysicalDamageAndArmor(t *testing.T) {
 			int32(proto.Stat_StatArmor): 150, int32(proto.Stat_StatPhysicalDamage): 10,
 		}}},
 	})
-	NewSpellDataProc(SpellDataProc{TriggerSpellID: zeal, IsWeaponProc: true, ProcChancePct: 100},
+	everyHit(t, zeal)
+	NewSpellDataProc(SpellDataProc{TriggerSpellID: zeal, IsWeaponProc: true},
 		[]ItemVariant{{ItemID: itemID, ItemName: "Test Sword of Zeal"}})
 
 	sim := newAuraSim(shaman("Wielder", map[proto.ItemSlot]int32{proto.ItemSlot_ItemSlotMainHand: itemID}))

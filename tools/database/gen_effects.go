@@ -104,9 +104,7 @@ type ProcRouting struct {
 	// A "Chance on hit" item effect or a combat enchant, cast by the game off every eligible weapon
 	// hit whatever the row's proc flags say.
 	IsWeaponProc bool
-	// A combat enchant's chance, stated on the enchantment's row rather than the spell's.
-	ProcChancePct int
-	Shape         ProcShape
+	Shape        ProcShape
 	// Empty when the rows state enough to build the listener.
 	Unsupported []string
 	// What the rows resolve to, for the reader of the generated file.
@@ -1370,8 +1368,7 @@ func routeEnchantSlot(slot dbc.EnchantProcSlot, instance *dbc.DBC) *ProcRouting 
 
 	routing := routeProc(slot.SpellID, buffSpellID, slot.IsCombatSpell)
 	if slot.IsCombatSpell {
-		routing.ProcChancePct = slot.ChancePct
-		routing.Unsupported = spelldata.CombatEnchantUnsupported(spelldata.Find(int32(slot.SpellID)), slot.ChancePct > 0)
+		routing.Unsupported = spelldata.CombatEnchantUnsupported(spelldata.Find(int32(slot.SpellID)))
 	} else {
 		routing.Unsupported = spelldata.EnchantAuraUnsupported(spelldata.Find(int32(slot.SpellID)))
 	}
@@ -1387,10 +1384,6 @@ func routeEnchantSlot(slot dbc.EnchantProcSlot, instance *dbc.DBC) *ProcRouting 
 	} else {
 		routing.Unsupported = append(routing.Unsupported,
 			fmt.Sprintf("the enchant's effect entry resolves no stats from %d (%s)", applied, spellEffectKinds(instance, applied)))
-	}
-
-	if slot.ChancePct > 0 {
-		routing.Summary += fmt.Sprintf("; the enchantment states %d%%", slot.ChancePct)
 	}
 
 	if trigger := spelldata.Find(int32(slot.SpellID)); !slot.IsCombatSpell &&

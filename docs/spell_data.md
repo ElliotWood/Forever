@@ -545,8 +545,10 @@ temporary stats listeners, which is why the proc buff keeps its own.
 
 An enchant's procs are read one per slot of its `SpellItemEnchantment` row that casts a combat spell
 (Effect 1) or hangs an equip aura off a hit (Effect 3), and at most one of them registers. A combat spell's chance, where the client states
-one, is on the enchantment rather than on the spell - `EffectPointsMin`, Fiery Blaze's 15 - and
-`ProcChancePct` carries it, rolled on the hits of the enchanted weapon only
+one, is on the enchantment rather than on the spell - `EffectPointsMin`, Fiery Blaze's 15 - and the
+store writes it onto the spell's row as its `ProcChance` column, noted beside the row. Every
+enchantment casting one spell states the same chance for it; the generator stops on one that does
+not. The chance is rolled on the hits of the enchanted weapon only
 (`spelldata.CombatEnchantUnsupported`). An equip aura's own description is empty, so the store reads
 the description of the spell granting the enchant in its place, for what no proc mask can state: the
 named ability, outcome-taken, attack-dodged and attack-parried hints, and whether its 100 is a

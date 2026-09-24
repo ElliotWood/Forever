@@ -391,8 +391,8 @@ func testOneHander(id int32) *proto.SimItem {
 	}
 }
 
-// Fiery Blaze 36's shape: a combat enchant on the main hand only, whose spell states no chance and
-// whose enchantment states 15%.
+// Fiery Blaze 36's shape: a combat enchant on the main hand only, whose enchantment states 15%, the
+// ProcChance the store writes onto its spell's row.
 func TestStatedEnchantChanceRollsOnTheEnchantedWeaponOnly(t *testing.T) {
 	const mainHandID, offHandID, enchantID int32 = 990401, 990402, 990403
 	core.AddToDatabase(&proto.SimDatabase{
@@ -416,9 +416,9 @@ func TestStatedEnchantChanceRollsOnTheEnchantedWeaponOnly(t *testing.T) {
 		AutoSwingMelee: true,
 	})
 
-	trigger := &spelldata.Spell{ID: 990410, Name: "Test Fiery Blaze"}
+	trigger := &spelldata.Spell{ID: 990410, Name: "Test Fiery Blaze", ProcChance: 15}
 	cfg := SpellDataProc{Name: "Test Fiery Blaze", EnchantID: enchantID, TriggerSpellID: trigger.ID,
-		BuffSpellID: trigger.ID, IsWeaponProc: true, ProcChancePct: 15}
+		BuffSpellID: trigger.ID, IsWeaponProc: true}
 	config := spellDataProcListener(character, cfg, cfg.effectSource(), trigger, nil)
 
 	if config.ProcChance != 0 {
@@ -482,13 +482,12 @@ func TestSpellDataProcTakesAPPMOverride(t *testing.T) {
 			row := *spelldata.MustFind(tc.spellID)
 			unsupported := func() []string {
 				if tc.isWeaponProc {
-					return spelldata.CombatEnchantUnsupported(&row, false)
+					return spelldata.CombatEnchantUnsupported(&row)
 				}
 				return spelldata.EnchantAuraUnsupported(&row)
 			}
 
-			// An equip aura's missing rate is read off the enchant's tooltip, by the generator.
-			if tc.isWeaponProc && !slices.Contains(unsupported(), spelldata.ReasonStatesNoRate) {
+			if !slices.Contains(unsupported(), spelldata.ReasonStatesNoRate) {
 				t.Fatalf("unsupported = %v before the override, want the missing rate named", unsupported())
 			}
 

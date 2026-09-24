@@ -58,9 +58,13 @@ func TestEnchantProcRouting(t *testing.T) {
 
 			for i, w := range tc.want {
 				r := got[i]
-				if damage := r.Shape == ShapeDamage; r.TriggerSpellID != w.trigger || damage != w.damage || r.ProcChancePct != w.chancePct {
-					t.Errorf("routing %d: trigger %d, damage %v, chance %d%%; want %d, %v, %d%%",
-						i, r.TriggerSpellID, damage, r.ProcChancePct, w.trigger, w.damage, w.chancePct)
+				chance := 0
+				if r.IsWeaponProc {
+					chance = int(spelldata.Find(int32(r.TriggerSpellID)).ProcChance)
+				}
+				if damage := r.Shape == ShapeDamage; r.TriggerSpellID != w.trigger || damage != w.damage || chance != w.chancePct {
+					t.Errorf("routing %d: trigger %d, damage %v, combat chance %d%%; want %d, %v, %d%%",
+						i, r.TriggerSpellID, damage, chance, w.trigger, w.damage, w.chancePct)
 				}
 				if w.reason == "" && !r.Supported() {
 					t.Errorf("routing %d is refused (%s), want it registered", i, r.Reason())

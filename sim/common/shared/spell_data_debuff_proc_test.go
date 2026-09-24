@@ -200,8 +200,9 @@ func TestEyeOfInfluenceLowersTheTargetsAttackPower(t *testing.T) {
 	const itemID, trigger, debuff int32 = 991408, 1297085, 1297082
 	core.AddToDatabase(&proto.SimDatabase{Items: []*proto.SimItem{{Id: itemID, Name: "Test Eye",
 		Type: proto.ItemType_ItemTypeNeck, ScalingOptions: map[int32]*proto.ScalingItemProperties{0: {}}}}})
+	everyHit(t, trigger)
 	registerSpellDataDebuffProc(SpellDataProc{Name: "Test Eye", ItemID: itemID, TriggerSpellID: trigger,
-		BuffSpellID: debuff, ProcChancePct: 100})
+		BuffSpellID: debuff})
 
 	items := testHands(&proto.ItemSpec{}, &proto.ItemSpec{})
 	items[proto.ItemSlot_ItemSlotNeck] = &proto.ItemSpec{Id: itemID}

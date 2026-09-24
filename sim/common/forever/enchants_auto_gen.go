@@ -259,14 +259,13 @@ func RegisterAllEnchants() {
 
 	// Enchants a weapon to have a 15% chance to inflict 11 Fire damage to all enemies within 3 yards.
 	// https://www.wowhead.com/forever/spell=6296
-	// trigger 6297 (0%, core.CallbackEmpty, core.ProcMaskUnknown); the enchantment states 15%
+	// trigger 6297 (15%, core.CallbackEmpty, core.ProcMaskUnknown)
 	shared.NewSpellDataDamageProc(shared.SpellDataProc{
 		Name:           "Enchant: Fiery Blaze",
 		EnchantID:      36,
 		TriggerSpellID: 6297,
 		BuffSpellID:    6297,
 		IsWeaponProc:   true,
-		ProcChancePct:  15,
 	}, nil)
 
 	// Enchant a piece of chest armor so it has a 2% chance per hit of giving you 10 points of damage absorption.

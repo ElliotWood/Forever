@@ -149,6 +149,13 @@ func editRow(t *testing.T, id int32, edit func(*spelldata.Spell)) {
 	t.Cleanup(func() { *row = original })
 }
 
+// A trigger whose row states no rate, rolled at 100% for the test.
+func everyHit(t *testing.T, id int32) {
+	editRow(t, id, func(s *spelldata.Spell) {
+		s.ProcChance, s.ProcChanceSource, s.ProcChanceEffect = 100, spelldata.ProcChanceColumn, 0
+	})
+}
+
 // What the caster heals for between now and the given time after start, stepping just past it so a
 // tick landing on it is counted.
 func healedUntil(t *testing.T, sim *core.Simulation, caster *testCaster, start, after time.Duration) float64 {
