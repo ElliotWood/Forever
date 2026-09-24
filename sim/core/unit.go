@@ -684,10 +684,10 @@ func (unit *Unit) addUniversalStatDependencies() {
 	unit.AddStatDependency(stats.SpellCritRating, stats.SpellCritPercent, 1/SpellCritRatingPerCritPercent)
 	unit.AddStatDependency(stats.DodgeRating, stats.DodgePercent, 1/DodgeRatingPerDodgePercent)
 	unit.AddStatDependency(stats.ParryRating, stats.ParryPercent, 1/ParryRatingPerParryPercent)
-	unit.AddStatDependency(stats.BlockRating, stats.BlockPercent, 1/BlockRatingPerBlockPercent/100)
+	unit.AddStatDependency(stats.BlockRating, stats.BlockPercent, 1/BlockRatingPerBlockPercent)
 	unit.AddStatDependency(stats.DefenseRating, stats.DodgePercent, 1/DefenseRatingPerAvoidancePercent)
 	unit.AddStatDependency(stats.DefenseRating, stats.ParryPercent, 1/DefenseRatingPerAvoidancePercent)
-	unit.AddStatDependency(stats.DefenseRating, stats.BlockPercent, 1/DefenseRatingPerAvoidancePercent/100)
+	unit.AddStatDependency(stats.DefenseRating, stats.BlockPercent, 1/DefenseRatingPerAvoidancePercent)
 }
 
 func (unit *Unit) finalize() {
@@ -891,7 +891,7 @@ func (unit *Unit) GetParryFromRating() float64 {
 	return unit.stats[stats.ParryPercent] / 100
 }
 func (unit *Unit) GetBlockFromRating() float64 {
-	return unit.stats[stats.BlockPercent]
+	return unit.stats[stats.BlockPercent] / 100
 }
 
 func (unit *Unit) GetTotalDodgeChanceAsDefender(spell *Spell, atkTable *AttackTable) float64 {

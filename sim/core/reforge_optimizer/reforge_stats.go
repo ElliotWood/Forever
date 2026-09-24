@@ -114,7 +114,7 @@ func resolveStatDelta(sdm *stats.StatDependencyManager, baseStats core.UnitStats
 	// Mirror dual-stored stats from Stats (updated by SDM — e.g. HitRating→Hit%,
 	// CritRating→Crit%, Agility→PhysicalCritPercent) back to their PseudoStat indices.
 	for _, pair := range stats.PercentPseudoStats {
-		value := delta.Stats[pair.Stat] * pair.SheetScale
+		value := delta.Stats[pair.Stat]
 		if pair.MeleeShare != nil {
 			value = delta.Stats[pair.MeleeShare.Stat] + value
 		}

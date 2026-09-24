@@ -69,14 +69,14 @@ func TestReforgeHitCapMatchesTheBackEndHitPercent(t *testing.T) {
 
 func TestReforgeBlockDeltaLandsInPercent(t *testing.T) {
 	sdm := stats.NewStatDependencyManager()
-	sdm.AddStatDependency(stats.Strength, stats.BlockPercent, 0.005)
+	sdm.AddStatDependency(stats.Strength, stats.BlockPercent, 0.5)
 	sdm.FinalizeStatDeps()
 
 	delta := core.NewUnitStats()
 	delta.Stats[stats.Strength] = 10
 	resolved := resolveStatDelta(&sdm, core.NewUnitStats(), delta)
-	if got := resolved.Stats[stats.BlockPercent]; math.Abs(got-0.05) > 1e-12 {
-		t.Fatalf("back-end BlockPercent delta %v, want the 0.05 probability", got)
+	if got := resolved.Stats[stats.BlockPercent]; math.Abs(got-5) > 1e-12 {
+		t.Fatalf("back-end BlockPercent delta %v, want 5 percent", got)
 	}
 	if got := getUnitStat(resolved, stats.UnitStatFromPseudoStat(proto.PseudoStat_PseudoStatBlockPercent)); math.Abs(got-5) > 1e-9 {
 		t.Errorf("Block%% delta %v, want 5 percent", got)
@@ -166,7 +166,7 @@ func TestReforgeCapSpaceSkipsBlockAndParryTheCharacterLacks(t *testing.T) {
 	sdm := stats.NewStatDependencyManager()
 	sdm.AddStatDependency(stats.DodgeRating, stats.DodgePercent, 1/core.DodgeRatingPerDodgePercent)
 	sdm.AddStatDependency(stats.ParryRating, stats.ParryPercent, 1/core.ParryRatingPerParryPercent)
-	sdm.AddStatDependency(stats.BlockRating, stats.BlockPercent, 1/core.BlockRatingPerBlockPercent/100)
+	sdm.AddStatDependency(stats.BlockRating, stats.BlockPercent, 1/core.BlockRatingPerBlockPercent)
 	sdm.FinalizeStatDeps()
 
 	var delta stats.Stats

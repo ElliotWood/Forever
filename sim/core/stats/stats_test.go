@@ -104,13 +104,13 @@ func TestFromUnitStatsProtoImportsDodgeAndParryPercent(t *testing.T) {
 	}
 }
 
-func TestFromUnitStatsProtoImportsBlockPercentAsProbability(t *testing.T) {
+func TestFromUnitStatsProtoImportsBlockPercentInPercent(t *testing.T) {
 	pseudoStats := make([]float64, len(proto.PseudoStat_name))
 	pseudoStats[proto.PseudoStat_PseudoStatBlockPercent] = 5
 
 	got := FromUnitStatsProto(&proto.UnitStats{PseudoStats: pseudoStats})
-	if got[BlockPercent] != 0.05 {
-		t.Errorf("BlockPercent %v, want 0.05", got[BlockPercent])
+	if got[BlockPercent] != 5 {
+		t.Errorf("BlockPercent %v, want 5", got[BlockPercent])
 	}
 	if want := FromPseudoStatsProto(pseudoStats)[BlockPercent]; got[BlockPercent] != want {
 		t.Errorf("BlockPercent %v, want %v as FromPseudoStatsProto reads it", got[BlockPercent], want)

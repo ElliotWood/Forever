@@ -194,10 +194,9 @@ var auraTable = map[dbcenums.EffectAuraType]row{
 		return p.equipScaling(stats.Armor, percentMultiplier(v))
 	},
 
-	// Avoidance. The sim keeps block as a fraction (sim/core/unit.go:888 adds the rating share as
-	// rating/per-percent/100) and dodge and parry as percentage points.
+	// Avoidance, in percentage points.
 	dbcenums.A_MOD_BLOCK_PERCENT: func(p *parser, e *Effect, v float64) *attachment {
-		return p.statBuff(stats.BlockPercent, v/100)
+		return p.statBuff(stats.BlockPercent, v)
 	},
 	dbcenums.A_MOD_DODGE_PERCENT: func(p *parser, e *Effect, v float64) *attachment {
 		return p.statBuff(stats.DodgePercent, v)
