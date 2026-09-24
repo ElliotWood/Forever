@@ -431,69 +431,6 @@ func measureGeneratedBuffStats(char *core.Character) {
 	char.SetStats(char.SortAndApplyStatDependencies(char.GetStats()).FloorGameStats())
 }
 
-// Every buff a pet is given or denied, field by field, for a pet that is out
-// when the fight starts and one that is summoned during it.
-func TestGeneratedPetBuffsStripExactlyTheRowsThePolicyNames(t *testing.T) {
-	ticked := func() (*proto.RaidBuffs, *proto.PartyBuffs, *proto.IndividualBuffs) {
-		return &proto.RaidBuffs{
-				Thorns: true, ArcaneBrilliance: true, PrayerOfSpirit: true,
-				GiftOfTheWild: true, PrayerOfFortitude: true, PrayerOfShadowProtection: true,
-			},
-			&proto.PartyBuffs{
-				WindfuryTotem: true, BattleShout: proto.TristateEffect_TristateEffectRegular, GraceOfAirTotem: true,
-				MoonkinAura: true, LeaderOfThePack: true,
-				AtieshMage: 2,
-			},
-			&proto.IndividualBuffs{
-				Innervates: 1, PowerInfusions: 1,
-				GreaterBlessingOfKings: true, GreaterBlessingOfMight: true, GreaterBlessingOfWisdom: true,
-				GreaterBlessingOfSalvation: true,
-			}
-	}
-
-	owner := core.NewGeneratedBuffTestCharacter()
-	pet := core.NewGeneratedBuffTestPet(owner, true)
-
-	raid, party, individual := ticked()
-	core.StripPetBuffs(pet, raid, party, individual)
-
-	// Stripped whenever the pet is out: Thorns is not given to it, it cannot
-	// gain an extra attack, and nobody spends a cooldown on a pet.
-	if raid.Thorns || party.WindfuryTotem ||
-		individual.Innervates != 0 || individual.PowerInfusions != 0 {
-		t.Errorf("a pet out from the start kept %v, %v, %v", raid, party, individual)
-	}
-
-	// Everything else the party grants is still the pet's.
-	if party.BattleShout == proto.TristateEffect_TristateEffectMissing || !party.GraceOfAirTotem || !party.MoonkinAura ||
-		!party.LeaderOfThePack || party.AtieshMage != 2 {
-		t.Errorf("a pet out from the start lost a buff no policy strips: %v, %v", party, individual)
-	}
-	// A pet that was there from the start keeps every targeted buff.
-	if !raid.ArcaneBrilliance || !raid.PrayerOfSpirit || !raid.GiftOfTheWild ||
-		!raid.PrayerOfFortitude || !raid.PrayerOfShadowProtection || !individual.GreaterBlessingOfKings ||
-		!individual.GreaterBlessingOfMight || !individual.GreaterBlessingOfWisdom ||
-		!individual.GreaterBlessingOfSalvation {
-		t.Errorf("a pet out from the start lost a targeted buff: %v, %v", raid, individual)
-	}
-
-	late := core.NewGeneratedBuffTestPet(owner, false)
-	raid, party, individual = ticked()
-	core.StripPetBuffs(late, raid, party, individual)
-
-	if raid.ArcaneBrilliance || raid.PrayerOfSpirit || raid.GiftOfTheWild ||
-		raid.PrayerOfFortitude || raid.PrayerOfShadowProtection {
-		t.Errorf("a pet summoned late kept a raid buff cast at the pull: %v", raid)
-	}
-	if individual.GreaterBlessingOfKings || individual.GreaterBlessingOfMight || individual.GreaterBlessingOfWisdom ||
-		individual.GreaterBlessingOfSalvation {
-		t.Errorf("a pet summoned late kept a targeted individual buff: %v", individual)
-	}
-	if party.BattleShout == proto.TristateEffect_TristateEffectMissing || !party.GraceOfAirTotem {
-		t.Error("a pet summoned late lost a party aura, which no policy strips")
-	}
-}
-
 // Grace of Air is the row whose uptime another field decides: with totem
 // twisting on it is 9 seconds long and re-cast every 10, and without it the
 // totem simply stands.

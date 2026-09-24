@@ -1721,7 +1721,7 @@ it does write states what it could not read as a `// Left out:` note above it in
 one per aura effect the parse has no row for.
 
 Core applies the buffs through `core.BuffHooks`, which `sim/core/buffs` registers from its `init`:
-`ApplyBuffs`, `StripPetBuffs`, `ApplyDebuffs` and the Gift of Arthas elixir's debuff. A sim that
+`ApplyBuffs`, `ApplyDebuffs` and the Gift of Arthas elixir's debuff. A sim that
 never imported the package panics naming the import. `sim/common` imports it, which links it into every
 sim and every class test; core's own tests reach it through the generated-buff tests, which sit in
 `package core_test` beside `sim/core/export_test.go`.
@@ -1759,7 +1759,6 @@ sim and every class test; core's own tests reach it through the generated-buff t
 | `SharedCategory`           | a second category the aura joins without an effect of its own, which is how the paladin auras exclude each other across schools. Applied to the player's copy only, and declared once in the generated file as `<Name>Category`                                                                                                                                                                                               |
 | `SingleAura`               | the category holds one aura at a time, so the loser is deactivated rather than outbid                                                                                                                                                                                                                                                                                                                                         |
 | `Driver`                   | the apply block hands the row to `drive<Go>` instead of activating the aura outright                                                                                                                                                                                                                                                                                                                                          |
-| `Pet`                      | `PetNormal`, `PetStrip`, `PetInheritOwnerAura`, `PetCapAtRegular` or `PetStripWhenSummonedLate`                                                                                                                                                                                                                                                                                                                               |
 | `SkipAuras`                | aura names, spelled the way `sim/core/dbcenums` spells them, for an effect of the row's spell that sits beside the buff and that the raid's copy does not apply. Resolved to `dbcenums.EffectAuraType`s while the row is built; the six paladin auras skip `A_MOD_HEALING_PCT`, which each states as a healing-taken row of 0, and `A_MECHANIC_DURATION_MOD`, which only Concentration Aura states, as two mechanic rows of 0 |
 | `Stats`                    | the UI relevance tags a spec's `epStats` and `displayStats` are matched against                                                                                                                                                                                                                                                                                                                                               |
 | `ImpAction`                | the improved state's source when it is not a talent - an item, or the spell an item set grants at a piece threshold - and the icon that state shows. A `ProtoTristate` row states this or a `Talent`                                                                                                                                                                                                                          |
@@ -1826,7 +1825,7 @@ the manifest, for the one moment the sim cannot build: before protoc has seen a 
 | `TestScopeMatchesTheClientTargeting`                                                                              | a row whose spell states an area aura, or an aura aimed over an area, sits in the scope that targeting names                                         |
 | `TestManifestAnchorsMatchTheClient`                                                                               | with a database, each pinned spell is still the top rank, aura or cast the client's skill lines grant                                                |
 
-The generated constructors' behaviour - categories, stacks, drivers, pet policies - is held by
+The generated constructors' behaviour - categories, stacks, drivers - is held by
 `sim/core/buffs_generated_test.go` and `sim/core/debuffs_generated_test.go`. Rewrite the synthetic
 fixtures with `UPDATE_BUFF_FIXTURES=1 go test ./tools/database/`.
 
@@ -1863,10 +1862,6 @@ a settings envelope passes `ignoreUnknownFields`, so a field that only goes away
 and 35478, Battle, War and Restoration, nor their Greater variants - so there is nothing to model and
 no manifest row to hang them on. The only "Drums of War" it knows is 1259907, fifteen seconds of party
 movement speed, which is no stat buff at all.
-
-**A `PetInheritOwnerAura` row must name the aura the pet looks for.** The pet finds it on its owner by
-label, so the row needs a `Label`, a `Name` or a `Category` even when the client describes the buff not
-at all.
 
 **A talent curve only scales the row's first stat.** A row whose talent improves a second amount would
 need the generator extended; nothing in the manifest does today.
