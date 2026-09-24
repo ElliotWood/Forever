@@ -157,9 +157,9 @@ func syntheticBuffRows() []ResolvedBuff {
 			BuffSpec: buffmanifest.BuffSpec{
 				Field: "totem_twisting", Scope: buffmanifest.ScopeParty,
 				Proto: buffmanifest.ProtoBool, Kind: buffmanifest.KindAbsent,
-				Go: "SynthInheritedNeck", Category: "Inherited Neck",
+				Go: "SynthAbsent", Category: "Absent",
 			},
-			Reason: "the neck has no Item row",
+			Reason: "the client has no row for it",
 		},
 		{
 			BuffSpec: buffmanifest.BuffSpec{
