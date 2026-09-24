@@ -203,9 +203,6 @@ export class Encounter {
 	}
 
 	fromProto(proto: EncounterProto) {
-		// Fix out-of-date protos before importing
-		Encounter.updateProtoVersion(proto);
-
 		batch(() => {
 			this.setDuration(proto.duration);
 			this.setDurationVariation(proto.durationVariation);
@@ -260,17 +257,5 @@ export class Encounter {
 			spellSchool: SpellSchool.SpellSchoolPhysical,
 			targetInputs: new Array<TargetInput>(0),
 		});
-	}
-
-	static updateProtoVersion(proto: EncounterProto) {
-		if (!(proto.apiVersion < CURRENT_API_VERSION)) {
-			return;
-		}
-		proto.targets.forEach(target => {
-			target.stats = Stats.migrateStatsArray(target.stats, proto.apiVersion, Encounter.defaultTargetProto().stats);
-		});
-
-		// Flag the version as up-to-date once all migrations are done.
-		proto.apiVersion = CURRENT_API_VERSION;
 	}
 }

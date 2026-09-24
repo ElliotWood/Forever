@@ -66,7 +66,7 @@ const (
 	// Stats in UnitStats proto messages, since they are not required in the
 	// database files. However, it is valuable to keep these as proper Stats
 	// in the back-end, since they are used in various stat dependencies.
-	// The units for all 10 of these are percentages (between 0 and 100).
+	// The units for all 11 of these are percentages (between 0 and 100).
 	PhysicalHitPercent
 	SpellHitPercent
 	PhysicalCritPercent
@@ -77,6 +77,7 @@ const (
 	DodgePercent
 	ParryPercent
 	ReducedCritTakenPercent
+	ExpertisePercent
 	// DO NOT add new stats here without discussing it first; new stats come
 	// with a performance penalty.
 
@@ -214,6 +215,8 @@ func (s Stat) StatName() string {
 		return "ParryPercent"
 	case ReducedCritTakenPercent:
 		return "ReducedCritTakenPercent"
+	case ExpertisePercent:
+		return "ExpertisePercent"
 	case DefenseRating:
 		return "DefenseRating"
 	case BlockRating:
@@ -302,6 +305,7 @@ var PercentPseudoStats = []PercentPseudoStat{
 	{RangedCritPercent, proto.PseudoStat_PseudoStatRangedCritPercent, &meleeCritPercent},
 	{DodgePercent, proto.PseudoStat_PseudoStatDodgePercent, nil},
 	{ParryPercent, proto.PseudoStat_PseudoStatParryPercent, nil},
+	{ExpertisePercent, proto.PseudoStat_PseudoStatExpertisePercent, nil},
 }
 
 func PseudoStatValue(pseudoStats []float64, pseudoStat proto.PseudoStat) float64 {
@@ -520,7 +524,7 @@ type PseudoStats struct {
 	MeleeSpeedMultiplier  float64
 	RangedSpeedMultiplier float64
 	RangedHasteMultiplier float64
-	AttackSpeedMultiplier float64 // Used for real haste effects like Bloodlust that modify resoruce regen and are used for RPPM effects
+	AttackSpeedMultiplier float64 // Used for real haste effects that modify resoruce regen and are used for RPPM effects
 
 	FiveSecondRuleRefreshTime time.Duration // last time a spell was cast
 	SpiritRegenRateCasting    float64       // percentage of spirit regen allowed during casting

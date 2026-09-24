@@ -1,4 +1,4 @@
-import { PseudoStat, Stat, UnitStats } from '@generated/proto/common';
+import { PseudoStat, Stat } from '@generated/proto/common';
 import { describe, expect, it, vi } from 'vitest';
 
 // `stats.ts` only needs localization for display names, and `@i18n/localization` drags the whole
@@ -9,7 +9,6 @@ vi.mock('@i18n/localization', () => ({
 }));
 
 import * as Mechanics from '../constants/mechanics';
-import { CURRENT_API_VERSION } from '../constants/other';
 import { displayStatOrder, Stats, UnitStat } from './stats';
 
 describe('UnitStat', () => {
@@ -33,6 +32,14 @@ describe('UnitStat', () => {
 			expect(UnitStat.fromPseudoStat(school).hasRootStat()).toBe(false);
 			expect(UnitStat.getChildren(Stat.StatSpellHitRating)).toContain(school);
 		}
+	});
+
+	it('roots ExpertisePercent at ExpertiseRating and converts at the gametable ratio, with no quarter-point floor', () => {
+		const percent = UnitStat.fromPseudoStat(PseudoStat.PseudoStatExpertisePercent);
+		expect(percent.getRootStat()).toBe(Stat.StatExpertiseRating);
+		expect(UnitStat.getChildren(Stat.StatExpertiseRating)).toEqual([PseudoStat.PseudoStatExpertisePercent]);
+		expect(UnitStat.fromStat(Stat.StatExpertiseRating).convertRatingToPercent(12)).toBeCloseTo(1.2);
+		expect(percent.convertPercentToRating(6.5)).toBeCloseTo(6.5 * Mechanics.EXPERTISE_RATING_PER_EXPERTISE_PERCENT);
 	});
 
 	// Melee and spell hit each convert through their own constant. Forever's CombatRatings
@@ -61,38 +68,6 @@ describe('UnitStat', () => {
 		expect(unitStat.convertPercentToRating(1, Stat.StatDefenseRating)).toBeCloseTo(
 			Mechanics.DEFENSE_RATING_PER_DEFENSE_LEVEL / Mechanics.MISS_DODGE_PARRY_BLOCK_CRIT_CHANCE_PER_DEFENSE,
 		);
-	});
-});
-
-describe('Stats.fromProto', () => {
-	const version16Stats = () => {
-		const stats = new Array(42).fill(0);
-		stats[Stat.StatParryRating] = 29;
-		stats[30] = 7;
-		stats[31] = 31;
-		stats[41] = 41;
-		return stats;
-	};
-
-	it('moves a version-16 stats array onto the current Stat enum', () => {
-		const proto = UnitStats.create({ stats: version16Stats(), apiVersion: 16 });
-
-		const stats = Stats.fromProto(proto);
-
-		expect(stats.asProtoArray().length).toBe(41);
-		expect(stats.getStat(Stat.StatParryRating)).toBe(29);
-		expect(stats.getStat(Stat.StatArmor)).toBe(31);
-		expect(stats.getStat(Stat.StatPhysicalDamage)).toBe(41);
-		expect(proto.apiVersion).toBe(CURRENT_API_VERSION);
-	});
-
-	it('leaves a current stats array alone', () => {
-		const current = new Array(41).fill(0);
-		current[Stat.StatArmor] = 30;
-
-		const stats = Stats.fromProto(UnitStats.create({ stats: current, apiVersion: CURRENT_API_VERSION }));
-
-		expect(stats.getStat(Stat.StatArmor)).toBe(30);
 	});
 });
 

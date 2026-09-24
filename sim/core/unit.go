@@ -647,7 +647,7 @@ func (unit *Unit) updateMeleeAndRangedHaste() {
 	}
 }
 
-// Helper for when true haste effects are multiplied for i.E. Bloodlust
+// Helper for when true haste effects are multiplied.
 // Seems to also always impact the regen rate
 func (unit *Unit) MultiplyAttackSpeed(sim *Simulation, amount float64) {
 	unit.PseudoStats.AttackSpeedMultiplier *= amount
@@ -696,6 +696,7 @@ var RatingConversions = []RatingConversion{
 	{stats.SpellHitRating, stats.SpellHitPercent, SpellHitRatingPerHitPercent, 0},
 	{stats.MeleeCritRating, stats.PhysicalCritPercent, PhysicalCritRatingPerCritPercent, 0},
 	{stats.SpellCritRating, stats.SpellCritPercent, SpellCritRatingPerCritPercent, 0},
+	{stats.ExpertiseRating, stats.ExpertisePercent, ExpertiseRatingPerExpertisePercent, 0},
 	{stats.DodgeRating, stats.DodgePercent, DodgeRatingPerDodgePercent, 0},
 	{stats.ParryRating, stats.ParryPercent, ParryRatingPerParryPercent, 0},
 	{stats.BlockRating, stats.BlockPercent, BlockRatingPerBlockPercent, 0},

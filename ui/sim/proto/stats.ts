@@ -5,7 +5,6 @@ import { translatePseudoStat, translateStat } from '@i18n/localization';
 import * as Mechanics from '../constants/mechanics';
 import { CURRENT_API_VERSION } from '../constants/other';
 import { getEnumValues } from '../utils/collections';
-import { migrateOldProto, ProtoConversionMap } from './proto_migration';
 
 const STATS_LEN = getEnumValues(Stat).length;
 const PSEUDOSTATS_LEN = getEnumValues(PseudoStat).length;
@@ -105,8 +104,8 @@ export class UnitStat {
 			return ratingValue / Mechanics.PHYSICAL_CRIT_RATING_PER_CRIT_PERCENT;
 		} else if (this.linkedToStat(Stat.StatMeleeHasteRating)) {
 			return ratingValue / Mechanics.PHYSICAL_HASTE_RATING_PER_HASTE_PERCENT;
-		} else if (this.equalsStat(Stat.StatExpertiseRating)) {
-			return Math.floor(ratingValue / Mechanics.EXPERTISE_PER_QUARTER_PERCENT_REDUCTION) / 4;
+		} else if (this.linkedToStat(Stat.StatExpertiseRating)) {
+			return ratingValue / Mechanics.EXPERTISE_RATING_PER_EXPERTISE_PERCENT;
 		} else if (this.linkedToStat(Stat.StatDefenseRating)) {
 			return ratingValue / Mechanics.DEFENSE_RATING_PER_DEFENSE_LEVEL;
 		} else if (this.linkedToStat(Stat.StatDodgeRating)) {
@@ -149,8 +148,8 @@ export class UnitStat {
 			return percentOrPointsValue * Mechanics.PHYSICAL_CRIT_RATING_PER_CRIT_PERCENT;
 		} else if (this.linkedToStat(Stat.StatMeleeHasteRating)) {
 			return percentOrPointsValue * Mechanics.PHYSICAL_HASTE_RATING_PER_HASTE_PERCENT;
-		} else if (this.equalsStat(Stat.StatExpertiseRating)) {
-			return percentOrPointsValue * Mechanics.EXPERTISE_PER_QUARTER_PERCENT_REDUCTION * 4;
+		} else if (this.linkedToStat(Stat.StatExpertiseRating)) {
+			return percentOrPointsValue * Mechanics.EXPERTISE_RATING_PER_EXPERTISE_PERCENT;
 		} else if (this.linkedToStat(Stat.StatDefenseRating)) {
 			return percentOrPointsValue * Mechanics.DEFENSE_RATING_PER_DEFENSE_LEVEL;
 		} else if (this.linkedToStat(Stat.StatDodgeRating)) {
@@ -284,21 +283,12 @@ export class UnitStat {
 	}
 
 	static fromProto(protoMessage: UnitStatProto): UnitStat {
-		if (protoMessage) {
-			UnitStat.updateProtoVersion(protoMessage);
-		}
 		if (protoMessage.unitStat.oneofKind == 'stat') {
 			return UnitStat.fromStat(protoMessage.unitStat.stat);
 		} else if (protoMessage.unitStat.oneofKind == 'pseudoStat') {
 			return UnitStat.fromPseudoStat(protoMessage.unitStat.pseudoStat);
 		} else {
 			return new UnitStat(null, null, null);
-		}
-	}
-
-	static updateProtoVersion(proto: UnitStatProto) {
-		if (!(proto.apiVersion < CURRENT_API_VERSION)) {
-			return;
 		}
 	}
 
@@ -327,7 +317,9 @@ export class UnitStat {
 	static getRootStat(pseudoStat: PseudoStat): Stat | null {
 		const pseudoStatName = PseudoStat[pseudoStat];
 
-		if (pseudoStatName.includes('Dodge')) {
+		if (pseudoStatName.includes('Expertise')) {
+			return Stat.StatExpertiseRating;
+		} else if (pseudoStatName.includes('Dodge')) {
 			return Stat.StatDodgeRating;
 		} else if (pseudoStatName.includes('Parry')) {
 			return Stat.StatParryRating;
@@ -381,6 +373,8 @@ export class UnitStat {
 				return [PseudoStat.PseudoStatSpellHastePercent];
 			case Stat.StatDefenseRating:
 				return [PseudoStat.PseudoStatReducedCritTakenPercent];
+			case Stat.StatExpertiseRating:
+				return [PseudoStat.PseudoStatExpertisePercent];
 			default:
 				return [];
 		}
@@ -443,7 +437,7 @@ export const displayStatOrder: Array<UnitStat> = [
 	UnitStat.fromStat(Stat.StatMP5),
 	UnitStat.fromStat(Stat.StatAttackPower),
 	UnitStat.fromStat(Stat.StatRangedAttackPower),
-	UnitStat.fromStat(Stat.StatExpertiseRating),
+	UnitStat.fromPseudoStat(PseudoStat.PseudoStatExpertisePercent),
 	UnitStat.fromStat(Stat.StatArmorPenetration),
 	UnitStat.fromStat(Stat.StatSpellPiercing),
 	UnitStat.fromPseudoStat(PseudoStat.PseudoStatMeleeHitPercent),
@@ -676,51 +670,10 @@ export class Stats {
 
 	static fromProto(unitStats?: UnitStats): Stats {
 		if (unitStats) {
-			// Fix out of-date protos before importing
-			Stats.updateProtoVersion(unitStats);
-
 			return new Stats(unitStats.stats, unitStats.pseudoStats);
 		} else {
 			return new Stats();
 		}
-	}
-
-	static updateProtoVersion(proto: UnitStats) {
-		if (!(proto.apiVersion < CURRENT_API_VERSION)) {
-			return;
-		}
-
-		const conversionMap: ProtoConversionMap<UnitStats> = new Map([
-			[
-				17,
-				(oldProto: UnitStats) => {
-					oldProto.stats = Stats.migrateStatsArray(oldProto.stats, 16, undefined, 17);
-					oldProto.apiVersion = 17;
-					return oldProto;
-				},
-			],
-		]);
-
-		migrateOldProto<UnitStats>(proto, proto.apiVersion, conversionMap);
-
-		proto.apiVersion = CURRENT_API_VERSION;
-	}
-
-	// Takes in a stats array that was generated from an out-of-date proto version, and converts it to an array that is consistent with the current proto version.
-	static migrateStatsArray(oldStats: number[], oldApiVersion: number, fallbackStats?: number[], targetApiVersion?: number): number[] {
-		const conversionMap: ProtoConversionMap<number[]> = new Map([
-			[
-				17,
-				// Version 17 takes index 30 out of the Stat enum: Armor and every stat after it move down one.
-				(oldArray: number[]) => oldArray.filter((_, idx) => idx !== 30),
-			],
-		]);
-		const migratedProto = migrateOldProto<number[]>(oldStats, oldApiVersion, conversionMap, targetApiVersion);
-
-		// If there is a fallback array, use it if the lengths don't match
-		if (fallbackStats && migratedProto.length !== fallbackStats.length) return fallbackStats;
-
-		return migratedProto;
 	}
 }
 

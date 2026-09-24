@@ -1,13 +1,4 @@
-import {
-	AreaType,
-	Encounter as EncounterProto,
-	InputType,
-	PresetEncounter,
-	PresetTarget,
-	Stat,
-	Target as TargetProto,
-	TargetInput,
-} from '@generated/proto/common';
+import { AreaType, Encounter as EncounterProto, InputType, PresetEncounter, PresetTarget, Target as TargetProto, TargetInput } from '@generated/proto/common';
 import { describe, expect, it } from 'vitest';
 
 import type { Sim } from '../sim';
@@ -159,21 +150,5 @@ describe('Encounter', () => {
 
 		expect(dbTarget.level).toBe(93);
 		expect(dbTarget.targetInputs[0].numberValue).toBe(3);
-	});
-
-	it('moves a version-16 target stats array onto the current Stat enum', () => {
-		const stats = new Array(42).fill(0);
-		stats[Stat.StatParryRating] = 29;
-		stats[31] = 7685;
-		stats[33] = 6070400;
-		const encounter = makeEncounter();
-
-		encounter.fromProto(EncounterProto.create({ apiVersion: 16, targets: [TargetProto.create({ stats })] }));
-
-		const migrated = encounter.getTarget(0)!.stats;
-		expect(migrated).toHaveLength(41);
-		expect(migrated[Stat.StatParryRating]).toBe(29);
-		expect(migrated[Stat.StatArmor]).toBe(7685);
-		expect(migrated[Stat.StatHealth]).toBe(6070400);
 	});
 });
