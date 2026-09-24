@@ -116,3 +116,18 @@ func TestFromUnitStatsProtoImportsBlockPercentAsProbability(t *testing.T) {
 		t.Errorf("BlockPercent %v, want %v as FromPseudoStatsProto reads it", got[BlockPercent], want)
 	}
 }
+
+func TestWeightsKeepPercentWeightsPerPercent(t *testing.T) {
+	pseudoStats := make([]float64, PseudoStatsLen)
+	pseudoStats[proto.PseudoStat_PseudoStatBlockPercent] = 5
+	pseudoStats[proto.PseudoStat_PseudoStatMeleeHitPercent] = 2
+	pseudoStats[proto.PseudoStat_PseudoStatRangedHitPercent] = 3
+
+	got := WeightsFromUnitStatsProto(&proto.UnitStats{Stats: make([]float64, ProtoStatsLen), PseudoStats: pseudoStats})
+	if got[BlockPercent] != 5 {
+		t.Errorf("Block%% weight %v, want the 5 per percent the EP values state", got[BlockPercent])
+	}
+	if got[PhysicalHitPercent] != 2 || got[RangedHitPercent] != 3 {
+		t.Errorf("hit weights %v melee and %v ranged, want 2 and 3", got[PhysicalHitPercent], got[RangedHitPercent])
+	}
+}

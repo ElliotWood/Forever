@@ -113,9 +113,13 @@ func resolveStatDelta(sdm *stats.StatDependencyManager, baseStats core.UnitStats
 
 	// Mirror dual-stored stats from Stats (updated by SDM — e.g. HitRating→Hit%,
 	// CritRating→Crit%, Agility→PhysicalCritPercent) back to their PseudoStat indices.
-	delta = setUnitStat(delta, stats.UnitStatFromPseudoStat(proto.PseudoStat_PseudoStatMeleeHitPercent), delta.Stats[stats.PhysicalHitPercent])
-	delta = setUnitStat(delta, stats.UnitStatFromPseudoStat(proto.PseudoStat_PseudoStatSpellHitPercent), delta.Stats[stats.SpellHitPercent])
-	delta = setUnitStat(delta, stats.UnitStatFromPseudoStat(proto.PseudoStat_PseudoStatRangedHitPercent), delta.Stats[stats.PhysicalHitPercent]+delta.Stats[stats.RangedHitPercent])
+	for _, pair := range stats.PercentPseudoStats {
+		value := delta.Stats[pair.Stat] * pair.SheetScale
+		if pair.MeleeShare != nil {
+			value = delta.Stats[pair.MeleeShare.Stat] + value
+		}
+		delta = setUnitStat(delta, stats.UnitStatFromPseudoStat(pair.PseudoStat), value)
+	}
 	spellHitDelta := delta.Stats[stats.SpellHitPercent]
 	for _, schoolHitPS := range []proto.PseudoStat{
 		proto.PseudoStat_PseudoStatSchoolHitPercentArcane,
@@ -127,12 +131,6 @@ func resolveStatDelta(sdm *stats.StatDependencyManager, baseStats core.UnitStats
 	} {
 		delta = setUnitStat(delta, stats.UnitStatFromPseudoStat(schoolHitPS), spellHitDelta)
 	}
-	delta = setUnitStat(delta, stats.UnitStatFromPseudoStat(proto.PseudoStat_PseudoStatMeleeCritPercent), delta.Stats[stats.PhysicalCritPercent])
-	delta = setUnitStat(delta, stats.UnitStatFromPseudoStat(proto.PseudoStat_PseudoStatRangedCritPercent), delta.Stats[stats.PhysicalCritPercent]+delta.Stats[stats.RangedCritPercent])
-	delta = setUnitStat(delta, stats.UnitStatFromPseudoStat(proto.PseudoStat_PseudoStatSpellCritPercent), delta.Stats[stats.SpellCritPercent])
-	delta = setUnitStat(delta, stats.UnitStatFromPseudoStat(proto.PseudoStat_PseudoStatBlockPercent), delta.Stats[stats.BlockPercent]*100)
-	delta = setUnitStat(delta, stats.UnitStatFromPseudoStat(proto.PseudoStat_PseudoStatDodgePercent), delta.Stats[stats.DodgePercent])
-	delta = setUnitStat(delta, stats.UnitStatFromPseudoStat(proto.PseudoStat_PseudoStatParryPercent), delta.Stats[stats.ParryPercent])
 	critTaken := proto.PseudoStat_PseudoStatReducedCritTakenPercent
 	delta = setUnitStat(delta, stats.UnitStatFromPseudoStat(critTaken),
 		delta.Stats[stats.DefenseRating]/ratingPerPseudoStatPercent(critTaken, stats.DefenseRating)+
