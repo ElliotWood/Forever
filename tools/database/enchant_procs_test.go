@@ -175,12 +175,12 @@ func TestRecoveryHealsOnTheWearersAttackDodgedOrParried(t *testing.T) {
 		t.Errorf("shape %v, trigger %d, buff %d; want a heal from 1248761 casting 1248759",
 			r.Shape, r.TriggerSpellID, r.BuffSpellID)
 	}
-	if want := core.ProcHintAttackDodged | core.ProcHintAttackParried; r.ProcHint != want {
-		t.Errorf("hint %q, want %q", formatProcHint(r.ProcHint), formatProcHint(want))
+	trigger := spelldata.Find(1248761)
+	if want := core.ProcHintAttackDodged | core.ProcHintAttackParried; trigger.ProcHint != want {
+		t.Errorf("hint %q, want %q", formatProcHint(trigger.ProcHint), formatProcHint(want))
 	}
 
-	trigger := spelldata.Find(1248761)
-	decoded := core.DecodeProcTypeMask(trigger.ProcFlags, trigger.ProcHint|r.ProcHint)
+	decoded := core.DecodeProcTypeMask(trigger.ProcFlags, trigger.ProcHint)
 	if decoded.Callback != core.CallbackOnSpellHitDealt {
 		t.Errorf("callback %v, want the wearer's own hits dealt", decoded.Callback)
 	}
@@ -215,14 +215,14 @@ func withPPMOverride(t *testing.T, spellID int32, ppm float32) {
 }
 
 // Recovery's tooltip states a cooldown with "more often than", which is not the "often" of a rate.
-func TestEnchantTooltipRateWording(t *testing.T) {
+func TestTooltipRateWording(t *testing.T) {
 	for tooltip, want := range map[string]bool{
 		"Permanently enchant a melee weapon to often strike for 40 additional fire damage.":                   true,
 		"Permanently enchant a Weapon to cause all spells and attacks to sometimes deal 76 additional damage": true,
 		"Permanently enchant a Melee Weapon to have a chance to trigger Revelation when a non-periodic spell": true,
 		"healing you for 5% of your maximum health. Cannot occur more often than once every 10 sec.":          false,
 	} {
-		if got := enchantTooltipStatesAnUnknownRate(tooltip); got != want {
+		if got := tooltipStatesAnUnknownRate(tooltip); got != want {
 			t.Errorf("%q: %v, want %v", tooltip, got, want)
 		}
 	}

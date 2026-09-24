@@ -72,6 +72,14 @@ func TestProcShapeOfNamedSpells(t *testing.T) {
 			0, "the wording modifies another spell's chance and states no trigger of its own"},
 		{440529, "Resourcefulness", procChancePPM, 0, `"your critical strikes have a $m3% chance" names effect 3, and the row carries two effects, so no chance resolves`,
 			core.ProcHintCrit | core.ProcHintNamedAbility, `"your critical strikes" names the trigger, "your Trap abilities" the ability`},
+		{23689, "Darkmoon Card: Heroism", procChancePPM, 0, `"Sometimes heals" beside the 100 is a rate the client keeps elsewhere`,
+			core.ProcHintHeals, `"heals bearer" is heal wording`},
+		{1248761, "Recovery, an enchant's equip aura", procChanceAlways, 0, `the row ships no tooltip, and its grant 1248760's "Cannot occur more often than" is a cooldown, not a rate`,
+			core.ProcHintAttackDodged | core.ProcHintAttackParried, `the grant reads "when you are Parried or Dodged"`},
+		{1248806, "Revelation, an enchant's equip aura", procChancePPM, 0, `its grant 1248805's "a chance to trigger Revelation" beside the 100 is a rate the client keeps elsewhere`,
+			0, "the grant's crit wording names which hits feed the proc, which is the row's own mask to say"},
+		{1248758, "Insight, an enchant's equip aura", procChanceColumn, 0, "the column's 35 is the roll",
+			0, `the grant's "when you cast a spell" names which hits feed the proc, which is the row's own mask to say`},
 	} {
 		t.Run(want.name, func(t *testing.T) {
 			rows := []storeSpell{tables.row(want.id)}

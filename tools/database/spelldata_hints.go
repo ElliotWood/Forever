@@ -44,6 +44,23 @@ func applyTooltipHints(t *spellTables, s *storeSpell) {
 	s.ProcHint = procTooltipHints(description)
 	s.ProcChanceSource, s.ProcChanceEffect = procChanceSource(description, ownChance, s)
 	s.tooltipStatesChance = ownChance || s.ProcChanceSource == procChanceEffectN
+
+	if grant, ok := t.EnchantGrants[s.ID]; ok && description == "" {
+		applyEnchantGrantHints(t.Descriptions[grant], s)
+	}
+}
+
+// What an enchant's grant states about the equip spell it hangs on a hit. The grant describes the
+// enchant rather than the spell's mask, so only what no mask can state is read off it: a named
+// ability, an outcome the mask has no bit for, the wearer's attack dodged or parried, and whether a
+// column of 100 is a rate the rows do not carry. Which hits feed the proc stays the mask's to say.
+func applyEnchantGrantHints(grant string, s *storeSpell) {
+	s.ProcHint |= procTooltipHints(grant) &
+		(core.ProcHintNamedAbility | core.ProcHintOutcomeTaken | core.ProcHintAttackDodged | core.ProcHintAttackParried)
+
+	if s.ProcChanceSource == procChanceAlways && tooltipStatesAnUnknownRate(grant) {
+		s.ProcChanceSource = procChancePPM
+	}
 }
 
 func procChanceSource(description string, ownChance bool, s *storeSpell) (storeProcChanceSource, int8) {

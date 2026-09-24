@@ -3,6 +3,8 @@ package database
 import (
 	"database/sql"
 	"fmt"
+	"strconv"
+	"strings"
 
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/dbcenums"
@@ -168,6 +170,9 @@ type spellTables struct {
 	Powers  map[int32][]storePower
 	Effects map[int32][]storeEffect
 
+	// The spell granting the enchant, by each enchant equip spell that answers a hit.
+	EnchantGrants map[int32]int32
+
 	// The tooltip references by spell id, filled as referencedIDs reads them: the closure asks for
 	// the same spell on every pass over the store.
 	refs map[int32][]int32
@@ -231,15 +236,17 @@ func loadSpellTables(db *sql.DB) (*spellTables, error) {
 		CreatureType: map[int32]int32{},
 		Requirements: map[int32]int32{},
 		Equipped:     map[int32]equippedRow{},
-		Labels:       map[int32][]int16{},
-		Powers:       map[int32][]storePower{},
-		Effects:      map[int32][]storeEffect{},
+		Labels:        map[int32][]int16{},
+		Powers:        map[int32][]storePower{},
+		Effects:       map[int32][]storeEffect{},
+		EnchantGrants: map[int32]int32{},
 	}
 
 	for _, load := range []func(*sql.DB) error{
 		t.loadNames, t.loadMisc, t.loadLevels, t.loadCooldowns, t.loadCategories, t.loadAuraOptions,
 		t.loadClassOptions, t.loadInterrupts, t.loadShapeshift, t.loadTargetRestrictions,
 		t.loadCastingRequirements, t.loadEquippedItems, t.loadLabels, t.loadPowers, t.loadEffects,
+		t.loadEnchantGrants,
 	} {
 		if err := load(db); err != nil {
 			return nil, err
@@ -641,6 +648,45 @@ func (t *spellTables) loadEffects(db *sql.DB) error {
 		t.Effects[e.SpellID] = append(t.Effects[e.SpellID], e)
 		return nil
 	})
+}
+
+// The auras through which an enchant's equip spell answers a hit: the proc triggers, the retaliation
+// of a damage shield, and the dummy a server-side proc hangs off.
+var enchantProcAuras = []dbcenums.EffectAuraType{
+	dbcenums.A_PROC_TRIGGER_SPELL, dbcenums.A_PROC_TRIGGER_SPELL_WITH_VALUE, dbcenums.A_PROC_TRIGGER_SPELL_COPY,
+	dbcenums.A_PROC_TRIGGER_DAMAGE, dbcenums.A_DAMAGE_SHIELD, dbcenums.A_DUMMY,
+}
+
+// The equip spells (Effect 3) of each SpellItemEnchantment row that answer a hit, with the
+// E_ENCHANT_ITEM spell granting the enchant. Several spells can grant one enchant - a recipe
+// re-taught by a later expansion - and several enchants can share an equip spell; the lowest grant
+// is the one kept.
+func (t *spellTables) loadEnchantGrants(db *sql.DB) error {
+	auras := make([]string, len(enchantProcAuras))
+	for i, aura := range enchantProcAuras {
+		auras[i] = strconv.Itoa(int(aura))
+	}
+
+	return eachRow(db, fmt.Sprintf(`
+		WITH slots AS (
+			SELECT ID, Effect_0 AS Effect, EffectArg_0 AS SpellID FROM SpellItemEnchantment
+			UNION ALL SELECT ID, Effect_1, EffectArg_1 FROM SpellItemEnchantment
+			UNION ALL SELECT ID, Effect_2, EffectArg_2 FROM SpellItemEnchantment)
+		SELECT s.SpellID, min(g.SpellID)
+		FROM slots s
+		JOIN SpellEffect g ON g.Effect = %d AND g.EffectMiscValue_0 = s.ID
+		WHERE s.Effect = 3 AND s.SpellID > 0 AND EXISTS (
+			SELECT 1 FROM SpellEffect a
+			WHERE a.SpellID = s.SpellID AND a.DifficultyID = 0 AND a.EffectAura IN (%s))
+		GROUP BY s.SpellID ORDER BY s.SpellID`, dbcenums.E_ENCHANT_ITEM, strings.Join(auras, ", ")),
+		func(rows *sql.Rows) error {
+			var id, grant int32
+			if err := rows.Scan(&id, &grant); err != nil {
+				return err
+			}
+			t.EnchantGrants[id] = grant
+			return nil
+		})
 }
 
 // The spell ids the tooltip names, in the order it names them, each once. An id no SpellName row

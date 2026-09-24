@@ -22,6 +22,8 @@ import (
 //     does not name. The other tables are cut to the store's ids, which loses nothing: the closure
 //     only ever reads the rows of a spell it has already reached.
 //   - the talent tree's nodes, and the points each definition states.
+//   - the spell granting the enchant of each enchant equip spell in the store, with that spell's
+//     description: the equip spell ships none of its own.
 //
 // Derived, and captured all the same because re-deriving it needs tables the store does not otherwise
 // read: the root ids. They come from the item, enchant and set-bonus tables, from the ladder and tree
@@ -93,9 +95,10 @@ func captureStoreInputs(t *spellTables, roots []int32, ids []int32,
 			CreatureType: map[int32]int32{},
 			Requirements: map[int32]int32{},
 			Equipped:     map[int32]equippedRow{},
-			Labels:       map[int32][]int16{},
-			Powers:       map[int32][]storePower{},
-			Effects:      map[int32][]storeEffect{},
+			Labels:        map[int32][]int16{},
+			Powers:        map[int32][]storePower{},
+			Effects:       map[int32][]storeEffect{},
+			EnchantGrants: map[int32]int32{},
 		},
 		Roots:       roots,
 		TraitNodes:  nodes,
@@ -122,6 +125,11 @@ func captureStoreInputs(t *spellTables, roots []int32, ids []int32,
 		keepSlice(in.Labels, id, t.Labels)
 		keepSlice(in.Powers, id, t.Powers)
 		keepSlice(in.Effects, id, t.Effects)
+
+		if grant, ok := t.EnchantGrants[id]; ok {
+			in.EnchantGrants[id] = grant
+			keepString(in.Descriptions, grant, t.Descriptions[grant])
+		}
 	}
 	return in
 }

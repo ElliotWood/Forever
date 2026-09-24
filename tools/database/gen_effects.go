@@ -1468,20 +1468,15 @@ func (r *ProcRouting) readEnchantTooltip(tooltip string) {
 func (r *ProcRouting) refuseASentinelRate(tooltip string) {
 	trigger := spelldata.Find(int32(r.TriggerSpellID))
 	if trigger.ProcChanceSource == spelldata.ProcChanceAlways && trigger.RPPM == 0 &&
-		enchantTooltipStatesAnUnknownRate(tooltip) && !statesNoRate(r) {
+		tooltipStatesAnUnknownRate(tooltip) && !statesNoRate(r) {
 		r.Unsupported = append(r.Unsupported, spelldata.ReasonStatesNoRate)
 	}
 }
 
-// "Often", "sometimes" and "occasionally" are how an enchant's tooltip says its proc has a rate the
-// rows do not carry. "No more often than" states a cooldown instead.
-var enchantRateWordMatcher = regexp.MustCompile(`(?i)\b(often|sometimes|occasionally)\b`)
+// "Often", "sometimes" and "occasionally" are how a tooltip says its proc has a rate the rows do not
+// carry. "No more often than" states a cooldown instead.
+var rateWordMatcher = regexp.MustCompile(`(?i)\b(often|sometimes|occasionally)\b`)
 var cooldownWordingMatcher = regexp.MustCompile(`(?i)more often than`)
-
-func enchantTooltipStatesAnUnknownRate(tooltip string) bool {
-	return tooltipStatesAnUnknownRate(tooltip) ||
-		enchantRateWordMatcher.MatchString(cooldownWordingMatcher.ReplaceAllString(tooltip, ""))
-}
 
 func ParseTooltipForMissingEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instance *dbc.DBC, groupMap map[string]Group, groupMapName string) {
 	if parsed.ScalingOptions[0].Ilvl >= MIN_EFFECT_ILVL {
@@ -1593,10 +1588,10 @@ var increasedChanceMatcher = regexp.MustCompile(`(?i)increase[sd]?[^.]{0,40}?cha
 // splits a sentence in two, and neither changes which half carries the trigger.
 var sentenceBreak = regexp.MustCompile(`[.!?](?:\s|$)|\r?\n`)
 
-// Whether the tooltip says the effect only happens sometimes and leaves the rate unsaid. Read from
-// the sentence that states the trigger rather than from the whole text: "increases your critical
-// strike chance" is a magnitude on hundreds of spells, and a chance in a sentence that names nothing
-// the proc fires on is about something else entirely.
+// Whether the tooltip says the effect only happens sometimes and leaves the rate unsaid. A stated
+// chance is read from the sentence that states the trigger rather than from the whole text:
+// "increases your critical strike chance" is a magnitude on hundreds of spells, and a chance in a
+// sentence that names nothing the proc fires on is about something else entirely.
 func tooltipStatesAnUnknownRate(description string) bool {
 	for _, sentence := range sentenceBreak.Split(description, -1) {
 		if !statedChanceMatcher.MatchString(sentence) {
@@ -1612,7 +1607,7 @@ func tooltipStatesAnUnknownRate(description string) bool {
 		return true
 	}
 
-	return false
+	return rateWordMatcher.MatchString(cooldownWordingMatcher.ReplaceAllString(description, ""))
 }
 
 // Wording that names the cast itself as the trigger rather than the spell landing:
