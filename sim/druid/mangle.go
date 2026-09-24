@@ -47,11 +47,20 @@ func (druid *Druid) registerMangleBearSpell() {
 		MaxRange:         core.MaxMeleeRange,
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			baseDamage := mangleRank.DamageEffect().Average(core.CharacterLevel) + spell.Unit.MHWeaponDamage(sim, spell.MeleeAttackPower(target))
-			result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
+			// Berserk lets Mangle strike up to 3 targets (417141 tooltip, "$s3 targets").
+			numTargets := int32(1)
+			if druid.BerserkAura.IsActive() {
+				numTargets = min(3, sim.Environment.ActiveTargetCount())
+			}
 
-			if !result.Landed() {
-				spell.IssueRefund(sim)
+			for i := range numTargets {
+				baseDamage := mangleRank.DamageEffect().Average(core.CharacterLevel) + spell.Unit.MHWeaponDamage(sim, spell.MeleeAttackPower(target))
+				result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
+
+				if i == 0 && !result.Landed() {
+					spell.IssueRefund(sim)
+				}
+				target = sim.Environment.NextActiveTargetUnit(target)
 			}
 
 			// Berserk removes Mangle's cooldown (client 417141).

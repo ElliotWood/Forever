@@ -123,7 +123,8 @@ func (shaman *Shaman) applyElementalFocus() {
 	var triggeringSpell *core.Spell
 	var triggerTime time.Duration
 
-	canConsumeSpells := SpellMaskLightningBolt | SpellMaskChainLightning | SpellMaskLavaBurst | (SpellMaskShock & ^SpellMaskFlameShockDot)
+	// 16246's class mask: Lightning Bolt, Chain Lightning, Lava Burst, the shocks and Fire Nova (408345).
+	canConsumeSpells := SpellMaskLightningBolt | SpellMaskChainLightning | SpellMaskLavaBurst | SpellMaskFireNova | (SpellMaskShock & ^SpellMaskFlameShockDot)
 
 	clearcasting := spellData.ElementalFocusTriggered.Highest()
 	maxStacks := int32(clearcasting.ProcCharges)
@@ -180,11 +181,12 @@ func (shaman *Shaman) applyElementalFury() {
 
 	// The talent's class mask (16089) also covers Flametongue Attack (bit 21) and Frostbrand
 	// Attack (bit 24): shamans' Flametongue Weapon hits crit for 2.0x in logs while the same
-	// attack granted by Flametongue Totem crits for 1.5x on other players.
+	// attack granted by Flametongue Totem crits for 1.5x on other players. Bit 10 is Lightning
+	// Shield, the orbs (26363..26370) included.
 	shaman.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_CritMultiplier_Flat,
 		FloatValue: spellData.ElementalFury.Effect(dbcenums.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_CRIT_DAMAGE_BONUS)).FractionAt(shaman.Talents.ElementalFury),
-		ClassMask:  SpellMaskFireTotem | SpellMaskFire | SpellMaskNature | SpellMaskFrost | SpellMaskFlametongueWeapon | SpellMaskFrostbrandWeapon,
+		ClassMask:  SpellMaskFireTotem | SpellMaskFire | SpellMaskNature | SpellMaskFrost | SpellMaskFlametongueWeapon | SpellMaskFrostbrandWeapon | SpellMaskLightningShield,
 	})
 }
 func (shaman *Shaman) applyLightningOverload() {
