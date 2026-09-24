@@ -596,7 +596,8 @@ func storeUnmappedSpeedEnchant(instance *dbc.DBC, enchant dbc.Enchant, parsed *p
 // Several spells can grant the same enchant -- an enchant that was re-taught
 // by a later expansion's recipe has one spell per version, up to five here.
 // Map iteration order is randomized, so keep the lowest spell ID rather than
-// letting whichever one is visited last win and churn the generated file.
+// letting whichever one is visited last win and churn the generated file. The store's
+// loadEnchantGrants keeps the same one.
 func enchantGrantEffects(effects map[int]dbc.SpellEffect) map[int]*dbc.SpellEffect {
 	grants := map[int]*dbc.SpellEffect{}
 	for _, effect := range effects {
