@@ -49,7 +49,6 @@ const (
 	BlockValue
 	DodgeRating
 	ParryRating
-	ResilienceRating
 	Armor
 	BonusArmor
 	Health
@@ -185,8 +184,6 @@ func (s Stat) StatName() string {
 		return "NatureDamage"
 	case ShadowDamage:
 		return "ShadowDamage"
-	case ResilienceRating:
-		return "ResilienceRating"
 	case Armor:
 		return "Armor"
 	case BonusArmor:
@@ -591,8 +588,8 @@ type PseudoStats struct {
 	BaseParryChance float64
 	BaseBlockChance float64
 
-	BaseReducedCritTakenPercent float64 // Base crit reduction from talents/auras (before Defense/Resilience contributions).
-	ReducedCritTakenPercent     float64 // Total crit reduction including Defense and Resilience contributions.
+	BaseReducedCritTakenPercent float64 // Base crit reduction from talents/auras (before the Defense contribution).
+	ReducedCritTakenPercent     float64 // Total crit reduction including the Defense contribution.
 
 	BonusHealingTaken          float64 // Talisman of Troll Divinity
 	BonusSpellCritPercentTaken float64 // Imp Shadow Bolt / Imp Scorch / Winter's Chill debuff

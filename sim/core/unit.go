@@ -703,7 +703,6 @@ var RatingConversions = []RatingConversion{
 	{stats.DefenseRating, stats.DodgePercent, DefenseRatingPerAvoidancePercent, 0},
 	{stats.DefenseRating, stats.ParryPercent, DefenseRatingPerAvoidancePercent, 0},
 	{stats.DefenseRating, stats.BlockPercent, DefenseRatingPerAvoidancePercent, 0},
-	{stats.ResilienceRating, stats.ReducedCritTakenPercent, ResilienceRatingPerCritReductionChance, 0},
 }
 
 func AddRatingConversions(sdm *stats.StatDependencyManager) {
@@ -956,10 +955,6 @@ func (unit *Unit) GetTotalBlockChanceAsDefender(atkTable *AttackTable) float64 {
 		atkTable.BaseBlockChance +
 		unit.GetBlockFromRating()
 	return math.Max(chance, 0.0)
-}
-
-func (unit *Unit) GetResilienceReduction() float64 {
-	return unit.GetStat(stats.ResilienceRating) / ResilienceRatingPerCritReductionChance / 100
 }
 
 func (unit *Unit) updateReducedCritTakenPercent() {

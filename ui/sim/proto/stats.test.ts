@@ -1,4 +1,4 @@
-import { PseudoStat, Stat } from '@generated/proto/common';
+import { PseudoStat, Stat, UnitStats } from '@generated/proto/common';
 import { describe, expect, it, vi } from 'vitest';
 
 // `stats.ts` only needs localization for display names, and `@i18n/localization` drags the whole
@@ -9,14 +9,15 @@ vi.mock('@i18n/localization', () => ({
 }));
 
 import * as Mechanics from '../constants/mechanics';
+import { CURRENT_API_VERSION } from '../constants/other';
 import { displayStatOrder, Stats, UnitStat } from './stats';
 
 describe('UnitStat', () => {
 	// The MoP placeholder evaluated `displayStatOrder` at module scope against MoP's PseudoStat set
 	// and threw inside getRootStat on TBC's, taking every transitive importer down with it.
-	it('builds displayStatOrder at module scope over TBC 42-stat shape', () => {
+	it('builds displayStatOrder at module scope over the 41-stat shape', () => {
 		expect(displayStatOrder.length).toBeGreaterThan(0);
-		expect(new Stats().asProtoArray().length).toBe(42);
+		expect(new Stats().asProtoArray().length).toBe(41);
 	});
 
 	it('roots the six school hit pseudo-stats at SpellHitRating and leaves their own root null', () => {
@@ -54,14 +55,44 @@ describe('UnitStat', () => {
 		expect(() => unitStat.convertEpToRatingScale(0).toFixed(2)).not.toThrow();
 	});
 
-	// TBC-only second parameter: ReducedCritTakenPercent has two possible rating sources.
 	it('needs a parentStat to turn ReducedCritTakenPercent back into a rating', () => {
 		const unitStat = UnitStat.fromPseudoStat(PseudoStat.PseudoStatReducedCritTakenPercent);
 		expect(unitStat.convertPercentToRating(1)).toBeNull();
-		expect(unitStat.convertPercentToRating(1, Stat.StatResilienceRating)).toBeCloseTo(Mechanics.RESILIENCE_RATING_PER_CRIT_REDUCTION_CHANCE);
 		expect(unitStat.convertPercentToRating(1, Stat.StatDefenseRating)).toBeCloseTo(
 			Mechanics.DEFENSE_RATING_PER_DEFENSE_LEVEL / Mechanics.MISS_DODGE_PARRY_BLOCK_CRIT_CHANCE_PER_DEFENSE,
 		);
+	});
+});
+
+describe('Stats.fromProto', () => {
+	const version16Stats = () => {
+		const stats = new Array(42).fill(0);
+		stats[Stat.StatParryRating] = 29;
+		stats[30] = 7;
+		stats[31] = 31;
+		stats[41] = 41;
+		return stats;
+	};
+
+	it('moves a version-16 stats array onto the current Stat enum', () => {
+		const proto = UnitStats.create({ stats: version16Stats(), apiVersion: 16 });
+
+		const stats = Stats.fromProto(proto);
+
+		expect(stats.asProtoArray().length).toBe(41);
+		expect(stats.getStat(Stat.StatParryRating)).toBe(29);
+		expect(stats.getStat(Stat.StatArmor)).toBe(31);
+		expect(stats.getStat(Stat.StatPhysicalDamage)).toBe(41);
+		expect(proto.apiVersion).toBe(CURRENT_API_VERSION);
+	});
+
+	it('leaves a current stats array alone', () => {
+		const current = new Array(41).fill(0);
+		current[Stat.StatArmor] = 30;
+
+		const stats = Stats.fromProto(UnitStats.create({ stats: current, apiVersion: CURRENT_API_VERSION }));
+
+		expect(stats.getStat(Stat.StatArmor)).toBe(30);
 	});
 });
 
