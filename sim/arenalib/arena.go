@@ -140,13 +140,11 @@ type TalentBuild struct {
 	Talents string
 }
 
-// Run enumerates the spec's builds and writes them out. A no-op unless ARENA_OUT is set, so
-// an ordinary `go test ./...` never pays for it.
+// Run enumerates the spec's builds and writes them out when ARENA_OUT is set. Without it an
+// ordinary `go test ./...` only runs each build for a few iterations to check the spell
+// manifest (checkManifest), which costs about a second a spec.
 func Run(t *testing.T, spec Spec) {
 	outDir := os.Getenv(outDirEnv)
-	if outDir == "" {
-		t.Skipf("%s is not set, so the arena is not being generated", outDirEnv)
-	}
 
 	uiDir := specDir(spec)
 	talents := communityTalents(t, uiDir, spec.Talents)
@@ -162,7 +160,7 @@ func Run(t *testing.T, spec Spec) {
 	}
 	gearSets := filter(namesIn(filepath.Join(uiDir, "gear_sets"), ".gear.json"), spec.GearSets)
 	rotations := filter(namesIn(filepath.Join(uiDir, "apls"), ".apl.json"), spec.Rotations)
-	if os.Getenv(relevanceEnv) != "" {
+	if outDir != "" && os.Getenv(relevanceEnv) != "" {
 		surveyRelevance(t, spec, outDir, talents, gearSets, rotations)
 		return
 	}
@@ -181,6 +179,10 @@ func Run(t *testing.T, spec Spec) {
 				combos = append(combos, run{talent, gear, rotation})
 			}
 		}
+	}
+	if outDir == "" {
+		checkManifest(t, spec, combos)
+		return
 	}
 	sims := &memo{spec: spec, done: map[string]Result{}}
 	results := sims.all(combos)
@@ -484,6 +486,49 @@ func runAt(spec Spec, talent TalentBuild, gear string, rotation string, iteratio
 		collect(&row, pet)
 	}
 	return row
+}
+
+// Without ARENA_OUT the arena still runs every build, briefly, to hold the evidence manifest
+// (ui/sim/spells) to what the sim actually does: a spell id dealing damage with no entry there
+// counts as unclassified on the leaderboard and the rankings page. This is what
+// sim/spell_sources_test.go did before the engine switch, narrowed to the ids that carry damage,
+// which the old syntax-tree walk could not follow into the client spell store anyway.
+const manifestIterations = int32(3)
+
+func checkManifest(t *testing.T, spec Spec, combos []run) {
+	manifest := map[string]bool{}
+	files, err := filepath.Glob(filepath.Join(repoRoot(), "ui", "sim", "spells", "*.json"))
+	if err != nil || len(files) == 0 {
+		t.Fatalf("no evidence manifest under ui/sim/spells: %v", err)
+	}
+	for _, file := range files {
+		var entries map[string]json.RawMessage
+		data, err := os.ReadFile(file)
+		if err == nil {
+			err = json.Unmarshal(data, &entries)
+		}
+		if err != nil {
+			t.Fatalf("%s: %s", file, err)
+		}
+		for id := range entries {
+			manifest[id] = true
+		}
+	}
+
+	rows := parallelMap(len(combos), func(i int) Result {
+		return runAt(spec, combos[i].talent, combos[i].gear, combos[i].rotation, manifestIterations)
+	})
+	missing := map[string]string{}
+	for i, row := range rows {
+		for id := range row.Damage {
+			if !manifest[id] {
+				missing[id] = combos[i].talent.Name
+			}
+		}
+	}
+	for _, id := range slices.Sorted(maps.Keys(missing)) {
+		t.Errorf("%s: spell %s deals damage (build %q) but has no entry in ui/sim/spells", spec.Dir, id, missing[id])
+	}
 }
 
 // Damage per spell, summed over targets. A pet's damage is the build's damage, and the

@@ -387,6 +387,16 @@
 		"source": "forever",
 		"tooltip": "7% of base mana, 5 Rage or 10 Energy\nInstant\n3 min cooldown\nIncreases your attack and casting speed by 10% for 10 sec."
 	},
+	"26992": {
+		"ability": "Thorns",
+		"assumptions": [
+			"25 Nature damage per melee hit taken, the Burning Crusade rank 7's number: 26992 is not in the beta client, whose top rank 9910 deals 22, so the sim's Thorns is about 14% high. Improved Thorns' 25% a point matches the client."
+		],
+		"file": "sim/core/buffs.go",
+		"note": "The raid buff's damage, dealt under the Burning Crusade Thorns rank 7 id, which the beta client does not carry.",
+		"source": "assumed",
+		"tooltip": "Thorns sprout from the friendly target causing 25 Nature damage to attackers when hit. Lasts 10 min."
+	},
 	"28142": {
 		"ability": "Atiesh, Greatstaff of the Guardian (mage)",
 		"file": "sim/core/buffs.go",
@@ -557,8 +567,9 @@
 	},
 	"9910": {
 		"ability": "Thorns",
-		"file": "sim/core/buffs.go",
-		"note": "18 Nature damage per melee hit taken, +25% per point of Brambles; unchanged from upstream Classic.",
-		"source": "classic"
+		"file": "sim/druid/thorns.go",
+		"note": "Rank 6, the druid's own cast. Beta client 1.60.1.69893: 22 Nature damage per melee hit taken, up from Classic Era's 18; Improved Thorns still adds 25% a point. The damage itself is dealt under 26992.",
+		"source": "forever",
+		"tooltip": "320 Mana\nInstant\nThorns sprout from the friendly target causing 22 Nature damage to attackers when hit. Lasts 10 min."
 	}
 }

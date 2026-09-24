@@ -226,6 +226,17 @@
 		"source": "forever",
 		"tooltip": "160 Mana\nInstant\n12 sec cooldown\nAn instant attack that lashes the target, causing 50 Shadow damage."
 	},
+	"1293696": {
+		"ability": "Demonic Brand",
+		"assumptions": [
+			"The branded pet attack deals 39 to 42 damage at level 60 - the beta client writes it as a formula ($<minDam> to $<maxDam>) its exported tables do not carry, so the BlizzCon tooltip's numbers are kept",
+			"The extra hit carries three times normal threat and cannot miss or crit"
+		],
+		"file": "sim/warlock/talents_demonology.go",
+		"note": "The brand the pet carries (beta client 1.60.1.69893, 10 sec), whose id the sim gives the branded hit. The talent is 18821 / 1293695.",
+		"source": "assumed",
+		"tooltip": "Your pet's next attacks against the branded target generate high threat and deal 39 to 42 Fire or Shadow damage based on the pet."
+	},
 	"1293812": {
 		"ability": "Incinerate",
 		"file": "sim/warlock/incinerate.go",
