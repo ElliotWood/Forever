@@ -165,6 +165,9 @@ def main():
     parser.add_argument('--specs', default='', help='comma separated, substring matched')
     parser.add_argument('--detach', action='store_true', help='run in a process that outlives this one')
     args = parser.parse_args()
+    if args.push and REF != f'origin/{BRANCH}':
+        # The push is HEAD:BRANCH, and HEAD would carry REF's unmerged commits along with it.
+        sys.exit(f'--push only from origin/{BRANCH}; ARENA_REF={REF} would push that ref to {BRANCH}')
 
     if args.detach:
         command = [sys.executable, os.path.abspath(__file__)] + [a for a in sys.argv[1:] if a != '--detach']
