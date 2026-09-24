@@ -534,14 +534,13 @@ casts a chance-on-hit effect off the weapon's hit without consulting a proc mask
 sentinel is never a rate.
 
 A buff the client states as a percentage of a stat (`A_MOD_PERCENT_STAT`, misc the stat index, -1 all
-five) has no effect entry, which carries flat stats only. `spelldata.PercentStats` reads the multipliers
-off the buff's row, and the buff multiplies the stat through a dynamic stat dependency, reporting what
-it adds and removes to the temporary stats listeners: Insight 8216's 1299796 doubles Spirit for 10 s.
-The generator routes an enchant slot to it. An item effect with no flat stats is dropped before the
-generator routes it, so an item proc of this shape is not emitted; the client has none. `ParseEffects`
-and `ParseStatic` read the same aura as a stat multiplier, so an equip or talent row stating it is
-parsed, and `ItemAuraUnsupported` does not refuse it; the parser's multiplier reports nothing to the
-temporary stats listeners, which is why the proc buff keeps its own.
+five) has no effect entry, which carries flat stats only, so the generator routes it as auras:
+`NewSpellDataAuraProc` parses the buff's row, whose multiplier works through a dynamic stat dependency
+and reports what it adds and removes to the temporary stats listeners. Insight 8216's 1299796 doubles
+Spirit for 10 s. The aura proc registers the wearer's buff with the item swap, so an enchant's buff
+drops with its weapon or shield, and, where the buff moves stats, with the stat-proc APL values. The
+client has no item proc of this shape. `ParseStatic` reads the same aura as a multiplier applied once,
+which reports nothing.
 
 An enchant's procs are read one per slot of its `SpellItemEnchantment` row that casts a combat spell
 (Effect 1) or hangs an equip aura off a hit (Effect 3), and at most one of them registers. A combat spell's chance, where the client states

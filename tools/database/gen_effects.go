@@ -1225,8 +1225,8 @@ func (r *ProcRouting) ProcConstructor() string {
 	return procShapes[r.Shape].procConstructor
 }
 
-// The auras the item aura shape is emitted for: the damage, healing, cost and armor multipliers and
-// the flat damage taken, none of which an item states as a stat.
+// The auras the item aura shape is emitted for: the damage, healing, cost, armor and stat multipliers
+// and the flat damage taken, none of which an item states as a stat.
 var itemAuraKinds = []dbcenums.EffectAuraType{
 	dbcenums.A_MOD_DAMAGE_PERCENT_DONE,
 	dbcenums.A_MOD_DAMAGE_PERCENT_TAKEN,
@@ -1234,6 +1234,7 @@ var itemAuraKinds = []dbcenums.EffectAuraType{
 	dbcenums.A_MOD_POWER_COST_SCHOOL_PCT,
 	dbcenums.A_MOD_DAMAGE_TAKEN,
 	dbcenums.A_MOD_BASE_RESISTANCE_PCT,
+	dbcenums.A_MOD_PERCENT_STAT,
 }
 
 func appliesAnItemAura(s *spelldata.Spell) bool {
@@ -1344,27 +1345,20 @@ func statesNoRate(routing *ProcRouting) bool {
 }
 
 // One slot's proc. The trigger is the slot's spell; the buff is what the shipped entry says it
-// applies, where it resolves stats, the spell the slot applies where that multiplies stats, and
-// otherwise the spell it deals damage through.
+// applies, where it resolves stats, and otherwise the spell it deals damage through or the auras the
+// slot applies.
 func routeEnchantSlot(slot dbc.EnchantProcSlot, instance *dbc.DBC) *ProcRouting {
 	applied := slot.AppliesSpellID
 	if applied == 0 {
 		applied = slot.SpellID
 	}
 
-	// A buff stated as a percentage of a stat resolves no flat stats: the sim reads the multipliers
-	// off the buff's own row.
 	effect := slot.Effect
 	hasStats := effect != nil
-	appliedRow := spelldata.Find(int32(applied))
-	multipliesStats := !hasStats && len(spelldata.PercentStats(appliedRow, 0)) > 0
 
 	buffSpellID := slot.SpellID
-	switch {
-	case hasStats:
+	if hasStats {
 		buffSpellID = int(effect.BuffId)
-	case multipliesStats:
-		buffSpellID = applied
 	}
 
 	routing := routeProc(slot.SpellID, buffSpellID, slot.IsCombatSpell)
@@ -1373,9 +1367,17 @@ func routeEnchantSlot(slot dbc.EnchantProcSlot, instance *dbc.DBC) *ProcRouting 
 		routing.Unsupported = spelldata.EnchantAuraUnsupported(trigger)
 	}
 
-	if hasStats || multipliesStats {
+	shape, spellID := ShapeStats, int32(0)
+	if !hasStats {
+		shape, spellID = pickNoStatShape(slot.SpellID, int32(applied))
+		if shape == ShapeStats && appliesAnItemAura(spelldata.Find(int32(applied))) {
+			shape, spellID = ShapeAura, int32(applied)
+		}
+	}
+
+	if hasStats {
 		routing.requireABuffDuration()
-	} else if shape, spellID := pickNoStatShape(slot.SpellID, int32(applied)); shape != ShapeStats {
+	} else if shape != ShapeStats {
 		routing.as(shape, spellID)
 		if mask := spelldata.Find(spellID).TargetCreatureType; shape == ShapeDamage && mask != 0 {
 			routing.Unsupported = append(routing.Unsupported,

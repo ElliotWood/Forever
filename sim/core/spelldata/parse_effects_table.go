@@ -39,6 +39,10 @@ type parser struct {
 	// The row states CumulativeAura, so a value follows the aura's stacks. The rows whose value
 	// cannot be scaled are skipped while this is set; IgnoreStacks clears it.
 	stacking bool
+
+	// The aura the attachments follow, which the unit's temporary stats listeners are told about.
+	// Nil on the static path.
+	aura *core.Aura
 }
 
 // One attachment made for one effect: the sim kind it became, the value in the sim's own units, and
@@ -52,6 +56,8 @@ type attachment struct {
 	// The operation reads the Simulation it is handed, so it cannot act on an aura that was already
 	// up when the parse ran.
 	needsSim bool
+
+	stats []stats.Stat
 }
 
 // What the parser does with one effect, by the aura it applies. A row answers nil for an effect it
@@ -426,7 +432,7 @@ func (p *parser) statsBuff(sts []stats.Stat, v float64) *attachment {
 		return nil
 	}
 
-	return additive("stat "+statNames(sts), v, func(sim *core.Simulation, delta float64) {
+	a := additive("stat "+statNames(sts), v, func(sim *core.Simulation, delta float64) {
 		bonus := stats.Stats{}
 		for _, stat := range sts {
 			bonus[stat] = delta
@@ -437,11 +443,15 @@ func (p *parser) statsBuff(sts []stats.Stat, v float64) *attachment {
 			p.unit.AddStatsDynamic(sim, bonus)
 		}
 	})
+	a.stats = sts
+	return a
 }
 
 // A multiplier on a stat. The sim states it as a dependency, which cannot carry a per-stack value, so
 // a stacking row is skipped rather than attached at one stack. The static path has no aura to follow
-// and no Simulation to answer a later Refresh with, so a conditional row is skipped there too.
+// and no Simulation to answer a later Refresh with, so a conditional row is skipped there too. The
+// unit's temporary stats listeners hear the stats the dependencies add or remove, measured at that
+// moment.
 func (p *parser) statMultiplier(sts []stats.Stat, mult float64) *attachment {
 	if len(sts) == 0 || p.stacking {
 		return nil
@@ -454,7 +464,7 @@ func (p *parser) statMultiplier(sts []stats.Stat, mult float64) *attachment {
 			return nil
 		}
 		applied := false
-		return &attachment{kind: kind, value: mult, set: func(_ *core.Simulation, level float64) {
+		return &attachment{kind: kind, value: mult, stats: sts, set: func(_ *core.Simulation, level float64) {
 			if level <= 0 || applied {
 				return
 			}
@@ -470,18 +480,32 @@ func (p *parser) statMultiplier(sts []stats.Stat, mult float64) *attachment {
 		deps[i] = p.unit.NewDynamicMultiplyStat(stat, mult)
 	}
 
-	active := false
-	return &attachment{kind: kind, value: mult, set: func(sim *core.Simulation, level float64) {
-		if (level > 0) == active {
-			return
-		}
-		active = level > 0
+	toggle := func(sim *core.Simulation, active bool) {
 		for _, dep := range deps {
 			if active {
 				p.unit.EnableBuildPhaseStatDep(sim, dep)
 			} else {
 				p.unit.DisableBuildPhaseStatDep(sim, dep)
 			}
+		}
+	}
+
+	active := false
+	return &attachment{kind: kind, value: mult, stats: sts, set: func(sim *core.Simulation, level float64) {
+		if (level > 0) == active {
+			return
+		}
+		active = level > 0
+		if sim == nil || len(p.unit.OnTemporaryStatsChanges) == 0 {
+			toggle(sim, active)
+			return
+		}
+
+		before := p.unit.GetStats()
+		toggle(sim, active)
+		change := p.unit.GetStats().Subtract(before)
+		for _, onChange := range p.unit.OnTemporaryStatsChanges {
+			onChange(sim, p.aura, change)
 		}
 	}}
 }

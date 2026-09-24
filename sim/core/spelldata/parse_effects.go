@@ -7,6 +7,7 @@ import (
 
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/dbcenums"
+	"github.com/wowsims/forever/sim/core/stats"
 )
 
 // How a parse is narrowed: which effects it reads, what gates them and whether their values follow
@@ -114,6 +115,7 @@ func parse(unit *core.Unit, character *core.Character, aura *core.Aura, s *Spell
 		static:      aura == nil,
 		conditional: o.cond != nil,
 		stacking:    s.MaxStack > 0 && !o.ignoreStacks,
+		aura:        aura,
 	}
 
 	folded := foldedDotEffects(s, o)
@@ -182,6 +184,17 @@ func parse(unit *core.Unit, character *core.Character, aura *core.Aura, s *Spell
 	}
 
 	return parsed
+}
+
+// The stats the attachments add to or multiply, in effect order.
+func (p *Parsed) Stats() []stats.Stat {
+	var sts []stats.Stat
+	for _, a := range p.attachments {
+		if a != nil {
+			sts = append(sts, a.stats...)
+		}
+	}
+	return sts
 }
 
 // Reads the condition again and turns the attachments on or off accordingly, for a caller whose
