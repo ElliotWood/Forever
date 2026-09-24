@@ -1368,10 +1368,9 @@ func routeEnchantSlot(slot dbc.EnchantProcSlot, instance *dbc.DBC) *ProcRouting 
 	}
 
 	routing := routeProc(slot.SpellID, buffSpellID, slot.IsCombatSpell)
-	if slot.IsCombatSpell {
-		routing.Unsupported = spelldata.CombatEnchantUnsupported(spelldata.Find(int32(slot.SpellID)))
-	} else {
-		routing.Unsupported = spelldata.EnchantAuraUnsupported(spelldata.Find(int32(slot.SpellID)))
+	trigger := spelldata.Find(int32(slot.SpellID))
+	if !slot.IsCombatSpell {
+		routing.Unsupported = spelldata.EnchantAuraUnsupported(trigger)
 	}
 
 	if hasStats || multipliesStats {
@@ -1387,8 +1386,7 @@ func routeEnchantSlot(slot dbc.EnchantProcSlot, instance *dbc.DBC) *ProcRouting 
 			fmt.Sprintf("the enchant's effect entry resolves no stats from %d (%s)", applied, spellEffectKinds(instance, applied)))
 	}
 
-	if trigger := spelldata.Find(int32(slot.SpellID)); !slot.IsCombatSpell &&
-		trigger.ProcHint&(core.ProcHintAttackDodged|core.ProcHintAttackParried) != 0 {
+	if !slot.IsCombatSpell && trigger.ProcHint.Matches(core.ProcHintAttackAvoided) {
 		decoded := core.DecodeProcTypeMask(trigger.ProcFlags, trigger.ProcHint)
 		routing.Summary += fmt.Sprintf("; the enchant's tooltip restricts it to %s", asCoreOutcome(decoded.Outcome))
 	}

@@ -549,7 +549,7 @@ one, is on the enchantment rather than on the spell - `EffectPointsMin`, Fiery B
 store writes it onto the spell's row as its `ProcChance` column, noted beside the row. Every
 enchantment casting one spell states the same chance for it; the generator stops on one that does
 not. The chance is rolled on the hits of the enchanted weapon only
-(`spelldata.CombatEnchantUnsupported`). An equip aura's own description is empty, so the store reads
+(`shared.statedWeaponProcChance`). An equip aura's own description is empty, so the store reads
 the description of the spell granting the enchant in its place, for what no proc mask can state: the
 named ability, outcome-taken, attack-dodged and attack-parried hints, and whether its 100 is a
 sentinel ("often", "sometimes", "a chance to"), which makes it `ProcChancePPM`. The grant's cast,
