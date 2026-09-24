@@ -684,6 +684,10 @@ func (unit *Unit) addUniversalStatDependencies() {
 	unit.AddStatDependency(stats.SpellCritRating, stats.SpellCritPercent, 1/SpellCritRatingPerCritPercent)
 	unit.AddStatDependency(stats.DodgeRating, stats.DodgePercent, 1/DodgeRatingPerDodgePercent)
 	unit.AddStatDependency(stats.ParryRating, stats.ParryPercent, 1/ParryRatingPerParryPercent)
+	unit.AddStatDependency(stats.BlockRating, stats.BlockPercent, 1/BlockRatingPerBlockPercent/100)
+	unit.AddStatDependency(stats.DefenseRating, stats.DodgePercent, MissDodgeParryBlockCritChancePerDefense/DefenseRatingPerDefenseLevel)
+	unit.AddStatDependency(stats.DefenseRating, stats.ParryPercent, MissDodgeParryBlockCritChancePerDefense/DefenseRatingPerDefenseLevel)
+	unit.AddStatDependency(stats.DefenseRating, stats.BlockPercent, MissDodgeParryBlockCritChancePerDefense/DefenseRatingPerDefenseLevel/100)
 }
 
 func (unit *Unit) finalize() {
@@ -887,7 +891,7 @@ func (unit *Unit) GetParryFromRating() float64 {
 	return unit.stats[stats.ParryPercent] / 100
 }
 func (unit *Unit) GetBlockFromRating() float64 {
-	return unit.stats[stats.BlockPercent] + unit.stats[stats.BlockRating]/BlockRatingPerBlockPercent/100
+	return unit.stats[stats.BlockPercent]
 }
 
 func (unit *Unit) GetTotalDodgeChanceAsDefender(spell *Spell, atkTable *AttackTable) float64 {
@@ -895,8 +899,7 @@ func (unit *Unit) GetTotalDodgeChanceAsDefender(spell *Spell, atkTable *AttackTa
 		atkTable.BaseDodgeChance +
 		unit.GetDodgeFromRating() -
 		spell.DodgeParrySuppression() -
-		spell.Unit.PseudoStats.DodgeReduction +
-		unit.GetDefenseReduction()
+		spell.Unit.PseudoStats.DodgeReduction
 	return math.Max(chance, 0.0)
 }
 
@@ -904,8 +907,7 @@ func (unit *Unit) GetTotalParryChanceAsDefender(spell *Spell, atkTable *AttackTa
 	chance := unit.PseudoStats.BaseParryChance +
 		atkTable.BaseParryChance +
 		unit.GetParryFromRating() -
-		spell.DodgeParrySuppression() +
-		unit.GetDefenseReduction()
+		spell.DodgeParrySuppression()
 	return math.Max(chance, 0.0)
 }
 
@@ -919,8 +921,7 @@ func (unit *Unit) GetTotalChanceToBeMissedAsDefender(atkTable *AttackTable) floa
 func (unit *Unit) GetTotalBlockChanceAsDefender(atkTable *AttackTable) float64 {
 	chance := unit.PseudoStats.BaseBlockChance +
 		atkTable.BaseBlockChance +
-		unit.GetBlockFromRating() +
-		unit.GetDefenseReduction()
+		unit.GetBlockFromRating()
 	return math.Max(chance, 0.0)
 }
 
