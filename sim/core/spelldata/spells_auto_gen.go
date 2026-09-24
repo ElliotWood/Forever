@@ -30741,6 +30741,15 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1313867, SpellID: 1293306, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_STUN, PvpMult: 1, ChainAmp: 1, Mechanic: 24, Target: [2]dbcenums.ImplicitTarget{22, 15}},
 		}},
+	{ID: 1293331, Name: "Thorncurse - Add Nature Dam - Weap 02", School: 1, Attr: [17]uint32{0: 0x1c0, 15: 0x2000}, SpellLevel: 60, ProcChance: 100, ProcFlags: [2]uint32{0: 0x14}, RefIDs: []int32{1293333}, ProcChanceSource: ProcChanceAlways,
+		Effects: []Effect{
+			{ID: 1313903, SpellID: 1293331, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_SPELL, SpellLevel: 60, PvpMult: 1, TriggerID: 1293333, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
+		}},
+	{ID: 1293333, Name: "Thorncurse", School: 8, Attr: [17]uint32{3: 0x30000, 4: 0x800000, 15: 0x2000}, SpellLevel: 1, MaxRange: 30, DefenseType: 1,
+		Effects: []Effect{
+			{ID: 1313905, SpellID: 1293333, Type: dbcenums.E_SCHOOL_DAMAGE, BasePoints: 2, SpellLevel: 1, PvpMult: 1, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{6, 0}},
+			{ID: 1313906, SpellID: 1293333, Index: 1, Type: dbcenums.E_SCHOOL_DAMAGE, BasePoints: 2, SpellLevel: 1, PvpMult: 1, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
+		}},
 	{ID: 1293421, Name: "Shadow Bolt", School: 32, Speed: 20, Attr: [17]uint32{0: 0x10000, 15: 0x2000}, SpellLevel: 30, MaxRange: 100, GCDMs: 1500, StartRecoveryCategory: 133, DefenseType: 1,
 		Effects: []Effect{
 			{ID: 1314064, SpellID: 1293421, Type: dbcenums.E_SCHOOL_DAMAGE, BasePoints: 93, Variance: 0.5, SpellLevel: 30, PvpMult: 1, Amplitude: 1, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{6, 0}},
