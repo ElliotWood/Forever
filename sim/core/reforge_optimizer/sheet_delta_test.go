@@ -36,44 +36,65 @@ func sheetStats(t *testing.T, raid *proto.Raid) core.UnitStats {
 
 func TestCapSpaceDeltaMatchesTheSheet(t *testing.T) {
 	sim.RegisterAll()
-	raid := protectionWarriorRaid("preraid")
-	baseResult, sdm := computeReforgeStatsAndDeps(&proto.ComputeStatsRequest{Raid: protopkg.Clone(raid).(*proto.Raid)})
-	if baseResult.ErrorResult != "" {
-		t.Fatalf("ComputeStats: %s", baseResult.ErrorResult)
-	}
-	baseStats := protoToCoreUnitStats(baseResult.RaidStats.Parties[0].Players[0].FinalStats)
+	unshielded := protectionWarriorRaid("preraid")
+	unshielded.Parties[0].Players[0].Equipment.Items[proto.ItemSlot_ItemSlotOffHand] = &proto.ItemSpec{}
 
 	block := proto.PseudoStat_PseudoStatBlockPercent
 	dodge := proto.PseudoStat_PseudoStatDodgePercent
 	parry := proto.PseudoStat_PseudoStatParryPercent
 	critTaken := proto.PseudoStat_PseudoStatReducedCritTakenPercent
-	for _, test := range []struct {
-		stat  stats.Stat
-		moves []proto.PseudoStat
+	for _, character := range []struct {
+		name               string
+		raid               *proto.Raid
+		canBlock, canParry bool
 	}{
-		{stats.BlockRating, []proto.PseudoStat{block}},
-		{stats.DefenseRating, []proto.PseudoStat{block, dodge, parry, critTaken}},
-		{stats.ResilienceRating, []proto.PseudoStat{critTaken}},
-		{stats.DodgeRating, []proto.PseudoStat{dodge}},
-		{stats.ParryRating, []proto.PseudoStat{parry}},
+		{"warrior with a shield", protectionWarriorRaid("preraid"), true, true},
+		{"warrior without a shield", unshielded, false, true},
 	} {
-		t.Run(test.stat.StatName(), func(t *testing.T) {
-			delta := core.NewUnitStats()
-			delta.Stats[test.stat] = 25
+		t.Run(character.name, func(t *testing.T) {
+			baseResult, sdm, pseudoStats := computeReforgeStatsAndDeps(&proto.ComputeStatsRequest{Raid: protopkg.Clone(character.raid).(*proto.Raid)})
+			if baseResult.ErrorResult != "" {
+				t.Fatalf("ComputeStats: %s", baseResult.ErrorResult)
+			}
+			if pseudoStats.CanBlock != character.canBlock || pseudoStats.CanParry != character.canParry {
+				t.Fatalf("can block %v and parry %v, want %v and %v", pseudoStats.CanBlock, pseudoStats.CanParry, character.canBlock, character.canParry)
+			}
+			o := &reforgeOptimizer{
+				statDeps:  sdm,
+				canBlock:  pseudoStats.CanBlock,
+				canParry:  pseudoStats.CanParry,
+				baseStats: protoToCoreUnitStats(baseResult.RaidStats.Parties[0].Players[0].FinalStats),
+			}
 
-			bonusRaid := protopkg.Clone(raid).(*proto.Raid)
-			bonusRaid.Parties[0].Players[0].BonusStats = &proto.UnitStats{Stats: delta.Stats[:stats.ProtoStatsLen]}
-			sheetDelta := subtractUnitStats(sheetStats(t, bonusRaid), baseStats)
-			resolved := resolveStatDelta(sdm, baseStats, delta)
+			for _, test := range []struct {
+				stat  stats.Stat
+				moves []proto.PseudoStat
+			}{
+				{stats.BlockRating, []proto.PseudoStat{block}},
+				{stats.DefenseRating, []proto.PseudoStat{block, dodge, parry, critTaken}},
+				{stats.ResilienceRating, []proto.PseudoStat{critTaken}},
+				{stats.DodgeRating, []proto.PseudoStat{dodge}},
+				{stats.ParryRating, []proto.PseudoStat{parry}},
+			} {
+				var delta stats.Stats
+				delta[test.stat] = 25
 
-			for _, pseudoStat := range []proto.PseudoStat{block, dodge, parry, critTaken} {
-				unitStat := stats.UnitStatFromPseudoStat(pseudoStat)
-				want := getUnitStat(sheetDelta, unitStat)
-				if (want != 0) != slices.Contains(test.moves, pseudoStat) {
-					t.Errorf("%s: the sheet moves by %v", pseudoStat, want)
-				}
-				if got := getUnitStat(resolved, unitStat); math.Abs(got-want) > 1e-9 {
-					t.Errorf("%s: cap space moves by %v, the sheet by %v", pseudoStat, got, want)
+				bonusRaid := protopkg.Clone(character.raid).(*proto.Raid)
+				bonusRaid.Parties[0].Players[0].BonusStats = &proto.UnitStats{Stats: delta[:stats.ProtoStatsLen]}
+				sheetDelta := subtractUnitStats(sheetStats(t, bonusRaid), o.baseStats)
+				capCoeffs := o.resolveCapCoeffs(delta)
+
+				for _, pseudoStat := range []proto.PseudoStat{block, dodge, parry, critTaken} {
+					moves := slices.Contains(test.moves, pseudoStat) &&
+						(pseudoStat != block || character.canBlock) &&
+						(pseudoStat != parry || character.canParry)
+					want := getUnitStat(sheetDelta, stats.UnitStatFromPseudoStat(pseudoStat))
+					if (want != 0) != moves {
+						t.Errorf("%s moves the sheet's %s by %v", test.stat.StatName(), pseudoStat, want)
+					}
+					if got := capCoeffs[pseudoStatCoeffKey(pseudoStat)]; math.Abs(got-want) > 1e-9 {
+						t.Errorf("%s moves the cap space's %s by %v, the sheet's by %v", test.stat.StatName(), pseudoStat, got, want)
+					}
 				}
 			}
 		})

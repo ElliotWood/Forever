@@ -161,3 +161,34 @@ func TestReforgeDefenseWeightMovesOntoCritTakenOnly(t *testing.T) {
 		t.Errorf("Dodge%% takes weight %v from defense, want 0", got)
 	}
 }
+
+func TestReforgeCapSpaceSkipsBlockAndParryTheCharacterLacks(t *testing.T) {
+	sdm := stats.NewStatDependencyManager()
+	sdm.AddStatDependency(stats.DodgeRating, stats.DodgePercent, 1/core.DodgeRatingPerDodgePercent)
+	sdm.AddStatDependency(stats.ParryRating, stats.ParryPercent, 1/core.ParryRatingPerParryPercent)
+	sdm.AddStatDependency(stats.BlockRating, stats.BlockPercent, 1/core.BlockRatingPerBlockPercent/100)
+	sdm.FinalizeStatDeps()
+
+	var delta stats.Stats
+	delta[stats.DodgeRating] = core.DodgeRatingPerDodgePercent
+	delta[stats.ParryRating] = core.ParryRatingPerParryPercent
+	delta[stats.BlockRating] = core.BlockRatingPerBlockPercent
+
+	for _, character := range []struct{ canBlock, canParry bool }{{true, true}, {false, true}, {true, false}, {false, false}} {
+		o := &reforgeOptimizer{statDeps: &sdm, baseStats: core.NewUnitStats(), canBlock: character.canBlock, canParry: character.canParry}
+		coeffs := o.resolveCapCoeffs(delta)
+		for _, want := range []struct {
+			pseudoStat proto.PseudoStat
+			counts     bool
+		}{
+			{proto.PseudoStat_PseudoStatDodgePercent, true},
+			{proto.PseudoStat_PseudoStatBlockPercent, character.canBlock},
+			{proto.PseudoStat_PseudoStatParryPercent, character.canParry},
+		} {
+			_, counts := coeffs[pseudoStatCoeffKey(want.pseudoStat)]
+			if counts != want.counts {
+				t.Errorf("can block %v, parry %v: %s in the cap space is %v", character.canBlock, character.canParry, want.pseudoStat, counts)
+			}
+		}
+	}
+}
