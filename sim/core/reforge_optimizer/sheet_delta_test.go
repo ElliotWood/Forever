@@ -46,12 +46,14 @@ func TestCapSpaceDeltaMatchesTheSheet(t *testing.T) {
 	block := proto.PseudoStat_PseudoStatBlockPercent
 	dodge := proto.PseudoStat_PseudoStatDodgePercent
 	parry := proto.PseudoStat_PseudoStatParryPercent
+	critTaken := proto.PseudoStat_PseudoStatReducedCritTakenPercent
 	for _, test := range []struct {
 		stat  stats.Stat
 		moves []proto.PseudoStat
 	}{
 		{stats.BlockRating, []proto.PseudoStat{block}},
-		{stats.DefenseRating, []proto.PseudoStat{block, dodge, parry}},
+		{stats.DefenseRating, []proto.PseudoStat{block, dodge, parry, critTaken}},
+		{stats.ResilienceRating, []proto.PseudoStat{critTaken}},
 		{stats.DodgeRating, []proto.PseudoStat{dodge}},
 		{stats.ParryRating, []proto.PseudoStat{parry}},
 	} {
@@ -64,7 +66,7 @@ func TestCapSpaceDeltaMatchesTheSheet(t *testing.T) {
 			sheetDelta := subtractUnitStats(sheetStats(t, bonusRaid), baseStats)
 			resolved := resolveStatDelta(sdm, baseStats, delta)
 
-			for _, pseudoStat := range []proto.PseudoStat{block, dodge, parry} {
+			for _, pseudoStat := range []proto.PseudoStat{block, dodge, parry, critTaken} {
 				unitStat := stats.UnitStatFromPseudoStat(pseudoStat)
 				want := getUnitStat(sheetDelta, unitStat)
 				if (want != 0) != slices.Contains(test.moves, pseudoStat) {

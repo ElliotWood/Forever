@@ -133,6 +133,10 @@ func resolveStatDelta(sdm *stats.StatDependencyManager, baseStats core.UnitStats
 	delta = setUnitStat(delta, stats.UnitStatFromPseudoStat(proto.PseudoStat_PseudoStatBlockPercent), delta.Stats[stats.BlockPercent]*100)
 	delta = setUnitStat(delta, stats.UnitStatFromPseudoStat(proto.PseudoStat_PseudoStatDodgePercent), delta.Stats[stats.DodgePercent])
 	delta = setUnitStat(delta, stats.UnitStatFromPseudoStat(proto.PseudoStat_PseudoStatParryPercent), delta.Stats[stats.ParryPercent])
+	critTaken := proto.PseudoStat_PseudoStatReducedCritTakenPercent
+	delta = setUnitStat(delta, stats.UnitStatFromPseudoStat(critTaken),
+		delta.Stats[stats.DefenseRating]/ratingPerPseudoStatPercent(critTaken, stats.DefenseRating)+
+			delta.Stats[stats.ResilienceRating]/ratingPerPseudoStatPercent(critTaken, stats.ResilienceRating))
 
 	// Haste% pseudo-stats: read speed multipliers from baseStats.PseudoStats, which
 	// GetPseudoStatsProto populates as MeleeSpeedMultiplier×AttackSpeedMultiplier etc.

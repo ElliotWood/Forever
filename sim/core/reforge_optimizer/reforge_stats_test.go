@@ -100,3 +100,16 @@ func TestReforgeDodgeAndParryRatingReachTheirPercentCaps(t *testing.T) {
 		t.Errorf("rating for 3%% parry moves Parry%% by %v, want 3", got)
 	}
 }
+
+func TestReforgeDefenseAndResilienceReachTheCritTakenCap(t *testing.T) {
+	sdm := stats.NewStatDependencyManager()
+	sdm.FinalizeStatDeps()
+
+	delta := core.NewUnitStats()
+	delta.Stats[stats.DefenseRating] = 25 * core.DefenseRatingPerDefenseLevel
+	delta.Stats[stats.ResilienceRating] = 2 * core.ResilienceRatingPerCritReductionChance
+	resolved := resolveStatDelta(&sdm, core.NewUnitStats(), delta)
+	if got := getUnitStat(resolved, stats.UnitStatFromPseudoStat(proto.PseudoStat_PseudoStatReducedCritTakenPercent)); math.Abs(got-3) > 1e-9 {
+		t.Errorf("25 defense and the resilience for 2%% move crit taken by %v, want 3", got)
+	}
+}
