@@ -116,12 +116,8 @@ var auraTable = map[dbcenums.EffectAuraType]row{
 	dbcenums.A_MOD_STAT: func(p *parser, e *Effect, v float64) *attachment {
 		return p.statsBuff(clientStatList(e.Misc), v)
 	},
-	dbcenums.A_MOD_PERCENT_STAT: func(p *parser, e *Effect, v float64) *attachment {
-		return p.statMultiplier(clientStatList(e.Misc), percentMultiplier(v))
-	},
-	dbcenums.A_MOD_TOTAL_STAT_PERCENTAGE: func(p *parser, e *Effect, v float64) *attachment {
-		return p.statMultiplier(clientStatList(e.Misc), percentMultiplier(v))
-	},
+	dbcenums.A_MOD_PERCENT_STAT:          percentStatRow,
+	dbcenums.A_MOD_TOTAL_STAT_PERCENTAGE: percentStatRow,
 
 	// Hit and crit, which the sim states in percentage points the way the client does.
 	dbcenums.A_MOD_HIT_CHANCE: func(p *parser, e *Effect, v float64) *attachment {
@@ -351,6 +347,10 @@ func lookup(table map[dbcenums.SpellModOp]row, op dbcenums.SpellModOp) row {
 
 func skipRow(_ *parser, _ *Effect, _ float64) *attachment {
 	return nil
+}
+
+func percentStatRow(p *parser, e *Effect, v float64) *attachment {
+	return p.statMultiplier(clientStatList(e.Misc), percentMultiplier(v))
 }
 
 // The spells a modifier effect names. The client leaves the mask empty on an effect that means the
