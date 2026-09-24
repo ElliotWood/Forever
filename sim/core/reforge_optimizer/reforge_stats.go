@@ -188,6 +188,12 @@ func childPseudoStats(parent stats.Stat) []proto.PseudoStat {
 		return []proto.PseudoStat{proto.PseudoStat_PseudoStatSpellHastePercent}
 	case stats.ResilienceRating, stats.DefenseRating:
 		return []proto.PseudoStat{proto.PseudoStat_PseudoStatReducedCritTakenPercent}
+	case stats.DodgeRating:
+		return []proto.PseudoStat{proto.PseudoStat_PseudoStatDodgePercent}
+	case stats.ParryRating:
+		return []proto.PseudoStat{proto.PseudoStat_PseudoStatParryPercent}
+	case stats.BlockRating:
+		return []proto.PseudoStat{proto.PseudoStat_PseudoStatBlockPercent}
 	default:
 		return nil
 	}
@@ -213,6 +219,12 @@ func ratingPerPseudoStatPercent(pseudoStat proto.PseudoStat, parent stats.Stat) 
 		return core.PhysicalHasteRatingPerHastePercent
 	case proto.PseudoStat_PseudoStatSpellHastePercent:
 		return core.SpellHasteRatingPerHastePercent
+	case proto.PseudoStat_PseudoStatDodgePercent:
+		return core.DodgeRatingPerDodgePercent
+	case proto.PseudoStat_PseudoStatParryPercent:
+		return core.ParryRatingPerParryPercent
+	case proto.PseudoStat_PseudoStatBlockPercent:
+		return core.BlockRatingPerBlockPercent
 	case proto.PseudoStat_PseudoStatReducedCritTakenPercent:
 		if parent == stats.DefenseRating {
 			return core.DefenseRatingPerDefenseLevel / core.MissDodgeParryBlockCritChancePerDefense

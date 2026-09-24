@@ -113,3 +113,51 @@ func TestReforgeDefenseAndResilienceReachTheCritTakenCap(t *testing.T) {
 		t.Errorf("25 defense and the resilience for 2%% move crit taken by %v, want 3", got)
 	}
 }
+
+func TestReforgeAvoidanceRatingWeightMovesOntoItsCappedPercent(t *testing.T) {
+	for _, test := range []struct {
+		rating           stats.Stat
+		percent          proto.PseudoStat
+		ratingPerPercent float64
+	}{
+		{stats.DodgeRating, proto.PseudoStat_PseudoStatDodgePercent, core.DodgeRatingPerDodgePercent},
+		{stats.ParryRating, proto.PseudoStat_PseudoStatParryPercent, core.ParryRatingPerParryPercent},
+		{stats.BlockRating, proto.PseudoStat_PseudoStatBlockPercent, core.BlockRatingPerBlockPercent},
+	} {
+		percent := stats.UnitStatFromPseudoStat(test.percent)
+		weights := core.NewUnitStats()
+		weights.Stats[test.rating] = 1
+		caps := setUnitStat(core.NewUnitStats(), percent, 2)
+
+		validated := checkWeights(weights, caps, nil)
+		if validated.Stats[test.rating] != 0 {
+			t.Errorf("%s keeps weight %v under a %s cap, want 0", test.rating.StatName(), validated.Stats[test.rating], test.percent)
+		}
+		if got := getUnitStat(validated, percent); got != test.ratingPerPercent {
+			t.Errorf("%s weighs %v per percent, want %v", test.percent, got, test.ratingPerPercent)
+		}
+
+		coeffs := map[string]float64{}
+		o := &reforgeOptimizer{player: &proto.Player{}}
+		o.applyReforgeStat(coeffs, test.rating, 3*test.ratingPerPercent, validated)
+		if got := coeffs[pseudoStatCoeffKey(test.percent)]; math.Abs(got-3) > 1e-9 {
+			t.Errorf("the rating for 3%% counts %v toward %s, want 3", got, test.percent)
+		}
+	}
+}
+
+func TestReforgeDefenseWeightMovesOntoCritTakenOnly(t *testing.T) {
+	critTaken := stats.UnitStatFromPseudoStat(proto.PseudoStat_PseudoStatReducedCritTakenPercent)
+	dodge := stats.UnitStatFromPseudoStat(proto.PseudoStat_PseudoStatDodgePercent)
+	weights := core.NewUnitStats()
+	weights.Stats[stats.DefenseRating] = 1
+	caps := setUnitStat(setUnitStat(core.NewUnitStats(), critTaken, 2), dodge, 2)
+
+	validated := checkWeights(weights, caps, nil)
+	if got := getUnitStat(validated, critTaken); got != core.DefenseRatingPerDefenseLevel/core.MissDodgeParryBlockCritChancePerDefense {
+		t.Errorf("crit taken weighs %v per percent, want the 25 defense one percent costs", got)
+	}
+	if got := getUnitStat(validated, dodge); got != 0 {
+		t.Errorf("Dodge%% takes weight %v from defense, want 0", got)
+	}
+}

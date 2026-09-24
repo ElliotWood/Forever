@@ -117,6 +117,9 @@ func checkWeights(weights core.UnitStats, reforgeCaps core.UnitStats, reforgeSof
 		stats.SpellHasteRating,
 		stats.DefenseRating,
 		stats.ResilienceRating,
+		stats.DodgeRating,
+		stats.ParryRating,
+		stats.BlockRating,
 	} {
 		children := childPseudoStats(parent)
 		if len(children) == 0 {
