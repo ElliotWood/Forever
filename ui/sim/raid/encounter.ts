@@ -266,5 +266,11 @@ export class Encounter {
 		if (!(proto.apiVersion < CURRENT_API_VERSION)) {
 			return;
 		}
+		proto.targets.forEach(target => {
+			target.stats = Stats.migrateStatsArray(target.stats, proto.apiVersion, Encounter.defaultTargetProto().stats);
+		});
+
+		// Flag the version as up-to-date once all migrations are done.
+		proto.apiVersion = CURRENT_API_VERSION;
 	}
 }
