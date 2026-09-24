@@ -1,4 +1,4 @@
-import { WarriorShout, WarriorStance } from '@generated/proto/warrior';
+import { WarriorStance } from '@generated/proto/warrior';
 import i18n from '@i18n/config';
 import { ActionId } from '@sim/proto/action_id';
 import { WarriorSpecs } from '@sim/proto/spec_types';
@@ -8,11 +8,10 @@ import * as InputHelpers from '@ui-kit/input_helpers';
 // These don't need to be in a separate file but it keeps things cleaner.
 export const ShoutPicker = <SpecType extends WarriorSpecs>() =>
 	InputHelpers.makeClassOptionsBooleanIconInput<SpecType>({
-		fieldName: 'defaultShout',
+		fieldName: 'useBattleShout',
 		label: i18n.t('settings_tab.other.default_shout.label'),
 		labelTooltip: i18n.t('settings_tab.other.default_shout.tooltip'),
 		id: ActionId.fromSpellId(25289),
-		value: WarriorShout.WarriorShoutBattle,
 	});
 export const StancePicker = <SpecType extends WarriorSpecs>() =>
 	InputHelpers.makeClassOptionsEnumIconInput<SpecType, WarriorStance>({

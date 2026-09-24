@@ -83,7 +83,7 @@ func TestPlayerBattleShoutTakesTheCategoryOnATie(t *testing.T) {
 	if player.Label != "Battle Shout (Player)" {
 		t.Errorf("the player's copy is labelled %q, want %q", player.Label, "Battle Shout (Player)")
 	}
-	// What a warrior whose DefaultShout is Battle does with its own aura.
+	// What a warrior whose UseBattleShout is set does with its own aura.
 	player.BuildPhase = core.CharacterBuildPhaseBuffs
 
 	char.ApplyBuildPhaseAuras(core.CharacterBuildPhaseBuffs)
