@@ -547,8 +547,11 @@ An enchant's procs are read one per slot of its `SpellItemEnchantment` row that 
 (Effect 1) or hangs an equip aura off a hit (Effect 3), and at most one of them registers. A combat spell's chance, where the client states
 one, is on the enchantment rather than on the spell - `EffectPointsMin`, Fiery Blaze's 15 - and
 `ProcChancePct` carries it, rolled on the hits of the enchanted weapon only
-(`spelldata.CombatEnchantUnsupported`). An equip aura's own description is empty, so the generator
-reads its trigger and whether its 100 is a sentinel off the tooltip of the spell granting the enchant.
+(`spelldata.CombatEnchantUnsupported`). An equip aura's own description is empty, so the store reads
+the description of the spell granting the enchant in its place, for what no proc mask can state: the
+named ability, outcome-taken, attack-dodged and attack-parried hints, and whether its 100 is a
+sentinel ("often", "sometimes", "a chance to"), which makes it `ProcChancePPM`. The grant's cast,
+crit and heal wording is left alone: which hits feed the aura is its own mask's to say.
 A combat spell and an aura applying the same spell (Crusader) register once, as the combat spell.
 
 `spelldata.ItemProcUnsupported(trigger, isWeaponProc)` is the single decision about whether the rows
@@ -1263,7 +1266,8 @@ may state a percentage now, and the other way round.
    and there is no roll: Flurry and Deep Wounds on a crit, Dual Wield Specialization on every hit. A
    101 on something that is not a proc at all (Sunder Armor, Demoralizing Shout) means nothing. A
    tooltip whose _trigger clause_ says the effect only happens sometimes - "Chance to strike your
-   ranged target", "your melee swings have a chance to" - is shape 4 rather than this one, and on a
+   ranged target", "your melee swings have a chance to" - or that says "often", "sometimes" or
+   "occasionally" (Darkmoon Card: Heroism's "Sometimes heals") is shape 4 rather than this one, and on a
    chance-on-hit weapon, where the game consults no condition at all, the 100 and 101 always are.
 4. **No chance in the tooltip, and a column the tooltip's trigger clause contradicts.** A procs-per-minute
    proc the client does not carry (`SpellProcsPerMinuteID` is 0 on every row). The PPM is

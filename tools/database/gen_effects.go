@@ -106,9 +106,7 @@ type ProcRouting struct {
 	IsWeaponProc bool
 	// A combat enchant's chance, stated on the enchantment's row rather than the spell's.
 	ProcChancePct int
-	// The trigger's outcome where the enchant's grant states it rather than the aura's own row.
-	ProcHint core.ProcHint
-	Shape    ProcShape
+	Shape         ProcShape
 	// Empty when the rows state enough to build the listener.
 	Unsupported []string
 	// What the rows resolve to, for the reader of the generated file.
@@ -415,7 +413,6 @@ func GenerateEffectsFile(groups []*Group, outFile string, templateString string)
 		"asCoreProcMask": asCoreProcMask,
 		"asCoreOutcome":  asCoreOutcome,
 		"formatStrings":  formatStrings,
-		"formatProcHint": formatProcHint,
 	}
 	tmpl := template.Must(template.New("effects").Funcs(funcMap).Parse(templateString))
 
@@ -430,9 +427,9 @@ func GenerateEffectsFile(groups []*Group, outFile string, templateString string)
 	}
 
 	hasStacking := false
-	// A registration resolved from the client's rows names no core constant unless it carries a hint,
-	// so a file whose live entries are all of that shape must not import core: gen_db links the sim,
-	// and an unused import in a file it just wrote breaks the build the next run needs.
+	// A registration resolved from the client's rows names no core constant, so a file whose live
+	// entries are all of that shape must not import core: gen_db links the sim, and an unused import
+	// in a file it just wrote breaks the build the next run needs.
 	usesCore := false
 	// And nothing at all is imported by a file whose every entry is commented out.
 	hasLive := false
@@ -445,7 +442,7 @@ func GenerateEffectsFile(groups []*Group, outFile string, templateString string)
 				continue
 			}
 			hasLive = true
-			if entry.Proc == nil || entry.Proc.ProcHint != 0 {
+			if entry.Proc == nil {
 				usesCore = true
 			}
 		}
@@ -895,7 +892,7 @@ func TryParseProcEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, inst
 			// stay where they are: a window accumulating a second aura, and an effect with no stats.
 			grantsStats := len(dbc.EffectStats(itemEffect)) > 0
 			if itemEffect.StackingAura == nil && grantsStats {
-				entry.Proc = routeItemProc(parsed, itemEffect, renderedTooltip)
+				entry.Proc = routeItemProc(parsed, itemEffect)
 				if entry.Proc != nil {
 					entry.Proc.requireABuffDuration()
 					entry.Supported = entry.Proc.Supported()
@@ -912,7 +909,7 @@ func TryParseProcEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, inst
 					shape, spellID = ShapeAura, itemEffect.BuffId
 				}
 				if shape != ShapeStats {
-					entry.Proc = routeItemProc(parsed, itemEffect, renderedTooltip)
+					entry.Proc = routeItemProc(parsed, itemEffect)
 					if entry.Proc != nil {
 						entry.Proc.as(shape, spellID)
 						entry.Supported = entry.Proc.Supported()
@@ -960,18 +957,14 @@ func TryParseProcEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, inst
 }
 
 // The rows an item effect names: the client's ItemEffect row carries the spell with the proc on it,
-// and the shipped entry carries the spell that applies the stats. A 100 beside "sometimes" on the
-// tooltip is a rate the rows do not carry, as it is on an enchant: Darkmoon Card: Heroism 23689.
-func routeItemProc(parsed *proto.UIItem, itemEffect *proto.ItemEffect, tooltip string) *ProcRouting {
+// and the shipped entry carries the spell that applies the stats.
+func routeItemProc(parsed *proto.UIItem, itemEffect *proto.ItemEffect) *ProcRouting {
 	effect := dbc.GetItemEffectForBuffID(int(parsed.Id), int(itemEffect.BuffId))
 	if effect == nil {
 		return nil
 	}
 
-	routing := routeProc(effect.SpellID, int(itemEffect.BuffId), effect.TriggerType == dbc.ITEM_SPELLTRIGGER_CHANCE_ON_HIT)
-	routing.refuseASentinelRate(tooltip)
-
-	return routing
+	return routeProc(effect.SpellID, int(itemEffect.BuffId), effect.TriggerType == dbc.ITEM_SPELLTRIGGER_CHANCE_ON_HIT)
 }
 
 // An equip spell with no stats that applies an aura the stat path cannot state, read from the row it
@@ -1278,7 +1271,7 @@ func TryParseEnchantEffect(enchant *proto.UIEnchant, slots []dbc.EnchantProcSlot
 		grp = Group{Name: "Enchants"}
 	}
 
-	for _, routing := range routeEnchantProcs(slots, instance, renderedTooltip) {
+	for _, routing := range routeEnchantProcs(slots, instance) {
 		grp.Entries = append(grp.Entries, &Entry{
 			Tooltip:   strings.Split(renderedTooltip, "\n"),
 			Variants:  []*Variant{{ID: int(enchant.EffectId), Name: enchant.Name, SpellID: int(enchantingSpell.SpellID)}},
@@ -1301,10 +1294,10 @@ func TryParseEnchantEffect(enchant *proto.UIEnchant, slots []dbc.EnchantProcSlot
 // apply the same spell are one proc stated twice (Crusader 1900), so one of the two is kept: the
 // combat spell, unless only the aura states a rate. An enchant registers once, so where two slots
 // could, the first does.
-func routeEnchantProcs(slots []dbc.EnchantProcSlot, instance *dbc.DBC, grantTooltip string) []*ProcRouting {
+func routeEnchantProcs(slots []dbc.EnchantProcSlot, instance *dbc.DBC) []*ProcRouting {
 	routings := make([]*ProcRouting, len(slots))
 	for i, slot := range slots {
-		routings[i] = routeEnchantSlot(slot, instance, grantTooltip)
+		routings[i] = routeEnchantSlot(slot, instance)
 	}
 
 	for i, combat := range slots {
@@ -1354,7 +1347,7 @@ func statesNoRate(routing *ProcRouting) bool {
 // One slot's proc. The trigger is the slot's spell; the buff is what the shipped entry says it
 // applies, where it resolves stats, the spell the slot applies where that multiplies stats, and
 // otherwise the spell it deals damage through.
-func routeEnchantSlot(slot dbc.EnchantProcSlot, instance *dbc.DBC, grantTooltip string) *ProcRouting {
+func routeEnchantSlot(slot dbc.EnchantProcSlot, instance *dbc.DBC) *ProcRouting {
 	applied := slot.AppliesSpellID
 	if applied == 0 {
 		applied = slot.SpellID
@@ -1381,7 +1374,6 @@ func routeEnchantSlot(slot dbc.EnchantProcSlot, instance *dbc.DBC, grantTooltip 
 		routing.Unsupported = spelldata.CombatEnchantUnsupported(spelldata.Find(int32(slot.SpellID)), slot.ChancePct > 0)
 	} else {
 		routing.Unsupported = spelldata.EnchantAuraUnsupported(spelldata.Find(int32(slot.SpellID)))
-		routing.readEnchantTooltip(grantTooltip)
 	}
 
 	if hasStats || multipliesStats {
@@ -1401,9 +1393,9 @@ func routeEnchantSlot(slot dbc.EnchantProcSlot, instance *dbc.DBC, grantTooltip 
 		routing.Summary += fmt.Sprintf("; the enchantment states %d%%", slot.ChancePct)
 	}
 
-	if routing.ProcHint != 0 {
-		trigger := spelldata.Find(int32(slot.SpellID))
-		decoded := core.DecodeProcTypeMask(trigger.ProcFlags, trigger.ProcHint|routing.ProcHint)
+	if trigger := spelldata.Find(int32(slot.SpellID)); !slot.IsCombatSpell &&
+		trigger.ProcHint&(core.ProcHintAttackDodged|core.ProcHintAttackParried) != 0 {
+		decoded := core.DecodeProcTypeMask(trigger.ProcFlags, trigger.ProcHint)
 		routing.Summary += fmt.Sprintf("; the enchant's tooltip restricts it to %s", asCoreOutcome(decoded.Outcome))
 	}
 
@@ -1443,34 +1435,6 @@ func effectKind(typ dbcenums.SpellEffectType, aura dbcenums.EffectAuraType) stri
 		return aura.String()
 	}
 	return typ.String()
-}
-
-// An equip aura's trigger and rate as the enchant's tooltip states them. The store reads both off the
-// aura's own description, which the client leaves empty on these auras: the wording is on the spell
-// that grants the enchant.
-func (r *ProcRouting) readEnchantTooltip(tooltip string) {
-	trigger := spelldata.Find(int32(r.TriggerSpellID))
-	hints := procTooltipHints(tooltip)
-
-	if hints.Matches(core.ProcHintNamedAbility) && !trigger.ProcHint.Matches(core.ProcHintNamedAbility) {
-		r.Unsupported = append(r.Unsupported, "named ability")
-	}
-	if hints.Matches(core.ProcHintOutcomeTaken) && !trigger.ProcHint.Matches(core.ProcHintOutcomeTaken) {
-		r.Unsupported = append(r.Unsupported, "an outcome the proc mask has no bit for")
-	}
-	r.refuseASentinelRate(tooltip)
-
-	r.ProcHint = hints & (core.ProcHintAttackDodged | core.ProcHintAttackParried) &^ trigger.ProcHint
-}
-
-// A trigger's 100 beside wording that says the proc happens only sometimes is a rate the rows do not
-// carry.
-func (r *ProcRouting) refuseASentinelRate(tooltip string) {
-	trigger := spelldata.Find(int32(r.TriggerSpellID))
-	if trigger.ProcChanceSource == spelldata.ProcChanceAlways && trigger.RPPM == 0 &&
-		tooltipStatesAnUnknownRate(tooltip) && !statesNoRate(r) {
-		r.Unsupported = append(r.Unsupported, spelldata.ReasonStatesNoRate)
-	}
 }
 
 // "Often", "sometimes" and "occasionally" are how a tooltip says its proc has a rate the rows do not

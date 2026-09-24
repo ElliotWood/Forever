@@ -18,7 +18,6 @@ import (
 func TestEnchantProcRouting(t *testing.T) {
 	inRepositoryRoot(t)
 	instance := dbc.GetDBC()
-	grants := enchantGrantEffects(instance.SpellEffectsById)
 
 	type want struct {
 		trigger   int
@@ -52,12 +51,7 @@ func TestEnchantProcRouting(t *testing.T) {
 			if !ok {
 				t.Fatalf("enchant %d is not in the enchant inputs", tc.effectID)
 			}
-			grant, ok := grants[tc.effectID]
-			if !ok {
-				t.Fatalf("no spell grants enchant %d", tc.effectID)
-			}
-
-			got := routeEnchantProcs(enchant.ProcSlots(), instance, renderSpellTooltip(instance, grant.SpellID))
+			got := routeEnchantProcs(enchant.ProcSlots(), instance)
 			if len(got) != len(tc.want) {
 				t.Fatalf("%d routings, want %d", len(got), len(tc.want))
 			}
@@ -85,7 +79,6 @@ func TestEnchantProcRouting(t *testing.T) {
 func TestEnchantProcRoutingTakesAPPMOverride(t *testing.T) {
 	inRepositoryRoot(t)
 	instance := dbc.GetDBC()
-	grants := enchantGrantEffects(instance.SpellEffectsById)
 
 	for _, tc := range []struct {
 		effectID   int
@@ -102,8 +95,7 @@ func TestEnchantProcRoutingTakesAPPMOverride(t *testing.T) {
 			enchant := instance.EnchantsByEffectId[tc.effectID]
 			route := func() *ProcRouting {
 				t.Helper()
-				got := routeEnchantProcs(enchant.ProcSlots(), instance,
-					renderSpellTooltip(instance, grants[tc.effectID].SpellID))
+				got := routeEnchantProcs(enchant.ProcSlots(), instance)
 				if len(got) != 1 || got[0].TriggerSpellID != int(tc.overrideOn) {
 					t.Fatalf("routings %v, want one through %d", got, tc.overrideOn)
 				}
@@ -139,10 +131,9 @@ func TestEnchantProcRoutingTakesAPPMOverride(t *testing.T) {
 func TestEnchantPercentStatBuffIsTheAppliedSpell(t *testing.T) {
 	inRepositoryRoot(t)
 	instance := dbc.GetDBC()
-	grants := enchantGrantEffects(instance.SpellEffectsById)
 
 	enchant := instance.EnchantsByEffectId[8216]
-	got := routeEnchantProcs(enchant.ProcSlots(), instance, renderSpellTooltip(instance, grants[8216].SpellID))
+	got := routeEnchantProcs(enchant.ProcSlots(), instance)
 	if len(got) != 1 || got[0].TriggerSpellID != 1248758 || got[0].BuffSpellID != 1299796 {
 		t.Fatalf("routings %v, want one from 1248758 to 1299796", got)
 	}
@@ -154,15 +145,14 @@ func TestEnchantPercentStatBuffIsTheAppliedSpell(t *testing.T) {
 }
 
 // Recovery's equip aura 1248761 carries no description; its grant 1248760 reads "trigger Recovery when
-// you are Parried or Dodged". The routing carries that outcome, the row's 10 s ProcCategoryRecovery
-// and its ProcChance of 100, and casts the 5% E_HEAL_PCT heal 1248759 it applies.
+// you are Parried or Dodged". The row carries that outcome, its 10 s ProcCategoryRecovery and its
+// ProcChance of 100, and the routing casts the 5% E_HEAL_PCT heal 1248759 it applies.
 func TestRecoveryHealsOnTheWearersAttackDodgedOrParried(t *testing.T) {
 	inRepositoryRoot(t)
 	instance := dbc.GetDBC()
-	grants := enchantGrantEffects(instance.SpellEffectsById)
 
 	enchant := instance.EnchantsByEffectId[8721]
-	got := routeEnchantProcs(enchant.ProcSlots(), instance, renderSpellTooltip(instance, grants[8721].SpellID))
+	got := routeEnchantProcs(enchant.ProcSlots(), instance)
 	if len(got) != 1 {
 		t.Fatalf("%d routings, want 1", len(got))
 	}

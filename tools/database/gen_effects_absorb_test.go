@@ -116,7 +116,6 @@ func TestItemProcAbsorbRoutes(t *testing.T) {
 func TestEnchantAbsorbRoutes(t *testing.T) {
 	inRepositoryRoot(t)
 	instance := dbc.GetDBC()
-	grants := enchantGrantEffects(instance.SpellEffectsById)
 
 	for _, tc := range []struct {
 		effectID int
@@ -131,7 +130,7 @@ func TestEnchantAbsorbRoutes(t *testing.T) {
 		if !ok {
 			t.Fatalf("enchant %d is not in the enchant inputs", tc.effectID)
 		}
-		got := routeEnchantProcs(enchant.ProcSlots(), instance, renderSpellTooltip(instance, grants[tc.effectID].SpellID))
+		got := routeEnchantProcs(enchant.ProcSlots(), instance)
 		if len(got) != 1 {
 			t.Fatalf("enchant %d: %d routings, want 1", tc.effectID, len(got))
 		}

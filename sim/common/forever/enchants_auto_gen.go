@@ -2,7 +2,6 @@ package forever
 
 import (
 	"github.com/wowsims/forever/sim/common/shared"
-	"github.com/wowsims/forever/sim/core"
 )
 
 func RegisterAllEnchants() {
@@ -155,7 +154,7 @@ func RegisterAllEnchants() {
 	// mechanical creatures.
 	// https://www.wowhead.com/forever/spell=435481
 	// unsupported: states no rate; the damage spell hits mechanicals (TargetCreatureType 256) only
-	// trigger 435467 (every time, core.CallbackOnSpellHitDealt, core.ProcMaskMeleeMHAuto | core.ProcMaskMeleeOHAuto | core.ProcMaskMeleeMHSpecial | core.ProcMaskMeleeOHSpecial | core.ProcMaskRangedAuto | core.ProcMaskRangedSpecial) -> buff 439164
+	// trigger 435467 (no stated rate, core.CallbackOnSpellHitDealt, core.ProcMaskMeleeMHAuto | core.ProcMaskMeleeOHAuto | core.ProcMaskMeleeMHSpecial | core.ProcMaskMeleeOHSpecial | core.ProcMaskRangedAuto | core.ProcMaskRangedSpecial) -> buff 439164
 	// shared.NewSpellDataDamageProc(shared.SpellDataProc{
 	//	Name:           "Enchant Weapon - Dismantle",
 	//	EnchantID:      7210,
@@ -236,7 +235,7 @@ func RegisterAllEnchants() {
 	// Revelation's chance to trigger is diminished as your critical strike chance increases.
 	// https://www.wowhead.com/forever/spell=1248805
 	// unsupported: states no rate; the enchant's effect entry resolves no stats from 1248808 (A_MOD_CRIT_PCT)
-	// trigger 1248806 (every time, core.CallbackOnSpellHitDealt | core.CallbackOnHealDealt, core.ProcMaskSpellDamage | core.ProcMaskSpellHealing)
+	// trigger 1248806 (no stated rate, core.CallbackOnSpellHitDealt | core.CallbackOnHealDealt, core.ProcMaskSpellDamage | core.ProcMaskSpellHealing)
 	// shared.NewSpellDataProc(shared.SpellDataProc{
 	//	Name:           "Enchant Weapon - Revelation",
 	//	EnchantID:      8217,
@@ -345,6 +344,5 @@ func RegisterAllEnchants() {
 		EnchantID:      8721,
 		TriggerSpellID: 1248761,
 		BuffSpellID:    1248759,
-		ProcHint:       core.ProcHintAttackDodged | core.ProcHintAttackParried,
 	}, nil)
 }

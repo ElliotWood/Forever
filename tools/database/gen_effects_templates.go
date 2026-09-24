@@ -278,9 +278,6 @@ func RegisterAllEnchants() {
 			{{- if .Proc.ProcChancePct }}
 			ProcChancePct:  {{ .Proc.ProcChancePct }},
 			{{- end}}
-			{{- if .Proc.ProcHint }}
-			ProcHint:       {{ .Proc.ProcHint | formatProcHint }},
-			{{- end}}
 		}, nil)
 		{{- else}}
 		// unsupported: {{ .Proc.Reason }}
@@ -299,9 +296,6 @@ func RegisterAllEnchants() {
 		{{- end}}
 		{{- if .Proc.ProcChancePct }}
 		//	ProcChancePct:  {{ .Proc.ProcChancePct }},
-		{{- end}}
-		{{- if .Proc.ProcHint }}
-		//	ProcHint:       {{ .Proc.ProcHint | formatProcHint }},
 		{{- end}}
 		// }, nil)
 		{{- end}}
