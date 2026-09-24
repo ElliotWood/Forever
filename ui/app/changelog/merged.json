@@ -1,5 +1,11 @@
 [
 	{
+		"number": 431,
+		"title": "stat weights: calculate Intellect for Ret and Prot Paladin",
+		"mergedAt": "2026-09-24",
+		"url": "https://github.com/ElliotWood/Forever/pull/431"
+	},
+	{
 		"number": 430,
 		"title": "arena: talent search back on the new engine, plus two-tree splits (20/31, 21/30, 30/21, 31/20)",
 		"mergedAt": "2026-09-24",
