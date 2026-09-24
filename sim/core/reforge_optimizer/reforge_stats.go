@@ -227,7 +227,7 @@ func ratingPerPseudoStatPercent(pseudoStat proto.PseudoStat, parent stats.Stat) 
 		return core.BlockRatingPerBlockPercent
 	case proto.PseudoStat_PseudoStatReducedCritTakenPercent:
 		if parent == stats.DefenseRating {
-			return core.DefenseRatingPerDefenseLevel / core.MissDodgeParryBlockCritChancePerDefense
+			return core.DefenseRatingPerAvoidancePercent
 		}
 		if parent == stats.ResilienceRating {
 			return core.ResilienceRatingPerCritReductionChance

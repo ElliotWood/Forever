@@ -685,9 +685,9 @@ func (unit *Unit) addUniversalStatDependencies() {
 	unit.AddStatDependency(stats.DodgeRating, stats.DodgePercent, 1/DodgeRatingPerDodgePercent)
 	unit.AddStatDependency(stats.ParryRating, stats.ParryPercent, 1/ParryRatingPerParryPercent)
 	unit.AddStatDependency(stats.BlockRating, stats.BlockPercent, 1/BlockRatingPerBlockPercent/100)
-	unit.AddStatDependency(stats.DefenseRating, stats.DodgePercent, MissDodgeParryBlockCritChancePerDefense/DefenseRatingPerDefenseLevel)
-	unit.AddStatDependency(stats.DefenseRating, stats.ParryPercent, MissDodgeParryBlockCritChancePerDefense/DefenseRatingPerDefenseLevel)
-	unit.AddStatDependency(stats.DefenseRating, stats.BlockPercent, MissDodgeParryBlockCritChancePerDefense/DefenseRatingPerDefenseLevel/100)
+	unit.AddStatDependency(stats.DefenseRating, stats.DodgePercent, 1/DefenseRatingPerAvoidancePercent)
+	unit.AddStatDependency(stats.DefenseRating, stats.ParryPercent, 1/DefenseRatingPerAvoidancePercent)
+	unit.AddStatDependency(stats.DefenseRating, stats.BlockPercent, 1/DefenseRatingPerAvoidancePercent/100)
 }
 
 func (unit *Unit) finalize() {

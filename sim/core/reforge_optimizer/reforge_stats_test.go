@@ -154,7 +154,7 @@ func TestReforgeDefenseWeightMovesOntoCritTakenOnly(t *testing.T) {
 	caps := setUnitStat(setUnitStat(core.NewUnitStats(), critTaken, 2), dodge, 2)
 
 	validated := checkWeights(weights, caps, nil)
-	if got := getUnitStat(validated, critTaken); got != core.DefenseRatingPerDefenseLevel/core.MissDodgeParryBlockCritChancePerDefense {
+	if got := getUnitStat(validated, critTaken); got != core.DefenseRatingPerAvoidancePercent {
 		t.Errorf("crit taken weighs %v per percent, want the 25 defense one percent costs", got)
 	}
 	if got := getUnitStat(validated, dodge); got != 0 {
