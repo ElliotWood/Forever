@@ -538,7 +538,10 @@ five) has no effect entry, which carries flat stats only. `spelldata.PercentStat
 off the buff's row, and the buff multiplies the stat through a dynamic stat dependency, reporting what
 it adds and removes to the temporary stats listeners: Insight 8216's 1299796 doubles Spirit for 10 s.
 The generator routes an enchant slot to it. An item effect with no flat stats is dropped before the
-generator routes it, so an item proc of this shape is not emitted; the client has none.
+generator routes it, so an item proc of this shape is not emitted; the client has none. `ParseEffects`
+and `ParseStatic` read the same aura as a stat multiplier, so an equip or talent row stating it is
+parsed, and `ItemAuraUnsupported` does not refuse it; the parser's multiplier reports nothing to the
+temporary stats listeners, which is why the proc buff keeps its own.
 
 An enchant's procs are read one per slot of its `SpellItemEnchantment` row that casts a combat spell
 (Effect 1) or hangs an equip aura off a hit (Effect 3), and at most one of them registers. A combat spell's chance, where the client states

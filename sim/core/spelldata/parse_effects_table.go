@@ -11,11 +11,11 @@ const (
 	miscAllSchools  int32 = 127 // every school bit, which the sim states as one multiplier
 	miscMagicSchool int32 = 126 // every school but physical, which is what spell damage covers
 	miscArmor       int32 = 1   // A_MOD_RESISTANCE and A_MOD_BASE_RESISTANCE_PCT state armor as school 1
-	miscAllStats    int32 = -1  // A_MOD_STAT and A_MOD_TOTAL_STAT_PERCENTAGE: all five at once
+	miscAllStats    int32 = -1  // A_MOD_STAT, A_MOD_PERCENT_STAT and A_MOD_TOTAL_STAT_PERCENTAGE: all five at once
 )
 
-// The five stats the client counts in its own order, which is what A_MOD_STAT and
-// A_MOD_TOTAL_STAT_PERCENTAGE index by.
+// The five stats the client counts in its own order, which is what A_MOD_STAT, A_MOD_PERCENT_STAT
+// and A_MOD_TOTAL_STAT_PERCENTAGE index by.
 var clientStats = [5]stats.Stat{stats.Strength, stats.Agility, stats.Stamina, stats.Intellect, stats.Spirit}
 
 // The state one ParseEffects or ParseStatic call shares with the table.
@@ -115,6 +115,9 @@ var auraTable = map[dbcenums.EffectAuraType]row{
 
 	dbcenums.A_MOD_STAT: func(p *parser, e *Effect, v float64) *attachment {
 		return p.statsBuff(clientStatList(e.Misc), v)
+	},
+	dbcenums.A_MOD_PERCENT_STAT: func(p *parser, e *Effect, v float64) *attachment {
+		return p.statMultiplier(clientStatList(e.Misc), percentMultiplier(v))
 	},
 	dbcenums.A_MOD_TOTAL_STAT_PERCENTAGE: func(p *parser, e *Effect, v float64) *attachment {
 		return p.statMultiplier(clientStatList(e.Misc), percentMultiplier(v))
