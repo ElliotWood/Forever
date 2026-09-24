@@ -610,6 +610,20 @@ func (character *Character) newDenseDynamiteSpell(sharedTimer *Timer) *Spell {
 	return character.GetOrRegisterSpell(character.newBasicExplosiveSpellConfig(sharedTimer, DenseDynamiteActionID, SpellSchoolFire, 340, 460, 14, time.Second, Cooldown{}))
 }
 
+func imbueFlatWeaponDamage(imbueId int32) float64 {
+	switch imbueId {
+	case 16138, 16622: // Dense Sharpening Stone / Dense Weightstone
+		return 8
+	}
+	return 0
+}
+
+// Flat weapon damage the main-hand imbue adds, for classes that build their
+// main-hand weapon from the equipped item.
+func (character *Character) MHImbueFlatWeaponDamage() float64 {
+	return imbueFlatWeaponDamage(character.Consumables.MhImbueId)
+}
+
 func registerStaticImbue(agent Agent, imbueId int32, weapon *Weapon) {
 	character := agent.GetCharacter()
 	switch imbueId {
@@ -622,8 +636,8 @@ func registerStaticImbue(agent Agent, imbueId int32, weapon *Weapon) {
 	case 25121: // Wizard Oil
 		character.AddStat(stats.SpellDamage, 30)
 	case 16138, 16622: // Dense Sharpening Stone / Dense Weightstone
-		weapon.BaseDamageMin += 8
-		weapon.BaseDamageMax += 8
+		weapon.BaseDamageMin += imbueFlatWeaponDamage(imbueId)
+		weapon.BaseDamageMax += imbueFlatWeaponDamage(imbueId)
 	case 22756: // Elemental Sharpening Stone
 		// RangedCritPercent is the ranged offset from PhysicalCritPercent, so the melee-only
 		// crit has to be cancelled there.

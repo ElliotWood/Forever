@@ -61,9 +61,10 @@ func (druid *Druid) ClearForm(sim *core.Simulation) {
 
 func (druid *Druid) GetCatWeapon() core.Weapon {
 	unscaledWeapon := druid.WeaponFromMainHand()
+	imbueBonus := druid.MHImbueFlatWeaponDamage()
 	return core.Weapon{
-		BaseDamageMin:        unscaledWeapon.BaseDamageMin / unscaledWeapon.SwingSpeed,
-		BaseDamageMax:        unscaledWeapon.BaseDamageMax / unscaledWeapon.SwingSpeed,
+		BaseDamageMin:        (unscaledWeapon.BaseDamageMin + imbueBonus) / unscaledWeapon.SwingSpeed,
+		BaseDamageMax:        (unscaledWeapon.BaseDamageMax + imbueBonus) / unscaledWeapon.SwingSpeed,
 		SwingSpeed:           1.0,
 		NormalizedSwingSpeed: 1.0,
 		AttackPowerPerDPS:    core.DefaultAttackPowerPerDPS,
@@ -73,9 +74,10 @@ func (druid *Druid) GetCatWeapon() core.Weapon {
 
 func (druid *Druid) GetBearWeapon() core.Weapon {
 	unscaledWeapon := druid.WeaponFromMainHand()
+	imbueBonus := druid.MHImbueFlatWeaponDamage()
 	return core.Weapon{
-		BaseDamageMin:        unscaledWeapon.BaseDamageMin / unscaledWeapon.SwingSpeed * 2.5,
-		BaseDamageMax:        unscaledWeapon.BaseDamageMax / unscaledWeapon.SwingSpeed * 2.5,
+		BaseDamageMin:        (unscaledWeapon.BaseDamageMin + imbueBonus) / unscaledWeapon.SwingSpeed * 2.5,
+		BaseDamageMax:        (unscaledWeapon.BaseDamageMax + imbueBonus) / unscaledWeapon.SwingSpeed * 2.5,
 		SwingSpeed:           2.5,
 		NormalizedSwingSpeed: 2.5,
 		AttackPowerPerDPS:    core.DefaultAttackPowerPerDPS,
