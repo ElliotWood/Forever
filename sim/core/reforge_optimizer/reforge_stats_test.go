@@ -82,3 +82,21 @@ func TestReforgeBlockDeltaLandsInPercent(t *testing.T) {
 		t.Errorf("Block%% delta %v, want 5 percent", got)
 	}
 }
+
+func TestReforgeDodgeAndParryRatingReachTheirPercentCaps(t *testing.T) {
+	sdm := stats.NewStatDependencyManager()
+	sdm.AddStatDependency(stats.DodgeRating, stats.DodgePercent, 1/core.DodgeRatingPerDodgePercent)
+	sdm.AddStatDependency(stats.ParryRating, stats.ParryPercent, 1/core.ParryRatingPerParryPercent)
+	sdm.FinalizeStatDeps()
+
+	delta := core.NewUnitStats()
+	delta.Stats[stats.DodgeRating] = 2 * core.DodgeRatingPerDodgePercent
+	delta.Stats[stats.ParryRating] = 3 * core.ParryRatingPerParryPercent
+	resolved := resolveStatDelta(&sdm, core.NewUnitStats(), delta)
+	if got := getUnitStat(resolved, stats.UnitStatFromPseudoStat(proto.PseudoStat_PseudoStatDodgePercent)); math.Abs(got-2) > 1e-9 {
+		t.Errorf("rating for 2%% dodge moves Dodge%% by %v, want 2", got)
+	}
+	if got := getUnitStat(resolved, stats.UnitStatFromPseudoStat(proto.PseudoStat_PseudoStatParryPercent)); math.Abs(got-3) > 1e-9 {
+		t.Errorf("rating for 3%% parry moves Parry%% by %v, want 3", got)
+	}
+}
