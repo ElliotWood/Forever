@@ -1,5 +1,11 @@
 [
 	{
+		"number": 466,
+		"title": "shaman: the talented Mana Tide Totem restores the party's mana",
+		"mergedAt": "2026-09-25",
+		"url": "https://github.com/ElliotWood/Forever/pull/466"
+	},
+	{
 		"number": 465,
 		"title": "warlock: Demonic Pact keeps a pre-pull sacrifice",
 		"mergedAt": "2026-09-25",
