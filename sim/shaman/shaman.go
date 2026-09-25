@@ -131,6 +131,15 @@ func (shaman *Shaman) GetCharacter() *core.Character {
 func (shaman *Shaman) AddRaidBuffs(raidBuffs *proto.RaidBuffs) {
 }
 
+// The talented Mana Tide Totem (16190) is the party buff's totem, dropped by this shaman.
+// ponytail: it does not take Mana Spring's water slot for its 12 s; model the slot if a sim ever
+// shows the overlap mattering.
+func (shaman *Shaman) AddPartyBuffs(partyBuffs *proto.PartyBuffs) {
+	if shaman.Talents.ManaTideTotem {
+		partyBuffs.ManaTideTotems++
+	}
+}
+
 func (shaman *Shaman) Initialize() {
 	shaman.registerChainLightningSpell()
 	shaman.registerLightningBoltSpell()
