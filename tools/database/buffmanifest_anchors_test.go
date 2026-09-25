@@ -63,7 +63,7 @@ func TestManifestAnchorsMatchTheClient(t *testing.T) {
 		cast := topRank(cands, classMask)
 		aura := cast.SpellID
 		if spec.AuraName != "" {
-			if aura, err = auraFamilyMember(db, spec.AuraName, cast.Subtext); err != nil {
+			if aura, err = auraFamilyMember(db, spec.AuraName, cast.Subtext, spec.Kind != buffmanifest.KindProc); err != nil {
 				t.Fatalf("%s: %v", spec.Field, err)
 			}
 		}
@@ -215,7 +215,10 @@ func topRank(cands []buffCandidate, classMask int32) buffCandidate {
 // rank subtext of the cast picks the matching rank; where neither carries one - Leader of the Pack
 // is 17007 and 24932, both rankless - the spell that applies a party or raid aura is the one other
 // players see.
-func auraFamilyMember(db *sql.DB, name string, subtext string) (int32, error) {
+// preferShared picks the aura that reaches the party over a same-named one that only its caster
+// holds. A proc row wants the reverse: since client build 70009 Windfury Totem's party aura (10612)
+// shares the name of the proc aura it hands out (10610), and the proc aura is the one that states it.
+func auraFamilyMember(db *sql.DB, name string, subtext string, preferShared bool) (int32, error) {
 	type auraCandidate struct {
 		SpellID int32
 		Subtext string
@@ -261,7 +264,7 @@ func auraFamilyMember(db *sql.DB, name string, subtext string) (int32, error) {
 	}
 	if len(matching) > 1 {
 		for _, c := range matching {
-			if c.Shared {
+			if c.Shared == preferShared {
 				return c.SpellID, nil
 			}
 		}

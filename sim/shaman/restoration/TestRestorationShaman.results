@@ -2,7 +2,7 @@ character_stats_results: {
  key: "TestRestorationShaman-naked"
  value: {
   final_stats: 171
-  final_stats: 171
+  final_stats: 73
   final_stats: 261
   final_stats: 149
   final_stats: 95
@@ -29,11 +29,11 @@ character_stats_results: {
   final_stats: 0
   final_stats: 0
   final_stats: 0
-  final_stats: 82.08
+  final_stats: 35.04
   final_stats: 0
-  final_stats: 1462
+  final_stats: 1266
   final_stats: 0
-  final_stats: 3710
+  final_stats: 3858.4
   final_stats: 3475
   final_stats: 81
   final_stats: 27
@@ -44,12 +44,12 @@ character_stats_results: {
   final_stats: 0
   final_stats: 5
   final_stats: 5
-  final_stats: 13.3868
+  final_stats: 8.4084
   final_stats: 9.8181
   final_stats: 0
   final_stats: 0
   final_stats: 0
-  final_stats: 6.84
+  final_stats: 2.92
   final_stats: 0
   final_stats: 0
   final_stats: 0

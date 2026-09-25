@@ -2,7 +2,7 @@ character_stats_results: {
  key: "TestShadowPriest-CharacterStats-Default"
  value: {
   final_stats: 115
-  final_stats: 161
+  final_stats: 63
   final_stats: 210
   final_stats: 179
   final_stats: 95
@@ -31,7 +31,7 @@ character_stats_results: {
   final_stats: 0
   final_stats: 0
   final_stats: 0
-  final_stats: 3022
+  final_stats: 2826
   final_stats: 0
   final_stats: 3317
   final_stats: 3781
@@ -44,7 +44,7 @@ character_stats_results: {
   final_stats: 0
   final_stats: 0
   final_stats: 0
-  final_stats: 14.05
+  final_stats: 9.15
   final_stats: 8.8072
   final_stats: 0
   final_stats: 0
@@ -373,8 +373,8 @@ dps_results: {
 dps_results: {
  key: "TestShadowPriest-AllItems-InfernalLasso-219345"
  value: {
-  dps: 342.48902
-  tps: 243.63996
+  dps: 343.79118
+  tps: 244.55147
  }
 }
 dps_results: {
@@ -410,6 +410,13 @@ dps_results: {
  value: {
   dps: 341.68957
   tps: 242.78595
+ }
+}
+dps_results: {
+ key: "TestShadowPriest-AllItems-Lifestone-833"
+ value: {
+  dps: 339.61891
+  tps: 241.8152
  }
 }
 dps_results: {

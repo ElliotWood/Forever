@@ -59,14 +59,14 @@ export const DefaultConsumables = ConsumesSpec.create({
 	conjuredId: 12662, // Demonic Rune
 });
 
-export const TalentsLevel60 = PresetUtils.makePresetTalents('Level 60', SavedTalents.create({ talentsString: '5505301500103031--503352001' }));
+export const TalentsLevel60 = PresetUtils.makePresetTalents('Level 60', SavedTalents.create({ talentsString: '5505301300103051--503352001' }));
 export const TalentsElemental = PresetUtils.makePresetTalents(
 	'Elemental 31/6/14',
-	SavedTalents.create({ talentsString: '2505301500123031-0500001-053050001' }),
+	SavedTalents.create({ talentsString: '2505301300123051-0500001-053050001' }),
 );
 export const TalentsStormcaller = PresetUtils.makePresetTalents(
 	'Stormcaller 28/23/0',
-	SavedTalents.create({ talentsString: '050433150010303-055030030004102' }),
+	SavedTalents.create({ talentsString: '150533130010303-055030030004102' }),
 );
 export const TalentPresets = [TalentsLevel60, TalentsElemental, TalentsStormcaller];
 

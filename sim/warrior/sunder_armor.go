@@ -7,10 +7,9 @@ import (
 )
 
 func (warrior *Warrior) registerSunderArmor() {
-	// The client supplies Sunder Armor's flat threat per rank: 405/608/810/1013 for ranks 2-5.
-	//
-	// TODO: rank 1 reads a flat threat of 1, which looks like placeholder data next to the
-	// rest of the ladder. Harmless while this pins the highest rank, but worth confirming.
+	// The client supplies Sunder Armor's flat threat per rank: 34/75/117/158/206 (build 70009).
+	// The 2026-09-24 notes add "a small increase from attack power", but the E_THREAT effect
+	// carries no AP coefficient in the client data, so only the flat value is modelled.
 	sunderArmorRank := spellData.SunderArmor.Highest()
 
 	actionId := core.ActionID{SpellID: sunderArmorRank.ID}

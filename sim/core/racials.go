@@ -328,21 +328,23 @@ func applyExpansiveMind(character *Character) {
 // see those masks, so this takes every class ability that deals damage (or heals, for a priest).
 func applyEureka(character *Character) {
 	var spellID int32
-	var costReduction float64
 	var resourceType proto.ResourceType
 	procMask := ProcMaskSpecial
+	// Build 70009 states -10% cost (effect 0, SPELLMOD_COST) on all five class variants; core
+	// cannot import spelldata, so the value is mirrored here.
+	const costReduction = 0.1
 
 	switch character.Class {
 	case proto.Class_ClassRogue:
-		spellID, costReduction, resourceType = 1259812, 0.2, proto.ResourceType_ResourceTypeEnergy
+		spellID, resourceType = 1259812, proto.ResourceType_ResourceTypeEnergy
 	case proto.Class_ClassWarrior:
-		spellID, costReduction, resourceType = 1259813, 0.4, proto.ResourceType_ResourceTypeRage
+		spellID, resourceType = 1259813, proto.ResourceType_ResourceTypeRage
 	case proto.Class_ClassMage:
-		spellID, costReduction, resourceType = 1259817, 0.5, proto.ResourceType_ResourceTypeMana
+		spellID, resourceType = 1259817, proto.ResourceType_ResourceTypeMana
 	case proto.Class_ClassWarlock:
-		spellID, costReduction, resourceType = 1259821, 0.5, proto.ResourceType_ResourceTypeMana
+		spellID, resourceType = 1259821, proto.ResourceType_ResourceTypeMana
 	case proto.Class_ClassPriest:
-		spellID, costReduction, resourceType = 1259823, 0.15, proto.ResourceType_ResourceTypeMana
+		spellID, resourceType = 1259823, proto.ResourceType_ResourceTypeMana
 		procMask |= ProcMaskSpellHealing
 	default:
 		return

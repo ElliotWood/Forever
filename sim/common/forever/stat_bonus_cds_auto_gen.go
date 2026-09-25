@@ -10,8 +10,6 @@ import (
 func RegisterAllOnUseCds() {
 
 	//
-	// unsupported: the spell has no row in the store
-	// shared.NewSimpleStatActive(833) // Lifestone - https://www.wowhead.com/forever/spell=17712
 	// unsupported: 1300364 deals no damage and heals no one (A_MOD_DETECTED_RANGE)
 	// shared.NewSimpleStatActive(1490) // Guardian Talisman - https://www.wowhead.com/forever/spell=1300364
 	// unsupported: 14530 deals no damage and heals no one (A_MOD_INCREASE_SPEED)
@@ -117,8 +115,6 @@ func RegisterAllOnUseCds() {
 	// shared.NewSimpleStatActive(260819) // EZ-Thro Field Transporter: Gadgetzan - https://www.wowhead.com/forever/spell=23453
 	// unsupported: 1269339 deals no damage and heals no one (E_DUMMY)
 	// shared.NewSimpleStatActive(260821) // EZ and SAF Field Transporter: Mt. Hyjal - https://www.wowhead.com/forever/spell=1269339
-	// unsupported: 1269339 deals no damage and heals no one (E_DUMMY)
-	// shared.NewSimpleStatActive(260823) // Dimensional Transporter - Mt. Hyjal - https://www.wowhead.com/forever/spell=1269339
 	// unsupported: 1270941 deals no damage and heals no one (E_DUMMY)
 	// shared.NewSimpleStatActive(260824) // Gnomish Poultryizer - https://www.wowhead.com/forever/spell=1270941
 	// unsupported: 1296664 deals no damage and heals no one (A_MOD_CHARM)
@@ -246,6 +242,8 @@ func RegisterAllOnUseCds() {
 	shared.NewSimpleStatActive(23046) // The Restrained Essence of Sapphiron - https://www.wowhead.com/forever/spell=28779
 
 	// Heals
+	// on use: 17712 (E_HEAL); not simulated: E_NONE
+	shared.NewSpellDataHealOnUse(833) // Lifestone - https://www.wowhead.com/forever/spell=17712
 	// on use: 20631 (A_PERIODIC_HEAL)
 	shared.NewSpellDataHealOnUse(16768) // Furbolg Medicine Pouch - https://www.wowhead.com/forever/spell=20631
 

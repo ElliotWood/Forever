@@ -3,6 +3,7 @@
 #   UPDATE_REGISTERED_EFFECTS=1 GOARCH=amd64 go test --tags=with_db ./sim/common/ -run TestRegisteredEffects -count=1
 
 # items
+833 Lifestone
 942 Freezing Band
 1168 Skullflame Shield
 1979 Wall of the Dead

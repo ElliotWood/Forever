@@ -678,8 +678,8 @@ func registerStaticImbue(agent Agent, imbueId int32, weapon *Weapon) {
 		character.AddStat(stats.SpellDamage, 36)
 		character.AddStat(stats.HealingPower, 36)
 		character.AddStat(stats.SpellCritPercent, 1)
-	case 25121: // Wizard Oil
-		character.AddStat(stats.SpellDamage, 30)
+	case 25121: // Wizard Oil: 24 in the client (enchant 2627, spell 25111), reverted 2026-09-24
+		character.AddStat(stats.SpellDamage, 24)
 	case 22756, 18262: // Elemental Sharpening Stone (18262: the item id Forever saved before the merge)
 		// RangedCritPercent is the ranged offset from PhysicalCritPercent, so the melee-only
 		// crit has to be cancelled there.

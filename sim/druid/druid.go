@@ -39,7 +39,7 @@ type Druid struct {
 	Innervate            *DruidSpell
 	InsectSwarm          *DruidSpell
 	Lacerate             *DruidSpell
-	MangleBear           *DruidSpell
+	PrimalBite           *DruidSpell
 	Maul                 *DruidSpell
 	Moonfire             *DruidSpell
 	NaturesSwiftness     *DruidSpell
@@ -102,7 +102,7 @@ const (
 	DruidSpellInnervate
 	DruidSpellInsectSwarm
 	DruidSpellLacerate
-	DruidSpellMangleBear
+	DruidSpellPrimalBite
 	DruidSpellMaul
 	DruidSpellMoonfireInitial
 	DruidSpellMoonfireDoT
@@ -139,8 +139,7 @@ const (
 	DruidSpellDoT                = DruidSpellMoonfireDoT | DruidSpellInsectSwarm
 	DruidSpellHoT                = DruidSpellRejuvenation | DruidSpellLifebloom | DruidSpellRegrowth
 	DruidSpellInstant            = DruidSpellMoonfire | DruidSpellFaerieFire
-	DruidSpellMangle             = DruidSpellMangleBear
-	DruidSpellBuilder            = DruidSpellMangle | DruidSpellShred | DruidSpellRake | DruidSpellRavage
+	DruidSpellBuilder            = DruidSpellPrimalBite | DruidSpellShred | DruidSpellRake | DruidSpellRavage
 	DruidSpellFinisher           = DruidSpellFerociousBite | DruidSpellRip
 	DruidArcaneSpells            = DruidSpellMoonfire | DruidSpellMoonfireDoT | DruidSpellStarfire
 	DruidNatureSpells            = DruidSpellWrath | DruidSpellHurricane | DruidSpellInsectSwarm
@@ -272,7 +271,7 @@ func (druid *Druid) RegisterFeralTankSpells() {
 	druid.registerEnrageSpell()
 	druid.registerFrenziedRegenerationSpell()
 	druid.registerLacerateSpell()
-	druid.registerMangleBearSpell()
+	druid.registerPrimalBiteSpell()
 	druid.registerMaulSpell()
 	druid.registerSwipeBearSpell()
 }
