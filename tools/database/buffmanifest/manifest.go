@@ -202,8 +202,9 @@ func (s BuffSpec) TSField() string {
 	return b.String()
 }
 
-// Scopes is the order of the four buff messages, which is the order every rendered file lists them.
-var Scopes = []BuffScope{ScopeRaid, ScopeParty, ScopeIndividual, ScopeDebuff}
+// Scopes is the order the rows are resolved, rendered and applied in. The apply order is the order
+// the auras register in, which the sim's results follow.
+var Scopes = []BuffScope{ScopeParty, ScopeRaid, ScopeIndividual, ScopeDebuff}
 
 // ByScope is the rows of one message, in proto number order.
 func ByScope(scope BuffScope) []BuffSpec {
@@ -227,7 +228,7 @@ type Row struct {
 	Number int32
 }
 
-// All is every row, message by message.
+// All is every row, scope by scope in Scopes order.
 func All() []Row {
 	var rows []Row
 	for _, scope := range Scopes {
