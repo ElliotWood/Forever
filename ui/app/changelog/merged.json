@@ -6,6 +6,12 @@
 		"url": "https://github.com/ElliotWood/Forever/pull/465"
 	},
 	{
+		"number": 464,
+		"title": "priest: Penance bolts land on cast and at 1 and 2 sec",
+		"mergedAt": "2026-09-25",
+		"url": "https://github.com/ElliotWood/Forever/pull/464"
+	},
+	{
 		"number": 463,
 		"title": "ci(upstream): skip quietly while wowsims/forever is unreachable",
 		"mergedAt": "2026-09-25",
