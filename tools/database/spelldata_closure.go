@@ -109,11 +109,8 @@ func withExtraIDs(t *spellTables, roots []int32) ([]int32, error) {
 // manifest row added without a regeneration fails the check.
 func buffManifestIDs() []int32 {
 	var ids []int32
-	for _, spec := range buffmanifest.Manifest {
-		ids = append(ids, spec.SpellID, spec.CastID)
-		if spec.Talent != nil {
-			ids = append(ids, spec.Talent.SpellID)
-		}
+	for _, spec := range buffmanifest.All() {
+		ids = append(ids, spec.SpellID, spec.CastID, spec.Talent)
 		if spec.ImpAction != nil {
 			ids = append(ids, spec.ImpAction.SpellID)
 		}
