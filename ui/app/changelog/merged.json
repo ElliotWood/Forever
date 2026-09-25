@@ -6,6 +6,12 @@
 		"url": "https://github.com/ElliotWood/Forever/pull/455"
 	},
 	{
+		"number": 454,
+		"title": "arena: climbs use their own tree's rotation; MythicSim builds as comparison rows",
+		"mergedAt": "2026-09-25",
+		"url": "https://github.com/ElliotWood/Forever/pull/454"
+	},
+	{
 		"number": 453,
 		"title": "arena: default to the best build in each talent tree",
 		"mergedAt": "2026-09-25",
