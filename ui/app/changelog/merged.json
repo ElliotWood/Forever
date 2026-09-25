@@ -6,6 +6,12 @@
 		"url": "https://github.com/ElliotWood/Forever/pull/459"
 	},
 	{
+		"number": 458,
+		"title": "arena: give casters and the hunter a raider's mana consumables",
+		"mergedAt": "2026-09-25",
+		"url": "https://github.com/ElliotWood/Forever/pull/458"
+	},
+	{
 		"number": 456,
 		"title": "core: drop the 200 aura cap that broke full-raid sims",
 		"mergedAt": "2026-09-25",
