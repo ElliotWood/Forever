@@ -30,7 +30,8 @@ import (
 // melee list would equalise the shopping and quietly tax the one spec that shoots. Within a
 // role every spec gets the identical list; what it is worth to you is your class's business,
 // which is why Mighty Rage Potion stays in the melee list even though only warriors can spend
-// it. Same shopping list, not same benefit - that is the part that makes two numbers comparable.
+// it (not that anyone drinks it yet - see the list). Same shopping list, not same benefit -
+// that is the part that makes two numbers comparable.
 //
 // The consumables are the Classic items the Forever client ships, in the Classic slots #421
 // added to ConsumesSpec. The buffs are the old engine's ForeverBuffs, field for field where the
@@ -111,6 +112,9 @@ var consumesMelee = core.BuffsCombo{
 		BattleElixirId:    13452, // Elixir of the Mongoose
 		AttackPowerBuffId: 12460, // Juju Might
 		StrengthBuffId:    12451, // Juju Power
+		// Named but not drunk: a potion only exists in the sim when it is in Potions, and
+		// registering this one panics the rogue and enhancement shaman and cuts the bear
+		// tank by 63%. It waits for its own fix.
 		PotId:             13442, // Mighty Rage Potion
 		DragonbreathChili: true,
 		FlaskId:           13510, // Flask of the Titans
@@ -120,7 +124,7 @@ var consumesMelee = core.BuffsCombo{
 }
 
 // The melee list with Grace of Air in the air slot, without the off-hand stone, whose ranged crit penalty is a real cost to the
-// one spec that does its damage from thirty yards, and without the rage potion.
+// one spec that does its damage from thirty yards, and with mana consumables in place of the rage potion.
 var consumesRanged = core.BuffsCombo{
 	Label:   "Arena-Ranged",
 	Raid:    arenaRaidBuffs,
@@ -134,9 +138,24 @@ var consumesRanged = core.BuffsCombo{
 		DragonbreathChili: true,
 		FlaskId:           13510, // Flask of the Titans
 		FoodId:            20452, // Smoked Desert Dumplings
+		// The hunter's mana, as the caster list below.
+		PotId:            13444, // Major Mana Potion
+		Potions:          []int32{13444},
+		ConjuredId:       12662, // Demonic Rune
+		ConjuredItems:    []int32{12662},
+		GuardianElixirId: 20007, // Mageblood Elixir
 	},
 }
 
+// A three minute fight runs casters dry, so the list carries what a raider drinks for mana.
+// The sim only knows a potion or a rune that is also in Potions or ConjuredItems - the UI
+// sends those lists, the arena has to write them - and until they were here the Major Mana
+// Potion this list has always named was never drunk. The Forever client has no battle and
+// guardian elixir split, so Mageblood stacks with the flask and both elixirs. Dark Rune is not
+// in its item data; Demonic Rune is.
+//
+// Brilliant Wizard Oil over Brilliant Mana Oil (15 mp5 in Forever): with the rest of this
+// list the wizard oil is ahead for every caster, the Smite priest by the least (1.9%).
 var consumesCaster = core.BuffsCombo{
 	Label:   "Arena-Caster",
 	Raid:    arenaRaidBuffs,
@@ -145,6 +164,10 @@ var consumesCaster = core.BuffsCombo{
 	Debuffs: arenaDebuffs,
 	Consumables: &proto.ConsumesSpec{
 		PotId:              13444, // Major Mana Potion
+		Potions:            []int32{13444},
+		ConjuredId:         12662, // Demonic Rune
+		ConjuredItems:      []int32{12662},
+		GuardianElixirId:   20007, // Mageblood Elixir
 		FlaskId:            13512, // Flask of Supreme Power
 		FoodId:             20452, // Smoked Desert Dumplings
 		MhImbueId:          20749, // Brilliant Wizard Oil
