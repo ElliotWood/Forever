@@ -106,7 +106,6 @@ var FullDebuffs = &proto.Debuffs{
 	JudgementOfTheCrusader: true,
 	CurseOfElements:        true,
 	GiftOfArthas:           true,
-	Mangle:                 true,
 	ExposeArmor:            true,
 	FaerieFire:             true,
 	SunderArmor:            true,
