@@ -1,5 +1,35 @@
 [
 	{
+		"number": 440,
+		"title": "Merge wowsims/forever master (a539274ef) into master",
+		"mergedAt": "2026-09-25",
+		"url": "https://github.com/ElliotWood/Forever/pull/440"
+	},
+	{
+		"number": 438,
+		"title": "Forever client build 1.60.1.70009",
+		"mergedAt": "2026-09-25",
+		"url": "https://github.com/ElliotWood/Forever/pull/438"
+	},
+	{
+		"number": 437,
+		"title": "Wowhead Forever data changed (2026-09-25)",
+		"mergedAt": "2026-09-25",
+		"url": "https://github.com/ElliotWood/Forever/pull/437"
+	},
+	{
+		"number": 435,
+		"title": "Wowhead Forever data changed (2026-09-24)",
+		"mergedAt": "2026-09-24",
+		"url": "https://github.com/ElliotWood/Forever/pull/435"
+	},
+	{
+		"number": 434,
+		"title": "Wowhead Forever data changed (2026-09-24)",
+		"mergedAt": "2026-09-24",
+		"url": "https://github.com/ElliotWood/Forever/pull/434"
+	},
+	{
 		"number": 433,
 		"title": "Wowhead Forever data changed (2026-09-24)",
 		"mergedAt": "2026-09-24",
