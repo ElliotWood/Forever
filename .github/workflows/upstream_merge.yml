@@ -43,12 +43,18 @@ jobs:
                   fetch-depth: 0
 
             - name: Mirror official
+              id: up
               run: |
-                  git fetch --no-tags "$UPSTREAM" master
+                  # wowsims/forever went 404 on 2026-09-25. Skip quietly rather than fail every 6 hours.
+                  if ! git fetch --no-tags "$UPSTREAM" master; then
+                    echo "::warning::wowsims/forever is unreachable; nothing to merge"
+                    echo "gone=true" >> "$GITHUB_OUTPUT"; exit 0
+                  fi
                   git push --force origin FETCH_HEAD:refs/heads/official || echo "::warning::could not update official"
 
             - name: Merge wowsims/forever master
               id: merge
+              if: steps.up.outputs.gone != 'true'
               run: |
                   upstream=$(git rev-parse FETCH_HEAD)
                   short=${upstream:0:9}
