@@ -244,7 +244,7 @@ func (druid *Druid) registerFormBreakingConsumes() {
 func (druid *Druid) RegisterBalanceSpells() {
 	StarfireRankMap.Each(func(_ int32, r *spelldata.Spell) { druid.registerStarfireSpell(r) })
 	druid.registerMoonfireSpell()
-	druid.registerWrathSpell()
+	spellData.Wrath.Each(func(_ int32, r *spelldata.Spell) { druid.registerWrathSpell(r) })
 	druid.registerHurricaneSpell()
 	druid.registerFaerieFireSpell()
 }
