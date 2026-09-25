@@ -138,7 +138,7 @@ var Manifest = []BuffSpec{
 		Go:      "WindfuryTotem", Name: "Windfury Totem", AuraName: "Windfury Totem",
 		Owner: proto.Class_ClassShaman, Category: "WindfuryTotem",
 		Stats: []proto.Stat{proto.Stat_StatAttackPower},
-		Notes: "the cast family (8512/10613/10614) and the aura family (8516/10608/10610) share the name; the aura carries the proc. Improved Weapon Totems (29193) has no node in shaman tree 1082.",
+		Notes: "the cast family (8512/10613/10614) and the aura family (8516/10608/10610) share the name; the aura carries the proc. The totem's party aura 10612 shares the name too and procs 10610. Improved Weapon Totems (29193) has no node in shaman tree 1082.",
 	},
 	{
 		Field: "atiesh_druid", Number: 16, Scope: ScopeParty, Proto: ProtoInt32, Kind: KindItemCount,
@@ -335,13 +335,6 @@ var Manifest = []BuffSpec{
 		Stats: []proto.Stat{proto.Stat_StatMP5},
 	},
 	{
-		Field: "mangle", Number: 6, Scope: ScopeDebuff, Proto: ProtoBool, Kind: KindDebuffDamageTaken,
-		SpellID: 1238073,
-		Go:      "Mangle", Name: "Mangle", Owner: proto.Class_ClassDruid,
-		Category: "Mangle", SingleAura: true,
-		Notes: "SkillLineAbility resolves the name to ranks 407995/1238069/1238070/1238073, so the top rank is 1238073.",
-	},
-	{
 		Field: "curse_of_elements", Number: 4, Scope: ScopeDebuff, Proto: ProtoBool, Kind: KindDebuffDamageTaken,
 		SpellID: 1311680,
 		Go:      "CurseOfElements", Name: "Curse of the Elements", Owner: proto.Class_ClassWarlock,
@@ -419,7 +412,7 @@ var Manifest = []BuffSpec{
 		Notes: "Nature's Splendor (1223083) effect 2 extends the duration (misc 1); the field is a plain bool, so the talent is not carried.",
 	},
 	{
-		Field: "scorpid_sting", Number: 16, Scope: ScopeDebuff, Proto: ProtoBool, Kind: KindDebuffStat,
+		Field: "scorpid_sting", Number: 6, Scope: ScopeDebuff, Proto: ProtoBool, Kind: KindDebuffStat,
 		SpellID: 3043,
 		Go:      "ScorpidSting", Name: "Scorpid Sting", Owner: proto.Class_ClassHunter,
 		Stats: []proto.Stat{proto.Stat_StatStamina, proto.Stat_StatDefenseRating},

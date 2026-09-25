@@ -2,7 +2,6 @@ package paladin
 
 import (
 	"fmt"
-	"slices"
 	"time"
 
 	"github.com/wowsims/forever/sim/common/shared"
@@ -31,7 +30,6 @@ func (paladin *Paladin) registerRetributionTalents() {
 	// Tier 4
 	paladin.applyEyeForAnEye()
 	paladin.applySacredArbiter()
-	paladin.applyCrusade()
 
 	// Tier 5
 	paladin.applyTwoHandedWeaponSpecialization()
@@ -256,26 +254,6 @@ func (paladin *Paladin) applySacredArbiter() {
 	})
 }
 
-// Crusade - Increases all damage dealt by 1/2%. Increased by an additional 1/2% against Demon and
-// Undead targets.
-func (paladin *Paladin) applyCrusade() {
-	if paladin.Talents.Crusade == 0 {
-		return
-	}
-
-	paladin.PseudoStats.DamageDealtMultiplier *= spellData.Crusade.Effect(shared.A_MOD_DAMAGE_PERCENT_DONE, 127).MultiplierAt(paladin.Talents.Crusade)
-
-	// Misc 36 is the creature-type mask the client states the bonus against: Demon and Undead.
-	versus := spellData.Crusade.Effect(shared.A_MOD_DAMAGE_DONE_VERSUS, 36).MultiplierAt(paladin.Talents.Crusade)
-	paladin.Env.RegisterPostFinalizeEffect(func() {
-		for _, at := range paladin.AttackTables {
-			if slices.Contains([]proto.MobType{proto.MobType_MobTypeDemon, proto.MobType_MobTypeUndead}, at.Defender.MobType) {
-				at.DamageDealtMultiplier *= versus
-			}
-		}
-	})
-}
-
 // Two-Handed Weapon Specialization - Increases the damage you deal with two-handed melee weapons
 // by 3/6/9%. The client puts it on the Physical school alone.
 func (paladin *Paladin) applyTwoHandedWeaponSpecialization() {
@@ -380,9 +358,9 @@ func (paladin *Paladin) applyInstrumentOfLaw() {
 	})
 }
 
-// Twist of Light - When you replace your Seal of Command, Seal of Righteousness, Seal of Fury, or
-// Seal of Justice with a different Seal, gain an Echo. Your next melee attack applies the replaced
-// Seal's effects, consuming the Echo.
+// Twist of Light - Reduces the mana cost of your Seal spells by 20%. When you replace your Seal of
+// Command, Seal of Righteousness, Seal of Fury, or Seal of Justice with a different Seal, gain an
+// Echo. Your next melee attack applies the replaced Seal's effects, consuming the Echo.
 //
 // Each seal leaves its own Echo (Echo of Command, of Fury, of Righteousness, of Justice): one
 // charge, no duration, consumed by the next auto attack that lands.
@@ -390,6 +368,12 @@ func (paladin *Paladin) applyTwistOfLight() {
 	if !paladin.Talents.TwistOfLight {
 		return
 	}
+
+	paladin.AddStaticMod(core.SpellModConfig{
+		ClassMask:  SpellMaskAllSeals,
+		Kind:       core.SpellMod_PowerCost_Pct,
+		FloatValue: spellData.TwistOfLight.FractionAt(1),
+	})
 
 	paladin.echoes = map[int32]*sealEcho{}
 	for _, id := range []int32{echoOfCommandID, echoOfFuryID, echoOfRighteousnessID, echoOfJusticeID} {
