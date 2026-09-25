@@ -7,6 +7,7 @@ import { SavedTalents } from '@generated/proto/ui';
 import ArcaneApl from './apls/arcane.apl.json';
 import BlankAPL from './apls/default.apl.json';
 import FireApl from './apls/fire.apl.json';
+import FireLowRankApl from './apls/fire_lowrank.apl.json';
 import FrostApl from './apls/frost.apl.json';
 import LaunchGear from './gear_sets/launch.gear.json';
 import P0BisGear from './gear_sets/p0.bis.gear.json';
@@ -19,7 +20,8 @@ export const BLANK_APL = PresetUtils.makePresetAPLRotation('Blank', BlankAPL);
 export const ROTATION_PRESET_FROST = PresetUtils.makePresetAPLRotation('Frost', FrostApl);
 export const ROTATION_PRESET_ARCANE = PresetUtils.makePresetAPLRotation('Arcane', ArcaneApl);
 export const ROTATION_PRESET_FIRE = PresetUtils.makePresetAPLRotation('Fire', FireApl);
-export const ROTATION_PRESETS = [ROTATION_PRESET_FROST, ROTATION_PRESET_ARCANE, ROTATION_PRESET_FIRE];
+export const ROTATION_PRESET_FIRE_LOWRANK = PresetUtils.makePresetAPLRotation('Fire (low rank)', FireLowRankApl);
+export const ROTATION_PRESETS = [ROTATION_PRESET_FROST, ROTATION_PRESET_ARCANE, ROTATION_PRESET_FIRE, ROTATION_PRESET_FIRE_LOWRANK];
 
 export const ArcaneMageSimpleRotation = Mage_Rotation.create({
 	conserveStart: 20,
