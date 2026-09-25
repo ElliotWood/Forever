@@ -1,5 +1,17 @@
 [
 	{
+		"number": 451,
+		"title": "arena: tag low-rank rotations as unconfirmed at 60",
+		"mergedAt": "2026-09-25",
+		"url": "https://github.com/ElliotWood/Forever/pull/451"
+	},
+	{
+		"number": 450,
+		"title": "Low-rank Balance and Elemental rotations; register every Wrath/Starfire rank",
+		"mergedAt": "2026-09-25",
+		"url": "https://github.com/ElliotWood/Forever/pull/450"
+	},
+	{
 		"number": 449,
 		"title": "priest: add smite_lowrank arena rotation (+40.8% on best Smite build)",
 		"mergedAt": "2026-09-25",
