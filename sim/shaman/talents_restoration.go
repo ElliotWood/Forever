@@ -191,8 +191,7 @@ func (shaman *Shaman) applyWaterShield() {
 	}
 }
 
-// applyManaTideTotem is Forever's healing talent granting a party mana-restoring totem. The DPS specs never
-// spend a point here and the sim scores no healing, so it changes no number.
+// applyManaTideTotem: the totem is the ManaTideTotems party buff, which AddPartyBuffs adds.
 func (shaman *Shaman) applyManaTideTotem() {
 	if !shaman.Talents.ManaTideTotem {
 		return
