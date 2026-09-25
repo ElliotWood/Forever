@@ -293,11 +293,12 @@
 		"note": "The published Forever racial set still gives the dwarf Stoneform, and the commit that aligned the racials to that list left it alone: +10% armor for 8 sec on a 3 min cooldown, as in Classic.",
 		"source": "classic"
 	},
-	"20906": {
+	"20905": {
 		"ability": "Trueshot Aura",
-		"file": "sim/core/buffs.go",
-		"note": "100 attack power, paid into both the melee and the ranged pool here; unchanged from upstream Classic.",
-		"source": "classic"
+		"file": "sim/core/buffs/buffs_auto_gen.go",
+		"note": "Beta client 1.60.1.70009: ranks of 30, 40, 50, 75 and 50 ranged attack power at 25, 32, 40, 50 and 60 (1299346, 1299348, 19506, 20905, 20906); Era's rank 5 was 100. Lower ranks stay castable, so the party gets rank 4's 75 whatever rank 5 grants on the server.",
+		"source": "forever",
+		"tooltip": "Increases the Ranged Attack Power of party members within 45 yards by 75."
 	},
 	"22817": {
 		"ability": "Fengus' Ferocity",

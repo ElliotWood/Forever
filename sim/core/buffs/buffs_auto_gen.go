@@ -207,7 +207,7 @@ func ConcentrationAuraAura(unit *core.Unit, isPlayer bool, talentPoints int32) *
 }
 
 // Trueshot Aura
-var trueshotAuraSpell = spelldata.MustFind(20906)
+var trueshotAuraSpell = spelldata.MustFind(20905)
 var trueshotAuraMeta = &Meta{
 	Label: "Trueshot Aura",
 	Spell: trueshotAuraSpell,
