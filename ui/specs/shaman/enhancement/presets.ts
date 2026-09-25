@@ -73,7 +73,7 @@ export const DefaultDebuffs = Debuffs.create({
 
 // Talent presets, from master's ui/shaman spec.
 export const TalentsLevel60 = PresetUtils.makePresetTalents('Level 60', SavedTalents.create({ talentsString: '5505301-053030031005112251' }));
-export const TalentsEnhancement = PresetUtils.makePresetTalents('Enhancement 16/35/0', SavedTalents.create({ talentsString: '05023015-055030030205112251' }));
+export const TalentsEnhancement = PresetUtils.makePresetTalents('Enhancement 16/35/0', SavedTalents.create({ talentsString: '2502331-055030030205112251' }));
 export const TalentPresets = [TalentsLevel60, TalentsEnhancement];
 
 // Our Forever sim's gear presets (master ui/<spec>/gear_sets).

@@ -74,13 +74,11 @@ var FullPartyBuffs = &proto.PartyBuffs{
 	AtieshMage:        1,
 	AtieshPriest:      1,
 	AtieshWarlock:     1,
-	TotemTwisting:     true,
 
 	ManaSpringTotem:      proto.TristateEffect_TristateEffectImproved,
 	ManaTideTotems:       1,
-	GraceOfAirTotem:      true,
 	StrengthOfEarthTotem: true,
-	WindfuryTotem:        true,
+	WindfuryTotem:        true, // one air totem per party since client build 70009
 
 	BattleShout: proto.TristateEffect_TristateEffectRegular,
 }

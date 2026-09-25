@@ -6,8 +6,8 @@ import { SavedTalents } from '@generated/proto/ui';
 
 // Defaults follow master's ui/holy_paladin.
 // Our Forever sim's builds.
-export const StandardTalents = PresetUtils.makePresetTalents('Standard', SavedTalents.create({ talentsString: '005321013025131251-503210302' }));
-export const TalentsHolyHealer = PresetUtils.makePresetTalents('Holy 38/13/0', SavedTalents.create({ talentsString: '205320213225131051-50323' }));
+export const StandardTalents = PresetUtils.makePresetTalents('Standard', SavedTalents.create({ talentsString: '05321013025131251-503210302' }));
+export const TalentsHolyHealer = PresetUtils.makePresetTalents('Holy 38/13/0', SavedTalents.create({ talentsString: '25320213225131051-50323' }));
 
 export const TalentPresets = [StandardTalents, TalentsHolyHealer];
 

@@ -54,7 +54,8 @@ var arenaRaidBuffs = &proto.RaidBuffs{
 	Thorns:                   true,
 }
 
-// Every role's party buffs. The melee and ranged lists add Windfury Totem on top.
+// Every role's party buffs. The melee list swaps Grace of Air for Windfury Totem: since client
+// build 70009 a party holds one air totem, and Windfury is the one a melee group takes.
 var arenaPartyBuffs = &proto.PartyBuffs{
 	BattleShout:          proto.TristateEffect_TristateEffectRegular, // Improved now means the T2 set bonus, a warrior item, not a raid buff
 	BloodPact:            true,
@@ -96,6 +97,7 @@ var arenaDebuffs = &proto.Debuffs{
 func withWindfury(party *proto.PartyBuffs) *proto.PartyBuffs {
 	party = googleProto.Clone(party).(*proto.PartyBuffs)
 	party.WindfuryTotem = true
+	party.GraceOfAirTotem = false
 	return party
 }
 
@@ -117,12 +119,12 @@ var consumesMelee = core.BuffsCombo{
 	},
 }
 
-// The melee list without the off-hand stone, whose ranged crit penalty is a real cost to the
+// The melee list with Grace of Air in the air slot, without the off-hand stone, whose ranged crit penalty is a real cost to the
 // one spec that does its damage from thirty yards, and without the rage potion.
 var consumesRanged = core.BuffsCombo{
 	Label:   "Arena-Ranged",
 	Raid:    arenaRaidBuffs,
-	Party:   withWindfury(arenaPartyBuffs),
+	Party:   arenaPartyBuffs,
 	Player:  arenaPlayerBuffs,
 	Debuffs: arenaDebuffs,
 	Consumables: &proto.ConsumesSpec{

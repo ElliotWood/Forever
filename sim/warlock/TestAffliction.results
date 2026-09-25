@@ -2,7 +2,7 @@ character_stats_results: {
  key: "TestAffliction-CharacterStats-Default"
  value: {
   final_stats: 128
-  final_stats: 167
+  final_stats: 69
   final_stats: 227
   final_stats: 169
   final_stats: 95
@@ -31,7 +31,7 @@ character_stats_results: {
   final_stats: 0
   final_stats: 0
   final_stats: 0
-  final_stats: 1454
+  final_stats: 1258
   final_stats: 0
   final_stats: 3504
   final_stats: 3628
@@ -44,7 +44,7 @@ character_stats_results: {
   final_stats: 0
   final_stats: 0
   final_stats: 5
-  final_stats: 13.35
+  final_stats: 8.45
   final_stats: 9.4885
   final_stats: 0
   final_stats: 0
@@ -387,8 +387,8 @@ dps_results: {
 dps_results: {
  key: "TestAffliction-AllItems-InfernalLasso-219345"
  value: {
-  dps: 237.30469
-  tps: 148.0579
+  dps: 238.4189
+  tps: 148.72223
  }
 }
 dps_results: {
@@ -410,6 +410,13 @@ dps_results: {
  value: {
   dps: 234.34143
   tps: 146.01382
+ }
+}
+dps_results: {
+ key: "TestAffliction-AllItems-Lifestone-833"
+ value: {
+  dps: 231.3102
+  tps: 144.37503
  }
 }
 dps_results: {
@@ -716,43 +723,43 @@ dps_results: {
 dps_results: {
  key: "TestAffliction-Settings-Gnome-Naked-Warlock-affliction-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 235.5109
-  tps: 968.63271
+  dps: 234.39729
+  tps: 998.79661
  }
 }
 dps_results: {
  key: "TestAffliction-Settings-Gnome-Naked-Warlock-affliction-FullBuffs-0.0yards-LongSingleTarget"
  value: {
-  dps: 235.5109
-  tps: 144.52037
+  dps: 234.39729
+  tps: 145.38891
  }
 }
 dps_results: {
  key: "TestAffliction-Settings-Gnome-Naked-Warlock-affliction-FullBuffs-0.0yards-ShortSingleTarget"
  value: {
-  dps: 238.91272
-  tps: 126.80225
+  dps: 237.59076
+  tps: 127.61857
  }
 }
 dps_results: {
  key: "TestAffliction-Settings-Gnome-Naked-Warlock-affliction-NoBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 165.72407
-  tps: 927.72423
+  dps: 161.92459
+  tps: 922.77884
  }
 }
 dps_results: {
  key: "TestAffliction-Settings-Gnome-Naked-Warlock-affliction-NoBuffs-0.0yards-LongSingleTarget"
  value: {
-  dps: 165.72407
-  tps: 145.99457
+  dps: 161.92459
+  tps: 142.75601
  }
 }
 dps_results: {
  key: "TestAffliction-Settings-Gnome-Naked-Warlock-affliction-NoBuffs-0.0yards-ShortSingleTarget"
  value: {
-  dps: 179.2824
-  tps: 152.26524
+  dps: 168.71143
+  tps: 141.46987
  }
 }
 dps_results: {

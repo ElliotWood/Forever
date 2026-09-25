@@ -109,3 +109,4 @@
 1317039 states no rate
 1318159 states no rate
 1318323 states no rate
+1321560 ProcTypeMask TAKE_HELPFUL_SPELL; ProcTypeMask bit 31

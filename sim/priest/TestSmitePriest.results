@@ -2,7 +2,7 @@ character_stats_results: {
  key: "TestSmitePriest-CharacterStats-Default"
  value: {
   final_stats: 115
-  final_stats: 161
+  final_stats: 63
   final_stats: 210
   final_stats: 206
   final_stats: 95
@@ -31,7 +31,7 @@ character_stats_results: {
   final_stats: 0
   final_stats: 0
   final_stats: 0
-  final_stats: 3022
+  final_stats: 2826
   final_stats: 0
   final_stats: 3317
   final_stats: 4186
@@ -44,7 +44,7 @@ character_stats_results: {
   final_stats: 0
   final_stats: 0
   final_stats: 0
-  final_stats: 14.05
+  final_stats: 9.15
   final_stats: 9.2608
   final_stats: 0
   final_stats: 0
@@ -373,8 +373,8 @@ dps_results: {
 dps_results: {
  key: "TestSmitePriest-AllItems-InfernalLasso-219345"
  value: {
-  dps: 159.00343
-  tps: 116.13729
+  dps: 159.01425
+  tps: 116.14487
  }
 }
 dps_results: {
@@ -410,6 +410,13 @@ dps_results: {
  value: {
   dps: 168.76309
   tps: 122.03418
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-AllItems-Lifestone-833"
+ value: {
+  dps: 155.62117
+  tps: 113.79865
  }
 }
 dps_results: {

@@ -165,8 +165,8 @@ func TestWizardOilGrantsSpellDamage(t *testing.T) {
 	delta := consumesStatDelta(t, stats.SpellDamage, func(request *proto.RaidSimRequest) {
 		consumesOf(request).MhImbueId = 25121
 	})
-	if !WithinToleranceFloat64(30, delta, 0.01) {
-		t.Fatalf("Wizard Oil should grant 30 spell damage, got %0.2f", delta)
+	if !WithinToleranceFloat64(24, delta, 0.01) {
+		t.Fatalf("Wizard Oil should grant 24 spell damage, got %0.2f", delta)
 	}
 }
 

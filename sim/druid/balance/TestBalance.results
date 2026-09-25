@@ -2,7 +2,7 @@ character_stats_results: {
  key: "TestBalance-CharacterStats-Default"
  value: {
   final_stats: 144
-  final_stats: 187
+  final_stats: 89
   final_stats: 229
   final_stats: 161
   final_stats: 95
@@ -29,9 +29,9 @@ character_stats_results: {
   final_stats: 0
   final_stats: 0
   final_stats: 0
-  final_stats: 112.2
+  final_stats: 53.4
   final_stats: 0
-  final_stats: 1494
+  final_stats: 1298
   final_stats: 0
   final_stats: 3593
   final_stats: 3379
@@ -44,12 +44,12 @@ character_stats_results: {
   final_stats: 0
   final_stats: 4
   final_stats: 4
-  final_stats: 17.25
+  final_stats: 12.35
   final_stats: 13.4887
   final_stats: 0
   final_stats: 0
   final_stats: 0
-  final_stats: 11.25
+  final_stats: 6.35
   final_stats: 0
   final_stats: 0
   final_stats: 0
@@ -408,8 +408,8 @@ dps_results: {
 dps_results: {
  key: "TestBalance-AllItems-HelmofFire-8348"
  value: {
-  dps: 178.62458
-  tps: 93.71801
+  dps: 176.44808
+  tps: 92.62195
  }
 }
 dps_results: {
@@ -443,8 +443,8 @@ dps_results: {
 dps_results: {
  key: "TestBalance-AllItems-InfernalLasso-219345"
  value: {
-  dps: 181.75355
-  tps: 95.23694
+  dps: 180.98529
+  tps: 94.91838
  }
 }
 dps_results: {
@@ -487,6 +487,13 @@ dps_results: {
  value: {
   dps: 204.57818
   tps: 105.939
+ }
+}
+dps_results: {
+ key: "TestBalance-AllItems-Lifestone-833"
+ value: {
+  dps: 175.5457
+  tps: 91.56559
  }
 }
 dps_results: {

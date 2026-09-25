@@ -238,16 +238,28 @@ func (paladin *Paladin) applyConsecratedGround() {
 	})
 }
 
-// Holy Power - Increases the critical strike chance of your Holy Shock spell by 3/6/9/12/15%, and
-// all other spells by 1/2/3/4/5%.
+// Holy Power - Increases the critical strike chance of your Holy Shock and Holy Strike by
+// 3/6/9/12/15%, and all other spells by 1/2/3/4/5%.
+//
+// Build 70009 states both as crit chance modifiers (5923, misc 7) on class masks. Effect 0's
+// "all other spells" is the mask below, not general spell crit: the Holy Shield proc and the Seal
+// of Light heal are outside it, the seal and judgement damage spells inside. Effect 1 names Holy
+// Shock (both halves) and Holy Strike.
 func (paladin *Paladin) applyHolyPower() {
 	if paladin.Talents.HolyPower == 0 {
 		return
 	}
 
-	paladin.AddStat(stats.SpellCritPercent, spellData.HolyPower.EffectAt(0).ValueAt(paladin.Talents.HolyPower))
 	paladin.AddStaticMod(core.SpellModConfig{
-		ClassMask:  SpellMaskHolyShock | SpellMaskHolyShockHeal,
+		ClassMask: SpellMaskConsecration | SpellMaskExorcism | SpellMaskFlashOfLight | SpellMaskHammerOfWrath |
+			SpellMaskHolyLight | SpellMaskHolyWrath | SpellMaskLayOnHands | SpellMaskLightsVigil | SpellMaskLightsVigilStrike |
+			SpellMaskJudgementOfRighteousness | SpellMaskJudgementOfCommand | SpellMaskJudgementOfFury |
+			SpellMaskSealOfRighteousnessProc | SpellMaskSealOfCommandProc | SpellMaskSealOfFuryProc,
+		Kind:       core.SpellMod_BonusCrit_Percent,
+		FloatValue: spellData.HolyPower.EffectAt(0).ValueAt(paladin.Talents.HolyPower),
+	})
+	paladin.AddStaticMod(core.SpellModConfig{
+		ClassMask:  SpellMaskHolyShock | SpellMaskHolyShockHeal | SpellMaskHolyStrike,
 		Kind:       core.SpellMod_BonusCrit_Percent,
 		FloatValue: spellData.HolyPower.EffectAt(1).ValueAt(paladin.Talents.HolyPower),
 	})

@@ -66,7 +66,7 @@ export const TalentsElemental = PresetUtils.makePresetTalents(
 );
 export const TalentsStormcaller = PresetUtils.makePresetTalents(
 	'Stormcaller 28/23/0',
-	SavedTalents.create({ talentsString: '050433150010303-055030030004102' }),
+	SavedTalents.create({ talentsString: '150533130010303-055030030004102' }),
 );
 export const TalentPresets = [TalentsLevel60, TalentsElemental, TalentsStormcaller];
 

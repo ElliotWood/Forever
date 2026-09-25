@@ -13,8 +13,8 @@ export const APL_PRESET = PresetUtils.makePresetAPLRotation('Basic Prot', Defaul
 export const APL_P5 = PresetUtils.makePresetAPLRotation('P5 Prot', P5Apl);
 
 // Our Forever sim's builds.
-export const P4ProtTalents = PresetUtils.makePresetTalents('P4 Prot', SavedTalents.create({ talentsString: '052003003-5530513321301501' }));
-export const P5ProtTalents = PresetUtils.makePresetTalents('P5 Prot', SavedTalents.create({ talentsString: '055003-5530513321301501' }));
+export const P4ProtTalents = PresetUtils.makePresetTalents('P4 Prot', SavedTalents.create({ talentsString: '52003003-5530513321301501' }));
+export const P5ProtTalents = PresetUtils.makePresetTalents('P5 Prot', SavedTalents.create({ talentsString: '55003-5530513321301501' }));
 export const TalentsProtection = PresetUtils.makePresetTalents('Protection 0/45/6', SavedTalents.create({ talentsString: '-5532513321301551-15' }));
 
 export const TalentPresets = [P5ProtTalents, P4ProtTalents, TalentsProtection];
