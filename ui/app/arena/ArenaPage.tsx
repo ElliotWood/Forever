@@ -399,9 +399,9 @@ export const ArenaPage = () => (
 				<strong>Three lists, not one.</strong> Elemental Sharpening Stone is +2% melee crit and -2% <em>ranged</em> crit, so a single list for all
 				fifteen would equalise the shopping and quietly tax the only spec that shoots. Within a role the list is identical - the same shopping list, not
 				the same benefit, which is why Mighty Rage Potion stays in the melee list even though only warriors can spend it (the sim does not drink it
-				yet). Casters and the hunter get a raider&apos;s mana: Major Mana Potion, Demonic Rune and Mageblood. What a class grants itself is
-				not a consumable and is left alone: an enhancement shaman keeps Windfury Weapon and a rogue keeps its poisons. Equalising those took 23.6% off
-				the shaman, which is not a shaman measured fairly, it is a shaman disarmed.
+				yet). Casters and the hunter get a raider&apos;s mana: Major Mana Potion, Demonic Rune and Mageblood. What a class grants itself is not a
+				consumable and is left alone: an enhancement shaman keeps Windfury Weapon and a rogue keeps its poisons. Equalising those took 23.6% off the
+				shaman, which is not a shaman measured fairly, it is a shaman disarmed.
 			</li>
 			<li>
 				<strong>Every spec wears the same standard of gear.</strong> Each row uses its spec&apos;s launch set: the best pre-raid gear from one shared
