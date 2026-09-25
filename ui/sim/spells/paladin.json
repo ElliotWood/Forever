@@ -497,17 +497,6 @@
 		"source": "forever",
 		"tooltip": "6% of base mana\nInstant\n6 sec cooldown\nHammer the current target and up to 3 additional nearby targets, causing Holy damage to each equal to 3 times the damage per second of your main hand weapon."
 	},
-	"53601": {
-		"ability": "Templar's Bulwark",
-		"assumptions": [
-			"The sim has no absorb model, so the shield is modelled as damage taken dropping to 1% for the whole 8 seconds rather than as a pool that can be spent early."
-		],
-		"file": "sim/paladin/templars_bulwark.go",
-		"foreverId": 1311015,
-		"note": "Templar's Bulwark is new in Forever and borrows Sacred Shield's id 53601, which Classic's database does not carry. Beta client 1.60.1.69893 (1311015) confirms 110 mana, the 5 min cooldown, 8 sec and 100% of maximum health, and Sacred Duty's 30 sec a rank.",
-		"source": "assumed",
-		"tooltip": "110 Mana\nInstant\n5 min cooldown\nGrants you an absorb shield equal to 100% of your maximum health for 8 sec.\nApplies Forbearance for 1 min. Cannot be cast while Forbearance is active."
-	},
 	"53671": {
 		"ability": "Swift Judgement",
 		"file": "sim/paladin/swift_judgement.go",
@@ -582,12 +571,9 @@
 	},
 	"9799": {
 		"ability": "Eye for an Eye",
-		"assumptions": [
-			"10% at rank 2 is rank 1's 5% doubled: only rank 1 has been seen (a beta tooltip), and the client's 15 on 9799 is the base point the talent's rank curve replaces."
-		],
 		"file": "sim/paladin/talents_retribution.go",
-		"note": "Beta client 1.60.1.69893: Forever folds both ranks into 9799 and widens it from spell criticals to all critical strikes, so melee crits reflect too. The reflected share is capped at half the paladin's health, as in Classic.",
-		"source": "assumed",
+		"note": "Beta client 1.60.1.69893: Forever folds both ranks into 9799 and widens it from spell criticals to all critical strikes, so melee crits reflect too. The talent's rank curve on 9799 is 5/10% (the row's 15 is the base point it replaces) and the client tooltip caps the reflection at 50% of the paladin's health, as the sim does.",
+		"source": "forever",
 		"tooltip": "Passive\nAll critical strikes against you cause 5/10% of the damage taken to the attacker as well. The damage caused by Eye for an Eye will not exceed 50% of the Paladin's total health."
 	}
 }

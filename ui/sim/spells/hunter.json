@@ -16,7 +16,7 @@
 	"1293241": {
 		"ability": "Summon Hawk",
 		"assumptions": [
-			"The hawk is a guardian whose swings the client does not describe; the assault is modelled as the rank's dive bomb base damage every 3 sec.",
+			"The hawk is a guardian whose swings the client does not describe; the assault is modelled as the rank's dive bomb base damage every 3 sec. Its scaling aura (1293586, Hunter Guardian Hawk Pet Scaling 01) passes on the hunter's haste, damage done and crit but no attack power, so the swings themselves should not grow with ranged attack power.",
 			"Two hawks at once, the client's cap; a cast past it replaces the hawk closest to leaving, which the client does not specify."
 		],
 		"file": "sim/hunter/summon_hawk.go",
@@ -27,7 +27,7 @@
 	"1293525": {
 		"ability": "Summon Hawk",
 		"assumptions": [
-			"The hawk is a guardian whose swings the client does not describe; the assault is modelled as the rank's dive bomb base damage every 3 sec.",
+			"The hawk is a guardian whose swings the client does not describe; the assault is modelled as the rank's dive bomb base damage every 3 sec. Its scaling aura (1293586, Hunter Guardian Hawk Pet Scaling 01) passes on the hunter's haste, damage done and crit but no attack power, so the swings themselves should not grow with ranged attack power.",
 			"Two hawks at once, the client's cap; a cast past it replaces the hawk closest to leaving, which the client does not specify."
 		],
 		"file": "sim/hunter/summon_hawk.go",
@@ -38,7 +38,7 @@
 	"1293526": {
 		"ability": "Summon Hawk",
 		"assumptions": [
-			"The hawk is a guardian whose swings the client does not describe; the assault is modelled as the rank's dive bomb base damage every 3 sec.",
+			"The hawk is a guardian whose swings the client does not describe; the assault is modelled as the rank's dive bomb base damage every 3 sec. Its scaling aura (1293586, Hunter Guardian Hawk Pet Scaling 01) passes on the hunter's haste, damage done and crit but no attack power, so the swings themselves should not grow with ranged attack power.",
 			"Two hawks at once, the client's cap; a cast past it replaces the hawk closest to leaving, which the client does not specify."
 		],
 		"file": "sim/hunter/summon_hawk.go",
@@ -49,7 +49,7 @@
 	"1293527": {
 		"ability": "Summon Hawk",
 		"assumptions": [
-			"The hawk is a guardian whose swings the client does not describe; the assault is modelled as the rank's dive bomb base damage every 3 sec.",
+			"The hawk is a guardian whose swings the client does not describe; the assault is modelled as the rank's dive bomb base damage every 3 sec. Its scaling aura (1293586, Hunter Guardian Hawk Pet Scaling 01) passes on the hunter's haste, damage done and crit but no attack power, so the swings themselves should not grow with ranged attack power.",
 			"Two hawks at once, the client's cap; a cast past it replaces the hawk closest to leaving, which the client does not specify."
 		],
 		"file": "sim/hunter/summon_hawk.go",
@@ -92,7 +92,10 @@
 	},
 	"13549": {
 		"ability": "Serpent Sting",
-		"assumptions": ["The client carries no spell power coefficient on Serpent Sting; Classic's is kept."],
+		"assumptions": [
+			"The client carries no spell power coefficient on Serpent Sting; Classic's is kept.",
+			"No attack power scaling. One beta player reports Serpent Sting and Arcane Shot do scale with attack power beyond their tooltips (forum thread 2358919, 2026-09-23, no numbers); check with and without Aspect of the Hawk."
+		],
 		"file": "sim/hunter/serpent_sting.go",
 		"note": "Beta client 1.60.1.69893: rank 2 deals 30 over 15 sec, down from 40.",
 		"source": "assumed",
@@ -100,7 +103,10 @@
 	},
 	"13550": {
 		"ability": "Serpent Sting",
-		"assumptions": ["The client carries no spell power coefficient on Serpent Sting; Classic's is kept."],
+		"assumptions": [
+			"The client carries no spell power coefficient on Serpent Sting; Classic's is kept.",
+			"No attack power scaling. One beta player reports Serpent Sting and Arcane Shot do scale with attack power beyond their tooltips (forum thread 2358919, 2026-09-23, no numbers); check with and without Aspect of the Hawk."
+		],
 		"file": "sim/hunter/serpent_sting.go",
 		"note": "Beta client 1.60.1.69893: rank 3 deals 60 over 15 sec, down from 80.",
 		"source": "assumed",
@@ -108,7 +114,10 @@
 	},
 	"13551": {
 		"ability": "Serpent Sting",
-		"assumptions": ["The client carries no spell power coefficient on Serpent Sting; Classic's is kept."],
+		"assumptions": [
+			"The client carries no spell power coefficient on Serpent Sting; Classic's is kept.",
+			"No attack power scaling. One beta player reports Serpent Sting and Arcane Shot do scale with attack power beyond their tooltips (forum thread 2358919, 2026-09-23, no numbers); check with and without Aspect of the Hawk."
+		],
 		"file": "sim/hunter/serpent_sting.go",
 		"note": "Beta client 1.60.1.69893: rank 4 deals 110 over 15 sec, down from 140.",
 		"source": "assumed",
@@ -116,7 +125,10 @@
 	},
 	"13552": {
 		"ability": "Serpent Sting",
-		"assumptions": ["The client carries no spell power coefficient on Serpent Sting; Classic's is kept."],
+		"assumptions": [
+			"The client carries no spell power coefficient on Serpent Sting; Classic's is kept.",
+			"No attack power scaling. One beta player reports Serpent Sting and Arcane Shot do scale with attack power beyond their tooltips (forum thread 2358919, 2026-09-23, no numbers); check with and without Aspect of the Hawk."
+		],
 		"file": "sim/hunter/serpent_sting.go",
 		"note": "Beta client 1.60.1.69893: rank 5 deals 170 over 15 sec, down from 210.",
 		"source": "assumed",
@@ -124,7 +136,10 @@
 	},
 	"13553": {
 		"ability": "Serpent Sting",
-		"assumptions": ["The client carries no spell power coefficient on Serpent Sting; Classic's is kept."],
+		"assumptions": [
+			"The client carries no spell power coefficient on Serpent Sting; Classic's is kept.",
+			"No attack power scaling. One beta player reports Serpent Sting and Arcane Shot do scale with attack power beyond their tooltips (forum thread 2358919, 2026-09-23, no numbers); check with and without Aspect of the Hawk."
+		],
 		"file": "sim/hunter/serpent_sting.go",
 		"note": "Beta client 1.60.1.69893: rank 6 deals 240 over 15 sec, down from 290.",
 		"source": "assumed",
@@ -132,7 +147,10 @@
 	},
 	"13554": {
 		"ability": "Serpent Sting",
-		"assumptions": ["The client carries no spell power coefficient on Serpent Sting; Classic's is kept."],
+		"assumptions": [
+			"The client carries no spell power coefficient on Serpent Sting; Classic's is kept.",
+			"No attack power scaling. One beta player reports Serpent Sting and Arcane Shot do scale with attack power beyond their tooltips (forum thread 2358919, 2026-09-23, no numbers); check with and without Aspect of the Hawk."
+		],
 		"file": "sim/hunter/serpent_sting.go",
 		"note": "Beta client 1.60.1.69893: rank 7 deals 320 over 15 sec, down from 385.",
 		"source": "assumed",
@@ -140,7 +158,10 @@
 	},
 	"13555": {
 		"ability": "Serpent Sting",
-		"assumptions": ["The client carries no spell power coefficient on Serpent Sting; Classic's is kept."],
+		"assumptions": [
+			"The client carries no spell power coefficient on Serpent Sting; Classic's is kept.",
+			"No attack power scaling. One beta player reports Serpent Sting and Arcane Shot do scale with attack power beyond their tooltips (forum thread 2358919, 2026-09-23, no numbers); check with and without Aspect of the Hawk."
+		],
 		"file": "sim/hunter/serpent_sting.go",
 		"note": "Beta client 1.60.1.69893: rank 8 deals 415 over 15 sec, down from 490.",
 		"source": "assumed",
@@ -238,7 +259,10 @@
 	},
 	"14281": {
 		"ability": "Arcane Shot",
-		"assumptions": ["The client carries no spell power coefficient on Arcane Shot; Classic's (.204, .3, then .429) is kept."],
+		"assumptions": [
+			"The client carries no spell power coefficient on Arcane Shot; Classic's (.204, .3, then .429) is kept.",
+			"No attack power scaling. One beta player reports Serpent Sting and Arcane Shot do scale with attack power beyond their tooltips (forum thread 2358919, 2026-09-23, no numbers); check with and without Aspect of the Hawk."
+		],
 		"file": "sim/hunter/arcane_shot.go",
 		"note": "Beta client 1.60.1.69893: rank 2 deals 26, up from 21.",
 		"source": "assumed",
@@ -246,7 +270,10 @@
 	},
 	"14282": {
 		"ability": "Arcane Shot",
-		"assumptions": ["The client carries no spell power coefficient on Arcane Shot; Classic's (.204, .3, then .429) is kept."],
+		"assumptions": [
+			"The client carries no spell power coefficient on Arcane Shot; Classic's (.204, .3, then .429) is kept.",
+			"No attack power scaling. One beta player reports Serpent Sting and Arcane Shot do scale with attack power beyond their tooltips (forum thread 2358919, 2026-09-23, no numbers); check with and without Aspect of the Hawk."
+		],
 		"file": "sim/hunter/arcane_shot.go",
 		"note": "Beta client 1.60.1.69893: rank 3 deals 39, up from 33.",
 		"source": "assumed",
@@ -254,7 +281,10 @@
 	},
 	"14283": {
 		"ability": "Arcane Shot",
-		"assumptions": ["The client carries no spell power coefficient on Arcane Shot; Classic's (.204, .3, then .429) is kept."],
+		"assumptions": [
+			"The client carries no spell power coefficient on Arcane Shot; Classic's (.204, .3, then .429) is kept.",
+			"No attack power scaling. One beta player reports Serpent Sting and Arcane Shot do scale with attack power beyond their tooltips (forum thread 2358919, 2026-09-23, no numbers); check with and without Aspect of the Hawk."
+		],
 		"file": "sim/hunter/arcane_shot.go",
 		"note": "Beta client 1.60.1.69893: rank 4 deals 65, up from 59.",
 		"source": "assumed",
@@ -262,7 +292,10 @@
 	},
 	"14284": {
 		"ability": "Arcane Shot",
-		"assumptions": ["The client carries no spell power coefficient on Arcane Shot; Classic's (.204, .3, then .429) is kept."],
+		"assumptions": [
+			"The client carries no spell power coefficient on Arcane Shot; Classic's (.204, .3, then .429) is kept.",
+			"No attack power scaling. One beta player reports Serpent Sting and Arcane Shot do scale with attack power beyond their tooltips (forum thread 2358919, 2026-09-23, no numbers); check with and without Aspect of the Hawk."
+		],
 		"file": "sim/hunter/arcane_shot.go",
 		"note": "Beta client 1.60.1.69893: rank 5 deals 94, up from 83.",
 		"source": "assumed",
@@ -270,7 +303,10 @@
 	},
 	"14285": {
 		"ability": "Arcane Shot",
-		"assumptions": ["The client carries no spell power coefficient on Arcane Shot; Classic's (.204, .3, then .429) is kept."],
+		"assumptions": [
+			"The client carries no spell power coefficient on Arcane Shot; Classic's (.204, .3, then .429) is kept.",
+			"No attack power scaling. One beta player reports Serpent Sting and Arcane Shot do scale with attack power beyond their tooltips (forum thread 2358919, 2026-09-23, no numbers); check with and without Aspect of the Hawk."
+		],
 		"file": "sim/hunter/arcane_shot.go",
 		"note": "Beta client 1.60.1.69893: rank 6 deals 134, up from 115.",
 		"source": "assumed",
@@ -278,7 +314,10 @@
 	},
 	"14286": {
 		"ability": "Arcane Shot",
-		"assumptions": ["The client carries no spell power coefficient on Arcane Shot; Classic's (.204, .3, then .429) is kept."],
+		"assumptions": [
+			"The client carries no spell power coefficient on Arcane Shot; Classic's (.204, .3, then .429) is kept.",
+			"No attack power scaling. One beta player reports Serpent Sting and Arcane Shot do scale with attack power beyond their tooltips (forum thread 2358919, 2026-09-23, no numbers); check with and without Aspect of the Hawk."
+		],
 		"file": "sim/hunter/arcane_shot.go",
 		"note": "Beta client 1.60.1.69893: rank 7 deals 170, up from 145.",
 		"source": "assumed",
@@ -286,7 +325,10 @@
 	},
 	"14287": {
 		"ability": "Arcane Shot",
-		"assumptions": ["The client carries no spell power coefficient on Arcane Shot; Classic's (.204, .3, then .429) is kept."],
+		"assumptions": [
+			"The client carries no spell power coefficient on Arcane Shot; Classic's (.204, .3, then .429) is kept.",
+			"No attack power scaling. One beta player reports Serpent Sting and Arcane Shot do scale with attack power beyond their tooltips (forum thread 2358919, 2026-09-23, no numbers); check with and without Aspect of the Hawk."
+		],
 		"file": "sim/hunter/arcane_shot.go",
 		"note": "Beta client 1.60.1.69893: rank 8 deals 217, up from 183.",
 		"source": "assumed",
@@ -456,7 +498,10 @@
 	},
 	"1978": {
 		"ability": "Serpent Sting",
-		"assumptions": ["The client carries no spell power coefficient on Serpent Sting; Classic's is kept."],
+		"assumptions": [
+			"The client carries no spell power coefficient on Serpent Sting; Classic's is kept.",
+			"No attack power scaling. One beta player reports Serpent Sting and Arcane Shot do scale with attack power beyond their tooltips (forum thread 2358919, 2026-09-23, no numbers); check with and without Aspect of the Hawk."
+		],
 		"file": "sim/hunter/serpent_sting.go",
 		"note": "Beta client 1.60.1.69893: rank 1 deals 10 over 15 sec, down from 20.",
 		"source": "assumed",
@@ -574,7 +619,10 @@
 	},
 	"25295": {
 		"ability": "Serpent Sting",
-		"assumptions": ["The client carries no spell power coefficient on Serpent Sting; Classic's is kept."],
+		"assumptions": [
+			"The client carries no spell power coefficient on Serpent Sting; Classic's is kept.",
+			"No attack power scaling. One beta player reports Serpent Sting and Arcane Shot do scale with attack power beyond their tooltips (forum thread 2358919, 2026-09-23, no numbers); check with and without Aspect of the Hawk."
+		],
 		"file": "sim/hunter/serpent_sting.go",
 		"note": "Beta client 1.60.1.69893: rank 9 deals 555 over 15 sec, as in Classic.",
 		"source": "assumed",
@@ -616,7 +664,10 @@
 	},
 	"3044": {
 		"ability": "Arcane Shot",
-		"assumptions": ["The client carries no spell power coefficient on Arcane Shot; Classic's (.204, .3, then .429) is kept."],
+		"assumptions": [
+			"The client carries no spell power coefficient on Arcane Shot; Classic's (.204, .3, then .429) is kept.",
+			"No attack power scaling. One beta player reports Serpent Sting and Arcane Shot do scale with attack power beyond their tooltips (forum thread 2358919, 2026-09-23, no numbers); check with and without Aspect of the Hawk."
+		],
 		"file": "sim/hunter/arcane_shot.go",
 		"note": "Beta client 1.60.1.69893: rank 1 deals 20, up from 13.",
 		"source": "assumed",

@@ -234,7 +234,9 @@
 	},
 	"1240047": {
 		"ability": "Ice Lance",
-		"assumptions": ["Spell power coefficient .143. The beta client carries no coefficient on the damage effect at all, so it cannot confirm one."],
+		"assumptions": [
+			"Spell power coefficient .143. The client row carries 0, as Season of Discovery's Ice Lance (400640) does: the scaling lives in a server script. Forever's row is a copy of SoD's reworked one (the same 20 and 5 Glaciate dummies, a x4 frozen bonus), and SoD's hotfix of 2024-12-04 raised that rune's spell power scaling by 300% from .143; so .429 or .572 is at least as likely as .143. At level 20: Ice Lance a non-frozen dummy 10 times with and without Lesser Wizard Oil (+16 spell power); the average rises by about 2 at .143, 7 at .429, 9 at .572."
+		],
 		"file": "sim/mage/ice_lance.go",
 		"note": "Rank 6, Forever's own id, which the sim now carries in place of the later expansion's 30455. Beta client 1.60.1.69893: 133-157 plus its growth to level 60 = 136-161, 160 mana, 300% against frozen targets.",
 		"source": "assumed",
@@ -565,21 +567,23 @@
 		"source": "forever",
 		"tooltip": "15% of base mana\n2.5 sec cast\nBlasts the target with energy, dealing 364 to 424 Arcane damage.\nEach cast increases the damage of all your other spells by 10% and the mana cost of Arcane Blast by 175%, stacking up to 4 times. Lasts 8 sec or until any other damage spell is cast."
 	},
-	"30455": {
-		"ability": "Ice Lance",
-		"assumptions": ["Spell power coefficient .143. The beta client carries no coefficient on the damage effect at all, so it cannot confirm one."],
-		"file": "sim/mage/ice_lance.go",
-		"foreverId": 1240047,
-		"note": "Ice Lance is a later expansion spell, so the Classic database has no entry for 30455. Beta client 1.60.1.69893 gives it six ranks; the sim casts rank 6 (1240047), 133-157 plus its growth to level 60 = 136-161, 160 mana, 300% against frozen targets.",
-		"source": "assumed",
-		"tooltip": "160 Mana\nInstant\nDeals 136 to 161 Frost damage to an enemy target.\nDeals 300% increased damage to a frozen target, which against a raid boss means one held by Fingers of Frost."
-	},
 	"3140": {
 		"ability": "Fireball",
 		"file": "sim/mage/fireball.go",
 		"note": "Beta client 1.60.1.69893: lower damage at every rank from 2 up (rank 12 596-760 -> 425-541, dot 76 -> 60) and no downranking penalty (rank 1 coefficient .123 -> .429). Cast times and costs are Classic's.",
 		"source": "forever",
 		"tooltip": "95 Mana\n3 sec cast\nHurls a fiery ball that causes 66 to 91 Fire damage and an additional 12 Fire damage over 8 sec."
+	},
+	"400669": {
+		"ability": "Fingers of Frost",
+		"assumptions": [
+			"A cast already in progress when the chill lands is not the 'next spell cast': it takes neither the Shatter crit nor a charge, and the cast after it takes both."
+		],
+		"file": "sim/mage/talents_frost.go",
+		"foreverId": 400669,
+		"note": "Fingers of Frost is a later expansion spell, so the Classic database has no entry for 44543. Beta client 1.60.1.69893 (400647, 400669, 400670): 15% at both ranks, one charge per rank, 15 sec. Shatter's crit bonus is folded into this aura because a raid boss can never be chilled or frozen by anything else.",
+		"source": "assumed",
+		"tooltip": "Your Chill effects have a 15% chance to grant Fingers of Frost, which treats your next spell cast, or next 2 at rank 2, as though the target were frozen. Lasts 15 sec.\nWhile it is up your spells gain Shatter's critical strike chance, 17/33/50%, and Ice Lance deals its frozen damage."
 	},
 	"412538": {
 		"ability": "Ignite",
@@ -603,17 +607,6 @@
 		"note": "Hot Streak is a later expansion spell, so the Classic database has no entry for 44445 and the site renders nothing; the 20 sec (15 before client build 70009), 25% and 3 stacks are all Forever's published numbers, and Frostfire Bolt, which the Forever tooltip also names, has no Classic spell so it cannot grant a stack here.",
 		"source": "forever",
 		"tooltip": "Your non-periodic critical strikes with Fireball, Fire Blast and Scorch grant Hot Streak for 20 sec.\nEach stack reduces the cast time of Pyroblast by 25%, stacking up to 3 times."
-	},
-	"44543": {
-		"ability": "Fingers of Frost",
-		"assumptions": [
-			"A cast already in progress when the chill lands is not the 'next spell cast': it takes neither the Shatter crit nor a charge, and the cast after it takes both."
-		],
-		"file": "sim/mage/talents.go",
-		"foreverId": 400669,
-		"note": "Fingers of Frost is a later expansion spell, so the Classic database has no entry for 44543. Beta client 1.60.1.69893 (400647, 400669, 400670): 15% at both ranks, one charge per rank, 15 sec. Shatter's crit bonus is folded into this aura because a raid boss can never be chilled or frozen by anything else.",
-		"source": "assumed",
-		"tooltip": "Your Chill effects have a 15% chance to grant Fingers of Frost, which treats your next spell cast, or next 2 at rank 2, as though the target were frozen. Lasts 15 sec.\nWhile it is up your spells gain Shatter's critical strike chance, 17/33/50%, and Ice Lance deals its frozen damage."
 	},
 	"5143": {
 		"ability": "Arcane Missiles",

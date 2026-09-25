@@ -145,13 +145,13 @@
 		"note": "Forever's demo tooltip is Classic's (20% melee attack speed, one extra nearby target, 15 sec) and the sim keeps Classic's 25 Energy and 2 min cooldown; only Restless Blades, from outside the spell, shortens it.",
 		"source": "classic"
 	},
-	"13964": {
+	"13960": {
 		"ability": "Hack and Slash",
 		"assumptions": [
 			"The extra attack keeps Classic Sword Specialization's 200 ms internal cooldown",
 			"A rogue holding two qualifying weapon types gets both halves of the talent"
 		],
-		"file": "sim/rogue/hack_and_slash.go",
+		"file": "sim/rogue/talents_combat.go",
 		"note": "Hack and Slash folds Classic's four weapon specialization talents into one and has no published spell id (the tree carries a placeholder 0), so the extra attack is logged under Classic's Sword Specialization id 13964 and the UI names it that. The beta client (13960, curves 1-5 and 3-15) confirms the linear ranks.",
 		"source": "assumed",
 		"tooltip": "Talent, 5 ranks\nGives your melee weapon attacks a benefit depending on the weapon.\nAxe/Sword: your successful melee attacks have a 1% chance per rank to trigger an extra attack on the target.\nDagger/Fist: increases your critical strike chance by 1% per rank.\nMace: your attacks ignore 3% of your target's armor per rank."
