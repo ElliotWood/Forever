@@ -109,13 +109,23 @@ func (warlock *Warlock) applyImprovedSayaad() {
 // Voidwalker mana (18792) and the Felhunter health (18790). The demon is sacrificed before the pull,
 // so the buff is simply permanent and no pet is ever summoned.
 func (warlock *Warlock) applyDemonicSacrifice() {
-	if !warlock.Talents.DemonicSacrifice || !warlock.Options.SacrificeSummon {
+	if !warlock.Talents.DemonicSacrifice {
 		return
+	}
+
+	demon := warlock.Options.Summon
+	if !warlock.Options.SacrificeSummon {
+		// Demonic Pact (425464): a demon sacrificed before the pull keeps its buff while a different
+		// one is out; summoning the sacrificed demon again cancels it.
+		if !warlock.Talents.DemonicPact || warlock.Options.PactSacrifice == warlock.Options.Summon {
+			return
+		}
+		demon = warlock.Options.PactSacrifice
 	}
 
 	var spellID int32
 	var school stats.SchoolIndex
-	switch warlock.Options.Summon {
+	switch demon {
 	case proto.WarlockOptions_Imp:
 		spellID, school = 18789, stats.SchoolIndexShadow
 	case proto.WarlockOptions_Succubus:
@@ -425,10 +435,8 @@ func (warlock *Warlock) applyImprovedFelhunter() {
 	}
 }
 
-// applyDemonicPact implements Demonic Pact, new in Forever.
-//
-// It keeps a Demonic Sacrifice buff alive while another demon is out, which only matters once the
-// sim summons and sacrifices during the fight.
+// applyDemonicPact implements Demonic Pact, new in Forever. The sacrifice it keeps (PactSacrifice)
+// is applied in applyDemonicSacrifice.
 func (warlock *Warlock) applyDemonicPact() {
 	if !warlock.Talents.DemonicPact {
 		return
