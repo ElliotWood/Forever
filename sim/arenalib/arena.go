@@ -152,7 +152,7 @@ func Run(t *testing.T, spec Spec) {
 	// rather than inherited. Without this a rebuild that does not search would quietly drop
 	// every optimised build the long one found; with it, the number is always produced by the
 	// sim as it stands today even when the search has not run since.
-	carried := previouslyOptimised(spec.Dir)
+	carried := previouslyOptimised(spec)
 	talents = append(talents, carried...)
 	wasOptimised := map[string]bool{}
 	for _, build := range carried {
@@ -674,7 +674,7 @@ func write(t *testing.T, path string, results any) {
 // that no longer exists sitting in a table of numbers that do, and there is no way to tell
 // them apart by looking. One per name, so every shape's row survives a rebuild that does not
 // search, even where two shapes share a build.
-func previouslyOptimised(spec string) []TalentBuild {
+func previouslyOptimised(spec Spec) []TalentBuild {
 	data, err := os.ReadFile(filepath.Join(repoRoot(), "ui", "app", "arena", "results.json"))
 	if err != nil {
 		return nil
@@ -691,11 +691,18 @@ func previouslyOptimised(spec string) []TalentBuild {
 		return nil
 	}
 
+	// A patch that removes or moves talents turns last run's builds illegal: 70009 took two
+	// paladin talents out, and a carried paladin build killed both paladin searches when a
+	// climb refused to start from it. An illegal build is not a result, so it is not carried.
+	trees, err := loadTrees(spec.Class)
+	if err != nil {
+		return nil
+	}
 	seen := map[string]bool{}
 	builds := []TalentBuild{}
 	for _, build := range published.Builds {
 		key := build.Build + "|" + build.Talents
-		if build.Spec == spec && build.Optimised && !seen[key] {
+		if build.Spec == spec.Dir && build.Optimised && !seen[key] && parseTalents(trees, build.Talents).valid(trees) {
 			seen[key] = true
 			builds = append(builds, TalentBuild{Name: build.Build, Talents: build.Talents})
 		}
