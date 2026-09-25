@@ -1,5 +1,11 @@
 [
 	{
+		"number": 469,
+		"title": "buffs: Trueshot Aura grants rank 4's 75 ranged attack power",
+		"mergedAt": "2026-09-25",
+		"url": "https://github.com/ElliotWood/Forever/pull/469"
+	},
+	{
 		"number": 468,
 		"title": "evidence: settle Eye for an Eye, drop stale guesses, record new leads",
 		"mergedAt": "2026-09-25",
