@@ -61,16 +61,17 @@ type Results = { sim?: string; commit: string; generated: string; iterations: nu
 const data = results as Results;
 const byDps = [...data.builds].sort((a, b) => b.dps - a.dps);
 
-// The arena runs every talent build on every gear set, but this page compares talents, so each
-// spec keeps one gear set - the one its best build wears - and each talent build appears once on
-// it, in its best rotation. Within a spec, rows differ only in talents.
-const GEAR = new Map<string, string>();
-for (const build of byDps) if (!GEAR.has(build.spec)) GEAR.set(build.spec, build.gear);
+// The arena runs every talent build on every gear set, but this page compares talents, and specs,
+// so every row wears its spec's launch set: the best pre-raid gear from one shared item pool,
+// built by the same rule for every spec (tools/launch_gear), all within a few item levels of
+// each other. A spec with two (rogue daggers or swords, warrior dual wield or two-hander) lets
+// each build take the better. Each talent build appears once, in its best rotation.
+const isLaunchSet = (gear: string) => gear === 'launch' || gear.endsWith('_launch');
 const builds = (() => {
 	const seen = new Set<string>();
 	return byDps.filter(build => {
 		const talents = `${build.spec}|${build.talents}`;
-		if (build.gear !== GEAR.get(build.spec) || seen.has(talents)) return false;
+		if (!isLaunchSet(build.gear) || seen.has(talents)) return false;
 		seen.add(talents);
 		return true;
 	});
@@ -343,7 +344,7 @@ const SimSource = () => {
 export const ArenaPage = () => (
 	<ProductPage
 		title="The build arena"
-		subtitle={`Every talent build this sim has on file, each on its spec's best gear set: ${builds.length} talent builds across ${new Set(builds.map(b => b.spec)).size} specs, each run on its own at ${formatToNumber(data.iterations)} iterations against the same target, with the same buffs and the same consumables, plus the builds a talent search found on top of those. Nothing is simulated in your browser.`}>
+		subtitle={`Every talent build this sim has on file, each on its spec's launch gear: ${builds.length} talent builds across ${new Set(builds.map(b => b.spec)).size} specs, each run on its own at ${formatToNumber(data.iterations)} iterations against the same target, with the same buffs and the same consumables, plus the builds a talent search found on top of those. Nothing is simulated in your browser.`}>
 		<div className="grid grid-cols-[repeat(auto-fit,minmax(min(26rem,100%),1fr))] gap-4">
 			<PageSection title="How a number gets onto this page">
 				<p className="m-0">
@@ -402,10 +403,10 @@ export const ArenaPage = () => (
 				the shaman, which is not a shaman measured fairly, it is a shaman disarmed.
 			</li>
 			<li>
-				<strong>This table compares talents, not gear.</strong> The arena sims every talent build on every gear set a spec has on file, but this page
-				shows each talent build once, on one gear set per spec: the set that spec&apos;s best build wears. So within a spec only the talents differ.
-				Between specs the gear still differs, and the line under the filter says by how many item levels. A <code>?</code> is a gear set the item
-				database could not price.
+				<strong>Every spec wears the same standard of gear.</strong> Each row uses its spec&apos;s launch set: the best pre-raid gear from one shared
+				item pool (dungeons, crafting, quests and world drops, with every raid and world boss left out), picked by the same rule for every spec. They
+				land within about three item levels of each other, and the line under the filter says exactly how far apart the rows you are looking at are. The
+				arena sims the spec&apos;s other gear sets too; they are not shown, because they would compare gear rather than specs.
 			</li>
 			<li>
 				<strong>Rests on a guess</strong> is what the build&apos;s damage is made of, not a verdict on it. Each ability is weighted by its share of that
