@@ -11,6 +11,7 @@ import type { PlayerSpec } from '@sim/player/player_spec';
 import { PlayerSpecs } from '@sim/player/specs';
 import { textClassNameForSpec } from '@sim/proto/utils';
 import type { Composition } from '@sim/spells/rests';
+import { classTalentsConfig } from '@sim/talents/factory';
 import { formatToNumber, formatToPercent } from '@sim/utils/format';
 import clsx from 'clsx';
 import pako from 'pako';
@@ -82,12 +83,26 @@ export const talentLink = (spec: PlayerSpec<any>, talents: string) => {
 	return `${spec.simLink}?i=t#${btoa(String.fromCharCode(...bytes))}`;
 };
 
-// Best build per spec. Specs ship different numbers of gear sets, so ranking each spec's best
-// across all of them ranks how far ahead somebody wrote its gear; the item level filter is what
-// makes the comparison mean something.
-const bestPerSpec = (from: Array<Build>): Array<Build> => {
+// The tree a build puts most points in, which is what "a Fury build" means. A tie goes to the
+// earlier tree.
+const mainTree = (build: Build) => {
+	const points = split(build.talents).split('/').map(Number);
+	return points.indexOf(Math.max(...points));
+};
+const treeName = (build: Build) => {
+	const spec = SPECS[build.spec]?.spec;
+	return spec ? (classTalentsConfig[spec.classID as keyof typeof classTalentsConfig]?.[mainTree(build)]?.name ?? '') : '';
+};
+
+// The default view: each spec's best build in each of its trees, so the Arms, Fury and
+// Protection answers all show rather than only whichever tree wins. from is best first, so the
+// first row seen for a spec and tree is its best.
+export const bestPerTree = (from: Array<Build>): Array<Build> => {
 	const best = new Map<string, Build>();
-	for (const build of from) if (!best.has(build.spec)) best.set(build.spec, build);
+	for (const build of from) {
+		const at = `${build.spec}|${mainTree(build)}`;
+		if (!best.has(at)) best.set(at, build);
+	}
 	return [...best.values()].sort((a, b) => b.dps - a.dps);
 };
 
@@ -143,7 +158,7 @@ const Row = ({ build, rank, top }: { build: Build; rank: number; top: number }) 
 					<span className="text-xs text-white/60">{specName(build.spec)}</span>
 					<span className={clsx('font-semibold', color)}>{displayName(build)}</span>
 					<span className="text-xs text-white/50 tabular-nums">
-						{split(build.talents)}
+						{split(build.talents)} {treeName(build)}
 						{spec && (
 							<>
 								{' · '}
@@ -229,7 +244,7 @@ const Controls = ({
 }) => (
 	<div className="flex flex-wrap items-center gap-x-4 gap-y-2">
 		<button className={clsx(PILL, 'border-brand text-white hover:bg-brand/15')} type="button" onClick={() => setShowAll(!showAll)}>
-			{showAll ? 'Show only the best of each spec' : 'Show every talent build'}
+			{showAll ? 'Show the best build in each tree' : 'Show every talent build'}
 		</button>
 		<select className={SELECT} value={spec} onChange={event => setSpec(event.target.value)} aria-label="Spec">
 			<option value="">Every spec</option>
@@ -248,7 +263,7 @@ const Leaderboard = () => {
 
 	const shown = useMemo(() => {
 		const kept = builds.filter(b => !spec || b.spec === spec);
-		return showAll || spec ? kept : bestPerSpec(kept);
+		return showAll ? kept : bestPerTree(kept);
 	}, [showAll, spec]);
 	const top = shown[0]?.dps || 1;
 	const specCount = new Set(shown.map(b => b.spec)).size;
@@ -264,9 +279,9 @@ const Leaderboard = () => {
 		<div className="flex flex-col gap-3">
 			<Controls {...{ showAll, setShowAll, spec, setSpec }} />
 			<p className="m-0 text-white/50" data-testid="arena-count">
-				{showAll || spec
+				{showAll
 					? `All ${shown.length} talent builds, best first. Each spec wears one gear set throughout, so within a spec only the talents differ.`
-					: `The best build of each of ${specCount} spec${specCount === 1 ? '' : 's'} matching these filters.`}
+					: `The best build in each talent tree of ${specCount} spec${specCount === 1 ? '' : 's'}: ${shown.length} builds, best first.`}
 			</p>
 			{levels.length > 0 && (
 				<p className={clsx('m-0 text-sm', wide ? 'text-brand' : 'text-white/50')} data-wide={wide || undefined}>
