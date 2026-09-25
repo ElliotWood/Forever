@@ -1,5 +1,11 @@
 [
 	{
+		"number": 441,
+		"title": "Forever beta build 70009: data and the 2026-09-24 patch notes",
+		"mergedAt": "2026-09-25",
+		"url": "https://github.com/ElliotWood/Forever/pull/441"
+	},
+	{
 		"number": 440,
 		"title": "Merge wowsims/forever master (a539274ef) into master",
 		"mergedAt": "2026-09-25",
