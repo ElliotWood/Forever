@@ -107,8 +107,8 @@ func TestFieldNamesRoundTrip(t *testing.T) {
 
 // proto/buffs.proto is rendered from this manifest, so this test is not an independent oracle for
 // the field set: it catches a hand edit to the committed proto drifting from the manifest, and
-// nothing more. What the numbers and types are checked against is gen_buffs_proto's
-// TestRenderMatchesCommittedFile: the committed file is what the manifest renders.
+// nothing more. What the numbers and types are checked against is tools/database's
+// TestBuffFilesRegenerateFromTheCommittedInputs: the committed file is what the manifest renders.
 func TestBuffsMatchProto(t *testing.T) {
 	messages := map[string]BuffScope{
 		"RaidBuffs":       ScopeRaid,
