@@ -179,6 +179,13 @@ Opens the sim with these talents. Your gear and other settings are kept.`}
 			<td className={clsx(CELL, 'text-sm')}>
 				<span className="block text-gray-300">{build.gear}</span>
 				<span className="block text-white/50">{build.rotation || 'default rotation'}</span>
+				{build.rotation.endsWith('_lowrank') && (
+					<span
+						className={clsx(TAG, 'block border-brand text-brand')}
+						title="Casts lower spell ranks to save mana. The sim gives lower ranks full spell-power scaling, as the beta does at level 20; whether Forever penalises them at level 60 is not yet known.">
+						low ranks, unconfirmed at 60
+					</span>
+				)}
 				<span
 					className="block text-white/50"
 					title="The consumable list this build drank. Every spec in a role drinks the same one; it is set by the arena, not by the spec.">
@@ -389,6 +396,11 @@ export const ArenaPage = () => (
 				<strong>Rests on a guess</strong> is what the build&apos;s damage is made of, not a verdict on it. Each ability is weighted by its share of that
 				build&apos;s damage and looked up in the <a href={`${SITE_BASE}evidence/`}>evidence manifest</a>. A build ten DPS ahead means something
 				different if a quarter of it is unconfirmed. Hover the bar for the breakdown.
+			</li>
+			<li>
+				<strong>Rotations tagged low ranks</strong> drop to cheaper spell ranks as mana runs down. The sim gives every rank full spell-power scaling,
+				which is what beta players see at level 20; nobody has confirmed whether Forever penalises low ranks at level 60, and if it does those rows will
+				overstate the spec. The spec&apos;s normal rotation is always ranked beside them.
 			</li>
 			<li>
 				<strong>Gear and rotations come from what is already here</strong> - the sets and priority lists on each spec&apos;s page. Nothing invents a
