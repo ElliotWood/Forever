@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/buffs"
 	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/stats"
@@ -113,7 +114,7 @@ func (shaman *Shaman) registerWindfuryTotemSpell() {
 		},
 	})
 
-	wfIntermediateAuraForExclusitivity.NewExclusiveEffect(core.WindfuryTotemCategory, false, core.ExclusiveEffect{
+	wfIntermediateAuraForExclusitivity.NewExclusiveEffect(buffs.WindfuryTotemCategory, false, core.ExclusiveEffect{
 		Priority: value,
 		OnGain: func(_ *core.ExclusiveEffect, sim *core.Simulation) {
 			wfProcTrigger.Activate(sim)
@@ -150,7 +151,7 @@ func (shaman *Shaman) registerStrengthOfEarthTotemSpell() {
 		ActionID: config.ActionID,
 		Duration: duration,
 	})
-	buffAura.NewExclusiveEffect(core.StrengthOfEarthTotemCategory+stats.Strength.StatName()+"Add", false, core.ExclusiveEffect{
+	buffAura.NewExclusiveEffect(buffs.StrengthOfEarthTotemCategory+stats.Strength.StatName()+"Add", false, core.ExclusiveEffect{
 		Priority: value,
 		OnGain: func(ee *core.ExclusiveEffect, sim *core.Simulation) {
 			ee.Aura.Unit.AddStatDynamic(sim, stats.Strength, value)
@@ -179,7 +180,7 @@ func (shaman *Shaman) registerGraceOfAirTotemSpell() {
 		ActionID: config.ActionID,
 		Duration: duration,
 	})
-	buffAura.NewExclusiveEffect(core.GraceOfAirTotemCategory+stats.Agility.StatName()+"Add", false, core.ExclusiveEffect{
+	buffAura.NewExclusiveEffect(buffs.GraceOfAirTotemCategory+stats.Agility.StatName()+"Add", false, core.ExclusiveEffect{
 		Priority: value,
 		OnGain: func(ee *core.ExclusiveEffect, sim *core.Simulation) {
 			ee.Aura.Unit.AddStatDynamic(sim, stats.Agility, value)
@@ -212,7 +213,7 @@ func (shaman *Shaman) registerManaSpringTotemSpell() {
 		ActionID: config.ActionID,
 		Duration: duration,
 	})
-	buffAura.NewExclusiveEffect(core.ManaSpringTotemCategory+stats.MP5.StatName()+"Add", false, core.ExclusiveEffect{
+	buffAura.NewExclusiveEffect(buffs.ManaSpringTotemCategory+stats.MP5.StatName()+"Add", false, core.ExclusiveEffect{
 		Priority: value,
 		OnGain: func(ee *core.ExclusiveEffect, sim *core.Simulation) {
 			ee.Aura.Unit.AddStatDynamic(sim, stats.MP5, value)

@@ -84,8 +84,8 @@ func newWeaponFromItem(item *Item, bonusDps float64) Weapon {
 	}
 
 	return Weapon{
-		BaseDamageMin:        item.WeaponDamageMin + bonusDps*item.SwingSpeed,
-		BaseDamageMax:        item.WeaponDamageMax + bonusDps*item.SwingSpeed,
+		BaseDamageMin:        item.WeaponDamageMin + item.Enchant.WeaponDamage + bonusDps*item.SwingSpeed,
+		BaseDamageMax:        item.WeaponDamageMax + item.Enchant.WeaponDamage + bonusDps*item.SwingSpeed,
 		SwingSpeed:           item.SwingSpeed,
 		NormalizedSwingSpeed: normalizedWeaponSpeed,
 		AttackPowerPerDPS:    DefaultAttackPowerPerDPS,
@@ -1051,11 +1051,20 @@ func (aa *AutoAttacks) PPMProc(sim *Simulation, ppm float64, procMask ProcMask, 
 	case spell.ProcMask.Matches(procMask &^ ProcMaskMeleeOH &^ ProcMaskRanged):
 		return sim.RandomFloat(label) < ppm*aa.mh.SwingSpeed/60.0
 	case spell.ProcMask.Matches(procMask & ProcMaskMeleeOH):
-		return sim.RandomFloat(label) < ppm*aa.oh.SwingSpeed/60.0
+		return sim.RandomFloat(label) < ppm*aa.offHandProcSpeed()/60.0
 	case spell.ProcMask.Matches(procMask & ProcMaskRanged):
 		return sim.RandomFloat(label) < ppm*aa.ranged.SwingSpeed/60.0
 	}
 	return false
+}
+
+// The swing speed a procs-per-minute rate is measured against for an off-hand hit. A hit with no
+// off-hand weapon behind it, such as a shield's, is measured against the main hand.
+func (aa *AutoAttacks) offHandProcSpeed() float64 {
+	if aa.oh.SwingSpeed == 0 {
+		return aa.mh.SwingSpeed
+	}
+	return aa.oh.SwingSpeed
 }
 
 func (unit *Unit) applyParryHaste() {

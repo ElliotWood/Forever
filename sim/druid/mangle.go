@@ -2,6 +2,7 @@ package druid
 
 import (
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/buffs"
 )
 
 var mangleRank = spellData.Mangle.Highest()
@@ -16,7 +17,7 @@ func (druid *Druid) registerMangleBearSpell() {
 		return
 	}
 
-	druid.MangleAuras = druid.NewEnemyAuraArray(core.MangleAura)
+	druid.MangleAuras = druid.NewEnemyAuraArray(buffs.MangleAura)
 
 	druid.MangleBear = druid.RegisterSpell(Bear, core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: mangleRank.ID},
