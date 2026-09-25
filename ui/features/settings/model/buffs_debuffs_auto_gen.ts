@@ -14,6 +14,84 @@ import {
 
 import type { RenderableStatOptions } from './stat_options';
 
+export const ArcaneBrilliance = makeBooleanRaidBuffInput({
+	actionId: ActionId.fromSpellId(23028),
+	fieldName: 'arcaneBrilliance',
+	label: 'Arcane Brilliance',
+});
+
+export const PrayerOfSpirit = makeBooleanRaidBuffInput({
+	actionId: ActionId.fromSpellId(27681),
+	fieldName: 'prayerOfSpirit',
+	label: 'Prayer of Spirit',
+});
+
+export const GiftOfTheWild = makeBooleanRaidBuffInput({
+	actionId: ActionId.fromSpellId(21850),
+	fieldName: 'giftOfTheWild',
+	label: 'Gift of the Wild',
+});
+
+export const Thorns = makeBooleanRaidBuffInput({
+	actionId: ActionId.fromSpellId(9910),
+	fieldName: 'thorns',
+	label: 'Thorns',
+});
+
+export const PrayerOfFortitude = makeBooleanRaidBuffInput({
+	actionId: ActionId.fromSpellId(21564),
+	fieldName: 'prayerOfFortitude',
+	label: 'Prayer of Fortitude',
+});
+
+export const PrayerOfShadowProtection = makeBooleanRaidBuffInput({
+	actionId: ActionId.fromSpellId(27683),
+	fieldName: 'prayerOfShadowProtection',
+	label: 'Prayer of Shadow Protection',
+});
+
+export const FireResistanceAura = makeBooleanRaidBuffInput({
+	actionId: ActionId.fromSpellId(19900),
+	fieldName: 'fireResistanceAura',
+	label: 'Fire Resistance Aura',
+});
+
+export const FrostResistanceAura = makeBooleanRaidBuffInput({
+	actionId: ActionId.fromSpellId(19898),
+	fieldName: 'frostResistanceAura',
+	label: 'Frost Resistance Aura',
+});
+
+export const ShadowResistanceAura = makeBooleanRaidBuffInput({
+	actionId: ActionId.fromSpellId(19896),
+	fieldName: 'shadowResistanceAura',
+	label: 'Shadow Resistance Aura',
+});
+
+export const FireResistanceTotem = makeBooleanRaidBuffInput({
+	actionId: ActionId.fromSpellId(10535),
+	fieldName: 'fireResistanceTotem',
+	label: 'Fire Resistance Totem',
+});
+
+export const FrostResistanceTotem = makeBooleanRaidBuffInput({
+	actionId: ActionId.fromSpellId(10477),
+	fieldName: 'frostResistanceTotem',
+	label: 'Frost Resistance Totem',
+});
+
+export const NatureResistanceTotem = makeBooleanRaidBuffInput({
+	actionId: ActionId.fromSpellId(10599),
+	fieldName: 'natureResistanceTotem',
+	label: 'Nature Resistance Totem',
+});
+
+export const AspectOfTheWild = makeBooleanRaidBuffInput({
+	actionId: ActionId.fromSpellId(20190),
+	fieldName: 'aspectOfTheWild',
+	label: 'Aspect of the Wild',
+});
+
 export const BloodPact = makeBooleanPartyBuffInput({
 	actionId: ActionId.fromSpellId(11767),
 	fieldName: 'bloodPact',
@@ -43,7 +121,7 @@ export const ManaSpringTotem = makeTristatePartyBuffInput({
 	actionId: ActionId.fromSpellId(10494),
 	impId: ActionId.fromSpellId(16187),
 	fieldName: 'manaSpringTotem',
-	label: 'Mana Spring',
+	label: 'Mana Spring Totem',
 });
 
 export const ManaTideTotems = makeMultistatePartyBuffInput({
@@ -94,13 +172,13 @@ export const AtieshWarlock = makeMultistatePartyBuffInput({
 export const StrengthOfEarthTotem = makeBooleanPartyBuffInput({
 	actionId: ActionId.fromSpellId(25362),
 	fieldName: 'strengthOfEarthTotem',
-	label: 'Strength of Earth',
+	label: 'Strength of Earth Totem',
 });
 
 export const GraceOfAirTotem = makeBooleanPartyBuffInput({
 	actionId: ActionId.fromSpellId(25360),
 	fieldName: 'graceOfAirTotem',
-	label: 'Grace of Air',
+	label: 'Grace of Air Totem',
 });
 
 export const WindfuryTotem = makeBooleanPartyBuffInput({
@@ -115,40 +193,10 @@ export const WindfuryTotem = makeBooleanPartyBuffInput({
 
 // totem_twisting: sim behaviour toggle with no spell source; rendered under Other Inputs.
 
-export const ArcaneBrilliance = makeBooleanRaidBuffInput({
-	actionId: ActionId.fromSpellId(23028),
-	fieldName: 'arcaneBrilliance',
-	label: 'Arcane Brilliance',
-});
-
 export const GreaterBlessingOfKings = makeBooleanIndividualBuffInput({
 	actionId: ActionId.fromSpellId(25898),
 	fieldName: 'greaterBlessingOfKings',
 	label: 'Greater Blessing of Kings',
-});
-
-export const PrayerOfSpirit = makeBooleanRaidBuffInput({
-	actionId: ActionId.fromSpellId(27681),
-	fieldName: 'prayerOfSpirit',
-	label: 'Prayer of Spirit',
-});
-
-export const GiftOfTheWild = makeBooleanRaidBuffInput({
-	actionId: ActionId.fromSpellId(21850),
-	fieldName: 'giftOfTheWild',
-	label: 'Gift of the Wild',
-});
-
-export const Thorns = makeBooleanRaidBuffInput({
-	actionId: ActionId.fromSpellId(9910),
-	fieldName: 'thorns',
-	label: 'Thorns',
-});
-
-export const PrayerOfFortitude = makeBooleanRaidBuffInput({
-	actionId: ActionId.fromSpellId(21564),
-	fieldName: 'prayerOfFortitude',
-	label: 'Prayer of Fortitude',
 });
 
 export const GreaterBlessingOfMight = makeBooleanIndividualBuffInput({
@@ -166,54 +214,6 @@ export const GreaterBlessingOfWisdom = makeBooleanIndividualBuffInput({
 // greater_blessing_of_salvation: the hand-written input hides itself for tank and healing specs, a role gate no manifest row carries.
 
 // greater_blessing_of_light: the hand-written input shows itself for tank and healing specs only, a role gate no manifest row carries.
-
-export const PrayerOfShadowProtection = makeBooleanRaidBuffInput({
-	actionId: ActionId.fromSpellId(27683),
-	fieldName: 'prayerOfShadowProtection',
-	label: 'Prayer of Shadow Protection',
-});
-
-export const FireResistanceAura = makeBooleanRaidBuffInput({
-	actionId: ActionId.fromSpellId(19900),
-	fieldName: 'fireResistanceAura',
-	label: 'Fire Resistance Aura',
-});
-
-export const FrostResistanceAura = makeBooleanRaidBuffInput({
-	actionId: ActionId.fromSpellId(19898),
-	fieldName: 'frostResistanceAura',
-	label: 'Frost Resistance Aura',
-});
-
-export const ShadowResistanceAura = makeBooleanRaidBuffInput({
-	actionId: ActionId.fromSpellId(19896),
-	fieldName: 'shadowResistanceAura',
-	label: 'Shadow Resistance Aura',
-});
-
-export const FireResistanceTotem = makeBooleanRaidBuffInput({
-	actionId: ActionId.fromSpellId(10535),
-	fieldName: 'fireResistanceTotem',
-	label: 'Fire Resistance',
-});
-
-export const FrostResistanceTotem = makeBooleanRaidBuffInput({
-	actionId: ActionId.fromSpellId(10477),
-	fieldName: 'frostResistanceTotem',
-	label: 'Frost Resistance',
-});
-
-export const NatureResistanceTotem = makeBooleanRaidBuffInput({
-	actionId: ActionId.fromSpellId(10599),
-	fieldName: 'natureResistanceTotem',
-	label: 'Nature Resistance',
-});
-
-export const AspectOfTheWild = makeBooleanRaidBuffInput({
-	actionId: ActionId.fromSpellId(20190),
-	fieldName: 'aspectOfTheWild',
-	label: 'Aspect of the Wild',
-});
 
 export const Innervates = makeMultistateIndividualBuffInput({
 	actionId: ActionId.fromSpellId(29166),
