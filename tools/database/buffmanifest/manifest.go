@@ -1,4 +1,4 @@
-// Package buffmanifest is the checked-in census of every raid, party, individual
+// Package buffmanifest is the checked-in manifest of every raid, party, individual
 // and enemy-debuff proto field the sim knows about. It is a leaf package: it may
 // import the standard library and sim/core/proto and nothing else, so the buff
 // generator and the proto emitter can both read it while the generated proto and
