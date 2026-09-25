@@ -347,7 +347,7 @@ var specs = map[string]spec{
 			stats.FireDamage: 0.1, stats.ShadowDamage: 0.9, stats.SpellHitRating: 12.79 / core.SpellHitRatingPerHitPercent, stats.SpellCritRating: 7.92 / core.SpellCritRatingPerCritPercent, stats.SpellHasteRating: 7.83 / core.SpellHasteRatingPerHastePercent, stats.Stamina: 0.01}),
 	},
 	"shadow_priest": {
-		class: proto.Class_ClassPriest, dir: "priest/dps", set: "shadow_launch", twoHand: true,
+		class: proto.Class_ClassPriest, dir: "priest/dps", set: "launch", twoHand: true,
 		weights: w(map[stats.Stat]float64{stats.Intellect: 0.16, stats.Spirit: 0.01, stats.SpellDamage: 1, stats.ShadowDamage: 1,
 			stats.SpellHitRating: 5.51 / core.SpellHitRatingPerHitPercent, stats.SpellCritRating: 5.99 / core.SpellCritRatingPerCritPercent, stats.SpellHasteRating: 1.65 / core.SpellHasteRatingPerHastePercent}),
 	},
