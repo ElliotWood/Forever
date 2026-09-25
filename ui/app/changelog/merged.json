@@ -1,5 +1,11 @@
 [
 	{
+		"number": 467,
+		"title": "mage: Improved Cone of Cold and Improved Frost Nova",
+		"mergedAt": "2026-09-25",
+		"url": "https://github.com/ElliotWood/Forever/pull/467"
+	},
+	{
 		"number": 466,
 		"title": "shaman: the talented Mana Tide Totem restores the party's mana",
 		"mergedAt": "2026-09-25",
