@@ -11,8 +11,8 @@ import LaunchGear from './gear_sets/launch.gear.json';
 export const APL_PRESET = PresetUtils.makePresetAPLRotation('Basic Ret', DefaultApl);
 
 // Our Forever sim's builds.
-export const P4RetTalents = PresetUtils.makePresetTalents('P4/P5 Ret', SavedTalents.create({ talentsString: '0550030022001--052251310002330321' }));
-export const TalentsRetribution = PresetUtils.makePresetTalents('Retribution 10/0/41', SavedTalents.create({ talentsString: '250003--552250312012331321' }));
+export const P4RetTalents = PresetUtils.makePresetTalents('P4/P5 Ret', SavedTalents.create({ talentsString: '550030022001--05225131000330321' }));
+export const TalentsRetribution = PresetUtils.makePresetTalents('Retribution 10/0/41', SavedTalents.create({ talentsString: '50003--55225031201331321' }));
 
 export const TalentPresets = [P4RetTalents, TalentsRetribution];
 export const DefaultTalents = P4RetTalents;

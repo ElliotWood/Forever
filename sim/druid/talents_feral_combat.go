@@ -183,12 +183,12 @@ func (druid *Druid) applyShreddingAttacks() {
 // Forever folds the old Blood Frenzy combo point proc into Primal Fury: a combo point on a Cat
 // builder crit, and Rage on a Bear crit.
 func (druid *Druid) applyPrimalFury() {
-	if druid.Talents.PrimalFury == 0 {
+	if druid.Talents.BloodFrenzy == 0 {
 		return
 	}
 
-	procChance := spellData.PrimalFury.EffectAt(1).FractionAt(druid.Talents.PrimalFury)
-	triggered := spellData.PrimalFuryTriggered.Highest()
+	procChance := spellData.BloodFrenzy.EffectAt(1).FractionAt(druid.Talents.BloodFrenzy)
+	triggered := spellData.BloodFrenzyTriggered.Highest()
 	actionID := core.ActionID{SpellID: triggered.ID}
 	// The client's E_ENERGIZE is in its own units: 50 is 5 Rage.
 	rage := triggered.EffectN(1).BaseValue() / 10

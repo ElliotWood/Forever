@@ -28,12 +28,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
-		833, // Lifestone
-		[
-			"Restores 800 Health, increased by 1% for each 1% of your Health missing.", // 17712 - https://www.wowhead.com/forever/spell=17712
-		]
-	],
-	[
 		1168, // Skullflame Shield
 		[
 			"When struck in melee combat, has a 3% chance of stealing 270 life from target enemy.", // 18817 - https://www.wowhead.com/forever/spell=18817
@@ -222,7 +216,7 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 	[
 		11603, // Vilerend Slicer
 		[
-			"Wounds the target for 75 damage.", // 16405 - https://www.wowhead.com/forever/spell=16405
+			"Wounds the target for 225 damage.", // 1320808 - https://www.wowhead.com/forever/spell=1320808
 		]
 	],
 	[
@@ -300,7 +294,7 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 	[
 		11902, // Linken's Sword of Mastery
 		[
-			"Blasts a target for 60 Nature damage.", // 18089 - https://www.wowhead.com/forever/spell=18089
+			"Blasts a target for 98 Nature damage.", // 18089 - https://www.wowhead.com/forever/spell=18089
 		]
 	],
 	[
@@ -402,7 +396,7 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 	[
 		12790, // Arcanite Champion
 		[
-			"Heal self for 360 and Increases Strength by 120 for 30s.", // 16916 - https://www.wowhead.com/forever/spell=16916
+			"Heal yourself for 360 and increase your Strength by 120 for 30s.", // 16916 - https://www.wowhead.com/forever/spell=16916
 		]
 	],
 	[
@@ -438,7 +432,7 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 	[
 		12797, // Frostguard
 		[
-			"Target's movement slowed by 30% and increasing the time between attacks by 25% for 5s.", // 16927 - https://www.wowhead.com/forever/spell=16927
+			"Slows the target's movement speed by 30% and increases the time between their attacks by 25% for 5s.", // 16927 - https://www.wowhead.com/forever/spell=16927
 		]
 	],
 	[
@@ -582,13 +576,13 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 	[
 		13399, // Gargoyle Shredder Talons
 		[
-			"Wounds the target causing them to bleed for 98 damage over 14s.", // 18202 - https://www.wowhead.com/forever/spell=18202
+			"Wounds the target causing them to bleed for 140 damage over 14s.", // 1320824 - https://www.wowhead.com/forever/spell=1320824
 		]
 	],
 	[
 		13401, // The Cruel Hand of Timmy
 		[
-			"Steals 210 life from target enemy.", // 17505 - https://www.wowhead.com/forever/spell=17505
+			"Steals 85 life from target enemy.", // 17505 - https://www.wowhead.com/forever/spell=17505
 		]
 	],
 	[
@@ -1167,7 +1161,7 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 	[
 		18671, // Baron Charr's Sceptre
 		[
-			"Blasts a target for 35 Fire damage.", // 13442 - https://www.wowhead.com/forever/spell=13442
+			"Blasts a target for 90 Fire damage.", // 13442 - https://www.wowhead.com/forever/spell=13442
 		]
 	],
 	[
@@ -2880,12 +2874,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
-		260823, // Dimensional Transporter - Mt. Hyjal
-		[
-			"Rips the dimensional walls asunder and transports you to Kaylaena's Workshop on Mount Hyjal. Technical problems have a high chance to occur with this mad combination of goblin and gnomish engineering.", // 1269339 - https://www.wowhead.com/forever/spell=1269339
-		]
-	],
-	[
 		260824, // Gnomish Poultryizer
 		[
 			"Turns the target into a chicken for 15s. Well, that is assuming the transmogrification polarity has not been reversed...", // 1270941 - https://www.wowhead.com/forever/spell=1270941
@@ -3364,7 +3352,7 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 	[
 		285281, // Arcanite Blacksmith Hammer
 		[
-			"Thrown hammers have a low chance to stun the target for 1s.", // 1318178 - https://www.wowhead.com/forever/spell=1318178
+			"Stun the target for 1s.", // 1318178 - https://www.wowhead.com/forever/spell=1318178
 		]
 	],
 ])

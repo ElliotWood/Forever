@@ -3,15 +3,12 @@ package paladin
 import (
 	"time"
 
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
-	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
 func (paladin *Paladin) registerHolyTalents() {
 	// Tier 1
-	paladin.applyImprovedHolyStrike()
 	paladin.applyDivineStrength()
 	paladin.applyDivineIntellect()
 
@@ -41,19 +38,6 @@ func (paladin *Paladin) registerHolyTalents() {
 
 	// Tier 7
 	// Light's Vigil registered in registerTalentSpells
-}
-
-// Improved Holy Strike - Reduces the cooldown of your Holy Strike ability by 1/2 sec.
-func (paladin *Paladin) applyImprovedHolyStrike() {
-	if paladin.Talents.ImprovedHolyStrike == 0 {
-		return
-	}
-
-	paladin.AddStaticMod(core.SpellModConfig{
-		ClassMask: SpellMaskHolyStrike,
-		Kind:      core.SpellMod_Cooldown_Flat,
-		TimeValue: time.Duration(spellData.ImprovedHolyStrike.ValueAt(paladin.Talents.ImprovedHolyStrike)) * time.Millisecond,
-	})
 }
 
 // Divine Strength - Increases your Strength by 2/4/6/8/10%.
@@ -261,10 +245,10 @@ func (paladin *Paladin) applyHolyPower() {
 		return
 	}
 
-	paladin.AddStat(stats.SpellCritPercent, spellData.HolyPower.Effect(shared.A_MOD_SPELL_CRIT_CHANCE, 0).ValueAt(paladin.Talents.HolyPower))
+	paladin.AddStat(stats.SpellCritPercent, spellData.HolyPower.EffectAt(0).ValueAt(paladin.Talents.HolyPower))
 	paladin.AddStaticMod(core.SpellModConfig{
 		ClassMask:  SpellMaskHolyShock | SpellMaskHolyShockHeal,
 		Kind:       core.SpellMod_BonusCrit_Percent,
-		FloatValue: spellData.HolyPower.Effect(shared.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_CRITICAL_CHANCE)).ValueAt(paladin.Talents.HolyPower),
+		FloatValue: spellData.HolyPower.EffectAt(1).ValueAt(paladin.Talents.HolyPower),
 	})
 }

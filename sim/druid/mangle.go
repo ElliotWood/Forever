@@ -4,7 +4,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var mangleRank = spellData.Mangle.Highest()
+var mangleRank = spellData.PrimalBite.Highest()
 
 // Forever ships ONE Mangle - 407995 and 1238069/1238070/1238073 on the Feral Combat line, all with
 // ShapeshiftMask [144,0], which is Bear and Dire Bear only. The TBC Cat/Bear split is gone with it,
@@ -12,7 +12,7 @@ var mangleRank = spellData.Mangle.Highest()
 // is restricted to. Its effects are weapon damage and a flat bonus only (1238073): none of TBC's
 // bleed debuff.
 func (druid *Druid) registerMangleBearSpell() {
-	if !druid.Talents.Mangle {
+	if !druid.Talents.PrimalBite {
 		return
 	}
 
