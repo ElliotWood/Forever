@@ -29,8 +29,8 @@ import (
 // Elemental Sharpening Stone is +2% melee crit and -2% RANGED crit, so handing the hunter the
 // melee list would equalise the shopping and quietly tax the one spec that shoots. Within a
 // role every spec gets the identical list; what it is worth to you is your class's business,
-// which is why Mighty Rage Potion stays in the melee list even though only warriors can spend
-// it (not that anyone drinks it yet - see the list). Same shopping list, not same benefit -
+// which is why Mighty Rage Potion stays in the melee list even though only rage users get its
+// rage; everyone gets its Strength. Same shopping list, not same benefit -
 // that is the part that makes two numbers comparable.
 //
 // The consumables are the Classic items the Forever client ships, in the Classic slots #421
@@ -112,10 +112,10 @@ var consumesMelee = core.BuffsCombo{
 		BattleElixirId:    13452, // Elixir of the Mongoose
 		AttackPowerBuffId: 12460, // Juju Might
 		StrengthBuffId:    12451, // Juju Power
-		// Named but not drunk: a potion only exists in the sim when it is in Potions, and
-		// registering this one panics the rogue and enhancement shaman and cuts the bear
-		// tank by 63%. It waits for its own fix.
+		// Drunk by everyone for its Strength; only a rage bar gets the rage. Druids wait for
+		// caster form rather than pot out of Bear or Cat Form on a timer.
 		PotId:             13442, // Mighty Rage Potion
+		Potions:           []int32{13442},
 		DragonbreathChili: true,
 		FlaskId:           13510, // Flask of the Titans
 		FoodId:            20452, // Smoked Desert Dumplings
