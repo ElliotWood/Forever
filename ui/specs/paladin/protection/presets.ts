@@ -1,5 +1,6 @@
 import * as PresetUtils from '@app/preset_utils';
-import { ConsumesSpec, Debuffs, IndividualBuffs, PartyBuffs, Profession, Race, RaidBuffs, TristateEffect } from '@generated/proto/common';
+import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
+import { ConsumesSpec, Profession, Race, TristateEffect } from '@generated/proto/common';
 import { ProtectionPaladin_Options as ProtectionPaladinOptions } from '@generated/proto/paladin';
 import { SavedTalents } from '@generated/proto/ui';
 
@@ -41,14 +42,14 @@ export const DefaultConsumables = ConsumesSpec.create({
 	foodId: 18045, // Tender Wolf Steak
 	potId: 13455, // Greater Stoneshield Potion
 	conjuredId: 12662, // Demonic Rune
-	explosiveId: 18641, // Dense Dynamite
+	explosiveId: 23063, // Dense Dynamite
 });
 
 export const DefaultRaidBuffs = RaidBuffs.create({
 	arcaneBrilliance: true,
-	divineSpirit: TristateEffect.TristateEffectRegular,
-	giftOfTheWild: TristateEffect.TristateEffectImproved,
-	powerWordFortitude: TristateEffect.TristateEffectImproved,
+	prayerOfSpirit: true,
+	giftOfTheWild: true,
+	prayerOfFortitude: true,
 });
 
 export const DefaultPartyBuffs = PartyBuffs.create({
@@ -56,13 +57,13 @@ export const DefaultPartyBuffs = PartyBuffs.create({
 });
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
-	blessingOfWisdom: true,
+	greaterBlessingOfWisdom: true,
 });
 
 export const DefaultDebuffs = Debuffs.create({
 	curseOfRecklessness: true,
-	exposeArmor: TristateEffect.TristateEffectImproved,
-	faerieFire: TristateEffect.TristateEffectRegular,
+	exposeArmor: true,
+	faerieFire: true,
 	giftOfArthas: true,
 	judgementOfTheCrusader: true,
 	judgementOfWisdom: true,

@@ -379,7 +379,7 @@ var specs = map[string]spec{
 	"feral_druid": {
 		class: proto.Class_ClassDruid, dir: "druid/feralcat", twoHand: true,
 		weights: w(map[stats.Stat]float64{stats.Strength: 2.4, stats.Agility: 2.43, stats.Intellect: 0.61, stats.Spirit: 0.38, stats.MP5: 0.79,
-			stats.AttackPower: 1, stats.FeralAttackPower: 1, stats.MeleeHitRating: 26.59 / core.PhysicalHitRatingPerHitPercent, stats.MeleeCritRating: 28.68 / core.PhysicalCritRatingPerCritPercent, stats.ExpertiseRating: 26.59 / core.ExpertisePerQuarterPercentReduction, stats.Mana: 0.03}),
+			stats.AttackPower: 1, stats.FeralAttackPower: 1, stats.MeleeHitRating: 26.59 / core.PhysicalHitRatingPerHitPercent, stats.MeleeCritRating: 28.68 / core.PhysicalCritRatingPerCritPercent, stats.ExpertiseRating: 26.59 / (core.ExpertiseRatingPerExpertisePercent / 4), stats.Mana: 0.03}),
 	},
 	// The same goes for a bear. Stamina and armor keep it up, Agility is crit, dodge and
 	// armor at once; the rest is threat.

@@ -65,7 +65,7 @@ type Druid struct {
 	FrenziedRegenerationAura *core.Aura
 	DemoralizingRoarAuras    core.AuraArray
 	FaerieFireAuras          core.AuraArray
-	MangleAuras              core.AuraArray // never applied: Forever's Mangle has no debuff; the legacy cat rotation reads it
+	MangleAuras              core.AuraArray // always nil: Forever's Mangle has no debuff; the legacy cat rotation reads it as inactive
 	BerserkAura              *core.Aura
 	MoonkinFormAura          *core.Aura
 	EclipseAura              *core.Aura
@@ -159,9 +159,9 @@ func (druid *Druid) GetCharacter() *core.Character {
 
 func (druid *Druid) AddPartyBuffs(partyBuffs *proto.PartyBuffs) {
 	if druid.InForm(Cat|Bear) && druid.Talents.LeaderOfThePack {
-		partyBuffs.LeaderOfThePack = core.Ternary(druid.HasItemEquipped(32387, []proto.ItemSlot{proto.ItemSlot_ItemSlotRanged}), proto.TristateEffect_TristateEffectImproved, proto.TristateEffect_TristateEffectRegular)
+		partyBuffs.LeaderOfThePack = true
 	} else if druid.InForm(Moonkin) && druid.Talents.MoonkinForm {
-		partyBuffs.MoonkinAura = core.Ternary(druid.HasItemEquipped(32387, []proto.ItemSlot{proto.ItemSlot_ItemSlotRanged}), proto.TristateEffect_TristateEffectImproved, proto.TristateEffect_TristateEffectRegular)
+		partyBuffs.MoonkinAura = true
 	}
 }
 

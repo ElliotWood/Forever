@@ -143,6 +143,13 @@
 		"note": "Frost Oil's 10% proc really does cast Frostbolt 1191 for 33 to 38, so the Classic name and icon are the right ones.",
 		"source": "classic"
 	},
+	"1260198": {
+		"ability": "Touch of the Grave",
+		"file": "sim/core/racials.go",
+		"source": "forever",
+		"note": "Forever's Undead racial, from the client's spells: aura 1260189 (warrior, paladin, rogue, 5%) or 1260201 (everyone else, 10%) on a landed hit, 1 sec cooldown, drains 5% of the caster's maximum health as Shadow damage and heals the same.",
+		"tooltip": "Passive\nYour damaging attacks and spells have a chance to drain 5% of your maximum health from the target as Shadow damage, healing you for the same amount."
+	},
 	"12873": {
 		"ability": "Improved Scorch",
 		"file": "sim/core/debuffs.go",

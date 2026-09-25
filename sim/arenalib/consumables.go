@@ -46,56 +46,56 @@ const (
 )
 
 var arenaRaidBuffs = &proto.RaidBuffs{
-	ArcaneBrilliance:   true,
-	PowerWordFortitude: proto.TristateEffect_TristateEffectImproved,
-	ShadowProtection:   true,
-	DivineSpirit:       proto.TristateEffect_TristateEffectRegular,
-	GiftOfTheWild:      proto.TristateEffect_TristateEffectImproved,
-	Thorns:             proto.TristateEffect_TristateEffectImproved,
+	ArcaneBrilliance:         true,
+	PrayerOfFortitude:        true,
+	PrayerOfShadowProtection: true,
+	PrayerOfSpirit:           true,
+	GiftOfTheWild:            true,
+	Thorns:                   true,
 }
 
 // Every role's party buffs. The melee and ranged lists add Windfury Totem on top.
 var arenaPartyBuffs = &proto.PartyBuffs{
-	BattleShout:          proto.TristateEffect_TristateEffectImproved,
-	BloodPact:            proto.TristateEffect_TristateEffectImproved,
+	BattleShout:          proto.TristateEffect_TristateEffectRegular, // Improved now means the T2 set bonus, a warrior item, not a raid buff
+	BloodPact:            true,
 	DevotionAura:         true,
 	RetributionAura:      true,
-	GraceOfAirTotem:      proto.TristateEffect_TristateEffectImproved,
-	LeaderOfThePack:      proto.TristateEffect_TristateEffectRegular,
+	GraceOfAirTotem:      true,
+	LeaderOfThePack:      true,
 	ManaSpringTotem:      proto.TristateEffect_TristateEffectImproved,
-	MoonkinAura:          proto.TristateEffect_TristateEffectRegular,
-	StrengthOfEarthTotem: proto.TristateEffect_TristateEffectImproved,
+	MoonkinAura:          true,
+	StrengthOfEarthTotem: true,
 	TrueshotAura:         true,
 }
 
 // World buffs do not work inside Forever raids, so the player buffs are the blessings alone.
 var arenaPlayerBuffs = &proto.IndividualBuffs{
-	BlessingOfKings:  true,
-	BlessingOfMight:  true,
-	BlessingOfWisdom: true,
+	GreaterBlessingOfKings:  true,
+	GreaterBlessingOfMight:  true,
+	GreaterBlessingOfWisdom: true,
 }
 
 // Improved Shadow Bolt, Shadow Weaving, Improved Scorch and Winter's Chill became personal
 // buffs on their caster in Forever, so nobody applies them to the raid.
 var arenaDebuffs = &proto.Debuffs{
-	CurseOfElements:        proto.TristateEffect_TristateEffectRegular,
+	CurseOfElements:        true,
 	CurseOfRecklessness:    true,
-	DemoralizingRoar:       proto.TristateEffect_TristateEffectImproved,
-	DemoralizingShout:      proto.TristateEffect_TristateEffectImproved,
-	ExposeArmor:            proto.TristateEffect_TristateEffectImproved,
-	FaerieFire:             proto.TristateEffect_TristateEffectRegular,
+	DemoralizingRoar:       true,
+	DemoralizingShout:      true,
+	ExposeArmor:            true,
+	FaerieFire:             true,
 	InsectSwarm:            true,
 	JudgementOfLight:       true,
 	JudgementOfWisdom:      true,
 	JudgementOfTheCrusader: true,
 	ScorpidSting:           true,
 	SunderArmor:            true,
-	ThunderClap:            proto.TristateEffect_TristateEffectImproved,
+	ThunderClap:            true,
 }
 
 func withWindfury(party *proto.PartyBuffs) *proto.PartyBuffs {
 	party = googleProto.Clone(party).(*proto.PartyBuffs)
-	party.WindfuryTotem = proto.TristateEffect_TristateEffectRegular
+	party.WindfuryTotem = true
 	return party
 }
 
@@ -194,7 +194,7 @@ func consumesFor(role Role, imbues ClassImbues) core.BuffsCombo {
 	}
 	if imbues.Windfury {
 		combo.Party = googleProto.Clone(combo.Party).(*proto.PartyBuffs)
-		combo.Party.WindfuryTotem = proto.TristateEffect_TristateEffectMissing
+		combo.Party.WindfuryTotem = false
 	}
 	combo.Label += "+class"
 	return combo

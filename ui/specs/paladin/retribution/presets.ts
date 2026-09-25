@@ -1,5 +1,6 @@
 import * as PresetUtils from '@app/preset_utils';
-import { ConsumesSpec, Debuffs, IndividualBuffs, PartyBuffs, Profession, Race, RaidBuffs, TristateEffect } from '@generated/proto/common';
+import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
+import { ConsumesSpec, Profession, Race, TristateEffect } from '@generated/proto/common';
 import { RetributionPaladin_Options as RetributionPaladinOptions } from '@generated/proto/paladin';
 import { SavedTalents } from '@generated/proto/ui';
 
@@ -21,8 +22,8 @@ export const DefaultOptions = RetributionPaladinOptions.create({
 });
 
 // Defaults below are what master's ui/retribution_paladin opens with (currentSettings on a fresh
-// profile); its raid-wide Battle Shout, Leader of the Pack, Moonkin and Fire Resistance Aura are
-// party buffs here. Master's Greater Firepower (21546) is Forever's Elixir of Holy Power.
+// profile); its raid-wide Battle Shout, Leader of the Pack and Moonkin are party buffs here.
+// Master's Greater Firepower (21546) is Forever's Elixir of Holy Power.
 export const DefaultConsumables = ConsumesSpec.create({
 	flaskId: 13512, // Flask of Supreme Power
 	battleElixirId: 13452, // Elixir of the Mongoose
@@ -39,26 +40,26 @@ export const DefaultConsumables = ConsumesSpec.create({
 
 export const DefaultRaidBuffs = RaidBuffs.create({
 	arcaneBrilliance: true,
-	divineSpirit: TristateEffect.TristateEffectRegular,
-	giftOfTheWild: TristateEffect.TristateEffectImproved,
+	prayerOfSpirit: true,
+	giftOfTheWild: true,
+	fireResistanceAura: true,
 });
 
 export const DefaultPartyBuffs = PartyBuffs.create({
 	battleShout: TristateEffect.TristateEffectImproved,
-	fireResistanceAura: true,
-	leaderOfThePack: TristateEffect.TristateEffectRegular,
-	moonkinAura: TristateEffect.TristateEffectRegular,
+	leaderOfThePack: true,
+	moonkinAura: true,
 });
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
-	blessingOfKings: true,
-	blessingOfWisdom: true,
-	blessingOfMight: true,
+	greaterBlessingOfKings: true,
+	greaterBlessingOfWisdom: true,
+	greaterBlessingOfMight: true,
 });
 
 export const DefaultDebuffs = Debuffs.create({
 	curseOfRecklessness: true,
-	faerieFire: TristateEffect.TristateEffectRegular,
+	faerieFire: true,
 	giftOfArthas: true,
 	judgementOfTheCrusader: true,
 	judgementOfWisdom: true,

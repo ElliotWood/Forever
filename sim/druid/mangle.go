@@ -16,8 +16,6 @@ func (druid *Druid) registerMangleBearSpell() {
 		return
 	}
 
-	druid.MangleAuras = druid.NewEnemyAuraArray(core.MangleAura)
-
 	druid.MangleBear = druid.RegisterSpell(Bear, core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: mangleRank.ID},
 		SpellSchool:    mangleRank.SpellSchool(),

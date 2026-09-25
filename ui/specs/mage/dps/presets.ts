@@ -1,10 +1,11 @@
 import * as PresetUtils from '@app/preset_utils';
-import { ConsumesSpec, Debuffs, IndividualBuffs, PartyBuffs, Profession, Race, RaidBuffs, Spec, TristateEffect } from '@generated/proto/common';
+import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
+import { ConsumesSpec, Profession, Race, Spec, TristateEffect } from '@generated/proto/common';
 import { Mage_Options as MageOptions, Mage_Rotation, MageArmor } from '@generated/proto/mage';
 import { SavedTalents } from '@generated/proto/ui';
 
 import ArcaneApl from './apls/arcane.apl.json';
-import BlankAPL from './apls/blank.apl.json';
+import BlankAPL from './apls/default.apl.json';
 import FireApl from './apls/fire.apl.json';
 import FrostApl from './apls/frost.apl.json';
 import LaunchGear from './gear_sets/launch.gear.json';
@@ -65,22 +66,22 @@ export const DefaultConsumables = ConsumesSpec.create({
 	foodId: 18254, // Runn Tum Tuber Surprise
 	potId: 13444, // Major Mana Potion
 	conjuredId: 12662, // Demonic Rune
-	mhImbueId: 20749, // Brilliant Wizard Oil
+	mhImbueId: 25122, // Brilliant Wizard Oil
 });
 
 export const DefaultRaidBuffs = RaidBuffs.create({
 	arcaneBrilliance: true,
-	divineSpirit: TristateEffect.TristateEffectRegular,
-	giftOfTheWild: TristateEffect.TristateEffectImproved,
+	prayerOfSpirit: true,
+	giftOfTheWild: true,
 });
 
 export const DefaultPartyBuffs = PartyBuffs.create({
 	manaSpringTotem: TristateEffect.TristateEffectRegular,
-	moonkinAura: TristateEffect.TristateEffectRegular,
+	moonkinAura: true,
 });
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
-	blessingOfWisdom: true,
+	greaterBlessingOfWisdom: true,
 });
 
 // Improved Scorch and Winter's Chill only help the mage that applied them in Forever. Master's

@@ -2,6 +2,7 @@ package warrior
 
 import (
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/buffs"
 	"github.com/wowsims/forever/sim/core/dbcenums"
 )
 
@@ -14,12 +15,9 @@ func (warrior *Warrior) registerSunderArmor() {
 
 	actionId := core.ActionID{SpellID: sunderArmorRank.ID}
 
-	// core.SunderArmorAura carries the client's rank 5 (450 armor a stack). The id is set to the
-	// rank's so an APL can watch the stacks by the spell it casts.
+	// The generated aura is the client's rank 5 (11597, 450 armor a stack), the rank cast here.
 	warrior.SunderArmorAuras = warrior.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-		aura := core.SunderArmorAura(target)
-		aura.ActionID = actionId
-		return aura
+		return buffs.SunderArmorAura(target, true, 0)
 	})
 
 	warrior.RegisterSpell(core.SpellConfig{
