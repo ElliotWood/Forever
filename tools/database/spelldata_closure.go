@@ -33,6 +33,7 @@ func storeRoots(db *sql.DB, t *spellTables, ladderIDs []int32) (roots []int32, g
 		{"item effects", itemEffectSpellQuery()},
 		{"enchant effects", enchantSpellQuery},
 		{"set bonuses", `SELECT DISTINCT SpellID FROM ItemSetSpell WHERE SpellID > 0`},
+		{"every class spell", everyClassSpellQuery()},
 	} {
 		if err := eachRow(db, source.query, func(rows *sql.Rows) error {
 			var id int32
@@ -48,6 +49,18 @@ func storeRoots(db *sql.DB, t *spellTables, ladderIDs []int32) (roots []int32, g
 	}
 
 	return namedIDs(t, roots), namedIDs(t, gear), nil
+}
+
+// Set by gen_spelldata -everyClassSpell: roots the store at every spell of a class family as well,
+// for an export of the client's class spells rather than a store the sim is built against.
+var EveryClassSpell bool
+
+// Selects nothing unless EveryClassSpell is set.
+func everyClassSpellQuery() string {
+	if !EveryClassSpell {
+		return `SELECT SpellID FROM SpellClassOptions WHERE 0`
+	}
+	return `SELECT DISTINCT SpellID FROM SpellClassOptions WHERE SpellClassSet BETWEEN 3 AND 11`
 }
 
 // The spells a rank reads its numbers off by name. A rank that states no amount of its own keeps it
