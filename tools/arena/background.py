@@ -22,7 +22,6 @@
 import argparse
 import json
 import os
-import shutil
 import subprocess
 import sys
 import time
@@ -99,15 +98,17 @@ def prepare_worktree():
     else:
         run_git('checkout', '-q', '--detach', REF)
         run_git('reset', '-q', '--hard', REF)
-    # The generated protos are gitignored, so a worktree has none and every package fails setup -
-    # which is exactly how the first run from here ended, 30 seconds in. There is no protoc on this
-    # machine to generate them, so they come from the main checkout, which is built from the same
-    # .proto files at the same commit.
-    # ponytail: copies rather than generates; stale if someone edits a .proto without rebuilding.
-    generated = os.path.join('sim', 'core', 'proto')
-    for name in os.listdir(os.path.join(REPO, generated)):
-        if name.endswith('.pb.go'):
-            shutil.copy2(os.path.join(REPO, generated, name), os.path.join(WORK, generated, name))
+    # The generated protos are gitignored, so a worktree has none and every package fails setup.
+    # They are generated here from the worktree's own .proto files. Copying the main checkout's
+    # used to be the shortcut, and it went stale the first time a .proto changed without that
+    # checkout being rebuilt: the post-#441 search died on a missing PseudoStat before simming
+    # anything. protoc comes from the main checkout's node_modules (@protobuf-ts/protoc), and
+    # protoc-gen-go from PATH (go install google.golang.org/protobuf/cmd/protoc-gen-go@latest).
+    protoc = os.path.join(REPO, 'node_modules', '@protobuf-ts', 'protoc', 'protoc.js')
+    protos = sorted(os.path.join('proto', n) for n in os.listdir(os.path.join(WORK, 'proto')) if n.endswith('.proto'))
+    subprocess.run(['node', protoc, '-I=./proto',
+                    '--go_opt=Mgoogle/protobuf/descriptor.proto=google.golang.org/protobuf/types/descriptorpb',
+                    '--go_out=./sim/core', *protos], cwd=WORK, check=True)
 
 
 def packages(specs):
