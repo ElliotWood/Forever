@@ -1,5 +1,11 @@
 [
 	{
+		"number": 460,
+		"title": "consumables: rage potion for the melee list; fix rogue/enh panic and druids potting out of form",
+		"mergedAt": "2026-09-25",
+		"url": "https://github.com/ElliotWood/Forever/pull/460"
+	},
+	{
 		"number": 459,
 		"title": "Merge wowsims/forever master (7d9f1559e) into master",
 		"mergedAt": "2026-09-25",
@@ -7,7 +13,7 @@
 	},
 	{
 		"number": 458,
-		"title": "arena: give casters and the hunter a raider's mana consumables",
+		"title": "arena: raider's consumables for every role (mana for casters/hunter, rage potion for melee) + two potion bugs",
 		"mergedAt": "2026-09-25",
 		"url": "https://github.com/ElliotWood/Forever/pull/458"
 	},
