@@ -235,10 +235,14 @@ func search(t *testing.T, spec Spec, sims *memo, results []Result) []Result {
 	}
 
 	// A carried shape row is not a start: an unconstrained climb from it would come back under
-	// the shape's name without the shape. Its own shape climb starts over below.
+	// the shape's name without the shape. It is where that shape's own climb resumes instead.
 	starts := []TalentBuild{}
+	resume := map[string]TalentBuild{}
 	seen := map[string]bool{}
 	for _, result := range results {
+		if result.Optimised && shapes[result.Build] && result.Gear == top.Gear && result.Rotation == top.Rotation {
+			resume[result.Build] = TalentBuild{Name: result.Build, Talents: result.Talents}
+		}
 		if result.Gear == top.Gear && result.Rotation == top.Rotation && !seen[result.Talents] && !shapes[result.Build] {
 			seen[result.Talents] = true
 			starts = append(starts, TalentBuild{Name: result.Build, Talents: result.Talents})
@@ -294,7 +298,16 @@ func search(t *testing.T, spec Spec, sims *memo, results []Result) []Result {
 		if k < len(starts) {
 			build, runs, err = optimise(spec, starts[k], top.Gear, top.Rotation, share)
 		} else {
-			build, runs, err = optimiseAnchored(spec, starts[0], top.Gear, top.Rotation, share, &anchors[k-len(starts)])
+			// From where this shape's climb ended last run when there is one. A sim change moves
+			// a peak a point or two, not across the tree, so the climb starts next to the answer
+			// and stops after a step instead of spending its share walking back from a blind
+			// reshape of the best build.
+			shape := &anchors[k-len(starts)]
+			from, ok := resume[shape.label]
+			if !ok {
+				from = starts[0]
+			}
+			build, runs, err = optimiseAnchored(spec, from, top.Gear, top.Rotation, share, shape)
 		}
 		totalRuns.Add(int64(runs))
 		return climbed{build, runs, err}
