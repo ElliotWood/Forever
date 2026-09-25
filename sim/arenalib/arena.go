@@ -154,6 +154,7 @@ func Run(t *testing.T, spec Spec) {
 	// sim as it stands today even when the search has not run since.
 	carried := previouslyOptimised(spec)
 	talents = append(talents, carried...)
+	talents = append(talents, outsideBuilds(spec)...)
 	wasOptimised := map[string]bool{}
 	for _, build := range carried {
 		wasOptimised[build.Name+"|"+build.Talents] = true
@@ -257,7 +258,7 @@ func search(t *testing.T, spec Spec, sims *memo, results []Result) []Result {
 	// Found builds by name, in the order they were found. Names, not talents, are the key:
 	// every shape keeps its own row even when two shapes land on the same build, so every
 	// spec shows every combination.
-	type find struct{ name, talents string }
+	type find struct{ name, talents, rotation string }
 	found := []find{}
 	totalRuns := atomic.Int64{}
 
@@ -269,7 +270,7 @@ func search(t *testing.T, spec Spec, sims *memo, results []Result) []Result {
 		t.Fatalf("%s: %s", spec.Dir, err)
 	} else if best.Talents != "" {
 		totalRuns.Add(int64(simulated))
-		found = append(found, find{best.Name, best.Talents})
+		found = append(found, find{best.Name, best.Talents, top.Rotation})
 		starts = append(starts, best)
 		t.Logf("%s: considered %d combinations, simulated %d, best %s (%s)", spec.Dir, considered, simulated, best.Talents, time.Since(started).Round(time.Second))
 	} else {
@@ -286,17 +287,54 @@ func search(t *testing.T, spec Spec, sims *memo, results []Result) []Result {
 	}
 	climbs := len(starts) + len(anchors)
 	share := max(1, budget/climbs)
+	// Every rotation the spec ran on this gear, the top one first, for each climb to choose from.
+	rotations := []string{top.Rotation}
+	for _, result := range results {
+		if result.Gear == top.Gear && !slices.Contains(rotations, result.Rotation) {
+			rotations = append(rotations, result.Rotation)
+		}
+	}
+	// A shape plays its deepest tree's rotation: the one that tree's best build on file uses. A
+	// shape starts from a blind reshape of some other build, so letting its start pick would hand
+	// a 31 Fire shape the Frost rotation whenever the spec's best build is Frost.
+	trees, err := loadTrees(spec.Class)
+	if err != nil {
+		t.Fatalf("%s: %s", spec.Dir, err)
+	}
+	treeRotation := map[int]string{}
+	for _, result := range results {
+		if result.Gear != top.Gear {
+			continue
+		}
+		if tree := mainTree(parseTalents(trees, result.Talents)); treeRotation[tree] == "" {
+			treeRotation[tree] = result.Rotation
+		}
+	}
+	shapeRotations := func(shape *anchor) []string {
+		deepest := shape.holds[0]
+		for _, h := range shape.holds {
+			if h.points > deepest.points {
+				deepest = h
+			}
+		}
+		if rotation, ok := treeRotation[deepest.tree]; ok {
+			return []string{rotation}
+		}
+		return rotations
+	}
 	type climbed struct {
-		build TalentBuild
-		runs  int
-		err   error
+		build    TalentBuild
+		rotation string
+		runs     int
+		err      error
 	}
 	out := parallelMap(climbs, func(k int) climbed {
 		var build TalentBuild
+		var rotation string
 		var runs int
 		var err error
 		if k < len(starts) {
-			build, runs, err = optimise(spec, starts[k], top.Gear, top.Rotation, share)
+			build, rotation, runs, err = optimise(spec, starts[k], top.Gear, rotations, share)
 		} else {
 			// From where this shape's climb ended last run when there is one. A sim change moves
 			// a peak a point or two, not across the tree, so the climb starts next to the answer
@@ -307,10 +345,10 @@ func search(t *testing.T, spec Spec, sims *memo, results []Result) []Result {
 			if !ok {
 				from = starts[0]
 			}
-			build, runs, err = optimiseAnchored(spec, from, top.Gear, top.Rotation, share, shape)
+			build, rotation, runs, err = optimiseAnchored(spec, from, top.Gear, shapeRotations(shape), share, shape)
 		}
 		totalRuns.Add(int64(runs))
-		return climbed{build, runs, err}
+		return climbed{build, rotation, runs, err}
 	})
 
 	taken := map[string]bool{}
@@ -322,13 +360,13 @@ func search(t *testing.T, spec Spec, sims *memo, results []Result) []Result {
 			if c.err != nil {
 				t.Fatalf("%s: %s", spec.Dir, c.err)
 			}
-			t.Logf("%s: climb from %s reached %s in %d runs", spec.Dir, starts[k].Name, c.build.Talents, c.runs)
+			t.Logf("%s: climb from %s reached %s (%s) in %d runs", spec.Dir, starts[k].Name, c.build.Talents, c.rotation, c.runs)
 			// First name wins among the free climbs. The enumeration labels its result "best of
 			// every combination", which is a much stronger statement than "found by climbing" -
 			// and when both land on the same build, the stronger label is the true one.
 			if !taken[c.build.Talents] {
 				taken[c.build.Talents] = true
-				found = append(found, find{c.build.Name, c.build.Talents})
+				found = append(found, find{c.build.Name, c.build.Talents, c.rotation})
 			}
 			continue
 		}
@@ -340,8 +378,8 @@ func search(t *testing.T, spec Spec, sims *memo, results []Result) []Result {
 		if c.err != nil {
 			t.Fatalf("%s: %s: %s", spec.Dir, shape.label, c.err)
 		}
-		t.Logf("%s: shape %s reached %s in %d runs", spec.Dir, shape.label, c.build.Talents, c.runs)
-		found = append(found, find{shape.label, c.build.Talents})
+		t.Logf("%s: shape %s reached %s (%s) in %d runs", spec.Dir, shape.label, c.build.Talents, c.rotation, c.runs)
+		found = append(found, find{shape.label, c.build.Talents, c.rotation})
 	}
 
 	// A name found this run supersedes the carried row of the same name: the shape's best is
@@ -363,7 +401,7 @@ func search(t *testing.T, spec Spec, sims *memo, results []Result) []Result {
 		if !shapes[f.name] && listed[f.talents] {
 			continue
 		}
-		rows = append(rows, run{TalentBuild{Name: f.name, Talents: f.talents}, top.Gear, top.Rotation})
+		rows = append(rows, run{TalentBuild{Name: f.name, Talents: f.talents}, top.Gear, f.rotation})
 	}
 	for _, row := range sims.all(rows) {
 		row.Optimised = true
@@ -674,6 +712,34 @@ func write(t *testing.T, path string, results any) {
 // that no longer exists sitting in a table of numbers that do, and there is no way to tell
 // them apart by looking. One per name, so every shape's row survives a rebuild that does not
 // search, even where two shapes share a build.
+// Builds other sites publish for this spec (outside_builds.json, each with its source), run
+// beside ours on the same gear, rotations and environment and used as climb starts. They are the
+// cheapest check there is on the search: when one beats every row here, the search missed it.
+func outsideBuilds(spec Spec) []TalentBuild {
+	data, err := os.ReadFile(filepath.Join(repoRoot(), "sim", "arenalib", "outside_builds.json"))
+	if err != nil {
+		return nil
+	}
+	var bySpec map[string][]struct {
+		Name    string `json:"name"`
+		Talents string `json:"talents"`
+	}
+	if json.Unmarshal(data, &bySpec) != nil {
+		return nil
+	}
+	trees, err := loadTrees(spec.Class)
+	if err != nil {
+		return nil
+	}
+	builds := []TalentBuild{}
+	for _, build := range bySpec[spec.Dir] {
+		if parseTalents(trees, build.Talents).valid(trees) {
+			builds = append(builds, TalentBuild{Name: build.Name, Talents: build.Talents})
+		}
+	}
+	return builds
+}
+
 func previouslyOptimised(spec Spec) []TalentBuild {
 	data, err := os.ReadFile(filepath.Join(repoRoot(), "ui", "app", "arena", "results.json"))
 	if err != nil {
