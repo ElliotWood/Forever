@@ -230,11 +230,12 @@ var Party = []BuffSpec{
 			proto.Stat_StatDefenseRating,
 		},
 	},
-	// TODO: rank 5 states 50 ranged attack power and rank 4 states 75; in-game testing has to say
-	// which one the top rank grants.
+	// Rank 4 (20905, level 50) states 75 ranged attack power and rank 5 (20906, level 60) only 50,
+	// where Era's rank 5 was 100. Lower ranks stay castable, so a level 60 hunter keeps rank 4 up:
+	// 75 is the floor whatever rank 5 turns out to be on the server.
 	{
 		Field:   "trueshot_aura",
-		SpellID: 20906,
+		SpellID: 20905,
 		Stats: []proto.Stat{
 			proto.Stat_StatRangedAttackPower,
 		},
