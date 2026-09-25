@@ -98,18 +98,17 @@ func (mage *Mage) registerPermafrost() {
 	}
 }
 
-// TODO: To be implemented. TBC body below needs no porting; kept commented until this class's port is reviewed.
+// Improved Frost Nova (11165): Frost Nova's cooldown -2/-4 s.
 func (mage *Mage) registerImprovedFrostNova() {
 	if mage.Talents.ImprovedFrostNova == 0 {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// mage.AddStaticMod(core.SpellModConfig{
-	// 	ClassMask: MageSpellFrostNova,
-	// 	TimeValue: time.Second * time.Duration(-2*mage.Talents.ImprovedFrostNova),
-	// 	Kind:      core.SpellMod_CastTime_Flat,
-	// })
+	mage.AddStaticMod(core.SpellModConfig{
+		ClassMask: MageSpellFrostNova,
+		TimeValue: time.Millisecond * time.Duration(spellData.ImprovedFrostNova.Effect(dbcenums.A_ADD_FLAT_MODIFIER, int32(dbcenums.SPELLMOD_COOLDOWN)).ValueAt(mage.Talents.ImprovedFrostNova)),
+		Kind:      core.SpellMod_Cooldown_Flat,
+	})
 }
 
 // registerFrostbite implements Frostbite, new in Forever.
@@ -174,18 +173,17 @@ func (mage *Mage) registerIceBlock() {
 	}
 }
 
-// TODO: To be implemented. TBC body below needs no porting; kept commented until this class's port is reviewed.
+// Improved Cone of Cold (11190): Cone of Cold damage +12/23/35%.
 func (mage *Mage) registerImprovedConeOfCold() {
 	if mage.Talents.ImprovedConeOfCold == 0 {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// mage.AddStaticMod(core.SpellModConfig{
-	// 	ClassMask:  MageSpellConeOfCold,
-	// 	FloatValue: .15 + (.10 * (float64(mage.Talents.ImprovedConeOfCold) - 1)),
-	// 	Kind:       core.SpellMod_DamageDone_Flat,
-	// })
+	mage.AddStaticMod(core.SpellModConfig{
+		ClassMask:  MageSpellConeOfCold,
+		FloatValue: spellData.ImprovedConeOfCold.Effect(dbcenums.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_DAMAGE)).FractionAt(mage.Talents.ImprovedConeOfCold),
+		Kind:       core.SpellMod_DamageDone_Flat,
+	})
 }
 
 // Raid bosses cannot be chilled or frozen, so Fingers of Frost is the only thing that gets Shatter
