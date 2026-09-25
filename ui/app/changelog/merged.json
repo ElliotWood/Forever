@@ -1,5 +1,11 @@
 [
 	{
+		"number": 447,
+		"title": "warlock: register every Shadow Bolt rank (low-rank rotations measured, none win)",
+		"mergedAt": "2026-09-25",
+		"url": "https://github.com/ElliotWood/Forever/pull/447"
+	},
+	{
 		"number": 446,
 		"title": "arena: drop carried builds the current trees make illegal",
 		"mergedAt": "2026-09-25",
