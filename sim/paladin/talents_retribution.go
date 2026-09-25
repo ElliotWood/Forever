@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/buffs"
+	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/stats"
 )
@@ -114,24 +114,24 @@ func (paladin *Paladin) applyVindication() {
 		return
 	}
 
-	row := spellData.VindicationTriggered.HighestRank()
-	points := spellData.Vindication.EffectAt(0).ValueAt(paladin.Talents.Vindication)
+	rank := spellData.VindicationTriggered.Highest()
+	points := spellData.Vindication.EffectAt(1).ValueAt(paladin.Talents.Vindication)
 	// The tooltip's ${$m1/-3*$440667m1}: the trigger's -201 scaled by the points over three.
-	targetAttackPower := row.Effect(shared.A_MOD_ATTACK_POWER, 0).Value * points / 3
+	targetAttackPower := rank.Effect(dbcenums.A_MOD_ATTACK_POWER, 0).Average(core.CharacterLevel) * points / 3
 
 	targetAuras := paladin.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
 		return target.GetOrRegisterAura(core.Aura{
 			Label:    "Vindication" + paladin.Label,
-			ActionID: core.ActionID{SpellID: row.SpellID},
-			Duration: row.Duration,
+			ActionID: core.ActionID{SpellID: rank.ID},
+			Duration: rank.Duration(),
 		}).AttachStatBuff(stats.AttackPower, targetAttackPower)
 	})
 
 	attackPowerDep := paladin.NewDynamicMultiplyStat(stats.AttackPower, 1+points/100)
 	selfAura := paladin.RegisterAura(core.Aura{
 		Label:    "Vindication" + paladin.Label,
-		ActionID: core.ActionID{SpellID: row.SpellID}.WithTag(1),
-		Duration: row.Duration,
+		ActionID: core.ActionID{SpellID: rank.ID}.WithTag(1),
+		Duration: rank.Duration(),
 	}).AttachStatDependency(attackPowerDep)
 
 	paladin.MakeProcTriggerAura(core.ProcTrigger{
@@ -148,20 +148,20 @@ func (paladin *Paladin) applyVindication() {
 }
 
 // Sanctified Judgement - Gives your Judgement ability a 33/66/100% chance to return 20/40/60% of
-// the Mana cost of the judged seal.
+// the Mana cost of the judged seal. The chance is the first effect, the refund the second.
 func (paladin *Paladin) applySanctifiedJudgement() {
 	if paladin.Talents.SanctifiedJudgement == 0 {
 		return
 	}
 
-	manaMetrics := paladin.NewManaMetrics(core.ActionID{SpellID: spellData.SanctifiedJudgement.HighestRank().SpellID})
-	refund := spellData.SanctifiedJudgement.EffectAt(1).FractionAt(paladin.Talents.SanctifiedJudgement)
+	manaMetrics := paladin.NewManaMetrics(core.ActionID{SpellID: spellData.SanctifiedJudgement.Highest().ID})
+	refund := spellData.SanctifiedJudgement.EffectAt(2).FractionAt(paladin.Talents.SanctifiedJudgement)
 
 	paladin.MakeProcTriggerAura(core.ProcTrigger{
 		Name:               "Sanctified Judgement" + paladin.Label,
 		Callback:           core.CallbackOnCastComplete,
 		ClassSpellMask:     SpellMaskJudgement,
-		ProcChance:         spellData.SanctifiedJudgement.EffectAt(0).FractionAt(paladin.Talents.SanctifiedJudgement),
+		ProcChance:         spellData.SanctifiedJudgement.EffectAt(1).FractionAt(paladin.Talents.SanctifiedJudgement),
 		TriggerImmediately: true,
 		Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
 			if seal := paladin.activeSeal(); seal != nil {
@@ -178,12 +178,12 @@ func (paladin *Paladin) applyEyeForAnEye() {
 		return
 	}
 
-	row := spellData.EyeForAnEye.HighestRank()
+	rank := spellData.EyeForAnEye.Highest()
 	share := spellData.EyeForAnEye.FractionAt(paladin.Talents.EyeForAnEye)
 
 	var reflected float64
 	reflect := paladin.RegisterSpell(core.SpellConfig{
-		ActionID:    core.ActionID{SpellID: row.SpellID},
+		ActionID:    core.ActionID{SpellID: rank.ID},
 		SpellSchool: core.SpellSchoolHoly,
 		ProcMask:    core.ProcMaskEmpty,
 		Flags:       core.SpellFlagBinary | core.SpellFlagPassiveSpell | core.SpellFlagIgnoreModifiers,
@@ -215,15 +215,15 @@ func (paladin *Paladin) applyPursuitOfJustice() {
 		return
 	}
 
-	row := spellData.PursuitOfJustice.HighestRank()
+	rank := spellData.PursuitOfJustice.Highest()
 	paladin.NewPassiveMovementSpeedAura(
 		"Pursuit of Justice",
-		core.ActionID{SpellID: row.SpellID},
-		spellData.PursuitOfJustice.Effect(shared.A_MOD_INCREASE_SPEED, 0).FractionAt(paladin.Talents.PursuitOfJustice),
+		core.ActionID{SpellID: rank.ID},
+		spellData.PursuitOfJustice.Effect(dbcenums.A_MOD_INCREASE_SPEED, 0).FractionAt(paladin.Talents.PursuitOfJustice),
 	)
 }
 
-// Sacred Arbiter - Increases the damage of your Holy Strike ability by 10% and causes it to refresh
+// Sacred Arbiter - Increases the damage of your Holy Strike ability by 20% and causes it to refresh
 // all Judgement effects on the target. The paladin's own melee strikes already refresh its own
 // judgements; Holy Strike with the talent refreshes every judgement on the target, whoever put it
 // there, the way Crusader Strike did in TBC.
@@ -255,7 +255,7 @@ func (paladin *Paladin) applySacredArbiter() {
 }
 
 // Two-Handed Weapon Specialization - Increases the damage you deal with two-handed melee weapons
-// by 3/6/9%. The client puts it on the Physical school alone.
+// by 2/4/6%. The client puts it on the Physical school alone.
 func (paladin *Paladin) applyTwoHandedWeaponSpecialization() {
 	if paladin.Talents.TwoHandedWeaponSpecialization == 0 {
 		return
@@ -268,13 +268,13 @@ func (paladin *Paladin) applyTwoHandedWeaponSpecialization() {
 }
 
 // Vengeance - Increases your Physical and Holy damage dealt by 1/2/3% for 30 sec after landing a
-// critical strike. Stacks up to 5 times.
+// critical strike. Stacks up to 3 times.
 func (paladin *Paladin) applyVengeance() {
 	if paladin.Talents.Vengeance == 0 {
 		return
 	}
 
-	row := spellData.VengeanceTriggered.HighestRank()
+	rank := spellData.VengeanceTriggered.Highest()
 	perStack := spellData.Vengeance.FractionAt(paladin.Talents.Vengeance)
 
 	damageMod := paladin.AddDynamicMod(core.SpellModConfig{
@@ -285,9 +285,9 @@ func (paladin *Paladin) applyVengeance() {
 
 	vengeance := paladin.RegisterAura(core.Aura{
 		Label:     "Vengeance" + paladin.Label,
-		ActionID:  core.ActionID{SpellID: row.SpellID},
-		Duration:  row.Duration,
-		MaxStacks: 5,
+		ActionID:  core.ActionID{SpellID: rank.ID},
+		Duration:  rank.Duration(),
+		MaxStacks: int32(rank.MaxStack),
 		OnGain: func(_ *core.Aura, _ *core.Simulation) {
 			damageMod.Activate()
 		},
@@ -318,7 +318,7 @@ func (paladin *Paladin) applyChampionOfTheLight() {
 		return
 	}
 
-	share := spellData.ChampionOfTheLight.Effect(shared.A_MOD_SPELL_DAMAGE_OF_STAT_PERCENT, 126).FractionAt(paladin.Talents.ChampionOfTheLight)
+	share := spellData.ChampionOfTheLight.Effect(dbcenums.A_MOD_SPELL_DAMAGE_OF_STAT_PERCENT, 126).FractionAt(paladin.Talents.ChampionOfTheLight)
 	paladin.AddStatDependency(stats.Intellect, stats.SpellDamage, share)
 	paladin.AddStatDependency(stats.Intellect, stats.HealingPower, share)
 }
@@ -330,21 +330,21 @@ func (paladin *Paladin) applyInstrumentOfLaw() {
 		return
 	}
 
-	row := spellData.InstrumentOfLaw.HighestRank()
+	rank := spellData.InstrumentOfLaw.Highest()
 
 	paladin.AddStaticMod(core.SpellModConfig{
 		ClassMask: SpellMaskHammerOfWrath,
 		Kind:      core.SpellMod_CastTime_Flat,
-		TimeValue: time.Duration(spellData.InstrumentOfLaw.EffectAt(0).ValueAt(paladin.Talents.InstrumentOfLaw)) * time.Millisecond,
+		TimeValue: time.Duration(spellData.InstrumentOfLaw.EffectAt(1).ValueAt(paladin.Talents.InstrumentOfLaw)) * time.Millisecond,
 	})
 
 	// The client states the threat reduction as a positive number Righteous Fury zeroes.
 	threat := core.MakePermanent(paladin.RegisterAura(core.Aura{
 		Label:    "Instrument of Law" + paladin.Label,
-		ActionID: core.ActionID{SpellID: row.SpellID},
+		ActionID: core.ActionID{SpellID: rank.ID},
 	}).AttachMultiplicativePseudoStatBuff(
 		&paladin.PseudoStats.ThreatMultiplier,
-		1-spellData.InstrumentOfLaw.Effect(shared.A_MOD_THREAT, 127).FractionAt(paladin.Talents.InstrumentOfLaw),
+		1-spellData.InstrumentOfLaw.Effect(dbcenums.A_MOD_THREAT, 127).FractionAt(paladin.Talents.InstrumentOfLaw),
 	))
 
 	paladin.OnSpellRegistered(func(spell *core.Spell) {
@@ -369,10 +369,12 @@ func (paladin *Paladin) applyTwistOfLight() {
 		return
 	}
 
+	// The discount is an A_ADD_PCT_MODIFIER on the cost, so it joins the additive bucket the way
+	// Swift Judgement's does.
 	paladin.AddStaticMod(core.SpellModConfig{
 		ClassMask:  SpellMaskAllSeals,
-		Kind:       core.SpellMod_PowerCost_Pct,
-		FloatValue: spellData.TwistOfLight.FractionAt(1),
+		Kind:       core.SpellMod_PowerCost_Pct_Add,
+		FloatValue: spellData.TwistOfLight.Effect(dbcenums.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_COST)).FractionAt(1),
 	})
 
 	paladin.echoes = map[int32]*sealEcho{}
