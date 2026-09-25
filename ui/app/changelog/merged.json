@@ -1,5 +1,11 @@
 [
 	{
+		"number": 461,
+		"title": "priest: Improved Healing discounts Penance",
+		"mergedAt": "2026-09-25",
+		"url": "https://github.com/ElliotWood/Forever/pull/461"
+	},
+	{
 		"number": 460,
 		"title": "consumables: rage potion for the melee list; fix rogue/enh panic and druids potting out of form",
 		"mergedAt": "2026-09-25",
