@@ -1234,9 +1234,9 @@ The last four are exceptions; most rows state none of them. The rest of a row is
   state, `ProtoInt32` for `KindExternalCD` and `KindItemCount`, and `ProtoBool` otherwise. The pass
   checks it against the compiled message, and renders a row whose field protoc has not retyped yet as a
   shell.
-- **Name and AuraName.** The client's `SpellName` of `CastID`, or of `SpellID` where no cast is pinned,
-  and of `SpellID` where one is. `Name` is the label unless `Label` overrides it; a spell no class family
-  files has neither and is labelled by its own name. `TestManifestAnchorsMatchTheClient` resolves the
+- **Name and AuraName.** `Name` is the client's `SpellName` of `CastID`, or of `SpellID` where no cast
+  is pinned. `AuraName` is the `SpellName` of `SpellID`, only where a cast is pinned. `Name` is the label
+  unless `Label` overrides it; a spell no class family files has neither and is labelled by its own name. `TestManifestAnchorsMatchTheClient` resolves the
   pins from both.
 - **Owner.** The class whose `core.ClassSpellFamilies` entry is the spell's family. It narrows the rank
   lookup, and marks the row "(External)" on that class's settings tab.
@@ -1264,18 +1264,19 @@ own value and a name for it in both emitters.
 `buffmanifest.Scopes` is Party, Raid, Individual, Debuffs: the rows resolve, render and apply in that
 order, each scope in slice order. The apply order is the order the auras register in, and the results
 follow it. The party's Retribution Aura and the raid's Thorns are both damage shields, and a hit taken
-reaches them in the order they registered, so the protection suites' results hold with Party first.
+reaches them in the order they activate, which is the order they registered, so the protection suites' results hold with Party first.
 `proto/buffs.proto` keeps its own message order: Raid, Party, Individual, Debuffs.
 
 ### Warnings
 
-The pass prints a `buffs:` line for what it resolves but doubts, and fails nothing on it:
+The pass prints a `buffs:` line for what it resolves but doubts, and writes the row regardless:
 
 - **An unpriced talent.** A passive trait node whose flat or percent spell modifier raises an effect
   value of the row's spell, on a row that names no `Talent`. It prices an improved state the row does
   not offer.
 - **A talent with nothing to scale.** A `Talent` that scales the value of a row the parse attaches no
-  amount of. The row keeps no ranks.
+  amount of. The row keeps no ranks, so `TestResolvedBuffInvariants` rejects it as a tristate nothing
+  prices.
 - **A scope mismatch.** The client states an area or a target the row's slice does not name.
   `TestScopeMatchesTheClientTargeting` holds the exemptions.
 
