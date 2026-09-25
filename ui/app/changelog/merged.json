@@ -1,5 +1,11 @@
 [
 	{
+		"number": 446,
+		"title": "arena: drop carried builds the current trees make illegal",
+		"mergedAt": "2026-09-25",
+		"url": "https://github.com/ElliotWood/Forever/pull/446"
+	},
+	{
 		"number": 445,
 		"title": "arena: incremental search (skip unchanged specs, resume shape climbs)",
 		"mergedAt": "2026-09-25",
