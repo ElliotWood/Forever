@@ -1,5 +1,11 @@
 [
 	{
+		"number": 481,
+		"title": "arena: Wowhead talent links use hash version v2",
+		"mergedAt": "2026-09-26",
+		"url": "https://github.com/ElliotWood/Forever/pull/481"
+	},
+	{
 		"number": 480,
 		"title": "site: beta checklist links point at docs/beta-pass",
 		"mergedAt": "2026-09-26",
