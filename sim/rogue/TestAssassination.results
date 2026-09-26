@@ -77,6 +77,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAssassination-AllItems-BarbaricBelt-4264"
+ value: {
+  dps: 324.58419
+  tps: 161.31834
+ }
+}
+dps_results: {
  key: "TestAssassination-AllItems-Bashguuder-13204"
  value: {
   dps: 322.87067
@@ -88,6 +95,13 @@ dps_results: {
  value: {
   dps: 329.24475
   tps: 163.63464
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-BlazingEmblem-2802"
+ value: {
+  dps: 322.87067
+  tps: 160.46672
  }
 }
 dps_results: {
@@ -130,6 +144,13 @@ dps_results: {
  value: {
   dps: 322.87067
   tps: 160.46672
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-CursedMurlocEye-273840"
+ value: {
+  dps: 334.24413
+  tps: 166.11933
  }
 }
 dps_results: {
@@ -190,6 +211,20 @@ dps_results: {
 }
 dps_results: {
  key: "TestAssassination-AllItems-Defiler'sTalisman-21115"
+ value: {
+  dps: 322.87067
+  tps: 160.46672
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-Defiler'sTalisman-21116"
+ value: {
+  dps: 322.87067
+  tps: 160.46672
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-Defiler'sTalisman-21120"
  value: {
   dps: 322.87067
   tps: 160.46672
@@ -316,6 +351,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAssassination-AllItems-EnergyCloak-9397"
+ value: {
+  dps: 322.87067
+  tps: 160.46672
+ }
+}
+dps_results: {
  key: "TestAssassination-AllItems-EssenceofthePureFlame-18815"
  value: {
   dps: 322.87067
@@ -369,6 +411,27 @@ dps_results: {
  value: {
   dps: 327.81432
   tps: 162.92372
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-Gem-studdedLeatherBelt-4262"
+ value: {
+  dps: 323.66153
+  tps: 160.85978
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-GnomishHarmPreventionBelt-10721"
+ value: {
+  dps: 322.87067
+  tps: 160.46672
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-GoblinConstructionHelmet-10543"
+ value: {
+  dps: 322.87067
+  tps: 160.46672
  }
 }
 dps_results: {
@@ -533,6 +596,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAssassination-AllItems-MarkoftheRedFlight-282778"
+ value: {
+  dps: 322.87067
+  tps: 160.46672
+ }
+}
+dps_results: {
  key: "TestAssassination-AllItems-MindtapTalisman-18371"
  value: {
   dps: 322.87067
@@ -568,6 +638,20 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAssassination-AllItems-OrbofFire-12805"
+ value: {
+  dps: 324.2256
+  tps: 161.14012
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-PetrolspillLeggings-9509"
+ value: {
+  dps: 327.39204
+  tps: 162.71384
+ }
+}
+dps_results: {
  key: "TestAssassination-AllItems-Prismcharm-15867"
  value: {
   dps: 322.87067
@@ -579,6 +663,13 @@ dps_results: {
  value: {
   dps: 320.13327
   tps: 159.10623
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-RedWhelpGloves-7284"
+ value: {
+  dps: 328.3043
+  tps: 163.16724
  }
 }
 dps_results: {
@@ -596,10 +687,45 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAssassination-AllItems-RingofSaviors-1447"
+ value: {
+  dps: 322.87067
+  tps: 160.46672
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-SatchelofBronzeBombs-285276"
+ value: {
+  dps: 322.87067
+  tps: 160.46672
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-SatchelofCopperBombs-285275"
+ value: {
+  dps: 322.87067
+  tps: 160.46672
+ }
+}
+dps_results: {
  key: "TestAssassination-AllItems-SatchelofDarkIronBombs-285278"
  value: {
   dps: 322.87067
   tps: 160.46672
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-SatchelofIronBombs-285277"
+ value: {
+  dps: 322.87067
+  tps: 160.46672
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-SearingDagger-273003"
+ value: {
+  dps: 279.14899
+  tps: 138.73705
  }
 }
 dps_results: {
@@ -694,6 +820,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAssassination-AllItems-SwineFists-10760"
+ value: {
+  dps: 331.64077
+  tps: 164.82546
+ }
+}
+dps_results: {
  key: "TestAssassination-AllItems-TalismanofArathor-20071"
  value: {
   dps: 322.87067
@@ -702,6 +835,20 @@ dps_results: {
 }
 dps_results: {
  key: "TestAssassination-AllItems-TalismanofArathor-21117"
+ value: {
+  dps: 322.87067
+  tps: 160.46672
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-TalismanofArathor-21118"
+ value: {
+  dps: 322.87067
+  tps: 160.46672
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-TalismanofArathor-21119"
  value: {
   dps: 322.87067
   tps: 160.46672
@@ -747,6 +894,13 @@ dps_results: {
  value: {
   dps: 322.87067
   tps: 160.46672
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-ThorncursedGrips-274159"
+ value: {
+  dps: 328.00653
+  tps: 163.01925
  }
 }
 dps_results: {

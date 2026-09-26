@@ -5,12 +5,36 @@
 # items
 833 Lifestone
 942 Freezing Band
+1131 Totem of Infliction
 1168 Skullflame Shield
+1204 The Green Tower
+1447 Ring of Saviors
 1979 Wall of the Dead
+2802 Blazing Emblem
 2824 Hurricane
+4262 Gem-studded Leather Belt
+4264 Barbaric Belt
 4696 Lapidis Tankard of Tidesippe
+5443 Gold-plated Buckler
+6898 Orb of Soran'ruk
+6907 Tortoise Armor
+6972 Fire Hardened Hauberk
+7133 Brutal Hauberk
+7284 Red Whelp Gloves
+7507 Arcane Orb
+7508 Ley Orb
+7515 Celestial Orb
+7747 Vile Protector
+7939 Truesilver Breastplate
 8348 Helm of Fire
 8367 Dragonscale Breastplate
+9397 Energy Cloak
+9449 Manual Crowd Pummeler
+9458 Thermaplugg's Central Core
+9509 Petrolspill Leggings
+10543 Goblin Construction Helmet
+10721 Gnomish Harm Prevention Belt
+10760 Swine Fists
 10847 Dragon's Call
 11302 Uther's Strength
 11669 Naglering
@@ -20,11 +44,13 @@
 11815 Hand of Justice
 11819 Second Wind
 11832 Burst of Knowledge
+11861 Girdle of Reprisal
 11905 Linken's Boomerang
 12532 Spire of the Stoneshaper
 12631 Fiery Plate Gauntlets
 12632 Storm Gauntlets
 12798 Annihilator
+12805 Orb of Fire
 13143 Mark of the Dragon Lord
 13164 Heart of the Scale
 13171 Smokey's Lighter
@@ -41,6 +67,9 @@
 14554 Cloudkeeper Legplates
 14557 The Lion Horn of Stormwind
 14576 Ebon Hilt of Marduk
+15107 Orb of Noh'Orahil
+15108 Orb of Dar'Orahil
+15866 Veildust Medicine Bag
 15867 Prismcharm
 15873 Ragged John's Neverending Cup
 16768 Furbolg Medicine Pouch
@@ -76,7 +105,11 @@
 20525 Earthen Sigil
 20636 Hibernation Crystal
 21115 Defiler's Talisman
+21116 Defiler's Talisman
 21117 Talisman of Arathor
+21118 Talisman of Arathor
+21119 Talisman of Arathor
+21120 Defiler's Talisman
 21180 Earthstrike
 21190 Wrath of Cenarius
 21473 Eye of Moam
@@ -101,14 +134,26 @@
 226881 Beastmaster's Treads
 234562 High Warlord's Shield Wall
 234588 Grand Marshal's Aegis
+249396 Mystic Mushroom
 249469 Frozen Heart of the Mountain
 249470 Molten Heart of the Mountain
 270226 Golden Banana
 272439 Serenity Field
 272591 Premier High Warlord's Shield Wall
 272838 Premier Grand Marshal's Aegis
+273003 Searing Dagger
+273137 Skum's Bucket
+273840 Cursed Murloc Eye
+274159 Thorncursed Grips
+274290 Painwalker Buckler
 274759 Everlook Pathcarver
+276631 Coldflame Saber
+282778 Mark of the Red Flight
+285275 Satchel of Copper Bombs
+285276 Satchel of Bronze Bombs
+285277 Satchel of Iron Bombs
 285278 Satchel of Dark Iron Bombs
+286541 Bael'dun Tankard
 
 # enchants
 30 Crude Scope
