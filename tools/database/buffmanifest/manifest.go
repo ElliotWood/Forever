@@ -125,6 +125,9 @@ type BuffSpec struct {
 	Proto BuffProtoType // override of the derived type
 	// Reason says what a Flag row is, since no spell does; the shell it renders as carries it.
 	Reason string
+	// LowerRank marks a SpellID pinned below the family's top rank on purpose (the top rank grants
+	// less), so the client anchor check leaves it alone.
+	LowerRank bool
 }
 
 // GoStem is the identifier stem the generated code names the row by: GoField without underscores.

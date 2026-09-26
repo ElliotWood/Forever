@@ -48,6 +48,10 @@ func TestManifestAnchorsMatchTheClient(t *testing.T) {
 		if row.Name == "" {
 			continue
 		}
+		// A deliberate lower-rank pin (see LowerRank) is not the top rank by design.
+		if row.LowerRank {
+			continue
+		}
 
 		// A totem or dummy whose cast the manifest does not name reads the aura's name, which no
 		// skill line grants, so it fails here.
