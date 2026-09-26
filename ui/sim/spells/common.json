@@ -16,7 +16,7 @@
 		"file": "sim/common/forever/item_sets_classic.go",
 		"source": "forever",
 		"tooltip": "30 to 50 Fire damage on a successful melee attack.",
-		"note": "Client 1.60.1.70009 (spell 9057): 30 to 50, doubled from Era's 15 to 25. The trigger 9233 states a 10% chance; the sim rolls 5%, as master did."
+		"note": "Client 1.60.1.70009 (spell 9057): 30 to 50, doubled from Era's 15 to 25. The trigger 9233 rolls 10% (Era 5%), read from the client; its description still says 5%."
 	},
 	"9591": {
 		"ability": "Acid Spit (Emerald Dragon Whelp)",
@@ -107,7 +107,7 @@
 		"ability": "Lightning",
 		"file": "sim/common/forever/item_sets_classic.go",
 		"source": "classic",
-		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py. The set bonus that fires it (18979, Stormshroud Armor 2 piece) rolls 10% in client 1.60.1.70009, twice Era's 5%; the sim reads it from the client."
 	},
 	"20007": {
 		"ability": "Holy Strength",
@@ -174,7 +174,7 @@
 		"ability": "Revitalize",
 		"file": "sim/common/forever/item_sets_classic.go",
 		"source": "classic",
-		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py. The set bonus that fires it (23863, Stormshroud Armor 3 piece) rolls 4% in client 1.60.1.70009, twice Era's 2%; the sim reads it from the client."
 	},
 	"27499": {
 		"ability": "Crusader's Wrath",

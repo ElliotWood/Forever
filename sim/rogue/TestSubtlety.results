@@ -689,8 +689,8 @@ dps_results: {
 dps_results: {
  key: "TestSubtlety-AllItems-StormshroudArmor"
  value: {
-  dps: 323.91788
-  tps: 160.98719
+  dps: 343.36542
+  tps: 170.65262
  }
 }
 dps_results: {
@@ -780,8 +780,8 @@ dps_results: {
 dps_results: {
  key: "TestSubtlety-AllItems-VolcanicArmor"
  value: {
-  dps: 289.10605
-  tps: 143.68571
+  dps: 292.25822
+  tps: 145.25234
  }
 }
 dps_results: {

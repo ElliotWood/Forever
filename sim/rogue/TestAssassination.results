@@ -689,8 +689,8 @@ dps_results: {
 dps_results: {
  key: "TestAssassination-AllItems-StormshroudArmor"
  value: {
-  dps: 372.43469
-  tps: 185.10004
+  dps: 394.13788
+  tps: 195.88653
  }
 }
 dps_results: {
@@ -780,8 +780,8 @@ dps_results: {
 dps_results: {
  key: "TestAssassination-AllItems-VolcanicArmor"
  value: {
-  dps: 326.13544
-  tps: 162.08931
+  dps: 329.97631
+  tps: 163.99823
  }
 }
 dps_results: {
