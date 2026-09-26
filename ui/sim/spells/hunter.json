@@ -61,7 +61,7 @@
 		"ability": "Arcane Shot",
 		"assumptions": [
 			"The client carries no spell power coefficient on Arcane Shot; Classic's (.204, .3, then .429) is kept.",
-			"No attack power scaling. One beta player reports Serpent Sting and Arcane Shot do scale with attack power beyond their tooltips (forum thread 2358919, 2026-09-23, no numbers); check with and without Aspect of the Hawk."
+			"No attack power scaling, which the beta's own combat logs say is wrong. Across 12 hunters in 20 public foreverlogs.gg reports (2026-09-26, level 20 dungeons), Arcane Shot's non-critical hits average 1.6-2.1x the client's base damage at every rank (rank 3: base 39, 67-82 seen) and Serpent Sting's ticks 1.4-2.0x (rank 2: base 12, 17-24 seen), from hunters with next to no spell power. The coefficient is not yet fitted: the logs carry each hunter's agility, but not Aspect of the Hawk or Hunter's Mark uptime. One beta player reported the same (forum thread 2358919, 2026-09-23)."
 		],
 		"file": "sim/hunter/arcane_shot.go",
 		"note": "Client 70009: rank 8 deals 217, up from 183.",
@@ -155,7 +155,7 @@
 		"ability": "Serpent Sting",
 		"assumptions": [
 			"The client carries no spell power coefficient on Serpent Sting; Classic's is kept.",
-			"No attack power scaling. One beta player reports Serpent Sting and Arcane Shot do scale with attack power beyond their tooltips (forum thread 2358919, 2026-09-23, no numbers); check with and without Aspect of the Hawk."
+			"No attack power scaling, which the beta's own combat logs say is wrong. Across 12 hunters in 20 public foreverlogs.gg reports (2026-09-26, level 20 dungeons), Arcane Shot's non-critical hits average 1.6-2.1x the client's base damage at every rank (rank 3: base 39, 67-82 seen) and Serpent Sting's ticks 1.4-2.0x (rank 2: base 12, 17-24 seen), from hunters with next to no spell power. The coefficient is not yet fitted: the logs carry each hunter's agility, but not Aspect of the Hawk or Hunter's Mark uptime. One beta player reported the same (forum thread 2358919, 2026-09-23)."
 		],
 		"file": "sim/hunter/serpent_sting.go",
 		"note": "Client 70009: rank 9 deals 555 over 15 sec, as in Classic; the ticks can crit (#362).",
