@@ -148,7 +148,7 @@ export const LandingForever = () => (
 				<li>
 					43 abilities still carry a number the client does not settle &mdash; 25 of them hunter. Each is named on the{' '}
 					<a href={`${SITE_BASE}evidence/`}>evidence page</a>, in the spell manifest, and in the{' '}
-					<a href={`${SITE_REPO_URL}/blob/master/docs/forever_beta_checklist.md`} target="_blank" rel="noreferrer">
+					<a href={`${SITE_REPO_URL}/tree/master/docs/beta-pass`} target="_blank" rel="noreferrer">
 						beta re-verification checklist
 					</a>
 					.
