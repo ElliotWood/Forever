@@ -39,7 +39,7 @@ const Provenance = () => (
 			1.60.1.69913, read against Classic Era and diffed spell by spell. Talent values come from the client&apos;s rank curves, coefficients from the spell
 			tables, and each rank is scaled to level 60 by the client&apos;s per-level points. {assumedCount} abilities still carry a number the client does not
 			settle and {unreviewedCount} have not been classified; they are listed one line each in the{' '}
-			<a className={LINK} href={`${SITE_REPO_URL}/blob/master/docs/forever_beta_checklist.md`} target="_blank" rel="noreferrer">
+			<a className={LINK} href={`${SITE_REPO_URL}/tree/master/docs/beta-pass`} target="_blank" rel="noreferrer">
 				beta re-verification checklist
 			</a>
 			, and every one of them can move a number in this table.
