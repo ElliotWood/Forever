@@ -252,12 +252,9 @@
 	"408345": {
 		"ability": "Fire Nova",
 		"file": "sim/shaman/fire_totems.go",
-		"note": "Rank 5, the only rank the sim casts. Forever removes Fire Nova Totem and the spellbook teaches this nova instead. In beta client 1.60.1.70009 408345 is a scripted dummy whose tooltip cites 11307 (419 base, 0.143 coefficient), and the sim reads the damage from 11307 since #276; before the engine switch it used 408428 (403 base, 0.214), which the client also carries. Cost and level are the totem's. Wowhead's 413-459 is the same 436 average, rounded inward.",
-		"source": "assumed",
-		"tooltip": "520 Mana\nInstant\n10 sec cooldown\nCauses a burst of flame around the caster, dealing 412 to 460 Fire damage to nearby enemies.",
-		"assumptions": [
-			"Fire Nova rank 5 hits for 412 to 460 Fire damage plus 14.3% of spell power (11307, the spell its tooltip cites), not 397 to 443 plus 21.4% (408428)"
-		]
+		"note": "Rank 5, the only rank the sim casts. Forever removes Fire Nova Totem and the spellbook teaches this nova instead. In beta client 1.60.1.70009 408345 is a scripted dummy that casts 408428 (403 base plus 3.4 a level to 57, 0.214 coefficient), so rank 5 hits for 397 to 443 at 60. Its tooltip cites the Era row 11307 (419 base, 0.143), which the sim read from #276 until now, but beta combat logs from five shamans record every Fire Nova hit as rank 1's sibling 408423 and none as the cited row (foreverlogs.gg reports 2650, 2671, 2673, 32 and 35). Cost and level are the totem's.",
+		"source": "forever",
+		"tooltip": "520 Mana\nInstant\n10 sec cooldown\nCauses a burst of flame around the caster, dealing 397 to 443 Fire damage to nearby enemies."
 	},
 	"408505": {
 		"ability": "Maelstrom Weapon",
