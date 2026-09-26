@@ -1075,8 +1075,8 @@ dps_results: {
 dps_results: {
  key: "TestProtectionWarrior-AllItems-StormshroudArmor"
  value: {
-  dps: 244.77953
-  tps: 603.91163
+  dps: 245.39992
+  tps: 605.41828
   dtps: 1457.2244
  }
 }
@@ -1219,8 +1219,8 @@ dps_results: {
 dps_results: {
  key: "TestProtectionWarrior-AllItems-VolcanicArmor"
  value: {
-  dps: 229.60425
-  tps: 572.29549
+  dps: 230.59826
+  tps: 574.21586
   dtps: 1459.55049
  }
 }

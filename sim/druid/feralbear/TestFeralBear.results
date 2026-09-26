@@ -835,8 +835,8 @@ dps_results: {
 dps_results: {
  key: "TestFeralBear-AllItems-StormshroudArmor"
  value: {
-  dps: 244.61486
-  tps: 623.58519
+  dps: 245.20159
+  tps: 624.34795
   dtps: 1538.24084
  }
 }
@@ -955,8 +955,8 @@ dps_results: {
 dps_results: {
  key: "TestFeralBear-AllItems-VolcanicArmor"
  value: {
-  dps: 227.4816
-  tps: 573.49276
+  dps: 228.92323
+  tps: 575.36687
   dtps: 1400.82337
  }
 }

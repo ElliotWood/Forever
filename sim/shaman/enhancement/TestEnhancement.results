@@ -765,8 +765,8 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-AllItems-StormshroudArmor"
  value: {
-  dps: 184.17392
-  tps: 105.29075
+  dps: 186.06371
+  tps: 106.28816
  }
 }
 dps_results: {
@@ -905,8 +905,8 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-AllItems-VolcanicArmor"
  value: {
-  dps: 174.05863
-  tps: 100.29059
+  dps: 174.70305
+  tps: 100.53288
  }
 }
 dps_results: {
