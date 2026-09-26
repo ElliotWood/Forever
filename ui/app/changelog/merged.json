@@ -1,5 +1,11 @@
 [
 	{
+		"number": 494,
+		"title": "Hunter: Lightning Breath drops the spell power coefficient the client removed; four Classic rows sourced",
+		"mergedAt": "2026-09-26",
+		"url": "https://github.com/ElliotWood/Forever/pull/494"
+	},
+	{
 		"number": 493,
 		"title": "site: the combat log is a measurement too; changelog points at the evidence page",
 		"mergedAt": "2026-09-26",
