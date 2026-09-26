@@ -134,7 +134,6 @@ func (hp *HunterPet) newLightningBreath() *core.Spell {
 
 		DamageMultiplier: 1,
 		ThreatMultiplier: 1,
-		BonusCoefficient: 1,
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
 			return hp.IsEnabled()
