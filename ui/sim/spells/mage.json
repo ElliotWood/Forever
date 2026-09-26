@@ -162,7 +162,7 @@
 			"Spell power coefficient .143. The client row carries 0, as Season of Discovery's Ice Lance (400640) does: the scaling lives in a server script. Forever's row is a copy of SoD's reworked one (the same 20 and 5 Glaciate dummies, a x4 frozen bonus), and SoD's hotfix of 2024-12-04 raised that rune's spell power scaling by 300% from .143; so .429 or .572 is at least as likely as .143. At level 20: Ice Lance a non-frozen dummy 10 times with and without Lesser Wizard Oil (+16 spell power); the average rises by about 2 at .143, 7 at .429, 9 at .572."
 		],
 		"file": "sim/mage/ice_lance.go",
-		"note": "Rank 6, Forever's own id; Ice Lance is a later expansion spell, so the Classic database has no entry for it. Beta client 1.60.1.70009: 133-157 plus its growth to level 60 = 136-160, 160 mana, 300% against frozen targets.",
+		"note": "Rank 6, Forever's own id; Ice Lance is a later expansion spell, so the Classic database has no entry for it. Beta client 1.60.1.70009: 133-157 plus its growth to level 60 = 136-160, 160 mana, 300% against frozen targets. Wowhead's 140-164 is the same row at its max level of 64.",
 		"source": "assumed",
 		"tooltip": "160 Mana\nInstant\nDeals 136 to 160 Frost damage to an enemy target.\nDeals 300% increased damage to a frozen target, which against a raid boss means one held by Fingers of Frost."
 	},
