@@ -29,7 +29,7 @@ const CHIP: Record<Tier, string> = {
 	measured: 'border-evidence-measured text-evidence-measured',
 	forever: 'border-white/20',
 	classic: 'border-white/20',
-	assumed: 'border-brand text-brand',
+	assumed: 'border-evidence-assumed text-evidence-assumed',
 };
 
 // What would actually move a number, worst first, with what to send for each.
