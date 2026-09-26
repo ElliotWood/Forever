@@ -96,6 +96,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-BarbaricCrossbow-272999"
+ value: {
+  dps: 232.02903
+  tps: 580.25704
+  dtps: 1510.60216
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-Bashguuder-13204"
  value: {
   dps: 232.02903
@@ -1030,6 +1038,14 @@ dps_results: {
   dps: 233.72834
   tps: 584.25197
   dtps: 1488.25778
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-Plaguefang-279876"
+ value: {
+  dps: 232.02903
+  tps: 580.25704
+  dtps: 1510.60216
  }
 }
 dps_results: {

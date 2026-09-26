@@ -91,6 +91,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBeastMastery-AllItems-BarbaricCrossbow-272999"
+ value: {
+  dps: 404.2576
+  tps: 228.99424
+ }
+}
+dps_results: {
  key: "TestBeastMastery-AllItems-Beastmaster'sBoots-22061"
  value: {
   dps: 463.98576
@@ -823,6 +830,13 @@ dps_results: {
  value: {
   dps: 458.07083
   tps: 262.92067
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-AllItems-Plaguefang-279876"
+ value: {
+  dps: 453.00349
+  tps: 259.37353
  }
 }
 dps_results: {

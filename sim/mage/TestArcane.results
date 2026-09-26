@@ -616,6 +616,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestArcane-AllItems-Plaguefang-279876"
+ value: {
+  dps: 274.54137
+  tps: 197.92718
+ }
+}
+dps_results: {
  key: "TestArcane-AllItems-Prismcharm-15867"
  value: {
   dps: 274.54137
