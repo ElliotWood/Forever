@@ -84,6 +84,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAssassination-AllItems-BarbaricCrossbow-272999"
+ value: {
+  dps: 322.87067
+  tps: 160.46672
+ }
+}
+dps_results: {
  key: "TestAssassination-AllItems-Bashguuder-13204"
  value: {
   dps: 322.87067
@@ -656,6 +663,13 @@ dps_results: {
  value: {
   dps: 327.39204
   tps: 162.71384
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-Plaguefang-279876"
+ value: {
+  dps: 322.87067
+  tps: 160.46672
  }
 }
 dps_results: {

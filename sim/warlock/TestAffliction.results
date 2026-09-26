@@ -560,6 +560,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAffliction-AllItems-Plaguefang-279876"
+ value: {
+  dps: 231.3102
+  tps: 144.37503
+ }
+}
+dps_results: {
  key: "TestAffliction-AllItems-Prismcharm-15867"
  value: {
   dps: 231.3102

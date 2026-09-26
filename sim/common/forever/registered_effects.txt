@@ -141,6 +141,7 @@
 272439 Serenity Field
 272591 Premier High Warlord's Shield Wall
 272838 Premier Grand Marshal's Aegis
+272999 Barbaric Crossbow
 273003 Searing Dagger
 273137 Skum's Bucket
 273840 Cursed Murloc Eye
@@ -148,6 +149,7 @@
 274290 Painwalker Buckler
 274759 Everlook Pathcarver
 276631 Coldflame Saber
+279876 Plaguefang
 282778 Mark of the Red Flight
 285275 Satchel of Copper Bombs
 285276 Satchel of Bronze Bombs

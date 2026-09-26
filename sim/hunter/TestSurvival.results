@@ -91,6 +91,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSurvival-AllItems-BarbaricCrossbow-272999"
+ value: {
+  dps: 246.40945
+  tps: 144.52338
+ }
+}
+dps_results: {
  key: "TestSurvival-AllItems-Beastmaster'sBoots-22061"
  value: {
   dps: 317.95253
@@ -823,6 +830,13 @@ dps_results: {
  value: {
   dps: 313.27106
   tps: 189.08083
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-Plaguefang-279876"
+ value: {
+  dps: 308.54315
+  tps: 185.77129
  }
 }
 dps_results: {

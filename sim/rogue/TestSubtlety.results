@@ -84,6 +84,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSubtlety-AllItems-BarbaricCrossbow-272999"
+ value: {
+  dps: 285.94867
+  tps: 142.11649
+ }
+}
+dps_results: {
  key: "TestSubtlety-AllItems-Bashguuder-13204"
  value: {
   dps: 285.94867
@@ -656,6 +663,13 @@ dps_results: {
  value: {
   dps: 290.26375
   tps: 144.26109
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-Plaguefang-279876"
+ value: {
+  dps: 285.94867
+  tps: 142.11649
  }
 }
 dps_results: {

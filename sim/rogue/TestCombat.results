@@ -84,6 +84,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestCombat-AllItems-BarbaricCrossbow-272999"
+ value: {
+  dps: 318.11786
+  tps: 158.10458
+ }
+}
+dps_results: {
  key: "TestCombat-AllItems-Bashguuder-13204"
  value: {
   dps: 318.11786
@@ -656,6 +663,13 @@ dps_results: {
  value: {
   dps: 323.09666
   tps: 160.57904
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-Plaguefang-279876"
+ value: {
+  dps: 318.11786
+  tps: 158.10458
  }
 }
 dps_results: {

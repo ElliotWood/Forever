@@ -616,6 +616,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFire-AllItems-Plaguefang-279876"
+ value: {
+  dps: 183.39321
+  tps: 118.13127
+ }
+}
+dps_results: {
  key: "TestFire-AllItems-Prismcharm-15867"
  value: {
   dps: 183.39321

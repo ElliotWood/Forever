@@ -4,7 +4,9 @@ import (
 	"time"
 
 	"github.com/wowsims/forever/sim/common/itemhelpers"
+	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/spelldata"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
@@ -90,4 +92,28 @@ func init() {
 		})
 	}
 
+	// Chance on hit procs the client states no rate for, measured in foreverlogs beta timelines as
+	// procs per landed hit of the weapon (white and yellow) times 60 / weapon speed:
+	// Barbaric Crossbow, Wound (1291551, 14 Physical, ranged table): 303 procs off 2671 Auto Shot
+	// and Arcane Shot hits of 3 hunters (report 2650) = 3.1-3.4 PPM.
+	// Plaguefang, Poison (1309315, 4 Nature a sec for 10 sec, ticks crit): 59 procs off 699 hits of a
+	// warrior whose swing timer held Plaguefang's 2.1 sec in every fight (report 2677) = 2.4 PPM.
+	for _, proc := range []struct {
+		itemID  int32
+		name    string
+		ppm     float64
+		spellID int32
+	}{
+		{272999, "Barbaric Crossbow", 3.2, 1291551},
+		{279876, "Plaguefang", 2.4, 1309315},
+	} {
+		itemhelpers.CreateWeaponProcSpell(itemhelpers.WeaponProcSpell{
+			ItemID: proc.itemID,
+			Name:   proc.name,
+			PPM:    proc.ppm,
+			Spell: func(character *core.Character) *core.Spell {
+				return character.GetOrRegisterSpell(shared.SpellDataProcDamageSpell(character, spelldata.MustFind(proc.spellID)))
+			},
+		})
+	}
 }
