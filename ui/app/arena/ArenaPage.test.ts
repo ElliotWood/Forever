@@ -18,7 +18,7 @@ describe('arena talent links', () => {
 describe('arena wowhead links', () => {
 	it('carry the talents in our digit order under the class', () => {
 		expect(wowheadLink(PlayerSpecs.DpsWarrior, '30305001302-05050005525010051')).toBe(
-			'https://www.wowhead.com/forever/talent-calc/warrior/v130305001302-05050005525010051',
+			'https://www.wowhead.com/forever/talent-calc/warrior/v230305001302-05050005525010051',
 		);
 	});
 });

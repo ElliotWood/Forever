@@ -84,9 +84,10 @@ export const talentLink = (spec: PlayerSpec<any>, talents: string) => {
 	return `${spec.simLink}?i=t#${btoa(String.fromCharCode(...bytes))}`;
 };
 
-// The same talents on Wowhead's Forever calculator, which reads the same digits in the same order.
+// The same talents on Wowhead's Forever calculator, which reads the same digits in the same order. The v2 is
+// Wowhead's hash version: it bumps it when the trees change and silently drops links on the old one.
 export const wowheadLink = (spec: PlayerSpec<any>, talents: string) =>
-	`https://www.wowhead.com/forever/talent-calc/${PlayerSpecs.getPlayerClass(spec).friendlyName.toLowerCase()}/v1${talents}`;
+	`https://www.wowhead.com/forever/talent-calc/${PlayerSpecs.getPlayerClass(spec).friendlyName.toLowerCase()}/v2${talents}`;
 
 // The tree a build puts most points in, which is what "a Fury build" means. A tie goes to the
 // earlier tree.
