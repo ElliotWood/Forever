@@ -173,7 +173,12 @@ func (shaman *Shaman) newFlametongueImbueSpell(weapon *core.Item) *core.Spell {
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			if weapon.SwingSpeed != 0 {
-				baseDamage := weapon.SwingSpeed * 35 // from old tbc sim
+				// The proc's dummy value is hundredths of damage per second of weapon speed, speed held
+				// to 1.3-4.0 (the tooltip's "(X / 77 - 1) to (X / 25)"): 16344's 2810 is 35 to 112 at 60.
+				// A beta log bears the scale out at rank 1 (8026, 4.4 a second): 100 hits from a 2.5
+				// speed weapon with no spell power averaged 11.2 (foreverlogs.gg report 2671).
+				speed := min(max(weapon.SwingSpeed, 1.3), 4)
+				baseDamage := speed * flametongueImbue.EffectN(1).Average(core.CharacterLevel) / 100
 				spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMagicHitAndCrit)
 			}
 		},

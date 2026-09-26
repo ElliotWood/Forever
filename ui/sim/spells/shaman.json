@@ -199,13 +199,9 @@
 	"16344": {
 		"ability": "Flametongue Weapon",
 		"file": "sim/shaman/weapon_imbues.go",
-		"note": "Rank 6's proc, the only one the sim casts. The sim deals 35 Fire damage per second of weapon speed at a 0.1 coefficient, figures carried over from the TBC sim rather than read from the client, whose 16344 stores 2810 at level 60 (28.1 a second if it is per 100 of weapon speed); the beta enchant (1666) lasts 1 hour.",
-		"source": "assumed",
-		"tooltip": "Imbue the Shaman's weapon with fire. Each hit causes 35 additional Fire damage per second of weapon speed. Lasts 1 hour.",
-		"assumptions": [
-			"Flametongue Weapon rank 6 adds 35 Fire damage per second of weapon speed (98 a hit on a 2.8 speed weapon before spell power); the client's 2810 would make it 28.1 (79)",
-			"Each Flametongue hit takes 10% of spell power"
-		]
+		"note": "Rank 6's proc, the only one the sim casts. Beta client 1.60.1.70009: 16344 stores 2810 at level 60, hundredths of Fire damage per second of weapon speed, speed held to 1.3-4.0 as the Forever tooltip's (X / 77 - 1) to (X / 25) reads, so 35 to 112 a hit; the damage lands as Flametongue Attack (29469) at the client's 0.1 coefficient; the beta enchant (1666) lasts 1 hour. The TBC sim's flat 35 a second is gone. A beta log bears out the scale at rank 1 (4.4 a second): 100 hits from a 2.5 speed weapon with no spell power averaged 11.2 against 11 (foreverlogs.gg report 2671).",
+		"source": "forever",
+		"tooltip": "Imbue the Shaman's weapon with fire. Each hit causes 35 to 112 additional Fire damage, based on the speed of the weapon. Slower weapons cause more fire damage per swing. Lasts 1 hour."
 	},
 	"16353": {
 		"ability": "Frostbrand Weapon",
