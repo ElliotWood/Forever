@@ -58,8 +58,8 @@ character_stats_results: {
 stat_weights_results: {
  key: "TestFeralCat-StatWeights-Default"
  value: {
-  weights: 2.39925
-  weights: 2.78321
+  weights: 2.39924
+  weights: 2.72869
   weights: 0
   weights: 0
   weights: 0
@@ -77,12 +77,12 @@ stat_weights_results: {
   weights: 0
   weights: 1
   weights: 0
-  weights: 0.99626
+  weights: 0.9962
   weights: 0
-  weights: 2.2348
-  weights: 1.01628
-  weights: 0.30468
-  weights: 1.74751
+  weights: 2.19254
+  weights: 0.58189
+  weights: 0.30536
+  weights: 1.64043
   weights: 0
   weights: 0
   weights: 0
@@ -115,1083 +115,1083 @@ stat_weights_results: {
 dps_results: {
  key: "TestFeralCat-AllItems-AccurateScope-33"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-ArenaGrandMaster-19024"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-BadgeoftheSwarmguard-21670"
  value: {
-  dps: 305.76613
-  tps: 172.55204
+  dps: 308.69608
+  tps: 173.5793
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-Bashguuder-13204"
  value: {
-  dps: 314.31672
-  tps: 176.70731
+  dps: 317.06914
+  tps: 178.00028
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-BlazefuryMedallion-17111"
  value: {
-  dps: 309.38481
-  tps: 174.37792
-  dtps: 3.74139
+  dps: 312.00464
+  tps: 175.35141
+  dtps: 3.26229
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-BloodTigerHarness"
  value: {
-  dps: 317.54786
-  tps: 178.45106
+  dps: 319.94049
+  tps: 179.41634
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-BloodvineGarb"
  value: {
-  dps: 309.41655
-  tps: 174.45612
+  dps: 312.30261
+  tps: 175.7445
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-BurstofKnowledge-11832"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-CadaverousGarb"
  value: {
-  dps: 337.08814
-  tps: 188.1529
+  dps: 340.82327
+  tps: 189.68193
   dtps: 3.76417
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-CenarionRaiment"
  value: {
-  dps: 341.54689
-  tps: 190.47063
+  dps: 345.31488
+  tps: 192.13547
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-Champion'sRefuge"
  value: {
-  dps: 304.52435
-  tps: 172.05381
+  dps: 305.69499
+  tps: 172.27293
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-CrudeScope-30"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-DarkmoonCard:BlueDragon-19288"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-DarkmoonCard:Heroism-19287"
  value: {
-  dps: 303.1017
-  tps: 171.23168
+  dps: 305.8468
+  tps: 172.16736
   dtps: 3.75281
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-DarkmoonCard:Maelstrom-19289"
  value: {
-  dps: 308.1858
-  tps: 173.74526
-  dtps: 3.88405
+  dps: 311.01041
+  tps: 174.73686
+  dtps: 3.81412
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-DeadlyScope-663"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-Defiler'sTalisman-20072"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-Defiler'sTalisman-21115"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-DevilsaurArmor"
  value: {
-  dps: 323.32735
-  tps: 181.29754
+  dps: 326.13872
+  tps: 182.39427
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-DraconicInfusedEmblem-22268"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-DreadmistRaiment"
  value: {
-  dps: 302.80366
-  tps: 171.19477
+  dps: 306.58304
+  tps: 172.83988
   dtps: 3.70524
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-EarthenSigil-20525"
  value: {
-  dps: 304.35714
-  tps: 172.93199
+  dps: 306.8572
+  tps: 173.87535
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-Earthstrike-21180"
  value: {
-  dps: 311.35796
-  tps: 175.33374
+  dps: 314.15651
+  tps: 176.29525
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-EidolonTalisman-18340"
  value: {
-  dps: 324.10522
-  tps: 181.68595
+  dps: 327.03164
+  tps: 182.71289
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-Enchant2HWeapon-GrandArcanist-7941"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-Enchant:FieryBlaze-36"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-EnchantChest-Absorption-8220"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-EnchantChest-LesserAbsorption-63"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-EnchantChest-MinorAbsorption-44"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-EnchantCloak-Subtlety-2621"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-EnchantGloves-Threat-2613"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-EnchantWeapon-Crusader-1900"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-EnchantWeapon-GrandSorcerer-7942"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-EnchantWeapon-Insight-8216"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-EnchantWeapon-Recovery-8721"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-EssenceofthePureFlame-18815"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-EverlookPathcarver-274759"
  value: {
-  dps: 307.47561
-  tps: 173.46521
+  dps: 310.22071
+  tps: 174.40089
   dtps: 3.72202
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-EyeofMoam-21473"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 4.07854
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-EyeoftheDead-23047"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-FeralheartRaiment"
  value: {
-  dps: 367.61244
-  tps: 203.61042
+  dps: 368.89116
+  tps: 203.94853
   dtps: 3.76417
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-FieldMarshal'sSanctuary"
  value: {
-  dps: 356.13812
-  tps: 197.76829
+  dps: 358.71262
+  tps: 198.69125
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-ForceofWill-11810"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.48692
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-FreezingBand-942"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-FrozenHeartoftheMountain-249469"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.76417
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-GoldenBanana-270226"
  value: {
-  dps: 304.63398
-  tps: 172.37935
+  dps: 308.2344
+  tps: 173.87398
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-HandofJustice-11815"
  value: {
-  dps: 308.11666
-  tps: 173.72023
+  dps: 310.32944
+  tps: 174.66545
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-Headmaster'sCharge-13937"
  value: {
-  dps: 308.29172
-  tps: 174.4148
+  dps: 310.33147
+  tps: 175.38882
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-HeartofWyrmthalak-22321"
  value: {
-  dps: 304.21443
-  tps: 171.7755
+  dps: 306.95953
+  tps: 172.71118
   dtps: 3.74825
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-HeartoftheScale-13164"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.59354
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-HelmofFire-8348"
  value: {
-  dps: 312.35914
-  tps: 175.93276
-  dtps: 3.65545
+  dps: 314.6068
+  tps: 176.73833
+  dtps: 3.46937
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-HibernationCrystal-20636"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-IdolofBrutality-23198"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-IdolofFerocity-22397"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-IdoloftheMoon-23197"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-InfernalLasso-219345"
  value: {
-  dps: 306.57918
-  tps: 173.02241
-  dtps: 3.86435
+  dps: 309.29851
+  tps: 173.91954
+  dtps: 4.06114
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-IronfeatherArmor"
  value: {
-  dps: 305.13895
-  tps: 172.24249
+  dps: 307.14131
+  tps: 172.95711
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-Ironfoe-11684"
  value: {
-  dps: 321.78932
-  tps: 182.16162
+  dps: 322.78909
+  tps: 182.67778
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-JomGabbar-23570"
  value: {
-  dps: 312.3546
-  tps: 175.83086
+  dps: 315.12812
+  tps: 176.78047
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-KissoftheSpider-22954"
  value: {
-  dps: 310.8066
-  tps: 175.53867
+  dps: 311.95552
+  tps: 175.95279
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-LieutenantCommander'sRefuge"
  value: {
-  dps: 304.52435
-  tps: 172.05381
+  dps: 305.69499
+  tps: 172.27293
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-Lifestone-833"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-Linken'sBoomerang-11905"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-Loatheb'sReflection-23042"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.36091
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-Magister'sRegalia"
  value: {
-  dps: 304.79769
-  tps: 172.13401
+  dps: 307.68359
+  tps: 173.23699
   dtps: 3.76417
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-MarkofResolution-17759"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-MarkofTyranny-13966"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.72089
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-MarkoftheChampion-23206"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-MarkoftheChampion-23207"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-MarkoftheDragonLord-13143"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-MindtapTalisman-18371"
  value: {
-  dps: 303.14444
-  tps: 174.44477
+  dps: 306.56358
+  tps: 175.69922
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-MoltenHeartoftheMountain-249470"
  value: {
-  dps: 306.70998
-  tps: 173.0236
+  dps: 309.4861
+  tps: 173.97471
   dtps: 3.76417
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-Naglering-11669"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-NecropileRaiment"
  value: {
-  dps: 304.04561
-  tps: 171.77661
+  dps: 305.21478
+  tps: 172.09489
   dtps: 3.76417
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-Prismcharm-15867"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.51888
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-RaggedJohn'sNeverendingCup-15873"
  value: {
-  dps: 298.82288
-  tps: 169.09644
+  dps: 301.55848
+  tps: 170.04281
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-RegaliaofUndeadCleansing"
  value: {
-  dps: 304.99185
-  tps: 172.24479
+  dps: 307.34963
+  tps: 173.10502
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-SecondWind-11819"
  value: {
-  dps: 303.93582
-  tps: 173.27374
+  dps: 305.64649
+  tps: 173.8817
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-SerenityField-272439"
  value: {
-  dps: 302.78778
-  tps: 171.03121
+  dps: 305.51149
+  tps: 171.93012
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-ShadowcraftArmor"
  value: {
-  dps: 368.89793
-  tps: 203.72909
+  dps: 372.1331
+  tps: 205.08593
   dtps: 3.76417
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-ShardoftheFallenStar-21891"
  value: {
-  dps: 306.3971
-  tps: 172.96517
+  dps: 309.1422
+  tps: 173.90085
   dtps: 3.60536
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-ShardoftheGods"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.72089
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-Slayer'sCrest-23041"
  value: {
-  dps: 318.27102
-  tps: 178.78148
+  dps: 321.12005
+  tps: 179.76698
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-Smokey'sLighter-13171"
  value: {
-  dps: 305.739
-  tps: 172.57345
+  dps: 308.4841
+  tps: 173.50913
   dtps: 3.88957
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-SmokingHeartoftheMountain-11811"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.76417
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-SniperScope-664"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-Spider'sKiss"
  value: {
-  dps: 308.52439
-  tps: 174.07606
+  dps: 309.06055
+  tps: 174.10378
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-SpireoftheStoneshaper-12532"
  value: {
-  dps: 308.97986
-  tps: 174.15624
+  dps: 312.39444
+  tps: 175.86439
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-SpiritofEskhandar"
  value: {
-  dps: 318.52263
-  tps: 178.82953
+  dps: 322.39315
+  tps: 180.85469
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-StandardScope-32"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-StormrageRaiment"
  value: {
-  dps: 318.44931
-  tps: 178.97073
+  dps: 319.77755
+  tps: 179.30505
   dtps: 3.72089
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-StormshroudArmor"
  value: {
-  dps: 335.4193
-  tps: 187.5183
-  dtps: 3.9071
+  dps: 337.63653
+  tps: 188.45302
+  dtps: 3.79962
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-Sulfuras,HandofRagnaros-17182"
  value: {
-  dps: 315.60087
-  tps: 177.42801
-  dtps: 4.00717
+  dps: 320.24997
+  tps: 179.72992
+  dtps: 3.95396
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-SymbolsofUnendingLife"
  value: {
-  dps: 365.81717
-  tps: 202.74484
+  dps: 365.8857
+  tps: 202.46984
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-TalismanofArathor-20071"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-TalismanofArathor-21117"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-TalismanofAscendance-22678"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-TalismanofEphemeralPower-18820"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-TheBurrower'sShell-23558"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-TheLionHornofStormwind-14557"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-TheLobotomizer-19324"
  value: {
-  dps: 309.01617
-  tps: 174.06799
+  dps: 311.75943
+  tps: 175.35783
   dtps: 3.86885
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-ThePostmaster"
  value: {
-  dps: 303.87406
-  tps: 171.65368
+  dps: 306.48622
+  tps: 172.65502
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-TheRestrainedEssenceofSapphiron-23046"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-UndeadSlayer'sArmor"
  value: {
-  dps: 306.59881
-  tps: 172.97128
+  dps: 309.36936
+  tps: 173.91907
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-Uther'sStrength-11302"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-VestmentsoftheDevout"
  value: {
-  dps: 302.15607
-  tps: 170.8045
+  dps: 306.18076
+  tps: 172.5856
   dtps: 3.76417
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-VolcanicArmor"
  value: {
-  dps: 306.0971
-  tps: 172.77409
-  dtps: 3.43043
+  dps: 308.74932
+  tps: 173.64451
+  dtps: 3.36854
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-Warlord'sSanctuary"
  value: {
-  dps: 356.13812
-  tps: 197.76829
+  dps: 358.71262
+  tps: 198.69125
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-WarmthofForgiveness-23027"
  value: {
-  dps: 304.04284
-  tps: 173.05874
+  dps: 305.41278
+  tps: 173.3988
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-WildheartRaiment"
  value: {
-  dps: 312.81247
-  tps: 176.08371
+  dps: 316.36782
+  tps: 177.6973
   dtps: 3.76417
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-WolfsheadHelm-8345"
  value: {
-  dps: 358.5301
-  tps: 200.50648
+  dps: 357.84919
+  tps: 199.84779
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-AllItems-WrathofCenarius-21190"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-Average-Default"
  value: {
-  dps: 304.44778
-  tps: 172.25626
-  dtps: 3.53608
+  dps: 305.7137
+  tps: 172.64128
+  dtps: 3.53453
  }
 }
 dps_results: {
  key: "TestFeralCat-Settings-NightElf-Naked-DefaultTalents-Standard-default-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 376.86537
-  tps: 589.98017
+  dps: 379.61047
+  tps: 584.74817
   dtps: 3.47599
  }
 }
 dps_results: {
  key: "TestFeralCat-Settings-NightElf-Naked-DefaultTalents-Standard-default-FullBuffs-0.0yards-LongSingleTarget"
  value: {
-  dps: 303.08119
-  tps: 171.21733
+  dps: 305.82629
+  tps: 172.15301
   dtps: 3.80567
  }
 }
 dps_results: {
  key: "TestFeralCat-Settings-NightElf-Naked-DefaultTalents-Standard-default-FullBuffs-0.0yards-ShortSingleTarget"
  value: {
-  dps: 333.10019
-  tps: 186.99256
+  dps: 340.78299
+  tps: 190.2827
   dtps: 11.41701
  }
 }
 dps_results: {
  key: "TestFeralCat-Settings-NightElf-Naked-DefaultTalents-Standard-default-NoBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 172.54937
-  tps: 126.02684
+  dps: 176.16489
+  tps: 128.56555
  }
 }
 dps_results: {
  key: "TestFeralCat-Settings-NightElf-Naked-DefaultTalents-Standard-default-NoBuffs-0.0yards-LongSingleTarget"
  value: {
-  dps: 172.54937
-  tps: 126.01629
+  dps: 176.16489
+  tps: 128.55499
  }
 }
 dps_results: {
  key: "TestFeralCat-Settings-NightElf-Naked-DefaultTalents-Standard-default-NoBuffs-0.0yards-ShortSingleTarget"
  value: {
-  dps: 180.21059
-  tps: 132.16308
+  dps: 184.71426
+  tps: 135.64133
  }
 }
 dps_results: {
  key: "TestFeralCat-Settings-NightElf-Naked-FeralCat-Standard-default-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 391.78468
-  tps: 597.45982
+  dps: 395.18259
+  tps: 594.46043
   dtps: 3.37668
  }
 }
 dps_results: {
  key: "TestFeralCat-Settings-NightElf-Naked-FeralCat-Standard-default-FullBuffs-0.0yards-LongSingleTarget"
  value: {
-  dps: 319.17933
-  tps: 179.20674
+  dps: 322.57724
+  tps: 180.62801
   dtps: 3.69694
  }
 }
 dps_results: {
  key: "TestFeralCat-Settings-NightElf-Naked-FeralCat-Standard-default-FullBuffs-0.0yards-ShortSingleTarget"
  value: {
-  dps: 346.28788
-  tps: 194.45994
+  dps: 355.43081
+  tps: 198.18285
   dtps: 11.09081
  }
 }
 dps_results: {
  key: "TestFeralCat-Settings-NightElf-Naked-FeralCat-Standard-default-NoBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 184.90657
-  tps: 134.86926
+  dps: 185.80681
+  tps: 135.47806
  }
 }
 dps_results: {
  key: "TestFeralCat-Settings-NightElf-Naked-FeralCat-Standard-default-NoBuffs-0.0yards-LongSingleTarget"
  value: {
-  dps: 184.90657
-  tps: 134.8587
+  dps: 185.80681
+  tps: 135.46751
  }
 }
 dps_results: {
  key: "TestFeralCat-Settings-NightElf-Naked-FeralCat-Standard-default-NoBuffs-0.0yards-ShortSingleTarget"
  value: {
-  dps: 197.58468
-  tps: 143.45504
+  dps: 196.50825
+  tps: 144.0463
  }
 }
 dps_results: {
  key: "TestFeralCat-Settings-Tauren-Naked-DefaultTalents-Standard-default-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 371.5519
-  tps: 585.45084
+  dps: 373.76595
+  tps: 580.44424
   dtps: 3.47599
  }
 }
 dps_results: {
  key: "TestFeralCat-Settings-Tauren-Naked-DefaultTalents-Standard-default-FullBuffs-0.0yards-LongSingleTarget"
  value: {
-  dps: 301.46713
-  tps: 170.24125
+  dps: 303.68118
+  tps: 171.00439
   dtps: 3.54068
  }
 }
 dps_results: {
  key: "TestFeralCat-Settings-Tauren-Naked-DefaultTalents-Standard-default-FullBuffs-0.0yards-ShortSingleTarget"
  value: {
-  dps: 326.51192
-  tps: 183.56191
+  dps: 334.12311
+  tps: 186.82341
   dtps: 10.62205
  }
 }
 dps_results: {
  key: "TestFeralCat-Settings-Tauren-Naked-DefaultTalents-Standard-default-NoBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 172.86514
-  tps: 126.06176
+  dps: 172.92904
+  tps: 126.53078
  }
 }
 dps_results: {
  key: "TestFeralCat-Settings-Tauren-Naked-DefaultTalents-Standard-default-NoBuffs-0.0yards-LongSingleTarget"
  value: {
-  dps: 172.86514
-  tps: 126.05121
+  dps: 172.92904
+  tps: 126.52023
  }
 }
 dps_results: {
  key: "TestFeralCat-Settings-Tauren-Naked-DefaultTalents-Standard-default-NoBuffs-0.0yards-ShortSingleTarget"
  value: {
-  dps: 177.849
-  tps: 130.36635
+  dps: 180.55389
+  tps: 132.65263
  }
 }
 dps_results: {
  key: "TestFeralCat-Settings-Tauren-Naked-FeralCat-Standard-default-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 388.34852
-  tps: 594.41107
+  dps: 390.50521
+  tps: 591.48554
   dtps: 3.37668
  }
 }
 dps_results: {
  key: "TestFeralCat-Settings-Tauren-Naked-FeralCat-Standard-default-FullBuffs-0.0yards-LongSingleTarget"
  value: {
-  dps: 319.01585
-  tps: 179.07356
+  dps: 321.17254
+  tps: 179.94592
   dtps: 3.50198
  }
 }
 dps_results: {
  key: "TestFeralCat-Settings-Tauren-Naked-FeralCat-Standard-default-FullBuffs-0.0yards-ShortSingleTarget"
  value: {
-  dps: 341.89349
-  tps: 192.00321
+  dps: 350.20393
+  tps: 195.55415
   dtps: 10.50595
  }
 }
 dps_results: {
  key: "TestFeralCat-Settings-Tauren-Naked-FeralCat-Standard-default-NoBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 186.51306
-  tps: 135.85171
+  dps: 188.11683
+  tps: 136.93402
  }
 }
 dps_results: {
  key: "TestFeralCat-Settings-Tauren-Naked-FeralCat-Standard-default-NoBuffs-0.0yards-LongSingleTarget"
  value: {
-  dps: 186.51306
-  tps: 135.84115
+  dps: 188.11683
+  tps: 136.92346
  }
 }
 dps_results: {
  key: "TestFeralCat-Settings-Tauren-Naked-FeralCat-Standard-default-NoBuffs-0.0yards-ShortSingleTarget"
  value: {
-  dps: 195.45142
-  tps: 141.57173
+  dps: 196.14442
+  tps: 143.15716
  }
 }
 dps_results: {
  key: "TestFeralCat-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 83.13821
-  tps: 41.56425
+  dps: 83.14041
+  tps: 41.32078
  }
 }

@@ -1,6 +1,8 @@
 package druid
 
 import (
+	"time"
+
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/stats"
 )
@@ -157,6 +159,25 @@ func (druid *Druid) RegisterCatFormAura() {
 	})
 
 	druid.CatFormAura.NewPassiveMovementSpeedEffect(0.25)
+
+	// Cat Form (Passive) 3025 in client 70009: Faerie Fire costs nothing and its global cooldown is
+	// 0.5 sec shorter in the form.
+	druid.attachFormFaerieFireMods(druid.CatFormAura)
+	druid.CatFormAura.AttachSpellMod(core.SpellModConfig{
+		Kind:      core.SpellMod_GlobalCooldown_Flat,
+		ClassMask: DruidSpellFaerieFire,
+		TimeValue: -500 * time.Millisecond,
+	})
+}
+
+// Cat and Bear Form (Passive) (3025, 1178, 9635) make Faerie Fire free. They also give it a 6 sec
+// cooldown, left out: the debuff lasts 40 sec, so the cooldown never binds.
+func (druid *Druid) attachFormFaerieFireMods(formAura *core.Aura) {
+	formAura.AttachSpellMod(core.SpellModConfig{
+		Kind:       core.SpellMod_PowerCost_Pct_Add,
+		ClassMask:  DruidSpellFaerieFire,
+		FloatValue: -1,
+	})
 }
 
 func (druid *Druid) registerCatFormSpell() {
@@ -307,6 +328,8 @@ func (druid *Druid) RegisterBearFormAura() {
 			}
 		},
 	})
+
+	druid.attachFormFaerieFireMods(druid.BearFormAura)
 }
 
 func (druid *Druid) registerBearFormSpell() {

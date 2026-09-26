@@ -170,7 +170,7 @@
 	"768": {
 		"ability": "Cat Form",
 		"file": "sim/druid/forms.go",
-		"note": "The form's own numbers are Classic's - 2 attack power per level, 0.71x threat, 55% of base mana less 10% per point of Natural Shapeshifter; the Energy a shift grants is Furor's, and Forever reworked the talent, not the form.",
+		"note": "The form's own numbers are Classic's - 2 attack power per level, 0.71x threat, 55% of base mana less 10% per point of Natural Shapeshifter; the Energy a shift grants is Furor's, and Forever reworked the talent. The one change to the form is Faerie Fire: Cat Form (Passive) 3025 in client 70009 makes it free, with a 6 sec cooldown and a 1 sec global cooldown.",
 		"source": "classic"
 	},
 	"8905": {
@@ -259,7 +259,7 @@
 	"9907": {
 		"ability": "Faerie Fire",
 		"file": "sim/druid/faerie_fire.go",
-		"note": "115 mana, 505 armor for 40 sec, all Classic's (client 70009). Forever has no Faerie Fire (Feral), so cat and bear cast this one too (#315).",
+		"note": "115 mana, 505 armor for 40 sec, all Classic's (client 70009). Forever has no Faerie Fire (Feral), so cat and bear cast this one too (#315); their form passives (3025, 1178, 9635) make it free with a 6 sec cooldown, and Cat Form cuts its global cooldown to 1 sec. The sim leaves the cooldown out, since the debuff lasts 40 sec.",
 		"source": "classic"
 	},
 	"9908": {
