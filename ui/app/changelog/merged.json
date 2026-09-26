@@ -1,5 +1,11 @@
 [
 	{
+		"number": 496,
+		"title": "spelldata: every evidence tooltip's numbers must come from the client store",
+		"mergedAt": "2026-09-26",
+		"url": "https://github.com/ElliotWood/Forever/pull/496"
+	},
+	{
 		"number": 495,
 		"title": "Druid: Faerie Fire is free in Cat and Bear Form, with a 1 sec global cooldown in Cat Form",
 		"mergedAt": "2026-09-26",
