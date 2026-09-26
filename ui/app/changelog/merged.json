@@ -1,5 +1,11 @@
 [
 	{
+		"number": 500,
+		"title": "Seal of Command's 7 procs a minute checked against beta combat logs",
+		"mergedAt": "2026-09-26",
+		"url": "https://github.com/ElliotWood/Forever/pull/500"
+	},
+	{
 		"number": 499,
 		"title": "Items below item level 50 get their procs and on-use effects simulated",
 		"mergedAt": "2026-09-26",
