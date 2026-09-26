@@ -1,5 +1,11 @@
 [
 	{
+		"number": 479,
+		"title": "evidence: re-audit the spell manifest against the official engine and client 70009",
+		"mergedAt": "2026-09-26",
+		"url": "https://github.com/ElliotWood/Forever/pull/479"
+	},
+	{
 		"number": 478,
 		"title": "changelog: catch the hand-written entries up from #215 to #476",
 		"mergedAt": "2026-09-26",
