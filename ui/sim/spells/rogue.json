@@ -76,12 +76,9 @@
 	},
 	"13960": {
 		"ability": "Hack and Slash",
-		"assumptions": [
-			"The extra attack keeps Classic Sword Specialization's 200 ms internal cooldown",
-			"A rogue holding two qualifying weapon types gets both halves of the talent"
-		],
+		"assumptions": ["A rogue holding two qualifying weapon types gets both halves of the talent"],
 		"file": "sim/rogue/talents_combat.go",
-		"note": "Hack and Slash folds Classic's four weapon specialization talents into one. The sim reads its three curves from the beta client (13960: 1-5% extra attack, 3-15% armor ignored, 1-5% crit), and the extra attack is a plain main-hand swing.",
+		"note": "Hack and Slash folds Classic's four weapon specialization talents into one. The sim reads its three curves from the beta client (13960: 1-5% extra attack, 3-15% armor ignored, 1-5% crit), and the extra attack's 200 ms internal cooldown from the same row (its proc cooldown). The extra attack is a plain main-hand swing.",
 		"source": "assumed",
 		"tooltip": "Talent, 5 ranks\nGives your melee weapon attacks a benefit depending on the weapon.\nAxe/Sword: your successful melee attacks have a 1% chance per rank to trigger an extra attack on the target.\nDagger/Fist: increases your critical strike chance by 1% per rank.\nMace: your attacks ignore 3% of your target's armor per rank."
 	},
