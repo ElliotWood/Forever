@@ -322,6 +322,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFury-AllItems-DefiasLeather"
+ value: {
+  dps: 332.3713
+  tps: 212.08524
+ }
+}
+dps_results: {
  key: "TestFury-AllItems-Defiler'sTalisman-20072"
  value: {
   dps: 309.21081

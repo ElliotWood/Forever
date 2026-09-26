@@ -71,6 +71,29 @@ func setUndeadSlaying(agent core.Agent, setBonusAura *core.Aura) {
 		})
 }
 
+// +n melee and ranged attack power against humanoids.
+func setHumanoidAttackPower(n float64) core.ApplySetBonus {
+	return func(agent core.Agent, setBonusAura *core.Aura) {
+		character := agent.GetCharacter()
+		bonus := setAttackPower(n)
+		setBonusAura.
+			ApplyOnGain(func(_ *core.Aura, _ *core.Simulation) {
+				for _, at := range character.AttackTables {
+					if at != nil {
+						at.MobTypeBonusStats[proto.MobType_MobTypeHumanoid] = at.MobTypeBonusStats[proto.MobType_MobTypeHumanoid].Add(bonus)
+					}
+				}
+			}).
+			ApplyOnExpire(func(_ *core.Aura, _ *core.Simulation) {
+				for _, at := range character.AttackTables {
+					if at != nil {
+						at.MobTypeBonusStats[proto.MobType_MobTypeHumanoid] = at.MobTypeBonusStats[proto.MobType_MobTypeHumanoid].Subtract(bonus)
+					}
+				}
+			})
+	}
+}
+
 // A melee proc that deals min..max damage of the given school, at the trigger's client chance.
 func setMeleeDamageProc(agent core.Agent, setBonusAura *core.Aura, name string, triggerID, spellID int32, school core.SpellSchool, min, max float64) {
 	character := agent.GetCharacter()
@@ -698,25 +721,7 @@ var ItemSetSpiritOfEskhandar = core.NewItemSet(core.ItemSet{
 	Name: "Spirit of Eskhandar",
 	Bonuses: map[int32]core.ApplySetBonus{
 		// +30 Attack Power against Humanoids (1298478), new in Forever.
-		2: func(agent core.Agent, setBonusAura *core.Aura) {
-			character := agent.GetCharacter()
-			bonus := setAttackPower(30)
-			setBonusAura.
-				ApplyOnGain(func(_ *core.Aura, _ *core.Simulation) {
-					for _, at := range character.AttackTables {
-						if at != nil {
-							at.MobTypeBonusStats[proto.MobType_MobTypeHumanoid] = at.MobTypeBonusStats[proto.MobType_MobTypeHumanoid].Add(bonus)
-						}
-					}
-				}).
-				ApplyOnExpire(func(_ *core.Aura, _ *core.Simulation) {
-					for _, at := range character.AttackTables {
-						if at != nil {
-							at.MobTypeBonusStats[proto.MobType_MobTypeHumanoid] = at.MobTypeBonusStats[proto.MobType_MobTypeHumanoid].Subtract(bonus)
-						}
-					}
-				})
-		},
+		2: setHumanoidAttackPower(30),
 		// Improves your chance to crit by 1% (1314828), new in Forever. The client doubles it at
 		// night, which the sim has no clock for.
 		3: setStats(setCritPercent(1)),
