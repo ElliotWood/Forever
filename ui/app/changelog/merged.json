@@ -1,5 +1,17 @@
 [
 	{
+		"number": 478,
+		"title": "changelog: catch the hand-written entries up from #215 to #476",
+		"mergedAt": "2026-09-26",
+		"url": "https://github.com/ElliotWood/Forever/pull/478"
+	},
+	{
+		"number": 477,
+		"title": "ci: restore TestProtoVersioning.results; update-tests keeps skipped tests' goldens",
+		"mergedAt": "2026-09-26",
+		"url": "https://github.com/ElliotWood/Forever/pull/477"
+	},
+	{
 		"number": 476,
 		"title": "[DB] Update to 1.60.1.70009 with hotfixes as of 2026-09-26",
 		"mergedAt": "2026-09-26",
