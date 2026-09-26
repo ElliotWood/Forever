@@ -267,6 +267,13 @@
 		"tooltip": "Wounds the target for 200 to 300 damage and slows its casting speed by 25% for 30 sec.",
 		"note": "The Lobotomizer's Brain Damage is Forever's own spell (#359), client 1.60.1.70009: 250 +-40% Shadow damage and a 25% cast slow, where Era's 24388 lowered Intellect by 25. The sim deals it as Physical rather than Shadow, leaves the cast slow out, and uses master's 0.4 PPM."
 	},
+	"1292029": {
+		"ability": "Devious Strike (Defias Leather)",
+		"file": "sim/common/forever/items_sets.go",
+		"source": "forever",
+		"tooltip": "Causes the target to Bleed for 75 Physical damage over 5 sec.",
+		"note": "Defias Leather 4 piece, new in Forever. Client 1.60.1.70009: 5% chance on a white hit from behind (1292028), 15 a second for 5 sec; since 70009 the ticks can crit. Beta logs agree: about 14.6 a tick and no crits before 70009, crits after (foreverlogs reports 32-46 and 2667-2677)."
+	},
 	"1299743": {
 		"ability": "Deathbone Surge",
 		"file": "sim/common/forever/item_sets_classic.go",

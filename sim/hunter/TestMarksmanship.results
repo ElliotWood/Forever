@@ -280,6 +280,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestMarksmanship-AllItems-DefiasLeather"
+ value: {
+  dps: 340.61
+  tps: 208.84989
+ }
+}
+dps_results: {
  key: "TestMarksmanship-AllItems-Defiler'sTalisman-20072"
  value: {
   dps: 335.40796
