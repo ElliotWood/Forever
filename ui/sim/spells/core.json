@@ -86,13 +86,12 @@
 		"source": "forever",
 		"tooltip": "60 Mana\nInstant\nPlaces the Hunter's Mark on the target, increasing the Ranged Attack Power of all attackers against that target by 71. Lasts 2 min."
 	},
-	"15363": {
+	"14893": {
 		"ability": "Inspiration",
 		"file": "sim/core/buffs.go",
-		"note": "The healing-model uptime (feral bear, protection paladin) applies Era's three-point Inspiration, +25% armor for 15 sec, under 15363, Era's rank-3 talent id. Client 1.60.1.70009 drops 15363 and has one Inspiration buff, 14893 at 8% armor, so what three points give in Forever is unsettled.",
-		"source": "assumed",
-		"tooltip": "Passive\nYour critical heals increase the target's armor by 25% for 15 sec.",
-		"assumptions": ["Three points of Inspiration still give +25% armor for 15 sec (the 1.60.1.70009 client carries one buff, 14893, at 8%)."]
+		"note": "Client 1.60.1.70009: the talent 14892's rank curve reads 8/17/25% armor (Era's 15363 is gone; the buff 14893 states rank 1's 8), 15 sec. The healing-model uptime (feral bear, protection paladin, protection warrior) applies three points.",
+		"source": "forever",
+		"tooltip": "Passive\nYour non-periodic critical heals increase your target's armor by 25% for 15 sec."
 	},
 	"15851": {
 		"ability": "Dragonbreath Chili (proc)",
