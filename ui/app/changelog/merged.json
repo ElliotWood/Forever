@@ -1,5 +1,11 @@
 [
 	{
+		"number": 475,
+		"title": "ci(update-db): daily, fully automatic client data updates",
+		"mergedAt": "2026-09-26",
+		"url": "https://github.com/ElliotWood/Forever/pull/475"
+	},
+	{
 		"number": 474,
 		"title": "site: replace the WoWSims logo with Blizzard game art",
 		"mergedAt": "2026-09-26",
