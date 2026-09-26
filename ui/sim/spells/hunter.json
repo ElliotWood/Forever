@@ -48,6 +48,7 @@
 	"14268": {
 		"ability": "Wing Clip",
 		"file": "sim/hunter/wing_clip.go",
+		"note": "Client 1.60.1.70009: rank 3 deals 50 damage and slows movement by 60% for 80 Mana, identical to Classic Era 1.15.9.",
 		"source": "classic"
 	},
 	"14271": {
@@ -102,6 +103,7 @@
 	"17261": {
 		"ability": "Bite",
 		"file": "sim/hunter/pet_abilities.go",
+		"note": "Client 1.60.1.70009: rank 8 deals 81 to 99 for 35 Focus on a 10 sec cooldown, identical to Classic Era 1.15.9.",
 		"source": "classic"
 	},
 	"19574": {
@@ -165,6 +167,7 @@
 	"25296": {
 		"ability": "Aspect of the Hawk",
 		"file": "sim/hunter/aspects.go",
+		"note": "Client 1.60.1.70009: rank 7 adds 120 ranged attack power for 120 Mana, identical to Classic Era 1.15.9.",
 		"source": "classic"
 	},
 	"2643": {
@@ -177,6 +180,7 @@
 	"3009": {
 		"ability": "Claw",
 		"file": "sim/hunter/pet_abilities.go",
+		"note": "Client 1.60.1.70009: rank 8 deals 43 to 59 for 25 Focus, identical to Classic Era 1.15.9.",
 		"source": "classic"
 	},
 	"3045": {
