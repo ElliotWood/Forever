@@ -59,10 +59,10 @@ const NEEDS: Array<Need> = [
 		find: 'hunter',
 	},
 	{
-		title: 'Ice Lance: how hard does it scale with spell power?',
-		why: "The client carries no coefficient on Ice Lance. Its row is a copy of Season of Discovery's, whose scaling lives on the server and was raised by 300% in a hotfix. The sim uses .143; .429 or .572 is at least as likely, which would triple the spell power part of every Ice Lance.",
-		send: 'A DamageMeter.bin from a level 20 mage: Ice Lance a dummy that is not frozen ten times, then ten more with Lesser Wizard Oil on (+16 spell power). The average rises by about 2 at .143, 7 at .429 and 9 at .572.',
-		find: 'Ice Lance',
+		title: 'Warrior: is Flurry 25% at five points, or a flat 30%?',
+		why: "The talent's rank curve reads 5% attack speed a point, Classic's values, but the buff it triggers now carries a flat 30%. The sim applies the curve. If the buff wins, every Fury warrior on the site swings faster than shown. Flurry sits at level 35, above the beta's level cap, so no public beta log has it yet.",
+		send: 'Once the cap allows it: a screenshot of the Flurry buff tooltip with one point in the talent. It shows 5% or 30%, and that settles it.',
+		find: 'Flurry',
 	},
 	{
 		title: 'Any tooltip that disagrees with this sim',
