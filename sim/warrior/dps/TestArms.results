@@ -84,6 +84,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestArms-AllItems-BarbaricBelt-4264"
+ value: {
+  dps: 254.25458
+  tps: 158.1794
+ }
+}
+dps_results: {
  key: "TestArms-AllItems-Bashguuder-13204"
  value: {
   dps: 281.19935
@@ -154,6 +161,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestArms-AllItems-BlazingEmblem-2802"
+ value: {
+  dps: 248.09352
+  tps: 153.16076
+ }
+}
+dps_results: {
  key: "TestArms-AllItems-BlessedPlate"
  value: {
   dps: 278.84194
@@ -203,6 +217,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestArms-AllItems-BrutalHauberk-7133"
+ value: {
+  dps: 252.47621
+  tps: 157.15669
+ }
+}
+dps_results: {
  key: "TestArms-AllItems-BurstofKnowledge-11832"
  value: {
   dps: 248.09352
@@ -249,6 +270,13 @@ dps_results: {
  value: {
   dps: 248.09352
   tps: 153.16076
+ }
+}
+dps_results: {
+ key: "TestArms-AllItems-CursedMurlocEye-273840"
+ value: {
+  dps: 252.2946
+  tps: 155.51337
  }
 }
 dps_results: {
@@ -302,6 +330,20 @@ dps_results: {
 }
 dps_results: {
  key: "TestArms-AllItems-Defiler'sTalisman-21115"
+ value: {
+  dps: 248.09352
+  tps: 153.16076
+ }
+}
+dps_results: {
+ key: "TestArms-AllItems-Defiler'sTalisman-21116"
+ value: {
+  dps: 248.09352
+  tps: 153.16076
+ }
+}
+dps_results: {
+ key: "TestArms-AllItems-Defiler'sTalisman-21120"
  value: {
   dps: 248.09352
   tps: 153.16076
@@ -435,6 +477,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestArms-AllItems-EnergyCloak-9397"
+ value: {
+  dps: 248.09352
+  tps: 153.16076
+ }
+}
+dps_results: {
  key: "TestArms-AllItems-EssenceofthePureFlame-18815"
  value: {
   dps: 248.09352
@@ -477,6 +526,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestArms-AllItems-FireHardenedHauberk-6972"
+ value: {
+  dps: 252.47621
+  tps: 157.15669
+ }
+}
+dps_results: {
  key: "TestArms-AllItems-FlameWalkers-18047"
  value: {
   dps: 248.09352
@@ -516,6 +572,34 @@ dps_results: {
  value: {
   dps: 251.84737
   tps: 155.31656
+ }
+}
+dps_results: {
+ key: "TestArms-AllItems-Gem-studdedLeatherBelt-4262"
+ value: {
+  dps: 248.84429
+  tps: 153.59192
+ }
+}
+dps_results: {
+ key: "TestArms-AllItems-GirdleofReprisal-11861"
+ value: {
+  dps: 251.34685
+  tps: 155.02912
+ }
+}
+dps_results: {
+ key: "TestArms-AllItems-GnomishHarmPreventionBelt-10721"
+ value: {
+  dps: 248.09352
+  tps: 153.16076
+ }
+}
+dps_results: {
+ key: "TestArms-AllItems-GoblinConstructionHelmet-10543"
+ value: {
+  dps: 248.09352
+  tps: 153.16076
  }
 }
 dps_results: {
@@ -680,6 +764,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestArms-AllItems-ManualCrowdPummeler-9449"
+ value: {
+  dps: 299.30708
+  tps: 186.50388
+ }
+}
+dps_results: {
  key: "TestArms-AllItems-MarkofResolution-17759"
  value: {
   dps: 248.09352
@@ -709,6 +800,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestArms-AllItems-MarkoftheDragonLord-13143"
+ value: {
+  dps: 248.09352
+  tps: 153.16076
+ }
+}
+dps_results: {
+ key: "TestArms-AllItems-MarkoftheRedFlight-282778"
  value: {
   dps: 248.09352
   tps: 153.16076
@@ -757,6 +855,20 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestArms-AllItems-OrbofFire-12805"
+ value: {
+  dps: 248.32697
+  tps: 153.29149
+ }
+}
+dps_results: {
+ key: "TestArms-AllItems-PetrolspillLeggings-9509"
+ value: {
+  dps: 249.85831
+  tps: 154.21908
+ }
+}
+dps_results: {
  key: "TestArms-AllItems-Prismcharm-15867"
  value: {
   dps: 248.09352
@@ -778,7 +890,21 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestArms-AllItems-RedWhelpGloves-7284"
+ value: {
+  dps: 250.12272
+  tps: 154.29711
+ }
+}
+dps_results: {
  key: "TestArms-AllItems-RegaliaofUndeadCleansing"
+ value: {
+  dps: 248.09352
+  tps: 153.16076
+ }
+}
+dps_results: {
+ key: "TestArms-AllItems-RingofSaviors-1447"
  value: {
   dps: 248.09352
   tps: 153.16076
@@ -799,10 +925,38 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestArms-AllItems-SatchelofBronzeBombs-285276"
+ value: {
+  dps: 248.09352
+  tps: 153.16076
+ }
+}
+dps_results: {
+ key: "TestArms-AllItems-SatchelofCopperBombs-285275"
+ value: {
+  dps: 248.09352
+  tps: 153.16076
+ }
+}
+dps_results: {
  key: "TestArms-AllItems-SatchelofDarkIronBombs-285278"
  value: {
   dps: 248.09352
   tps: 153.16076
+ }
+}
+dps_results: {
+ key: "TestArms-AllItems-SatchelofIronBombs-285277"
+ value: {
+  dps: 248.09352
+  tps: 153.16076
+ }
+}
+dps_results: {
+ key: "TestArms-AllItems-SearingDagger-273003"
+ value: {
+  dps: 135.99268
+  tps: 86.70666
  }
 }
 dps_results: {
@@ -918,6 +1072,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestArms-AllItems-SwineFists-10760"
+ value: {
+  dps: 253.41291
+  tps: 156.18625
+ }
+}
+dps_results: {
  key: "TestArms-AllItems-TalismanofArathor-20071"
  value: {
   dps: 248.09352
@@ -926,6 +1087,20 @@ dps_results: {
 }
 dps_results: {
  key: "TestArms-AllItems-TalismanofArathor-21117"
+ value: {
+  dps: 248.09352
+  tps: 153.16076
+ }
+}
+dps_results: {
+ key: "TestArms-AllItems-TalismanofArathor-21118"
+ value: {
+  dps: 248.09352
+  tps: 153.16076
+ }
+}
+dps_results: {
+ key: "TestArms-AllItems-TalismanofArathor-21119"
  value: {
   dps: 248.09352
   tps: 153.16076
@@ -1002,10 +1177,31 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestArms-AllItems-ThorncursedGrips-274159"
+ value: {
+  dps: 251.3961
+  tps: 155.04239
+ }
+}
+dps_results: {
  key: "TestArms-AllItems-Thunderfury,BlessedBladeoftheWindseeker-19019"
  value: {
   dps: 300.10291
   tps: 182.73072
+ }
+}
+dps_results: {
+ key: "TestArms-AllItems-TortoiseArmor-6907"
+ value: {
+  dps: 248.09352
+  tps: 153.16076
+ }
+}
+dps_results: {
+ key: "TestArms-AllItems-TruesilverBreastplate-7939"
+ value: {
+  dps: 248.09352
+  tps: 153.16076
  }
 }
 dps_results: {

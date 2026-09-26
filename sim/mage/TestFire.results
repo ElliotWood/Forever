@@ -63,6 +63,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFire-AllItems-ArcaneOrb-7507"
+ value: {
+  dps: 184.26301
+  tps: 118.91819
+ }
+}
+dps_results: {
  key: "TestFire-AllItems-ArenaGrandMaster-19024"
  value: {
   dps: 183.39321
@@ -77,7 +84,21 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFire-AllItems-Bael'dunTankard-286541"
+ value: {
+  dps: 192.03603
+  tps: 122.7227
+ }
+}
+dps_results: {
  key: "TestFire-AllItems-BlazefuryMedallion-17111"
+ value: {
+  dps: 183.39321
+  tps: 118.13127
+ }
+}
+dps_results: {
+ key: "TestFire-AllItems-BlazingEmblem-2802"
  value: {
   dps: 183.39321
   tps: 118.13127
@@ -105,10 +126,31 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFire-AllItems-CelestialOrb-7515"
+ value: {
+  dps: 198.83432
+  tps: 128.85506
+ }
+}
+dps_results: {
+ key: "TestFire-AllItems-ColdflameSaber-276631"
+ value: {
+  dps: 187.64533
+  tps: 120.56684
+ }
+}
+dps_results: {
  key: "TestFire-AllItems-CrudeScope-30"
  value: {
   dps: 183.39321
   tps: 118.13127
+ }
+}
+dps_results: {
+ key: "TestFire-AllItems-CursedMurlocEye-273840"
+ value: {
+  dps: 186.22229
+  tps: 119.78399
  }
 }
 dps_results: {
@@ -155,6 +197,20 @@ dps_results: {
 }
 dps_results: {
  key: "TestFire-AllItems-Defiler'sTalisman-21115"
+ value: {
+  dps: 183.39321
+  tps: 118.13127
+ }
+}
+dps_results: {
+ key: "TestFire-AllItems-Defiler'sTalisman-21116"
+ value: {
+  dps: 183.39321
+  tps: 118.13127
+ }
+}
+dps_results: {
+ key: "TestFire-AllItems-Defiler'sTalisman-21120"
  value: {
   dps: 183.39321
   tps: 118.13127
@@ -287,6 +343,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFire-AllItems-EnergyCloak-9397"
+ value: {
+  dps: 190.08437
+  tps: 122.83255
+ }
+}
+dps_results: {
  key: "TestFire-AllItems-EssenceofthePureFlame-18815"
  value: {
   dps: 183.39321
@@ -337,6 +400,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestFire-AllItems-FurbolgMedicinePouch-16768"
+ value: {
+  dps: 183.39321
+  tps: 118.13127
+ }
+}
+dps_results: {
+ key: "TestFire-AllItems-GoblinConstructionHelmet-10543"
  value: {
   dps: 183.39321
   tps: 118.13127
@@ -427,6 +497,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFire-AllItems-LeyOrb-7508"
+ value: {
+  dps: 184.26301
+  tps: 118.91819
+ }
+}
+dps_results: {
  key: "TestFire-AllItems-Lifestone-833"
  value: {
   dps: 183.39321
@@ -490,6 +567,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFire-AllItems-MarkoftheRedFlight-282778"
+ value: {
+  dps: 183.39321
+  tps: 118.13127
+ }
+}
+dps_results: {
  key: "TestFire-AllItems-MindQuickeningGem-19339"
  value: {
   dps: 189.3166
@@ -525,6 +609,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFire-AllItems-OrbofFire-12805"
+ value: {
+  dps: 183.39321
+  tps: 118.13127
+ }
+}
+dps_results: {
  key: "TestFire-AllItems-Prismcharm-15867"
  value: {
   dps: 183.39321
@@ -546,6 +637,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFire-AllItems-RingofSaviors-1447"
+ value: {
+  dps: 185.96298
+  tps: 119.62026
+ }
+}
+dps_results: {
  key: "TestFire-AllItems-RobeoftheArchmage-14152"
  value: {
   dps: 214.55671
@@ -557,6 +655,13 @@ dps_results: {
  value: {
   dps: 183.39321
   tps: 118.13127
+ }
+}
+dps_results: {
+ key: "TestFire-AllItems-SearingDagger-273003"
+ value: {
+  dps: 189.76056
+  tps: 122.13554
  }
 }
 dps_results: {
@@ -585,6 +690,13 @@ dps_results: {
  value: {
   dps: 183.39321
   tps: 118.13127
+ }
+}
+dps_results: {
+ key: "TestFire-AllItems-Skum'sBucket-273137"
+ value: {
+  dps: 191.92079
+  tps: 122.80199
  }
 }
 dps_results: {
@@ -644,6 +756,20 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFire-AllItems-TalismanofArathor-21118"
+ value: {
+  dps: 183.39321
+  tps: 118.13127
+ }
+}
+dps_results: {
+ key: "TestFire-AllItems-TalismanofArathor-21119"
+ value: {
+  dps: 183.39321
+  tps: 118.13127
+ }
+}
+dps_results: {
  key: "TestFire-AllItems-TalismanofAscendance-22678"
  value: {
   dps: 203.83842
@@ -694,6 +820,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestFire-AllItems-Thunderfury,BlessedBladeoftheWindseeker-19019"
+ value: {
+  dps: 183.39321
+  tps: 118.13127
+ }
+}
+dps_results: {
+ key: "TestFire-AllItems-TotemofInfliction-1131"
  value: {
   dps: 183.39321
   tps: 118.13127

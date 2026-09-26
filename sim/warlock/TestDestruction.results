@@ -84,6 +84,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestDestruction-AllItems-BlazingEmblem-2802"
+ value: {
+  dps: 170.8078
+  tps: 143.54489
+ }
+}
+dps_results: {
  key: "TestDestruction-AllItems-BloodvineGarb"
  value: {
   dps: 218.50918
@@ -109,6 +116,13 @@ dps_results: {
  value: {
   dps: 170.8078
   tps: 143.54489
+ }
+}
+dps_results: {
+ key: "TestDestruction-AllItems-CursedMurlocEye-273840"
+ value: {
+  dps: 176.57703
+  tps: 146.9772
  }
 }
 dps_results: {
@@ -155,6 +169,20 @@ dps_results: {
 }
 dps_results: {
  key: "TestDestruction-AllItems-Defiler'sTalisman-21115"
+ value: {
+  dps: 170.8078
+  tps: 143.54489
+ }
+}
+dps_results: {
+ key: "TestDestruction-AllItems-Defiler'sTalisman-21116"
+ value: {
+  dps: 170.8078
+  tps: 143.54489
+ }
+}
+dps_results: {
+ key: "TestDestruction-AllItems-Defiler'sTalisman-21120"
  value: {
   dps: 170.8078
   tps: 143.54489
@@ -287,6 +315,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestDestruction-AllItems-EnergyCloak-9397"
+ value: {
+  dps: 173.07574
+  tps: 145.45474
+ }
+}
+dps_results: {
  key: "TestDestruction-AllItems-EssenceofthePureFlame-18815"
  value: {
   dps: 170.8078
@@ -333,6 +368,13 @@ dps_results: {
  value: {
   dps: 172.40769
   tps: 144.43212
+ }
+}
+dps_results: {
+ key: "TestDestruction-AllItems-GoblinConstructionHelmet-10543"
+ value: {
+  dps: 170.8078
+  tps: 143.54489
  }
 }
 dps_results: {
@@ -476,6 +518,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestDestruction-AllItems-MarkoftheRedFlight-282778"
+ value: {
+  dps: 170.8078
+  tps: 143.54489
+ }
+}
+dps_results: {
  key: "TestDestruction-AllItems-MindtapTalisman-18371"
  value: {
   dps: 173.50985
@@ -504,6 +553,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestDestruction-AllItems-OrbofFire-12805"
+ value: {
+  dps: 170.8078
+  tps: 143.54489
+ }
+}
+dps_results: {
  key: "TestDestruction-AllItems-Prismcharm-15867"
  value: {
   dps: 170.8078
@@ -525,10 +581,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestDestruction-AllItems-RingofSaviors-1447"
+ value: {
+  dps: 172.28873
+  tps: 144.68046
+ }
+}
+dps_results: {
  key: "TestDestruction-AllItems-RunebladeofBaronRivendare-13505"
  value: {
   dps: 170.8078
   tps: 143.54489
+ }
+}
+dps_results: {
+ key: "TestDestruction-AllItems-SearingDagger-273003"
+ value: {
+  dps: 173.94547
+  tps: 145.71952
  }
 }
 dps_results: {
@@ -610,6 +680,20 @@ dps_results: {
 }
 dps_results: {
  key: "TestDestruction-AllItems-TalismanofArathor-21117"
+ value: {
+  dps: 170.8078
+  tps: 143.54489
+ }
+}
+dps_results: {
+ key: "TestDestruction-AllItems-TalismanofArathor-21118"
+ value: {
+  dps: 170.8078
+  tps: 143.54489
+ }
+}
+dps_results: {
+ key: "TestDestruction-AllItems-TalismanofArathor-21119"
  value: {
   dps: 170.8078
   tps: 143.54489

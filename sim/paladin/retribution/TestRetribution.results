@@ -141,6 +141,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestRetribution-AllItems-BarbaricBelt-4264"
+ value: {
+  dps: 427.5792
+  tps: 256.79232
+ }
+}
+dps_results: {
  key: "TestRetribution-AllItems-BattlegearofUndeadSlaying"
  value: {
   dps: 428.07672
@@ -180,6 +187,13 @@ dps_results: {
  value: {
   dps: 431.82669
   tps: 259.17592
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-BlazingEmblem-2802"
+ value: {
+  dps: 424.34535
+  tps: 254.98136
  }
 }
 dps_results: {
@@ -260,6 +274,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestRetribution-AllItems-CursedMurlocEye-273840"
+ value: {
+  dps: 430.49637
+  tps: 258.43188
+ }
+}
+dps_results: {
  key: "TestRetribution-AllItems-DarkmoonCard:BlueDragon-19288"
  value: {
   dps: 425.13469
@@ -303,6 +324,20 @@ dps_results: {
 }
 dps_results: {
  key: "TestRetribution-AllItems-Defiler'sTalisman-21115"
+ value: {
+  dps: 424.34535
+  tps: 254.98136
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-Defiler'sTalisman-21116"
+ value: {
+  dps: 424.34535
+  tps: 254.98136
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-Defiler'sTalisman-21120"
  value: {
   dps: 424.34535
   tps: 254.98136
@@ -436,6 +471,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestRetribution-AllItems-EnergyCloak-9397"
+ value: {
+  dps: 426.15936
+  tps: 256.83077
+ }
+}
+dps_results: {
  key: "TestRetribution-AllItems-EssenceofthePureFlame-18815"
  value: {
   dps: 424.34535
@@ -524,6 +566,34 @@ dps_results: {
  value: {
   dps: 428.07672
   tps: 257.07093
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-Gem-studdedLeatherBelt-4262"
+ value: {
+  dps: 425.09162
+  tps: 255.39927
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-GirdleofReprisal-11861"
+ value: {
+  dps: 428.07672
+  tps: 257.07093
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-GnomishHarmPreventionBelt-10721"
+ value: {
+  dps: 424.34535
+  tps: 254.98136
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-GoblinConstructionHelmet-10543"
+ value: {
+  dps: 424.34535
+  tps: 254.98136
  }
 }
 dps_results: {
@@ -751,6 +821,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestRetribution-AllItems-ManualCrowdPummeler-9449"
+ value: {
+  dps: 450.41041
+  tps: 269.88861
+ }
+}
+dps_results: {
  key: "TestRetribution-AllItems-MarkofResolution-17759"
  value: {
   dps: 424.34535
@@ -780,6 +857,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestRetribution-AllItems-MarkoftheDragonLord-13143"
+ value: {
+  dps: 424.34535
+  tps: 254.98136
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-MarkoftheRedFlight-282778"
  value: {
   dps: 424.34535
   tps: 254.98136
@@ -828,6 +912,20 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestRetribution-AllItems-OrbofFire-12805"
+ value: {
+  dps: 424.94859
+  tps: 255.29459
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-PetrolspillLeggings-9509"
+ value: {
+  dps: 429.15077
+  tps: 257.67239
+ }
+}
+dps_results: {
  key: "TestRetribution-AllItems-Prismcharm-15867"
  value: {
   dps: 424.34535
@@ -849,10 +947,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestRetribution-AllItems-RedWhelpGloves-7284"
+ value: {
+  dps: 426.66032
+  tps: 256.22327
+ }
+}
+dps_results: {
  key: "TestRetribution-AllItems-RegaliaofUndeadCleansing"
  value: {
   dps: 441.70396
   tps: 264.74252
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-RingofSaviors-1447"
+ value: {
+  dps: 424.57097
+  tps: 255.10409
  }
 }
 dps_results: {
@@ -989,6 +1101,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestRetribution-AllItems-SwineFists-10760"
+ value: {
+  dps: 432.33588
+  tps: 259.46201
+ }
+}
+dps_results: {
  key: "TestRetribution-AllItems-TalismanofArathor-20071"
  value: {
   dps: 424.34535
@@ -997,6 +1116,20 @@ dps_results: {
 }
 dps_results: {
  key: "TestRetribution-AllItems-TalismanofArathor-21117"
+ value: {
+  dps: 424.34535
+  tps: 254.98136
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-TalismanofArathor-21118"
+ value: {
+  dps: 424.34535
+  tps: 254.98136
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-TalismanofArathor-21119"
  value: {
   dps: 424.34535
   tps: 254.98136
@@ -1070,6 +1203,27 @@ dps_results: {
  value: {
   dps: 443.89088
   tps: 265.92686
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-ThorncursedGrips-274159"
+ value: {
+  dps: 429.70589
+  tps: 257.98827
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-TortoiseArmor-6907"
+ value: {
+  dps: 424.34535
+  tps: 254.98136
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-TruesilverBreastplate-7939"
+ value: {
+  dps: 424.34535
+  tps: 254.98136
  }
 }
 dps_results: {

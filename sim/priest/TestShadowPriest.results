@@ -84,6 +84,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestShadowPriest-AllItems-Bael'dunTankard-286541"
+ value: {
+  dps: 340.27476
+  tps: 241.81077
+ }
+}
+dps_results: {
  key: "TestShadowPriest-AllItems-Bashguuder-13204"
  value: {
   dps: 339.61891
@@ -92,6 +99,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestShadowPriest-AllItems-BlazefuryMedallion-17111"
+ value: {
+  dps: 339.61891
+  tps: 241.8152
+ }
+}
+dps_results: {
+ key: "TestShadowPriest-AllItems-BlazingEmblem-2802"
  value: {
   dps: 339.61891
   tps: 241.8152
@@ -116,6 +130,13 @@ dps_results: {
  value: {
   dps: 339.61891
   tps: 241.8152
+ }
+}
+dps_results: {
+ key: "TestShadowPriest-AllItems-CursedMurlocEye-273840"
+ value: {
+  dps: 344.00066
+  tps: 244.99657
  }
 }
 dps_results: {
@@ -155,6 +176,20 @@ dps_results: {
 }
 dps_results: {
  key: "TestShadowPriest-AllItems-Defiler'sTalisman-21115"
+ value: {
+  dps: 339.61891
+  tps: 241.8152
+ }
+}
+dps_results: {
+ key: "TestShadowPriest-AllItems-Defiler'sTalisman-21116"
+ value: {
+  dps: 339.61891
+  tps: 241.8152
+ }
+}
+dps_results: {
+ key: "TestShadowPriest-AllItems-Defiler'sTalisman-21120"
  value: {
   dps: 339.61891
   tps: 241.8152
@@ -273,6 +308,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestShadowPriest-AllItems-EnergyCloak-9397"
+ value: {
+  dps: 340.44271
+  tps: 243.27986
+ }
+}
+dps_results: {
  key: "TestShadowPriest-AllItems-EssenceofthePureFlame-18815"
  value: {
   dps: 339.61891
@@ -323,6 +365,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestShadowPriest-AllItems-FurbolgMedicinePouch-16768"
+ value: {
+  dps: 339.61891
+  tps: 241.8152
+ }
+}
+dps_results: {
+ key: "TestShadowPriest-AllItems-GoblinConstructionHelmet-10543"
  value: {
   dps: 339.61891
   tps: 241.8152
@@ -441,6 +490,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestShadowPriest-AllItems-ManualCrowdPummeler-9449"
+ value: {
+  dps: 339.61891
+  tps: 241.8152
+ }
+}
+dps_results: {
  key: "TestShadowPriest-AllItems-MarkofResolution-17759"
  value: {
   dps: 339.61891
@@ -476,6 +532,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestShadowPriest-AllItems-MarkoftheRedFlight-282778"
+ value: {
+  dps: 339.61891
+  tps: 241.8152
+ }
+}
+dps_results: {
  key: "TestShadowPriest-AllItems-MindtapTalisman-18371"
  value: {
   dps: 344.54324
@@ -504,6 +567,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestShadowPriest-AllItems-OrbofFire-12805"
+ value: {
+  dps: 339.61891
+  tps: 241.8152
+ }
+}
+dps_results: {
  key: "TestShadowPriest-AllItems-Prismcharm-15867"
  value: {
   dps: 339.61891
@@ -522,6 +592,20 @@ dps_results: {
  value: {
   dps: 352.74786
   tps: 251.10706
+ }
+}
+dps_results: {
+ key: "TestShadowPriest-AllItems-RingofSaviors-1447"
+ value: {
+  dps: 339.97628
+  tps: 242.071
+ }
+}
+dps_results: {
+ key: "TestShadowPriest-AllItems-SearingDagger-273003"
+ value: {
+  dps: 339.40269
+  tps: 241.5993
  }
 }
 dps_results: {
@@ -550,6 +634,13 @@ dps_results: {
  value: {
   dps: 339.61891
   tps: 241.8152
+ }
+}
+dps_results: {
+ key: "TestShadowPriest-AllItems-Skum'sBucket-273137"
+ value: {
+  dps: 341.00772
+  tps: 242.4018
  }
 }
 dps_results: {
@@ -623,6 +714,20 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestShadowPriest-AllItems-TalismanofArathor-21118"
+ value: {
+  dps: 339.61891
+  tps: 241.8152
+ }
+}
+dps_results: {
+ key: "TestShadowPriest-AllItems-TalismanofArathor-21119"
+ value: {
+  dps: 339.61891
+  tps: 241.8152
+ }
+}
+dps_results: {
  key: "TestShadowPriest-AllItems-TalismanofAscendance-22678"
  value: {
   dps: 356.6646
@@ -669,6 +774,13 @@ dps_results: {
  value: {
   dps: 368.23175
   tps: 261.50512
+ }
+}
+dps_results: {
+ key: "TestShadowPriest-AllItems-TotemofInfliction-1131"
+ value: {
+  dps: 339.61891
+  tps: 241.8152
  }
 }
 dps_results: {

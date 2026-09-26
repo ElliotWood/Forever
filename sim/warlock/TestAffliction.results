@@ -84,6 +84,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAffliction-AllItems-BlazingEmblem-2802"
+ value: {
+  dps: 231.3102
+  tps: 144.37503
+ }
+}
+dps_results: {
  key: "TestAffliction-AllItems-BloodvineGarb"
  value: {
   dps: 280.33998
@@ -109,6 +116,13 @@ dps_results: {
  value: {
   dps: 231.3102
   tps: 144.37503
+ }
+}
+dps_results: {
+ key: "TestAffliction-AllItems-CursedMurlocEye-273840"
+ value: {
+  dps: 235.1676
+  tps: 146.63521
  }
 }
 dps_results: {
@@ -155,6 +169,20 @@ dps_results: {
 }
 dps_results: {
  key: "TestAffliction-AllItems-Defiler'sTalisman-21115"
+ value: {
+  dps: 231.3102
+  tps: 144.37503
+ }
+}
+dps_results: {
+ key: "TestAffliction-AllItems-Defiler'sTalisman-21116"
+ value: {
+  dps: 231.3102
+  tps: 144.37503
+ }
+}
+dps_results: {
+ key: "TestAffliction-AllItems-Defiler'sTalisman-21120"
  value: {
   dps: 231.3102
   tps: 144.37503
@@ -287,6 +315,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAffliction-AllItems-EnergyCloak-9397"
+ value: {
+  dps: 231.8295
+  tps: 144.86773
+ }
+}
+dps_results: {
  key: "TestAffliction-AllItems-EssenceofthePureFlame-18815"
  value: {
   dps: 231.3102
@@ -333,6 +368,13 @@ dps_results: {
  value: {
   dps: 233.52427
   tps: 145.49162
+ }
+}
+dps_results: {
+ key: "TestAffliction-AllItems-GoblinConstructionHelmet-10543"
+ value: {
+  dps: 231.3102
+  tps: 144.37503
  }
 }
 dps_results: {
@@ -476,6 +518,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAffliction-AllItems-MarkoftheRedFlight-282778"
+ value: {
+  dps: 231.3102
+  tps: 144.37503
+ }
+}
+dps_results: {
  key: "TestAffliction-AllItems-MindtapTalisman-18371"
  value: {
   dps: 230.97153
@@ -504,6 +553,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAffliction-AllItems-OrbofFire-12805"
+ value: {
+  dps: 231.3102
+  tps: 144.37503
+ }
+}
+dps_results: {
  key: "TestAffliction-AllItems-Prismcharm-15867"
  value: {
   dps: 231.3102
@@ -525,10 +581,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAffliction-AllItems-RingofSaviors-1447"
+ value: {
+  dps: 233.0827
+  tps: 145.27412
+ }
+}
+dps_results: {
  key: "TestAffliction-AllItems-RunebladeofBaronRivendare-13505"
  value: {
   dps: 231.3102
   tps: 144.37503
+ }
+}
+dps_results: {
+ key: "TestAffliction-AllItems-SearingDagger-273003"
+ value: {
+  dps: 231.55013
+  tps: 144.72124
  }
 }
 dps_results: {
@@ -610,6 +680,20 @@ dps_results: {
 }
 dps_results: {
  key: "TestAffliction-AllItems-TalismanofArathor-21117"
+ value: {
+  dps: 231.3102
+  tps: 144.37503
+ }
+}
+dps_results: {
+ key: "TestAffliction-AllItems-TalismanofArathor-21118"
+ value: {
+  dps: 231.3102
+  tps: 144.37503
+ }
+}
+dps_results: {
+ key: "TestAffliction-AllItems-TalismanofArathor-21119"
  value: {
   dps: 231.3102
   tps: 144.37503
