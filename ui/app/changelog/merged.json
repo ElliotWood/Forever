@@ -1,5 +1,17 @@
 [
 	{
+		"number": 472,
+		"title": "Wowhead Forever data changed (2026-09-26)",
+		"mergedAt": "2026-09-26",
+		"url": "https://github.com/ElliotWood/Forever/pull/472"
+	},
+	{
+		"number": 471,
+		"title": "site: hide the build arena and damage comparison from the homepage",
+		"mergedAt": "2026-09-26",
+		"url": "https://github.com/ElliotWood/Forever/pull/471"
+	},
+	{
 		"number": 470,
 		"title": "landing: Forever key art and light-blue palette instead of TBC's Illidan and fel green",
 		"mergedAt": "2026-09-26",
