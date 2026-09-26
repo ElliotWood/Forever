@@ -1,5 +1,11 @@
 [
 	{
+		"number": 501,
+		"title": "Defias Leather set bonuses simulated, including the 4 piece bleed",
+		"mergedAt": "2026-09-26",
+		"url": "https://github.com/ElliotWood/Forever/pull/501"
+	},
+	{
 		"number": 500,
 		"title": "Seal of Command's 7 procs a minute checked against beta combat logs",
 		"mergedAt": "2026-09-26",
