@@ -213,7 +213,7 @@
 	"20424": {
 		"ability": "Seal of Command",
 		"file": "sim/paladin/seal_of_command.go",
-		"note": "Beta client 1.60.1.70009 matches Classic: 70% weapon damage, 0.29 coefficient. Every rank of the seal triggers this one proc in both clients, so the sim uses it for all five.",
+		"note": "Beta client 1.60.1.70009 matches Classic: 70% weapon damage, 0.29 coefficient. Every rank of the seal triggers this one proc in both clients, so the sim uses it for all five. The client marks the seal as procs-per-minute but carries no rate; the sim keeps Classic's 7, and the beta's public combat logs agree: 532 procs off the white hits of 4 level 20 paladins with 3.2-3.4 speed two-handers (Ligma, Quinvy, Ohcy, Sweet; foreverlogs.gg reports 32, 40, 44, 45, 2670, 2675, counted only while the seal was up) come to 6.75 +- 0.23 a minute, per player 6.1-7.5. Every proc landed on a white hit, none on Holy Strike or a spell.",
 		"source": "classic"
 	},
 	"20425": {
