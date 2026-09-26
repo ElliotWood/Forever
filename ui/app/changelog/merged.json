@@ -1,5 +1,11 @@
 [
 	{
+		"number": 492,
+		"title": "site: drop stale provenance text from the rankings page and the homepage",
+		"mergedAt": "2026-09-26",
+		"url": "https://github.com/ElliotWood/Forever/pull/492"
+	},
+	{
 		"number": 491,
 		"title": "Inspiration: read the client's 8/17/25% curve and buff 14893",
 		"mergedAt": "2026-09-26",
