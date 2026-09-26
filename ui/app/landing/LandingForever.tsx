@@ -92,8 +92,8 @@ export const LandingForever = () => (
 					<strong>
 						<code>DamageMeter.bin</code> &mdash; what the server actually paid out.
 					</strong>{' '}
-					Forever blocks addons from reading damage, so the client&apos;s own meter is the only measurement there will be. Twelve abilities have been
-					confirmed this way so far, out of 996. It does carry character names, so it gets scrubbed in your browser first.{' '}
+					Forever blocks addons from reading damage, so the client&apos;s own meter and its combat log are the only measurements there are. Twelve
+					abilities have been confirmed this way so far. It does carry character names, so it gets scrubbed in your browser first.{' '}
 					<strong>Getting one out is fiddly:</strong> open the meter, fight things, log out to character select, then copy the file before logging
 					back in &mdash; logging in deletes it.
 				</li>
