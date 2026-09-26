@@ -54,7 +54,7 @@ const guesses = (dir = 'sim/') => allSpellSources().filter(([, s]) => s.source =
 const NEEDS: Array<Need> = [
 	{
 		title: 'Hunter: do Arcane Shot and Serpent Sting scale with attack power?',
-		why: `${guesses('sim/hunter/')} of the ${guesses()} abilities that still carry a guess are hunter ones. The client gives Arcane Shot and Serpent Sting no attack power scaling, but the beta's public combat logs show both hitting for 1.4 to 2.1 times their base damage at every rank, so the sim's hunter numbers are too low until the coefficient is pinned down. Volley keeps Classic's coefficient for the same reason, and the hawk from Summon Hawk swings in a way the client does not describe.`,
+		why: `${guesses('sim/hunter/')} of the ${guesses()} abilities that still carry a guess are hunter ones. The client gives Arcane Shot and Serpent Sting no attack power scaling, but the beta's public combat logs show both hitting for 1.4 to 2.1 times their base damage at every rank, so the sim now adds 0.11 of ranged attack power to Arcane Shot and 0.035 to each Serpent Sting tick, fitted to four level 20 hunters. A clean measurement would pin it down. Volley keeps Classic's coefficient for the same reason, and the hawk from Summon Hawk swings in a way the client does not describe.`,
 		send: 'A DamageMeter.bin from any hunter: ten Arcane Shots and two full Serpent Stings with Aspect of the Hawk up, then the same with it down. If the biggest hit moves, they scale with attack power. Screenshots of those tooltips out of your spellbook help too.',
 		find: 'hunter',
 	},

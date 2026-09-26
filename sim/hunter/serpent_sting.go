@@ -14,6 +14,9 @@ func (hunter *Hunter) registerSerpentStingSpell() {
 	// The beta client carries no spell power coefficient on Serpent Sting at all, so Classic's
 	// stands: the full-duration 1.0 split across the ticks.
 	spellCoeff := 1.0 / float64(numberOfTicks)
+	// Nor any attack power share, but the same combat logs that fit Arcane Shot's (arcane_shot.go) put
+	// each tick at base + about 0.035 of ranged attack power.
+	const rapPerTick = 0.035
 
 	hunter.SerpentSting = hunter.RegisterRangedSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: rank.ID},
@@ -38,7 +41,7 @@ func (hunter *Hunter) registerSerpentStingSpell() {
 			BonusCoefficient: spellCoeff,
 
 			OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-				dot.Snapshot(target, tickDamage)
+				dot.Snapshot(target, tickDamage+rapPerTick*dot.Spell.RangedAttackPower(target))
 			},
 			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
 				dot.CalcAndDealPeriodicSnapshotDamage(sim, target, rank.TickOutcome(dot))
