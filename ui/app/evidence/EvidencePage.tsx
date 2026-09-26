@@ -35,8 +35,8 @@ const CHIP: Record<Tier, string> = {
 // What would actually move a number, worst first, with what to send for each.
 //
 // Hand-written on purpose. The manifest knows which abilities are unsettled, but not which
-// unsettled thing matters - downranking is one line in no JSON file and moves every caster
-// on the site, while a hunter pet's attack speed is a rounding error. A list generated from
+// unsettled thing matters - Ice Lance's coefficient moves every frost mage on the site, while
+// a hunter pet's attack speed is a rounding error. A list generated from
 // the manifest would rank those the same and quietly waste the first person who offers to
 // help. The counts inside it come from the manifest, so those cannot go stale.
 type Need = {
@@ -48,28 +48,21 @@ type Need = {
 	find?: string;
 };
 
+// How many rows still carry a guess, across the game or under one directory of sim/.
+const guesses = (dir = 'sim/') => allSpellSources().filter(([, s]) => s.source === 'assumed' && s.file.startsWith(dir)).length;
+
 const NEEDS: Array<Need> = [
 	{
-		title: 'Downranking: does a low rank still hit for full?',
-		why: 'The client carries the full coefficient on low ranks where Classic Era carried a reduced one. Read as written, a rank 4 Lightning Bolt does most of a rank 10 for a quarter of the mana, which would rewrite every caster rotation on this site. No table anywhere says whether Forever kept the penalty.',
-		send: 'A DamageMeter.bin from a session where you deliberately spammed a low rank of a direct damage spell - rank 1-4 Lightning Bolt, Fireball, Shadow Bolt. Twenty casts is plenty. The meter records the biggest hit, and that alone settles it.',
-		find: 'Lightning Bolt',
-	},
-	{
-		title: 'Hunter, nearly everything',
-		why: 'Hunter carries more guesses than the rest of the game put together. Volley, Serpent Sting, Arcane Shot and the pet abilities all run on numbers the client does not settle, and Summon Hawk models one hawk where the tooltip can be read as allowing two.',
-		send: 'A DamageMeter.bin from any hunter at any level, or screenshots of those tooltips out of your spellbook. Either one. The tooltips are worth as much as the damage here, because half of what is wrong is about what a number applies to rather than what it is.',
+		title: 'Hunter: do Arcane Shot and Serpent Sting scale with attack power?',
+		why: `${guesses('sim/hunter/')} of the ${guesses()} abilities that still carry a guess are hunter ones. The client gives Arcane Shot and Serpent Sting no spell power coefficient, and one beta player reports both grow with attack power beyond their tooltips. Volley keeps Classic's coefficient for the same reason, and the hawk from Summon Hawk swings in a way the client does not describe.`,
+		send: 'A DamageMeter.bin from any hunter: ten Arcane Shots and two full Serpent Stings with Aspect of the Hawk up, then the same with it down. If the biggest hit moves, they scale with attack power. Screenshots of those tooltips out of your spellbook help too.',
 		find: 'hunter',
 	},
 	{
-		title: 'Sky Elf abilities that appear in no file at all',
-		why: 'Three spell ids turn up in the beta client with no home: 1259231 Infusion of Wind, 1259652 Shock, 1248802 Wind Spike. They are not registered anywhere in this sim because nobody knows whether they are racials, a quest reward or cut content.',
-		send: 'A screenshot of a Sky Elf spellbook, or of the racials pane on the character screen. One picture ends this.',
-	},
-	{
-		title: 'Hotfixes, from anyone, any day',
-		why: 'Blizzard tunes after the build ships and none of it reaches a datamining site. It exists only in the cache your own client downloads it into, so a number here can go stale with nothing to indicate it has.',
-		send: 'DBCache.bin, as it is. It carries no character name, account, realm or Battle.net tag, so there is nothing to strip. Sending the same file again next week is useful - it is the change that matters.',
+		title: 'Ice Lance: how hard does it scale with spell power?',
+		why: "The client carries no coefficient on Ice Lance. Its row is a copy of Season of Discovery's, whose scaling lives on the server and was raised by 300% in a hotfix. The sim uses .143; .429 or .572 is at least as likely, which would triple the spell power part of every Ice Lance.",
+		send: 'A DamageMeter.bin from a level 20 mage: Ice Lance a dummy that is not frozen ten times, then ten more with Lesser Wizard Oil on (+16 spell power). The average rises by about 2 at .143, 7 at .429 and 9 at .572.',
+		find: 'Ice Lance',
 	},
 	{
 		title: 'Any tooltip that disagrees with this sim',
@@ -83,8 +76,8 @@ const tierOf = (s: SpellSource): Tier => s.source as Tier;
 /** A row's searchable text, so filtering never has to walk the DOM. */
 const haystack = (id: number, s: SpellSource) => `${id} ${s.ability} ${s.file} ${s.note ?? ''} ${(s.assumptions ?? []).join(' ')}`.toLowerCase();
 
-// 996 rows means 996 icon lookups, and an icon the bundled database has never heard of goes
-// out to Wowhead for it. Firing those on load would be a thousand requests for the forty
+// Every row is an icon lookup, and an icon the bundled database has never heard of goes
+// out to Wowhead for it. Firing those on load would be hundreds of requests for the forty
 // rows anyone can actually see, so a row resolves its ActionId (icon and href both) only
 // once it scrolls into view. One observer for every row; a hidden row intersects nothing,
 // so filtering down to it is what brings it into view.
@@ -228,7 +221,7 @@ export const EvidencePage = () => {
 				<section className="rounded-sm border border-brand/35 bg-brand/6 px-6 py-4" id="most-wanted">
 					<h2 className="m-0 text-xl text-white">Most wanted</h2>
 					<p className="m-0 mt-2 max-w-208">
-						Worst first. Each of these can be closed by one person with the game open, and the top one moves every caster on the site.{' '}
+						Worst first. Each of these can be closed by one person with the game open.{' '}
 						<a className="font-semibold text-brand" href={`${SITE_BASE}scrub/`}>
 							Send a file or a screenshot
 						</a>{' '}
