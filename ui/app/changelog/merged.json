@@ -1,5 +1,17 @@
 [
 	{
+		"number": 487,
+		"title": "Flametongue Weapon: read the client's damage, not TBC's 35 a second",
+		"mergedAt": "2026-09-26",
+		"url": "https://github.com/ElliotWood/Forever/pull/487"
+	},
+	{
+		"number": 486,
+		"title": "[DB] Update to 1.60.1.70009 with hotfixes as of 2026-09-26",
+		"mergedAt": "2026-09-26",
+		"url": "https://github.com/ElliotWood/Forever/pull/486"
+	},
+	{
 		"number": 485,
 		"title": "evidence: beta combat logs show Arcane Shot and Serpent Sting outgrow their base damage",
 		"mergedAt": "2026-09-26",
