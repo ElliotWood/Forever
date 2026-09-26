@@ -234,8 +234,9 @@ var Party = []BuffSpec{
 	// where Era's rank 5 was 100. Lower ranks stay castable, so a level 60 hunter keeps rank 4 up:
 	// 75 is the floor whatever rank 5 turns out to be on the server.
 	{
-		Field:   "trueshot_aura",
-		SpellID: 20905,
+		Field:     "trueshot_aura",
+		SpellID:   20905,
+		LowerRank: true,
 		Stats: []proto.Stat{
 			proto.Stat_StatRangedAttackPower,
 		},
