@@ -9,10 +9,8 @@ import { SITE_BASE, SITE_REPO_URL } from '../ProductPage/site';
 
 const PRODUCT_LINKS: Array<{ href: string; title: string; status: string }> = [
 	{ href: 'bis/', title: 'Best in Slot', status: 'Launch - Alpha' },
-	{ href: 'dps_rankings/', title: 'Damage comparison', status: 'Every community build, one raid' },
 	{ href: 'stat_weights/', title: 'Stat Weights', status: 'Launch - Alpha' },
 	{ href: 'changelog/', title: 'What changed for Forever', status: 'Changelog and sources' },
-	{ href: 'arena/', title: 'The build arena', status: 'Every build, ranked' },
 	{ href: 'evidence/', title: 'Where every number came from', status: '996 abilities, one reason each' },
 ];
 
@@ -44,6 +42,19 @@ export const LandingForever = () => (
 			<strong>Unaffiliated with any official or community sim project.</strong> One person writes it, every bug here is mine, and every number is
 			provisional &mdash; useful for catching the sim doing something obviously wrong, not as a statement about Forever.
 		</p>
+		<div className="flex flex-col gap-3 border border-brand bg-black/50 p-4" data-testid="wowsims-acknowledgement">
+			<p className="m-0">
+				<strong>Out of respect for WoWSims and the work they do, I have temporarily removed some features from this site</strong> &mdash; the build
+				arena and the damage comparison. From the WoWSims Forever team:
+			</p>
+			<blockquote className="m-0 border-l-4 border-brand pl-4 italic opacity-90">
+				&ldquo;We have decided to temporarily private the WoWSims Forever GitHub repo due to a number of AI-assisted tools publishing misleading results
+				and tier lists using incomplete/unfinished sims. We believe that WoWSims should be a tool used to help inform the playerbase, and that means we
+				have a responsibility to protect the integrity of the sims and the contributions of our developers and community. Once our code and data are far
+				enough along to be able to provide more accurate and reliable results, we will make the repo public again.&rdquo;
+				<footer className="mt-2 not-italic opacity-75">&mdash; Lucenia, WoWSims Forever, 26 September 2026</footer>
+			</blockquote>
+		</div>
 		<p className="m-0 opacity-80" data-testid="licence-credit">
 			Built on open-source simulator code, used under its{' '}
 			<a href={`${SITE_REPO_URL}/blob/master/LICENSE`} target="_blank" rel="noreferrer">
@@ -52,10 +63,7 @@ export const LandingForever = () => (
 			.
 		</p>
 		<p className="m-0 flex flex-wrap gap-3">
-			<Cta href="arena/" icon="trophy">
-				The build arena
-			</Cta>
-			<Cta href="evidence/" icon="clipboard-check" quiet>
+			<Cta href="evidence/" icon="clipboard-check">
 				Where every number came from
 			</Cta>
 			<Cta href="evidence/#most-wanted" icon="hand-holding-heart" quiet>
