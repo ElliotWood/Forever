@@ -1,5 +1,11 @@
 [
 	{
+		"number": 474,
+		"title": "site: replace the WoWSims logo with Blizzard game art",
+		"mergedAt": "2026-09-26",
+		"url": "https://github.com/ElliotWood/Forever/pull/474"
+	},
+	{
 		"number": 473,
 		"title": "site: homepage title reads WoW Forever / Sim",
 		"mergedAt": "2026-09-26",
