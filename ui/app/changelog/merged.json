@@ -1,5 +1,11 @@
 [
 	{
+		"number": 495,
+		"title": "Druid: Faerie Fire is free in Cat and Bear Form, with a 1 sec global cooldown in Cat Form",
+		"mergedAt": "2026-09-26",
+		"url": "https://github.com/ElliotWood/Forever/pull/495"
+	},
+	{
 		"number": 494,
 		"title": "Hunter: Lightning Breath drops the spell power coefficient the client removed; four Classic rows sourced",
 		"mergedAt": "2026-09-26",
