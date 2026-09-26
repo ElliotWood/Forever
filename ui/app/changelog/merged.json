@@ -1,5 +1,11 @@
 [
 	{
+		"number": 473,
+		"title": "site: homepage title reads WoW Forever / Sim",
+		"mergedAt": "2026-09-26",
+		"url": "https://github.com/ElliotWood/Forever/pull/473"
+	},
+	{
 		"number": 472,
 		"title": "Wowhead Forever data changed (2026-09-26)",
 		"mergedAt": "2026-09-26",
