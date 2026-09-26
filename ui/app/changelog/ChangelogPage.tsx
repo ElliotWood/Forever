@@ -1,4 +1,4 @@
-import { PageSection, ProductPage, SITE_REPO_URL } from '../ProductPage';
+import { PageSection, ProductPage, SITE_BASE, SITE_REPO_URL } from '../ProductPage';
 import { type Entry, sections, type Source } from './entries';
 // Every pull request merged into master, kept current by the Update Changelog workflow.
 import merged from './merged.json';
@@ -62,12 +62,9 @@ export const ChangelogPage = () => (
 				<strong className="text-brand">Sources.</strong> Forever is not out. Until the beta, what was modelled here was read from Blizzard&apos;s
 				BlizzCon 2026 announcements and panel, Wowhead&apos;s Forever guides, the community talent calculators rebuilt from the demo&apos;s tooltips,
 				and reports from people who played the demo. Since 17 September the numbers come from the beta client&apos;s own data, now pulled from
-				Blizzard&apos;s CDN every day with its hotfixes. Each entry below links the source it came from; what the client still does not settle is listed
-				per class in{' '}
-				<a href={`${SITE_REPO_URL}/tree/master/docs/beta-pass`} target="_blank" rel="noreferrer">
-					the beta checklists
-				</a>
-				. The beta is still changing; expect numbers to move.
+				Blizzard&apos;s CDN every day with its hotfixes. Each entry below links the source it came from; what the client still does not settle is
+				listed, with what would settle it, on the <a href={`${SITE_BASE}evidence/`}>evidence page</a>. The beta is still changing; expect numbers to
+				move.
 			</p>
 			<p className="m-0">
 				<strong className="text-brand">Where to read more.</strong> Each change links its pull request, which carries the full reasoning and the before
