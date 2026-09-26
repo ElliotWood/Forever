@@ -62,6 +62,10 @@ export const LandingForever = () => (
 			</a>
 			.
 		</p>
+		<p className="m-0 text-sm opacity-60" data-testid="trademark-notice">
+			World of Warcraft and Warcraft are trademarks or registered trademarks of Blizzard Entertainment, Inc., in the U.S. and/or other countries. Game
+			icons &copy; Blizzard Entertainment, Inc.
+		</p>
 		<p className="m-0 flex flex-wrap gap-3">
 			<Cta href="evidence/" icon="clipboard-check">
 				Where every number came from
