@@ -1,5 +1,11 @@
 [
 	{
+		"number": 470,
+		"title": "landing: Forever key art and light-blue palette instead of TBC's Illidan and fel green",
+		"mergedAt": "2026-09-26",
+		"url": "https://github.com/ElliotWood/Forever/pull/470"
+	},
+	{
 		"number": 469,
 		"title": "buffs: Trueshot Aura grants rank 4's 75 ranged attack power",
 		"mergedAt": "2026-09-25",
