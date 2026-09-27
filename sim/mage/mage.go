@@ -83,6 +83,7 @@ func (mage *Mage) registerSpells() {
 	mage.registerFrostboltSpell()
 	mage.registerEvocation()
 	mage.registerFireballSpell()
+	mage.registerFrostfireBoltSpell()
 	mage.registerFireBlastSpell()
 	mage.registerFrostNovaSpell()
 	mage.registerIceLanceSpell()
@@ -166,8 +167,6 @@ const (
 	MageSpellManaGem
 	MageSpellCombustion
 	MageSpellImprovedBlizzard
-
-	// TODO: Forever abilities the sim does not model yet; see the stub file named for each.
 	MageSpellFrostfireBolt
 
 	MageSpellLast
@@ -178,14 +177,14 @@ const (
 	MageSpellsAllDamaging = MageSpellArcaneBlast | MageSpellArcaneExplosion | MageSpellArcaneMissilesTick | MageSpellBlizzard |
 		MageSpellFireBlast | MageSpellFireball | MageSpellFlamestrike | MageSpellFrostbolt |
 		MageSpellIceLance | MageSpellPyroblast | MageSpellPyroblastDot | MageSpellScorch |
-		MageSpellBlastWave | MageSpellConeOfCold | MageSpellFrostNova
+		MageSpellBlastWave | MageSpellConeOfCold | MageSpellFrostNova | MageSpellFrostfireBolt
 	MageSpellInstantCast = MageSpellArcaneMissilesCast | MageSpellArcaneMissilesTick | MageSpellFireBlast | MageSpellArcaneExplosion | MageSpellPyroblastDot |
 		MageSpellCombustion | MageSpellConeOfCold | MageSpellIceLance | MageSpellManaGems | MageSpellPresenceOfMind
 	MageSpellExtraResult    = MageSpellArcaneMissilesTick | MageSpellBlizzard
 	FireSpellIgnitable      = MageSpellFireball | MageSpellScorch | MageSpellPyroblast
 	MageSpellArcaneMissiles = MageSpellArcaneMissilesCast | MageSpellArcaneMissilesTick
 
-	// The chill effects Fingers of Frost rolls on: Frostbolt's slow, Cone of Cold's, and Improved
-	// Blizzard's.
-	MageSpellChill = MageSpellFrostbolt | MageSpellConeOfCold | MageSpellImprovedBlizzard
+	// The chill effects Fingers of Frost rolls on: Frostbolt's slow, Cone of Cold's, Frostfire Bolt's
+	// (all three carry the client's chill bit, 0x100000) and Improved Blizzard's.
+	MageSpellChill = MageSpellFrostbolt | MageSpellConeOfCold | MageSpellFrostfireBolt | MageSpellImprovedBlizzard
 )
