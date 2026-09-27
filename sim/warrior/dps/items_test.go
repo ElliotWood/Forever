@@ -41,3 +41,37 @@ func TestDiamondFlask(t *testing.T) {
 	}
 	t.Error("Diamond Flask never granted its Strength")
 }
+
+// Shadowstrike, The Cruel Hand of Timmy and Skullforge Reaver drain life: a health leech (the first
+// two) or a damage aura (Skullforge Brand). Each proc has to land its damage on the target.
+func TestLifeDrainWeaponProcs(t *testing.T) {
+	for _, weapon := range []struct {
+		itemID, spellID int32
+	}{{17074, 21170}, {13401, 17505}, {13361, 17484}} {
+		player := core.WithSpec(&proto.Player{
+			Race:          proto.Race_RaceOrc,
+			Class:         proto.Class_ClassWarrior,
+			Equipment:     weaponsOnly(weapon.itemID, 0),
+			Consumables:   &proto.ConsumesSpec{},
+			TalentsString: DpsTalents,
+			Rotation:      core.GetAplRotation("../../../ui/specs/warrior/dps/apls", "dps_reck").Rotation,
+		}, DefaultOptions)
+		raid := core.SinglePlayerRaidProto(player, &proto.PartyBuffs{}, &proto.RaidBuffs{}, &proto.Debuffs{})
+		result := core.RunRaidSim(&proto.RaidSimRequest{Raid: raid, Encounter: core.MakeSingleTargetEncounter(0),
+			SimOptions: &proto.SimOptions{Iterations: 5, RandomSeed: 101}})
+		if result.Error != nil {
+			t.Fatal(result.Error.Message)
+		}
+		damage := 0.0
+		for _, action := range result.RaidMetrics.Parties[0].Players[0].Actions {
+			if action.Id.GetSpellId() == weapon.spellID {
+				for _, target := range action.Targets {
+					damage += target.Damage
+				}
+			}
+		}
+		if damage <= 0 {
+			t.Errorf("item %d: proc %d dealt no damage", weapon.itemID, weapon.spellID)
+		}
+	}
+}

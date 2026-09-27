@@ -62,6 +62,8 @@
 13171 Smokey's Lighter
 13204 Bashguuder
 13286 Rivenspike
+13361 Skullforge Reaver
+13401 The Cruel Hand of Timmy
 13505 Runeblade of Baron Rivendare
 13937 Headmaster's Charge
 13952 Iceblade Hacker
@@ -83,6 +85,7 @@
 15873 Ragged John's Neverending Cup
 16768 Furbolg Medicine Pouch
 17066 Drillborer Disk
+17074 Shadowstrike
 17076 Bonereaver's Edge
 17111 Blazefury Medallion
 17182 Sulfuras, Hand of Ragnaros

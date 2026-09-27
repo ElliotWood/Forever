@@ -1322,6 +1322,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtection-AllItems-SkullforgeReaver-13361"
+ value: {
+  dps: 279.2015
+  tps: 279.74718
+  dtps: 1610.42158
+ }
+}
+dps_results: {
  key: "TestProtection-AllItems-Slayer'sCrest-23041"
  value: {
   dps: 288.50424
@@ -1475,6 +1483,14 @@ dps_results: {
 }
 dps_results: {
  key: "TestProtection-AllItems-TheBurrower'sShell-23558"
+ value: {
+  dps: 279.2015
+  tps: 279.74718
+  dtps: 1610.42158
+ }
+}
+dps_results: {
+ key: "TestProtection-AllItems-TheCruelHandofTimmy-13401"
  value: {
   dps: 279.2015
   tps: 279.74718

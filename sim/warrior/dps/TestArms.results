@@ -1065,6 +1065,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestArms-AllItems-SkullforgeReaver-13361"
+ value: {
+  dps: 283.82666
+  tps: 175.72187
+ }
+}
+dps_results: {
  key: "TestArms-AllItems-Slayer'sCrest-23041"
  value: {
   dps: 262.86908
@@ -1202,6 +1209,13 @@ dps_results: {
  value: {
   dps: 248.02753
   tps: 153.12381
+ }
+}
+dps_results: {
+ key: "TestArms-AllItems-TheCruelHandofTimmy-13401"
+ value: {
+  dps: 282.07757
+  tps: 175.01021
  }
 }
 dps_results: {

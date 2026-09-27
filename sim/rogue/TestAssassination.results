@@ -834,6 +834,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAssassination-AllItems-SkullforgeReaver-13361"
+ value: {
+  dps: 322.87067
+  tps: 160.46672
+ }
+}
+dps_results: {
  key: "TestAssassination-AllItems-Slayer'sCrest-23041"
  value: {
   dps: 339.08528
@@ -947,6 +954,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestAssassination-AllItems-TheBurrower'sShell-23558"
+ value: {
+  dps: 322.87067
+  tps: 160.46672
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-TheCruelHandofTimmy-13401"
  value: {
   dps: 322.87067
   tps: 160.46672

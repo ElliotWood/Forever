@@ -798,6 +798,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestShadowPriest-AllItems-TheCruelHandofTimmy-13401"
+ value: {
+  dps: 339.61891
+  tps: 241.8152
+ }
+}
+dps_results: {
  key: "TestShadowPriest-AllItems-TheLionHornofStormwind-14557"
  value: {
   dps: 339.61891

@@ -973,6 +973,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestMarksmanship-AllItems-Shadowstrike-17074"
+ value: {
+  dps: 335.40796
+  tps: 205.20846
+ }
+}
+dps_results: {
  key: "TestMarksmanship-AllItems-ShardoftheFallenStar-21891"
  value: {
   dps: 337.1952
@@ -981,6 +988,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestMarksmanship-AllItems-ShardoftheGods"
+ value: {
+  dps: 335.40796
+  tps: 205.20846
+ }
+}
+dps_results: {
+ key: "TestMarksmanship-AllItems-SkullforgeReaver-13361"
  value: {
   dps: 335.40796
   tps: 205.20846

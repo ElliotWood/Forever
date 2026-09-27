@@ -129,6 +129,10 @@ func init() {
 		{19099, "Glacial Blade", 1.4, 18398},
 		{11809, "Flame Wrath", 1, 16559},
 		{12794, "Masterwork Stormhammer", 0.5, 16921},
+		// The same for three that drain life: only the damage is simulated, not what it heals.
+		{17074, "Shadowstrike", 2.2, 21170},
+		{13401, "The Cruel Hand of Timmy", 0.65, 17505},
+		{13361, "Skullforge Reaver", 1.7, 17484},
 	} {
 		itemhelpers.CreateWeaponProcSpell(itemhelpers.WeaponProcSpell{
 			ItemID: proc.itemID,

@@ -834,6 +834,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSubtlety-AllItems-SkullforgeReaver-13361"
+ value: {
+  dps: 285.94867
+  tps: 142.11649
+ }
+}
+dps_results: {
  key: "TestSubtlety-AllItems-Slayer'sCrest-23041"
  value: {
   dps: 304.62636
@@ -947,6 +954,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestSubtlety-AllItems-TheBurrower'sShell-23558"
+ value: {
+  dps: 285.94867
+  tps: 142.11649
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-TheCruelHandofTimmy-13401"
  value: {
   dps: 285.94867
   tps: 142.11649

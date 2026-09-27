@@ -1031,6 +1031,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestRetribution-AllItems-Shadowstrike-17074"
+ value: {
+  dps: 424.34535
+  tps: 254.98136
+ }
+}
+dps_results: {
  key: "TestRetribution-AllItems-ShardoftheFallenStar-21891"
  value: {
   dps: 427.5484
