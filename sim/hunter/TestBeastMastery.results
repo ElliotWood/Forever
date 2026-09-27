@@ -420,6 +420,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBeastMastery-AllItems-ElectrifiedDagger-19100"
+ value: {
+  dps: 456.54386
+  tps: 261.85179
+ }
+}
+dps_results: {
  key: "TestBeastMastery-AllItems-Enchant2HWeapon-GrandArcanist-7941"
  value: {
   dps: 453.00349
@@ -561,6 +568,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestBeastMastery-AllItems-FlameWrath-11809"
+ value: {
+  dps: 453.00349
+  tps: 259.37353
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-AllItems-FlurryAxe-871"
  value: {
   dps: 453.00349
   tps: 259.37353

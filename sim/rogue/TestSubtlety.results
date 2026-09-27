@@ -343,6 +343,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSubtlety-AllItems-ElectrifiedDagger-19100"
+ value: {
+  dps: 285.94867
+  tps: 142.11649
+ }
+}
+dps_results: {
  key: "TestSubtlety-AllItems-EmblemsofVeiledShadows"
  value: {
   dps: 298.95484

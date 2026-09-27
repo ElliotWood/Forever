@@ -1,6 +1,8 @@
 package dps
 
 import (
+	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/wowsims/forever/sim/core"
@@ -138,6 +140,41 @@ func TestWeaponEnchantDamageProcs(t *testing.T) {
 		}
 		if damage <= 0 {
 			t.Errorf("enchant %d: proc %d dealt no damage", enchant.effectID, enchant.spellID)
+		}
+	}
+}
+
+// Flurry Axe's proc is an extra swing (18797): passive procs keep no cast count, so read the log.
+// Electrified Dagger's is a 45 Nature bolt (23592) that has to deal damage.
+func TestFlurryAxeAndElectrifiedDagger(t *testing.T) {
+	for _, weapon := range []struct {
+		itemID, spellID int32
+	}{{871, 18797}, {19100, 23592}} {
+		player := core.WithSpec(&proto.Player{
+			Race:          proto.Race_RaceOrc,
+			Class:         proto.Class_ClassWarrior,
+			Equipment:     weaponsOnly(weapon.itemID, 0),
+			Consumables:   &proto.ConsumesSpec{},
+			TalentsString: DpsTalents,
+			Rotation:      core.GetAplRotation("../../../ui/specs/warrior/dps/apls", "dps_reck").Rotation,
+		}, DefaultOptions)
+		raid := core.SinglePlayerRaidProto(player, &proto.PartyBuffs{}, &proto.RaidBuffs{}, &proto.Debuffs{})
+		result := core.RunRaidSim(&proto.RaidSimRequest{Raid: raid, Encounter: core.MakeSingleTargetEncounter(0),
+			SimOptions: &proto.SimOptions{Iterations: 1, RandomSeed: 101, Debug: true}})
+		if result.Error != nil {
+			t.Fatal(result.Error.Message)
+		}
+		damage := 0.0
+		for _, action := range result.RaidMetrics.Parties[0].Players[0].Actions {
+			if action.Id.GetSpellId() == weapon.spellID {
+				for _, target := range action.Targets {
+					damage += target.Damage
+				}
+			}
+		}
+		casts := strings.Count(result.Logs, fmt.Sprintf("Casting {SpellID: %d}", weapon.spellID))
+		if casts == 0 || (weapon.spellID == 23592 && damage <= 0) {
+			t.Errorf("item %d: proc %d cast %d times for %.0f damage", weapon.itemID, weapon.spellID, casts, damage)
 		}
 	}
 }

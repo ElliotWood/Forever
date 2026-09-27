@@ -259,6 +259,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestShadowPriest-AllItems-ElectrifiedDagger-19100"
+ value: {
+  dps: 339.61891
+  tps: 241.8152
+ }
+}
+dps_results: {
  key: "TestShadowPriest-AllItems-Enchant2HWeapon-GrandArcanist-7941"
  value: {
   dps: 339.61891

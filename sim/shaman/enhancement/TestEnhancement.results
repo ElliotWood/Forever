@@ -364,6 +364,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestEnhancement-AllItems-ElectrifiedDagger-19100"
+ value: {
+  dps: 274.75909
+  tps: 149.22881
+ }
+}
+dps_results: {
  key: "TestEnhancement-AllItems-Enchant2HWeapon-GrandArcanist-7941"
  value: {
   dps: 171.66039
@@ -494,6 +501,13 @@ dps_results: {
  value: {
   dps: 171.66039
   tps: 99.11248
+ }
+}
+dps_results: {
+ key: "TestEnhancement-AllItems-FlurryAxe-871"
+ value: {
+  dps: 267.43966
+  tps: 147.35925
  }
 }
 dps_results: {

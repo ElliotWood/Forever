@@ -266,6 +266,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestDestruction-AllItems-ElectrifiedDagger-19100"
+ value: {
+  dps: 170.8078
+  tps: 143.54489
+ }
+}
+dps_results: {
  key: "TestDestruction-AllItems-Enchant2HWeapon-GrandArcanist-7941"
  value: {
   dps: 170.8078

@@ -420,6 +420,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSurvival-AllItems-ElectrifiedDagger-19100"
+ value: {
+  dps: 312.1002
+  tps: 188.26123
+ }
+}
+dps_results: {
  key: "TestSurvival-AllItems-Enchant2HWeapon-GrandArcanist-7941"
  value: {
   dps: 308.54315
@@ -561,6 +568,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestSurvival-AllItems-FlameWrath-11809"
+ value: {
+  dps: 308.54315
+  tps: 185.77129
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-FlurryAxe-871"
  value: {
   dps: 308.54315
   tps: 185.77129

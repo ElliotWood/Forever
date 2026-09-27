@@ -393,6 +393,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralCat-AllItems-ElectrifiedDagger-19100"
+ value: {
+  dps: 313.38906
+  tps: 176.25219
+  dtps: 3.90049
+ }
+}
+dps_results: {
  key: "TestFeralCat-AllItems-Enchant2HWeapon-GrandArcanist-7941"
  value: {
   dps: 305.82629
