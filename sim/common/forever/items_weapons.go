@@ -98,6 +98,10 @@ func init() {
 	// and Arcane Shot hits of 3 hunters (report 2650) = 3.1-3.4 PPM.
 	// Plaguefang, Poison (1309315, 4 Nature a sec for 10 sec, ticks crit): 59 procs off 699 hits of a
 	// warrior whose swing timer held Plaguefang's 2.1 sec in every fight (report 2677) = 2.4 PPM.
+	// Wolfsbane, Blazewind Blast (1282503, 49 Holystorm): 107 procs off 706 landed hits of one paladin
+	// over 61 fights (report 2678) = 2.7 +- 0.24 PPM. Seal of Command and Judgement of Command hits
+	// trigger it as well as swings and Holy Strike; Consecration ticks never do. The triple damage to
+	// Wolves and Worgen is left out (no target of that kind is simulated).
 	for _, proc := range []struct {
 		itemID  int32
 		name    string
@@ -106,6 +110,7 @@ func init() {
 	}{
 		{272999, "Barbaric Crossbow", 3.2, 1291551},
 		{279876, "Plaguefang", 2.4, 1309315},
+		{267369, "Wolfsbane", 2.7, 1282503},
 	} {
 		itemhelpers.CreateWeaponProcSpell(itemhelpers.WeaponProcSpell{
 			ItemID: proc.itemID,

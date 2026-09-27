@@ -137,6 +137,7 @@
 249396 Mystic Mushroom
 249469 Frozen Heart of the Mountain
 249470 Molten Heart of the Mountain
+267369 Wolfsbane
 270226 Golden Banana
 272439 Serenity Field
 272591 Premier High Warlord's Shield Wall
