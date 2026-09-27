@@ -311,7 +311,10 @@ const Leaderboard = () => {
 					[{ label: 'Written here', value: '' }, ...ALL_SOURCES.map(sim => ({ label: sim, value: sim }))].map(pill => (
 						<button
 							key={pill.label}
-							className={clsx(PILL, source === pill.value ? 'border-brand bg-brand/15 text-white' : 'border-white/30 text-gray-300 hover:bg-white/5')}
+							className={clsx(
+								PILL,
+								source === pill.value ? 'border-brand bg-brand/15 text-white' : 'border-white/30 text-gray-300 hover:bg-white/5',
+							)}
 							type="button"
 							aria-pressed={source === pill.value}
 							data-testid="arena-source-pill"
