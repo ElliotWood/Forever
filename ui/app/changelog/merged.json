@@ -1,5 +1,11 @@
 [
 	{
+		"number": 519,
+		"title": "Omen of Clarity: spells under 1.5 s roll on their own cast time",
+		"mergedAt": "2026-09-27",
+		"url": "https://github.com/ElliotWood/Forever/pull/519"
+	},
+	{
 		"number": 518,
 		"title": "Omen of Clarity: specials proc off the paw's swing, not the weapon's",
 		"mergedAt": "2026-09-27",
