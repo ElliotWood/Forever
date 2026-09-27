@@ -1148,6 +1148,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBeastMastery-AllItems-Venomstrike-6469"
+ value: {
+  dps: 402.54446
+  tps: 225.41296
+ }
+}
+dps_results: {
  key: "TestBeastMastery-AllItems-VestmentsoftheDevout"
  value: {
   dps: 497.10733

@@ -946,6 +946,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSubtlety-AllItems-Venomstrike-6469"
+ value: {
+  dps: 285.94867
+  tps: 142.11649
+ }
+}
+dps_results: {
  key: "TestSubtlety-AllItems-VestmentsoftheDevout"
  value: {
   dps: 285.94867

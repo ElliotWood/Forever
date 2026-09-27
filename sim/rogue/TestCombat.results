@@ -946,6 +946,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestCombat-AllItems-Venomstrike-6469"
+ value: {
+  dps: 318.11786
+  tps: 158.10458
+ }
+}
+dps_results: {
  key: "TestCombat-AllItems-VestmentsoftheDevout"
  value: {
   dps: 318.11786
