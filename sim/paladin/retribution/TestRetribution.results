@@ -1283,6 +1283,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestRetribution-AllItems-Wolfsbane-267369"
+ value: {
+  dps: 440.20983
+  tps: 263.87128
+ }
+}
+dps_results: {
  key: "TestRetribution-AllItems-WrathofCenarius-21190"
  value: {
   dps: 425.32256
