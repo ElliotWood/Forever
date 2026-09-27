@@ -75,3 +75,34 @@ func TestLifeDrainWeaponProcs(t *testing.T) {
 		}
 	}
 }
+
+// Sword of Zeal and Argent Avenger put their client row's buff on the wearer when they proc.
+func TestWeaponProcBuffsFromTheirRows(t *testing.T) {
+	for _, weapon := range []struct {
+		itemID, spellID int32
+	}{{6622, 8191}, {13246, 17352}} {
+		player := core.WithSpec(&proto.Player{
+			Race:          proto.Race_RaceOrc,
+			Class:         proto.Class_ClassWarrior,
+			Equipment:     weaponsOnly(weapon.itemID, 0),
+			Consumables:   &proto.ConsumesSpec{},
+			TalentsString: DpsTalents,
+			Rotation:      core.GetAplRotation("../../../ui/specs/warrior/dps/apls", "dps_reck").Rotation,
+		}, DefaultOptions)
+		raid := core.SinglePlayerRaidProto(player, &proto.PartyBuffs{}, &proto.RaidBuffs{}, &proto.Debuffs{})
+		result := core.RunRaidSim(&proto.RaidSimRequest{Raid: raid, Encounter: core.MakeSingleTargetEncounter(0),
+			SimOptions: &proto.SimOptions{Iterations: 5, RandomSeed: 101}})
+		if result.Error != nil {
+			t.Fatal(result.Error.Message)
+		}
+		uptime := 0.0
+		for _, aura := range result.RaidMetrics.Parties[0].Players[0].Auras {
+			if aura.Id.GetSpellId() == weapon.spellID {
+				uptime = aura.UptimeSecondsAvg
+			}
+		}
+		if uptime <= 0 {
+			t.Errorf("item %d never applied %d", weapon.itemID, weapon.spellID)
+		}
+	}
+}

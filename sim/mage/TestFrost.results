@@ -84,6 +84,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFrost-AllItems-ArgentAvenger-13246"
+ value: {
+  dps: 271.76559
+  tps: 159.22593
+ }
+}
+dps_results: {
  key: "TestFrost-AllItems-BadgeoftheSwarmguard-21670"
  value: {
   dps: 271.76559
@@ -778,6 +785,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestFrost-AllItems-StandardScope-32"
+ value: {
+  dps: 271.76559
+  tps: 159.22593
+ }
+}
+dps_results: {
+ key: "TestFrost-AllItems-SwordofZeal-6622"
  value: {
   dps: 271.76559
   tps: 159.22593

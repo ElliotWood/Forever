@@ -18,6 +18,7 @@
 5443 Gold-plated Buckler
 6469 Venomstrike
 6472 Stinging Viper
+6622 Sword of Zeal
 6898 Orb of Soran'ruk
 6907 Tortoise Armor
 6972 Fire Hardened Hauberk
@@ -61,6 +62,7 @@
 13164 Heart of the Scale
 13171 Smokey's Lighter
 13204 Bashguuder
+13246 Argent Avenger
 13286 Rivenspike
 13361 Skullforge Reaver
 13401 The Cruel Hand of Timmy

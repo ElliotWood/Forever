@@ -77,6 +77,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSubtlety-AllItems-ArgentAvenger-13246"
+ value: {
+  dps: 285.94867
+  tps: 142.11649
+ }
+}
+dps_results: {
  key: "TestSubtlety-AllItems-BadgeoftheSwarmguard-21670"
  value: {
   dps: 288.09525
@@ -908,6 +915,13 @@ dps_results: {
  value: {
   dps: 293.27679
   tps: 145.75856
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-SwordofZeal-6622"
+ value: {
+  dps: 283.05426
+  tps: 140.67797
  }
 }
 dps_results: {

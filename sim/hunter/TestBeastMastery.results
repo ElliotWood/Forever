@@ -84,6 +84,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBeastMastery-AllItems-ArgentAvenger-13246"
+ value: {
+  dps: 453.00349
+  tps: 259.37353
+ }
+}
+dps_results: {
  key: "TestBeastMastery-AllItems-BadgeoftheSwarmguard-21670"
  value: {
   dps: 456.0308
@@ -1075,6 +1082,13 @@ dps_results: {
  value: {
   dps: 458.04617
   tps: 262.90341
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-AllItems-SwordofZeal-6622"
+ value: {
+  dps: 449.77889
+  tps: 257.11631
  }
 }
 dps_results: {

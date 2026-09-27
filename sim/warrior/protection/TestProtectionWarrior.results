@@ -88,6 +88,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-ArgentAvenger-13246"
+ value: {
+  dps: 232.02903
+  tps: 580.25704
+  dtps: 1510.60216
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-BadgeoftheSwarmguard-21670"
  value: {
   dps: 234.29819
@@ -1366,6 +1374,14 @@ dps_results: {
   dps: 235.85662
   tps: 584.93336
   dtps: 1477.41071
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-SwordofZeal-6622"
+ value: {
+  dps: 231.70901
+  tps: 572.58333
+  dtps: 1493.57514
  }
 }
 dps_results: {
