@@ -4,6 +4,7 @@
 
 # items
 833 Lifestone
+871 Flurry Axe
 942 Freezing Band
 1131 Totem of Infliction
 1168 Skullflame Shield
@@ -106,6 +107,7 @@
 19019 Thunderfury, Blessed Blade of the Windseeker
 19024 Arena Grand Master
 19099 Glacial Blade
+19100 Electrified Dagger
 19287 Darkmoon Card: Heroism
 19288 Darkmoon Card: Blue Dragon
 19289 Darkmoon Card: Maelstrom
