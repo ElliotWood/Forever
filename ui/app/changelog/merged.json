@@ -1,5 +1,11 @@
 [
 	{
+		"number": 520,
+		"title": "Seal of Righteousness per-hit damage checked against beta combat logs",
+		"mergedAt": "2026-09-27",
+		"url": "https://github.com/ElliotWood/Forever/pull/520"
+	},
+	{
 		"number": 519,
 		"title": "Omen of Clarity: spells under 1.5 s roll on their own cast time",
 		"mergedAt": "2026-09-27",
