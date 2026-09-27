@@ -969,6 +969,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralBear-AllItems-StingingViper-6472"
+ value: {
+  dps: 232.1828
+  tps: 585.91538
+  dtps: 1604.30918
+ }
+}
+dps_results: {
  key: "TestFeralBear-AllItems-StormrageRaiment"
  value: {
   dps: 233.18261

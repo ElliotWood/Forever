@@ -952,6 +952,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestElemental-AllItems-StingingViper-6472"
+ value: {
+  dps: 122.72718
+  tps: 78.92881
+ }
+}
+dps_results: {
  key: "TestElemental-AllItems-StormGauntlets-12632"
  value: {
   dps: 132.11527

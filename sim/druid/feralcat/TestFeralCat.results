@@ -969,6 +969,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralCat-AllItems-StingingViper-6472"
+ value: {
+  dps: 311.54521
+  tps: 175.33738
+  dtps: 3.68058
+ }
+}
+dps_results: {
  key: "TestFeralCat-AllItems-StormrageRaiment"
  value: {
   dps: 319.77755

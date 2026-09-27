@@ -1065,6 +1065,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestArms-AllItems-StingingViper-6472"
+ value: {
+  dps: 267.4665
+  tps: 166.07303
+ }
+}
+dps_results: {
  key: "TestArms-AllItems-StoneformShoulders-13955"
  value: {
   dps: 248.02753

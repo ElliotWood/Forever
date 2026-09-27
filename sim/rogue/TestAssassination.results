@@ -834,6 +834,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAssassination-AllItems-StingingViper-6472"
+ value: {
+  dps: 322.87067
+  tps: 160.46672
+ }
+}
+dps_results: {
  key: "TestAssassination-AllItems-StormshroudArmor"
  value: {
   dps: 394.13788

@@ -834,6 +834,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSubtlety-AllItems-StingingViper-6472"
+ value: {
+  dps: 285.94867
+  tps: 142.11649
+ }
+}
+dps_results: {
  key: "TestSubtlety-AllItems-StormshroudArmor"
  value: {
   dps: 343.36542
