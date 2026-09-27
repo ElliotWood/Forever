@@ -63,6 +63,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAffliction-AllItems-Alcor'sSunrazor-14555"
+ value: {
+  dps: 231.3102
+  tps: 144.37503
+ }
+}
+dps_results: {
  key: "TestAffliction-AllItems-ArenaGrandMaster-19024"
  value: {
   dps: 231.3102
@@ -112,6 +119,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAffliction-AllItems-ColdrageDagger-10761"
+ value: {
+  dps: 231.3102
+  tps: 144.37503
+ }
+}
+dps_results: {
  key: "TestAffliction-AllItems-CrudeScope-30"
  value: {
   dps: 231.3102
@@ -148,6 +162,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestAffliction-AllItems-DarkmoonCard:Maelstrom-19289"
+ value: {
+  dps: 231.3102
+  tps: 144.37503
+ }
+}
+dps_results: {
+ key: "TestAffliction-AllItems-Darrowspike-13984"
  value: {
   dps: 231.3102
   tps: 144.37503
@@ -368,6 +389,13 @@ dps_results: {
  value: {
   dps: 233.52427
   tps: 145.49162
+ }
+}
+dps_results: {
+ key: "TestAffliction-AllItems-GlacialBlade-19099"
+ value: {
+  dps: 231.3102
+  tps: 144.37503
  }
 }
 dps_results: {

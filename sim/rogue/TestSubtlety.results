@@ -63,6 +63,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSubtlety-AllItems-Alcor'sSunrazor-14555"
+ value: {
+  dps: 285.94867
+  tps: 142.11649
+ }
+}
+dps_results: {
  key: "TestSubtlety-AllItems-ArenaGrandMaster-19024"
  value: {
   dps: 285.94867
@@ -126,10 +133,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSubtlety-AllItems-Bloodfist-11744"
+ value: {
+  dps: 285.94867
+  tps: 142.11649
+ }
+}
+dps_results: {
  key: "TestSubtlety-AllItems-BloodvineGarb"
  value: {
   dps: 296.68796
   tps: 147.45392
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-BonechillHammer-14487"
+ value: {
+  dps: 285.94867
+  tps: 142.11649
  }
 }
 dps_results: {
@@ -144,6 +165,13 @@ dps_results: {
  value: {
   dps: 328.47038
   tps: 163.24978
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-ColdrageDagger-10761"
+ value: {
+  dps: 285.94867
+  tps: 142.11649
  }
 }
 dps_results: {
@@ -193,6 +221,13 @@ dps_results: {
  value: {
   dps: 295.28462
   tps: 146.75645
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-Darrowspike-13984"
+ value: {
+  dps: 285.94867
+  tps: 142.11649
  }
 }
 dps_results: {
@@ -435,6 +470,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSubtlety-AllItems-GlacialBlade-19099"
+ value: {
+  dps: 285.94867
+  tps: 142.11649
+ }
+}
+dps_results: {
  key: "TestSubtlety-AllItems-GnomishHarmPreventionBelt-10721"
  value: {
   dps: 285.94867
@@ -611,6 +653,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestSubtlety-AllItems-MarkoftheRedFlight-282778"
+ value: {
+  dps: 285.94867
+  tps: 142.11649
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-MasterworkStormhammer-12794"
  value: {
   dps: 285.94867
   tps: 142.11649

@@ -119,6 +119,16 @@ func init() {
 		{267369, "Wolfsbane", 2.7, 1282503},
 		{6469, "Venomstrike", 1.6, 29653},
 		{6472, "Stinging Viper", 3.2, 1291663},
+		// No beta log carries these yet. Their damage rows match Era's (Coldrage Dagger's is Forever's
+		// own), so the rate is master's Classic one from the Armaments Discord, as for Bashguuder.
+		{14555, "Alcor's Sunrazor", 1, 18833},
+		{11744, "Bloodfist", 4, 16433},
+		{14487, "Bonechill Hammer", 1, 18276},
+		{13984, "Darrowspike", 1, 18276},
+		{10761, "Coldrage Dagger", 2.2, 1293790},
+		{19099, "Glacial Blade", 1.4, 18398},
+		{11809, "Flame Wrath", 1, 16559},
+		{12794, "Masterwork Stormhammer", 0.5, 16921},
 	} {
 		itemhelpers.CreateWeaponProcSpell(itemhelpers.WeaponProcSpell{
 			ItemID: proc.itemID,

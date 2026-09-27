@@ -63,6 +63,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFrost-AllItems-Alcor'sSunrazor-14555"
+ value: {
+  dps: 271.76559
+  tps: 159.22593
+ }
+}
+dps_results: {
  key: "TestFrost-AllItems-ArcaneOrb-7507"
  value: {
   dps: 275.2198
@@ -140,6 +147,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFrost-AllItems-ColdrageDagger-10761"
+ value: {
+  dps: 271.76559
+  tps: 159.22593
+ }
+}
+dps_results: {
  key: "TestFrost-AllItems-CrudeScope-30"
  value: {
   dps: 271.76559
@@ -176,6 +190,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestFrost-AllItems-DarkmoonCard:Maelstrom-19289"
+ value: {
+  dps: 271.76559
+  tps: 159.22593
+ }
+}
+dps_results: {
+ key: "TestFrost-AllItems-Darrowspike-13984"
  value: {
   dps: 271.76559
   tps: 159.22593
@@ -400,6 +421,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestFrost-AllItems-FurbolgMedicinePouch-16768"
+ value: {
+  dps: 271.76559
+  tps: 159.22593
+ }
+}
+dps_results: {
+ key: "TestFrost-AllItems-GlacialBlade-19099"
  value: {
   dps: 271.76559
   tps: 159.22593

@@ -63,6 +63,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestArms-AllItems-Alcor'sSunrazor-14555"
+ value: {
+  dps: 286.19403
+  tps: 177.75793
+ }
+}
+dps_results: {
  key: "TestArms-AllItems-Annihilator-12798"
  value: {
   dps: 281.934
@@ -189,6 +196,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestArms-AllItems-Bloodfist-11744"
+ value: {
+  dps: 286.40895
+  tps: 177.62171
+ }
+}
+dps_results: {
  key: "TestArms-AllItems-BloodmailRegalia"
  value: {
   dps: 274.74253
@@ -214,6 +228,13 @@ dps_results: {
  value: {
   dps: 248.02753
   tps: 153.12381
+ }
+}
+dps_results: {
+ key: "TestArms-AllItems-BonechillHammer-14487"
+ value: {
+  dps: 276.26106
+  tps: 171.00283
  }
 }
 dps_results: {
@@ -266,6 +287,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestArms-AllItems-ColdrageDagger-10761"
+ value: {
+  dps: 285.41557
+  tps: 177.47724
+ }
+}
+dps_results: {
  key: "TestArms-AllItems-Conqueror'sBattlegear"
  value: {
   dps: 302.4885
@@ -312,6 +340,13 @@ dps_results: {
  value: {
   dps: 254.02905
   tps: 156.48466
+ }
+}
+dps_results: {
+ key: "TestArms-AllItems-Darrowspike-13984"
+ value: {
+  dps: 289.46592
+  tps: 179.74544
  }
 }
 dps_results: {
@@ -603,6 +638,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestArms-AllItems-GlacialBlade-19099"
+ value: {
+  dps: 285.01217
+  tps: 176.72594
+ }
+}
+dps_results: {
  key: "TestArms-AllItems-GnomishHarmPreventionBelt-10721"
  value: {
   dps: 248.02753
@@ -824,6 +866,13 @@ dps_results: {
  value: {
   dps: 248.02753
   tps: 153.12381
+ }
+}
+dps_results: {
+ key: "TestArms-AllItems-MasterworkStormhammer-12794"
+ value: {
+  dps: 287.72681
+  tps: 178.32824
  }
 }
 dps_results: {

@@ -70,6 +70,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSmitePriest-AllItems-Alcor'sSunrazor-14555"
+ value: {
+  dps: 155.64501
+  tps: 113.84808
+ }
+}
+dps_results: {
  key: "TestSmitePriest-AllItems-ArenaGrandMaster-19024"
  value: {
   dps: 155.64501
@@ -119,10 +126,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSmitePriest-AllItems-BonechillHammer-14487"
+ value: {
+  dps: 155.64501
+  tps: 113.84808
+ }
+}
+dps_results: {
  key: "TestSmitePriest-AllItems-BurstofKnowledge-11832"
  value: {
   dps: 159.47352
   tps: 115.23466
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-AllItems-ColdrageDagger-10761"
+ value: {
+  dps: 155.64501
+  tps: 113.84808
  }
 }
 dps_results: {
@@ -155,6 +176,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-DarkmoonCard:Maelstrom-19289"
+ value: {
+  dps: 155.64501
+  tps: 113.84808
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-AllItems-Darrowspike-13984"
  value: {
   dps: 155.64501
   tps: 113.84808
@@ -371,6 +399,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSmitePriest-AllItems-GlacialBlade-19099"
+ value: {
+  dps: 155.64501
+  tps: 113.84808
+ }
+}
+dps_results: {
  key: "TestSmitePriest-AllItems-GoblinConstructionHelmet-10543"
  value: {
   dps: 155.64501
@@ -533,6 +568,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-MarkoftheRedFlight-282778"
+ value: {
+  dps: 155.64501
+  tps: 113.84808
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-AllItems-MasterworkStormhammer-12794"
  value: {
   dps: 155.64501
   tps: 113.84808

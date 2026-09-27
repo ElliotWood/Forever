@@ -63,6 +63,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestCombat-AllItems-Alcor'sSunrazor-14555"
+ value: {
+  dps: 318.11786
+  tps: 158.10458
+ }
+}
+dps_results: {
  key: "TestCombat-AllItems-ArenaGrandMaster-19024"
  value: {
   dps: 318.11786
@@ -126,10 +133,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestCombat-AllItems-Bloodfist-11744"
+ value: {
+  dps: 318.11786
+  tps: 158.10458
+ }
+}
+dps_results: {
  key: "TestCombat-AllItems-BloodvineGarb"
  value: {
   dps: 332.90802
   tps: 165.45529
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-BonechillHammer-14487"
+ value: {
+  dps: 318.11786
+  tps: 158.10458
  }
 }
 dps_results: {
@@ -144,6 +165,13 @@ dps_results: {
  value: {
   dps: 367.75878
   tps: 182.77612
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-ColdrageDagger-10761"
+ value: {
+  dps: 318.11786
+  tps: 158.10458
  }
 }
 dps_results: {
@@ -193,6 +221,13 @@ dps_results: {
  value: {
   dps: 328.62178
   tps: 163.32502
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-Darrowspike-13984"
+ value: {
+  dps: 318.11786
+  tps: 158.10458
  }
 }
 dps_results: {
@@ -435,6 +470,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestCombat-AllItems-GlacialBlade-19099"
+ value: {
+  dps: 318.11786
+  tps: 158.10458
+ }
+}
+dps_results: {
  key: "TestCombat-AllItems-GnomishHarmPreventionBelt-10721"
  value: {
   dps: 318.11786
@@ -611,6 +653,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestCombat-AllItems-MarkoftheRedFlight-282778"
+ value: {
+  dps: 318.11786
+  tps: 158.10458
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-MasterworkStormhammer-12794"
  value: {
   dps: 318.11786
   tps: 158.10458
