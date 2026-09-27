@@ -3,7 +3,7 @@ import { PlayerSpecs } from '@sim/player/specs';
 import { tryParseUrlLocation } from '@sim/state/sim_links';
 import { describe, expect, it } from 'vitest';
 
-import { bestPerTree, flags, talentLink, wowheadLink } from './ArenaPage';
+import { bestPerTree, flags, sourceOf, talentLink, wowheadLink } from './ArenaPage';
 
 describe('arena talent links', () => {
 	it('open the spec page with only the talents', () => {
@@ -46,5 +46,12 @@ describe('arena default view', () => {
 		const row = (talents: string, dps: number) => ({ spec: 'warrior', talents, dps }) as Parameters<typeof bestPerTree>[0][number];
 		const shown = bestPerTree([row('34300003-550500005152310051', 715), row('3-550500005152310051', 700), row('55050103201-0505', 650)]);
 		expect(shown.map(b => b.dps)).toEqual([715, 650]);
+	});
+});
+
+describe('arena build source', () => {
+	it('names the external sim a build came from, and nothing for our own', () => {
+		expect(sourceOf({ build: 'MythicSim Fury 15/36/0' })).toBe('MythicSim');
+		expect(sourceOf({ build: 'Arms 31/20/0' })).toBe('');
 	});
 });
