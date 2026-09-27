@@ -484,12 +484,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
-		6469, // Venomstrike
-		[
-			"Venom Shot the target for 28 Nature damage.", // 29653 - https://www.wowhead.com/forever/spell=29653
-		]
-	],
-	[
 		6472, // Stinging Viper
 		[
 			"Poisons target for 7 Nature damage every 3.0 sec for 12s.", // 1291663 - https://www.wowhead.com/forever/spell=1291663
@@ -4168,12 +4162,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
-		267369, // Wolfsbane
-		[
-			"Sear the target with a vortex of blazing wind, dealing 49 Holystorm damage. Deals 3 times as much damage to Wolves and Worgen. ", // 1282503 - https://www.wowhead.com/forever/spell=1282503
-		]
-	],
-	[
 		268484, // Moonsilver Blade
 		[
 			"Sear certain enchanted targets with blazing light causing it to take additional damage from holy attacks and spells", // 1282482 - https://www.wowhead.com/forever/spell=1282482
@@ -4430,12 +4418,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		272824, // Premier Lieutenant Commander's Voidcloth Gloves
 		[
 			"Gives you a 50% chance to avoid interruption caused by damage while casting Mind Blast.", // 23043 - https://www.wowhead.com/forever/spell=23043
-		]
-	],
-	[
-		272999, // Barbaric Crossbow
-		[
-			"Wounds the target for 14 Physical damage.", // 1291551 - https://www.wowhead.com/forever/spell=1291551
 		]
 	],
 	[
@@ -4749,12 +4731,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		279251, // Idol of the Ursine Twins
 		[
 			"Your Lacerate hits have a 10% chance to reset the cooldown on Mangle (Bear).", // 1306483 - https://www.wowhead.com/forever/spell=1306483
-		]
-	],
-	[
-		279876, // Plaguefang
-		[
-			"Poisons target for 4 Nature damage every 1.0 sec for 10s.", // 1309315 - https://www.wowhead.com/forever/spell=1309315
 		]
 	],
 	[
