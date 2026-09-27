@@ -1,5 +1,11 @@
 [
 	{
+		"number": 504,
+		"title": "Venomstrike's Venom Shot proc simulated, rate measured in beta logs",
+		"mergedAt": "2026-09-27",
+		"url": "https://github.com/ElliotWood/Forever/pull/504"
+	},
+	{
 		"number": 503,
 		"title": "Wolfsbane's Blazewind Blast proc simulated, rate measured in beta logs",
 		"mergedAt": "2026-09-27",
