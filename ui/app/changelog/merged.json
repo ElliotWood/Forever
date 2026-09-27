@@ -1,5 +1,17 @@
 [
 	{
+		"number": 512,
+		"title": "Stinging Viper's Poison proc simulated, rate measured in beta logs",
+		"mergedAt": "2026-09-27",
+		"url": "https://github.com/ElliotWood/Forever/pull/512"
+	},
+	{
+		"number": 511,
+		"title": "[DB] Update to 1.60.1.70009 with hotfixes as of 2026-09-27",
+		"mergedAt": "2026-09-27",
+		"url": "https://github.com/ElliotWood/Forever/pull/511"
+	},
+	{
 		"number": 510,
 		"title": "SAF-T / EZ-Thro bombs in the explosives slot, for everyone",
 		"mergedAt": "2026-09-27",
