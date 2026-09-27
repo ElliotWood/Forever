@@ -142,6 +142,12 @@ const displayName = (build: Build) => (build.optimised ? build.build.replace(/\s
 const specName = (spec: string) => SPECS[spec]?.name ?? spec;
 const consumablesName = (list: string) => (list || 'unknown consumables').replace('Arena-', '').replace('+class', ' + class imbues').toLowerCase();
 
+// External sims whose published builds the arena runs. Their builds are named after them, so the
+// first word says where a row came from; add a sim here and it gets its own flag and filter pill.
+const EXTERNAL_SIMS = ['MythicSim'];
+export const sourceOf = (build: Pick<Build, 'build'>) => EXTERNAL_SIMS.find(sim => build.build.startsWith(sim)) ?? '';
+const ALL_SOURCES = EXTERNAL_SIMS.filter(sim => builds.some(b => sourceOf(b) === sim));
+
 const ALL_SPECS = [...new Set(builds.map(b => b.spec))].sort((a, b) => specName(a).localeCompare(specName(b)));
 
 const PILL = 'inline-flex cursor-pointer items-center gap-1 rounded-full border px-2.5 py-1 text-sm';
@@ -152,9 +158,9 @@ const LINK = 'text-brand hover:underline';
 export const flags = (build: Build) => {
 	const guessed = build.rests ? unsettledShare(build.rests) : 0;
 	return [
-		build.build.startsWith('MythicSim') && {
-			label: 'MythicSim',
-			title: 'A build from MythicSim, run here as written or searched on from there.',
+		!!sourceOf(build) && {
+			label: sourceOf(build),
+			title: `A build from ${sourceOf(build)}, run here as written or searched on from there.`,
 			className: 'border-white/30 text-white/70',
 		},
 		build.rotation.endsWith('_lowrank') && {
@@ -269,11 +275,13 @@ const Row = ({ build, rank }: { build: Build; rank: number }) => {
 const Leaderboard = () => {
 	const [showAll, setShowAll] = useState(false);
 	const [spec, setSpec] = useState('');
+	// undefined is every source, '' is builds written for this sim, anything else is that external sim.
+	const [source, setSource] = useState<string | undefined>();
 
 	const shown = useMemo(() => {
-		const kept = builds.filter(b => !spec || b.spec === spec);
+		const kept = builds.filter(b => (!spec || b.spec === spec) && (source === undefined || sourceOf(b) === source));
 		return showAll ? kept : bestPerTree(kept);
-	}, [showAll, spec]);
+	}, [showAll, spec, source]);
 
 	// Admit it when the rows are not wearing comparable gear. Three item levels is about a fifth of a tier.
 	const levels = shown.map(b => b.ilvl).filter(ilvl => ilvl > 0);
@@ -299,6 +307,21 @@ const Leaderboard = () => {
 					onClick={() => setShowAll(!showAll)}>
 					Show all builds
 				</button>
+				{ALL_SOURCES.length > 0 &&
+					[{ label: 'Written here', value: '' }, ...ALL_SOURCES.map(sim => ({ label: sim, value: sim }))].map(pill => (
+						<button
+							key={pill.label}
+							className={clsx(
+								PILL,
+								source === pill.value ? 'border-brand bg-brand/15 text-white' : 'border-white/30 text-gray-300 hover:bg-white/5',
+							)}
+							type="button"
+							aria-pressed={source === pill.value}
+							data-testid="arena-source-pill"
+							onClick={() => setSource(source === pill.value ? undefined : pill.value)}>
+							{pill.label}
+						</button>
+					))}
 			</div>
 			<p className="m-0 text-sm text-white/50" data-testid="arena-count">
 				{showAll ? `All ${shown.length} builds` : `${shown.length} builds, best per tree`}
