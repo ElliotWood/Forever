@@ -350,6 +350,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFrost-AllItems-EnchantWeapon-FieryWeapon-803"
+ value: {
+  dps: 271.76559
+  tps: 159.22593
+ }
+}
+dps_results: {
  key: "TestFrost-AllItems-EnchantWeapon-GrandSorcerer-7942"
  value: {
   dps: 271.76559
@@ -358,6 +365,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestFrost-AllItems-EnchantWeapon-Insight-8216"
+ value: {
+  dps: 271.76559
+  tps: 159.22593
+ }
+}
+dps_results: {
+ key: "TestFrost-AllItems-EnchantWeapon-Lifestealing-1898"
  value: {
   dps: 271.76559
   tps: 159.22593

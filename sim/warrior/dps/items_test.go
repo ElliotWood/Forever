@@ -106,3 +106,38 @@ func TestWeaponProcBuffsFromTheirRows(t *testing.T) {
 		}
 	}
 }
+
+// Fiery Weapon and Lifestealing land their client row's damage on the target when they proc.
+func TestWeaponEnchantDamageProcs(t *testing.T) {
+	for _, enchant := range []struct {
+		effectID, spellID int32
+	}{{803, 13897}, {1898, 20004}} {
+		equipment := weaponsOnly(15240, 0)
+		equipment.Items[proto.ItemSlot_ItemSlotMainHand].Enchant = enchant.effectID
+		player := core.WithSpec(&proto.Player{
+			Race:          proto.Race_RaceOrc,
+			Class:         proto.Class_ClassWarrior,
+			Equipment:     equipment,
+			Consumables:   &proto.ConsumesSpec{},
+			TalentsString: DpsTalents,
+			Rotation:      core.GetAplRotation("../../../ui/specs/warrior/dps/apls", "dps_reck").Rotation,
+		}, DefaultOptions)
+		raid := core.SinglePlayerRaidProto(player, &proto.PartyBuffs{}, &proto.RaidBuffs{}, &proto.Debuffs{})
+		result := core.RunRaidSim(&proto.RaidSimRequest{Raid: raid, Encounter: core.MakeSingleTargetEncounter(0),
+			SimOptions: &proto.SimOptions{Iterations: 5, RandomSeed: 101}})
+		if result.Error != nil {
+			t.Fatal(result.Error.Message)
+		}
+		damage := 0.0
+		for _, action := range result.RaidMetrics.Parties[0].Players[0].Actions {
+			if action.Id.GetSpellId() == enchant.spellID {
+				for _, target := range action.Targets {
+					damage += target.Damage
+				}
+			}
+		}
+		if damage <= 0 {
+			t.Errorf("enchant %d: proc %d dealt no damage", enchant.effectID, enchant.spellID)
+		}
+	}
+}

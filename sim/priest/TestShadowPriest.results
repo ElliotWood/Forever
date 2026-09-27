@@ -315,6 +315,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestShadowPriest-AllItems-EnchantWeapon-FieryWeapon-803"
+ value: {
+  dps: 339.61891
+  tps: 241.8152
+ }
+}
+dps_results: {
  key: "TestShadowPriest-AllItems-EnchantWeapon-GrandSorcerer-7942"
  value: {
   dps: 339.61891
@@ -323,6 +330,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestShadowPriest-AllItems-EnchantWeapon-Insight-8216"
+ value: {
+  dps: 339.61891
+  tps: 241.8152
+ }
+}
+dps_results: {
+ key: "TestShadowPriest-AllItems-EnchantWeapon-Lifestealing-1898"
  value: {
   dps: 339.61891
   tps: 241.8152

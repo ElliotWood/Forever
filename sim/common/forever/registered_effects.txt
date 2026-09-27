@@ -182,6 +182,8 @@
 63 Enchant Chest - Lesser Absorption
 663 Deadly Scope
 664 Sniper Scope
+803 Enchant Weapon - Fiery Weapon
+1898 Enchant Weapon - Lifestealing
 1900 Enchant Weapon - Crusader
 2613 Enchant Gloves - Threat
 2621 Enchant Cloak - Subtlety
