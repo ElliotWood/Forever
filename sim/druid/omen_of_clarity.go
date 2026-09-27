@@ -32,7 +32,7 @@ const omenOfClarityPPM = 2.0
 // Spells take the rate off their cast time, instants off a 1.5 s GCD; a cast under 1.5 s is NOT floored
 // to the GCD. Saries (level 20 resto, reports 33-35/44/45/2667/2676/2677), casts outside the cooldown:
 // instants 69 procs / 1,644 (4.2%, 5% predicted), 1.0 s Healing Touch 8 / 409 (2.0%; 3.3% predicted, the old
-// GCD floor gave 5%, 20 expected), 2.0 s casts 26 / 388 (6.7%), 2.5-3.5 s 8 / 57 (11%).
+// GCD floor gave 5%, 20 expected), 2.0 s casts 26 / 388 (6.7%), 2.5-3.5 s 8 / 57 (14%, 8-12% predicted).
 func (druid *Druid) applyOmenOfClarity() {
 	clearcasting := spellData.OmenOfClarityTriggered.Highest()
 
