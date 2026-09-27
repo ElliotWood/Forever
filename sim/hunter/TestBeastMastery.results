@@ -1253,6 +1253,48 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBeastMastery-Settings-NightElf-Weapons-Raptor-bm-FullBuffs-30.0yards-LongMultiTarget"
+ value: {
+  dps: 488.53203
+  tps: 491.85009
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-Settings-NightElf-Weapons-Raptor-bm-FullBuffs-30.0yards-LongSingleTarget"
+ value: {
+  dps: 455.09036
+  tps: 260.58494
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-Settings-NightElf-Weapons-Raptor-bm-FullBuffs-30.0yards-ShortSingleTarget"
+ value: {
+  dps: 488.88076
+  tps: 281.05872
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-Settings-NightElf-Weapons-Raptor-bm-NoBuffs-30.0yards-LongMultiTarget"
+ value: {
+  dps: 209.17689
+  tps: 153.36353
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-Settings-NightElf-Weapons-Raptor-bm-NoBuffs-30.0yards-LongSingleTarget"
+ value: {
+  dps: 205.75238
+  tps: 150.0354
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-Settings-NightElf-Weapons-Raptor-bm-NoBuffs-30.0yards-ShortSingleTarget"
+ value: {
+  dps: 253.5923
+  tps: 191.92667
+ }
+}
+dps_results: {
  key: "TestBeastMastery-Settings-Orc-Weapons-Cat-bm-FullBuffs-30.0yards-LongMultiTarget"
  value: {
   dps: 488.4918
@@ -1292,6 +1334,48 @@ dps_results: {
  value: {
   dps: 244.20129
   tps: 182.09184
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-Settings-Orc-Weapons-Raptor-bm-FullBuffs-30.0yards-LongMultiTarget"
+ value: {
+  dps: 486.58188
+  tps: 491.49109
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-Settings-Orc-Weapons-Raptor-bm-FullBuffs-30.0yards-LongSingleTarget"
+ value: {
+  dps: 453.39055
+  tps: 259.57933
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-Settings-Orc-Weapons-Raptor-bm-FullBuffs-30.0yards-ShortSingleTarget"
+ value: {
+  dps: 479.39408
+  tps: 274.41804
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-Settings-Orc-Weapons-Raptor-bm-NoBuffs-30.0yards-LongMultiTarget"
+ value: {
+  dps: 206.23059
+  tps: 150.19114
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-Settings-Orc-Weapons-Raptor-bm-NoBuffs-30.0yards-LongSingleTarget"
+ value: {
+  dps: 204.0719
+  tps: 147.94828
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-Settings-Orc-Weapons-Raptor-bm-NoBuffs-30.0yards-ShortSingleTarget"
+ value: {
+  dps: 246.81467
+  tps: 185.55376
  }
 }
 dps_results: {

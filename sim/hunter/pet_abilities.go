@@ -19,6 +19,7 @@ const (
 	LightningBreath
 	Screech
 	ScorpidPoison
+	SavageRend
 )
 
 func (hp *HunterPet) NewPetAbility(abilityType PetAbilityType) *core.Spell {
@@ -33,6 +34,8 @@ func (hp *HunterPet) NewPetAbility(abilityType PetAbilityType) *core.Spell {
 		return hp.newScreech()
 	case ScorpidPoison:
 		return hp.newScorpidPoison()
+	case SavageRend:
+		return hp.newSavageRend()
 	case Unknown:
 		return nil
 	default:
@@ -251,6 +254,70 @@ func (hp *HunterPet) newScorpidPoison() *core.Spell {
 			if dot.GetStacks() < dot.MaxStacks {
 				dot.AddStack(sim)
 				dot.TakeSnapshot(sim)
+			}
+		},
+	})
+}
+
+// Savage Rend is new in Forever and the Raptor's alone (client SkillLineAbility puts it on skill line
+// 217, Raptor): a bleed for 50 focus on a 1 min cooldown, everything read off the client row. Beta
+// logs (Tynman's and Consumer's raptors, foreverlogs 2650/2669/2673/2674) put a tick at 6.4-7.0 at
+// rank 1, which is the 5 base times the pet's happiness and Raptor damage scalars, so no attack power
+// share. The 5% more bleed damage the tooltip adds is left out: nothing else of ours bleeds.
+func (hp *HunterPet) newSavageRend() *core.Spell {
+	rank := spellData.SavageRendTriggered.Highest()
+	tick := rank.PeriodicEffect()
+	tickLength := tick.Period()
+
+	return hp.RegisterSpell(core.SpellConfig{
+		ActionID:       core.ActionID{SpellID: rank.ID},
+		SpellSchool:    rank.SpellSchool(),
+		DefenseType:    rank.DefenseTypeCore(),
+		ClassSpellMask: HunterPetDamage,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		Flags:          core.SpellFlagMeleeMetrics,
+		MaxRange:       core.MaxMeleeRange,
+
+		FocusCost: core.FocusCostOptions{
+			Cost: int32(rank.Cost()),
+		},
+		Cast: core.CastConfig{
+			DefaultCast: core.Cast{
+				GCD: PetGCD,
+			},
+			IgnoreHaste: true,
+			CD: core.Cooldown{
+				Timer:    hp.NewTimer(),
+				Duration: rank.Cooldown(),
+			},
+		},
+
+		DamageMultiplier: 1,
+		ThreatMultiplier: 1,
+
+		Dot: core.DotConfig{
+			Aura: core.Aura{
+				Label: "Savage Rend",
+			},
+			NumberOfTicks: int32(rank.Duration() / tickLength),
+			TickLength:    tickLength,
+
+			OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
+				dot.Snapshot(target, tick.Average(core.CharacterLevel))
+			},
+			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
+				dot.CalcAndDealPeriodicSnapshotDamage(sim, target, rank.TickOutcomeHitRolled(dot))
+			},
+		},
+
+		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
+			return hp.IsEnabled()
+		},
+
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			result := spell.CalcAndDealOutcome(sim, target, spell.OutcomeMeleeSpecialHit)
+			if result.Landed() {
+				spell.Dot(target).Apply(sim)
 			}
 		},
 	})
