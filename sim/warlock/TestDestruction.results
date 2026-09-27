@@ -77,6 +77,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestDestruction-AllItems-ArgentAvenger-13246"
+ value: {
+  dps: 170.8078
+  tps: 143.54489
+ }
+}
+dps_results: {
  key: "TestDestruction-AllItems-BadgeoftheSwarmguard-21670"
  value: {
   dps: 170.8078
@@ -708,6 +715,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestDestruction-AllItems-StandardScope-32"
+ value: {
+  dps: 170.8078
+  tps: 143.54489
+ }
+}
+dps_results: {
+ key: "TestDestruction-AllItems-SwordofZeal-6622"
  value: {
   dps: 170.8078
   tps: 143.54489

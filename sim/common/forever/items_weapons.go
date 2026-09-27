@@ -143,4 +143,35 @@ func init() {
 			},
 		})
 	}
+
+	// Chance on hit buffs the client states no rate for either, from their rows: Sword of Zeal's Zeal
+	// (8191: +10 physical damage, +150 armor, 15 sec) and Argent Avenger's (17352: +100 attack power
+	// and ranged attack power, 10 sec). No beta log has them yet, so the rate is master's from the
+	// Armaments Discord: Sword of Zeal's comment there says 1.8 (its code said 1), Argent Avenger 1.
+	// Argent Avenger's further 100 attack power against Undead is left out: the parser skips it.
+	for _, proc := range []struct {
+		itemID  int32
+		name    string
+		ppm     float64
+		spellID int32
+	}{
+		{6622, "Sword of Zeal", 1.8, 8191},
+		{13246, "Argent Avenger", 1, 17352},
+	} {
+		itemhelpers.CreateWeaponProcAura(itemhelpers.WeaponProcAura{
+			ItemID: proc.itemID,
+			Name:   proc.name,
+			PPM:    proc.ppm,
+			Aura: func(character *core.Character) *core.Aura {
+				row := spelldata.MustFind(proc.spellID)
+				aura := character.GetOrRegisterAura(core.Aura{
+					Label:    proc.name,
+					ActionID: core.ActionID{SpellID: proc.spellID},
+					Duration: row.Duration(),
+				})
+				spelldata.ParseEffects(character, aura, row)
+				return aura
+			},
+		})
+	}
 }

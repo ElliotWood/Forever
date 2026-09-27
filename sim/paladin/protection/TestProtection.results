@@ -137,6 +137,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtection-AllItems-ArgentAvenger-13246"
+ value: {
+  dps: 279.2015
+  tps: 279.74718
+  dtps: 1610.42158
+ }
+}
+dps_results: {
  key: "TestProtection-AllItems-Avenger'sBattlegear"
  value: {
   dps: 364.11832
@@ -1423,6 +1431,14 @@ dps_results: {
   dps: 284.50715
   tps: 283.4421
   dtps: 1576.35048
+ }
+}
+dps_results: {
+ key: "TestProtection-AllItems-SwordofZeal-6622"
+ value: {
+  dps: 256.01627
+  tps: 262.02323
+  dtps: 1585.04966
  }
 }
 dps_results: {
