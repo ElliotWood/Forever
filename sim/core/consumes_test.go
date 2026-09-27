@@ -222,6 +222,35 @@ func TestThoriumGrenadeDealsItsClientDamage(t *testing.T) {
 	}
 }
 
+func TestScrollOfCryoblastIsAMageScroll(t *testing.T) {
+	_, warrior := setupConsumesSim(func(request *proto.RaidSimRequest) {
+		consumesOf(request).ExplosiveId = CryoblastSpellID
+	})
+	if warrior.GetSpell(CryoblastActionID) != nil {
+		t.Fatal("Scroll of Cryoblast is mage only")
+	}
+
+	sim, mage := setupConsumesSim(func(request *proto.RaidSimRequest) {
+		request.Raid.Parties[0].Players[0].Class = proto.Class_ClassMage
+		consumesOf(request).ExplosiveId = CryoblastSpellID
+	})
+	scroll := mage.GetSpell(CryoblastActionID)
+	if scroll == nil {
+		t.Fatal("Scroll of Cryoblast should need no Engineering")
+	}
+	if !scroll.Cast(sim, mage.CurrentTarget) {
+		t.Fatal("Scroll of Cryoblast could not be cast")
+	}
+	metrics := &scroll.SpellMetrics[mage.CurrentTarget.UnitIndex]
+	scale := 1.0
+	if metrics.Crits == 1 {
+		scale = scroll.CritDamageMultiplier(mage.AttackTables[mage.CurrentTarget.UnitIndex])
+	}
+	if metrics.TotalDamage < 183*scale || metrics.TotalDamage > 247*scale {
+		t.Fatalf("Scroll of Cryoblast should deal %0.2f - %0.2f damage, got %0.2f", 183*scale, 247*scale, metrics.TotalDamage)
+	}
+}
+
 func TestMajorHealthstoneHeal(t *testing.T) {
 	sim, fw := setupConsumesSim(func(request *proto.RaidSimRequest) {
 		consumes := consumesOf(request)

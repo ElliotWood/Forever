@@ -110,7 +110,15 @@ export const DenseDynamite = {
 	showWhen: (player: Player<any>) => player.hasProfession(Profession.Engineering),
 };
 
+// A mage's vendor scroll; it shares the explosives' 1 min cooldown, so it takes their slot.
+export const ScrollOfCryoblast = {
+	actionId: ActionId.fromItemId(217495),
+	value: 440212,
+	showWhen: (player: Player<any>) => player.getClass() == Class.ClassMage,
+};
+
 export const EXPLOSIVE_CONFIG = [
+	{ config: ScrollOfCryoblast, stats: [] },
 	{ config: ThoriumGrenade, stats: [] },
 	{ config: DenseDynamite, stats: [] },
 	{ config: CrystalCharge, stats: [] },
