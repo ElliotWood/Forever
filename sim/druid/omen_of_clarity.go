@@ -29,7 +29,10 @@ const omenOfClarityPPM = 2.0
 // Melee hits, white or special, take the rate off the current swing (the paw's in a form), not the
 // equipped weapon: Maul, Swipe and Claw from druids holding 2.4 to 3.6 s weapons gave 36 procs off
 // 542 hits, where the paw's speed predicts 36 and the weapon's 59.
-// ponytail: spells use the cast time, at least a GCD, which no log has checked yet.
+// Spells take the rate off their cast time, instants off a 1.5 s GCD; a cast under 1.5 s is NOT floored
+// to the GCD. Saries (level 20 resto, reports 33-35/44/45/2667/2676/2677), casts outside the cooldown:
+// instants 69 procs / 1,644 (4.2%, 5% predicted), 1.0 s Healing Touch 8 / 409 (2.0%; 3.3% predicted, the old
+// GCD floor gave 5%, 20 expected), 2.0 s casts 26 / 388 (6.7%), 2.5-3.5 s 8 / 57 (14%, 8-12% predicted).
 func (druid *Druid) applyOmenOfClarity() {
 	clearcasting := spellData.OmenOfClarityTriggered.Highest()
 
@@ -63,7 +66,10 @@ func (druid *Druid) applyOmenOfClarity() {
 		var seconds float64
 		switch {
 		case spell.ProcMask.Matches(core.ProcMaskSpellDamage | core.ProcMaskSpellHealing):
-			seconds = max(spell.DefaultCast.CastTime, core.GCDDefault).Seconds()
+			seconds = core.GCDDefault.Seconds()
+			if spell.DefaultCast.CastTime > 0 {
+				seconds = spell.DefaultCast.CastTime.Seconds()
+			}
 		default:
 			seconds = druid.AutoAttacks.MH().SwingSpeed
 		}
