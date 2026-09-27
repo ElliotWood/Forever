@@ -315,6 +315,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSmitePriest-AllItems-EnchantWeapon-FieryWeapon-803"
+ value: {
+  dps: 155.64501
+  tps: 113.84808
+ }
+}
+dps_results: {
  key: "TestSmitePriest-AllItems-EnchantWeapon-GrandSorcerer-7942"
  value: {
   dps: 155.64501
@@ -323,6 +330,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-EnchantWeapon-Insight-8216"
+ value: {
+  dps: 155.64501
+  tps: 113.84808
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-AllItems-EnchantWeapon-Lifestealing-1898"
  value: {
   dps: 155.64501
   tps: 113.84808

@@ -457,6 +457,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralCat-AllItems-EnchantWeapon-FieryWeapon-803"
+ value: {
+  dps: 305.82629
+  tps: 172.15301
+  dtps: 3.80567
+ }
+}
+dps_results: {
  key: "TestFeralCat-AllItems-EnchantWeapon-GrandSorcerer-7942"
  value: {
   dps: 305.82629
@@ -466,6 +474,14 @@ dps_results: {
 }
 dps_results: {
  key: "TestFeralCat-AllItems-EnchantWeapon-Insight-8216"
+ value: {
+  dps: 305.82629
+  tps: 172.15301
+  dtps: 3.80567
+ }
+}
+dps_results: {
+ key: "TestFeralCat-AllItems-EnchantWeapon-Lifestealing-1898"
  value: {
   dps: 305.82629
   tps: 172.15301

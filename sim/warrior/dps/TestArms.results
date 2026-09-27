@@ -511,6 +511,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestArms-AllItems-EnchantWeapon-FieryWeapon-803"
+ value: {
+  dps: 253.78878
+  tps: 156.35011
+ }
+}
+dps_results: {
  key: "TestArms-AllItems-EnchantWeapon-GrandSorcerer-7942"
  value: {
   dps: 248.02753
@@ -522,6 +529,13 @@ dps_results: {
  value: {
   dps: 248.02753
   tps: 153.12381
+ }
+}
+dps_results: {
+ key: "TestArms-AllItems-EnchantWeapon-Lifestealing-1898"
+ value: {
+  dps: 253.20097
+  tps: 156.02093
  }
 }
 dps_results: {
