@@ -538,6 +538,28 @@ var CryoblastActionID = ActionID{ItemID: 217495}
 // Scroll of Cryoblast's use spell, the value the explosives picker saves for it.
 const CryoblastSpellID = 440212
 
+// Forever's SAF-T / EZ-Thro bombs, keyed on their use spell (the picker's value). ItemSparse
+// (70009) gives them required level 1 and no RequiredSkill, so anyone can throw them. Each is a
+// 1 s cast of Fire damage shared on the 1 min explosives category; damage is the client's base
+// points +- half its variance, with no spell power coefficient. EZ-Thro Bronze Mortar (own 10 min
+// cooldown) and EZ-Thro Mana Bomb (a mana burn) are left out.
+var saftBombs = map[int32]struct {
+	itemID          int32
+	min, max, speed float64
+}{
+	1269161: {260793, 22, 28, 14},   // SAF-T Copper Bomb: 25, variance .24
+	1269155: {260792, 26, 34, 14},   // SAF-T Dynamite: 30, .267
+	1269192: {260795, 43, 57, 14},   // EZ-Thro Copper Bomb XL: 50, .28
+	1269216: {260797, 73, 97, 14},   // SAF-T Bronze Bomb: 85, .282
+	1269264: {260798, 128, 172, 14}, // SAF-T Jumbo Dynamite: 150, .293
+	1269272: {260805, 149, 201, 14}, // SAF-T Bomb: 175, .297
+	1269278: {260809, 149, 201, 14}, // Tru-Trigger Frag Bomb: 175, .297
+	1269270: {260803, 213, 287, 14}, // EZ-Thro Grenade: 250, .296
+	1269282: {260814, 340, 460, 14}, // SAF-T Clever Dynamite: 400, .3
+	1269330: {260816, 300, 500, 25}, // EZ-Thro Thorium Grenade: 400, .5
+	1269334: {260817, 225, 675, 14}, // EZ-Thro Dark Bomb: 450, 1
+}
+
 func registerExplosivesCD(agent Agent, consumes *proto.ConsumesSpec, sharedTimer *Timer) {
 	character := agent.GetCharacter()
 	engineer := character.HasProfession(proto.Profession_Engineering)
@@ -551,7 +573,10 @@ func registerExplosivesCD(agent Agent, consumes *proto.ConsumesSpec, sharedTimer
 	}
 
 	var filler *Spell
+	bomb, isSaftBomb := saftBombs[consumes.ExplosiveId]
 	switch {
+	case isSaftBomb:
+		filler = character.GetOrRegisterSpell(character.newBasicExplosiveSpellConfig(sharedTimer, ActionID{ItemID: bomb.itemID}, SpellSchoolFire, bomb.min, bomb.max, bomb.speed, time.Second, Cooldown{}))
 	case consumes.ExplosiveId == CryoblastSpellID:
 		// A mage's vendor scroll, not an engineer's bomb, but it shares their 1 min cooldown.
 		if character.Class == proto.Class_ClassMage {
@@ -656,6 +681,7 @@ func (character *Character) newEzThroDynamiteTwoSpell(sharedTimer *Timer) *Spell
 func (character *Character) newThoriumGrenadeSpell(sharedTimer *Timer) *Spell {
 	return character.GetOrRegisterSpell(character.newBasicExplosiveSpellConfig(sharedTimer, ThoriumGrenadeActionID, SpellSchoolFire, 300, 500, 25, time.Second, Cooldown{}))
 }
+
 // Client 1.60.1.70009: 215 Frost damage with 0.2977 variance (183 - 247) in 5 yards and no spell
 // power coefficient. Beta logs agree: 23 non-crit hits of two level 20 mages average 209.
 func (character *Character) newCryoblastSpell(sharedTimer *Timer) *Spell {

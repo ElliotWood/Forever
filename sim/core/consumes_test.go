@@ -292,7 +292,7 @@ func TestConjuredItemMissingFromTheDatabaseIsSkipped(t *testing.T) {
 }
 
 // ItemSparse (70009) puts Engineering on Thorium Grenade and Dense Dynamite only; Ez-Thro
-// Dynamite II and Crystal Charge are for everyone.
+// Dynamite II, Crystal Charge and the SAF-T / EZ-Thro bombs are for everyone.
 func TestOnlyEngineeringBombsNeedEngineering(t *testing.T) {
 	for _, c := range []struct {
 		explosiveId int32
@@ -303,6 +303,8 @@ func TestOnlyEngineeringBombsNeedEngineering(t *testing.T) {
 		{15239, CrystalChargeActionID, false},
 		{19769, ThoriumGrenadeActionID, true},
 		{23063, DenseDynamiteActionID, true},
+		{1269334, ActionID{ItemID: 260817}, false}, // EZ-Thro Dark Bomb
+		{1269161, ActionID{ItemID: 260793}, false}, // SAF-T Copper Bomb
 	} {
 		_, warrior := setupConsumesSim(func(request *proto.RaidSimRequest) {
 			consumesOf(request).ExplosiveId = c.explosiveId
