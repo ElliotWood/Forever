@@ -1,5 +1,11 @@
 [
 	{
+		"number": 510,
+		"title": "SAF-T / EZ-Thro bombs in the explosives slot, for everyone",
+		"mergedAt": "2026-09-27",
+		"url": "https://github.com/ElliotWood/Forever/pull/510"
+	},
+	{
 		"number": 509,
 		"title": "Ez-Thro Dynamite II and Crystal Charge no longer need Engineering",
 		"mergedAt": "2026-09-27",
