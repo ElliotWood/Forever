@@ -557,11 +557,12 @@ func registerExplosivesCD(agent Agent, consumes *proto.ConsumesSpec, sharedTimer
 		if character.Class == proto.Class_ClassMage {
 			filler = character.newCryoblastSpell(sharedTimer)
 		}
-	case !engineer:
+	// Ez-Thro Dynamite II and Crystal Charge state no RequiredSkill in ItemSparse (70009): anyone can throw them.
 	case consumes.ExplosiveId == 18588:
 		filler = character.newEzThroDynamiteTwoSpell(sharedTimer)
 	case consumes.ExplosiveId == 15239:
 		filler = character.newCrystalChargeSpell(sharedTimer)
+	case !engineer:
 	case consumes.ExplosiveId == 19769:
 		filler = character.newThoriumGrenadeSpell(sharedTimer)
 	case consumes.ExplosiveId == 23063, consumes.ExplosiveId == 18641: // 18641: the item id Forever saved before the merge
