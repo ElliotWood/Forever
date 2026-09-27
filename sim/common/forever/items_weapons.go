@@ -129,6 +129,9 @@ func init() {
 		{19099, "Glacial Blade", 1.4, 18398},
 		{11809, "Flame Wrath", 1, 16559},
 		{12794, "Masterwork Stormhammer", 0.5, 16921},
+		// Electrified Dagger (Alliance) mirrors Glacial Blade (Horde): same 45 damage bolt, so master
+		// gave it Glacial Blade's 1.4.
+		{19100, "Electrified Dagger", 1.4, 23592},
 		// The same for three that drain life: only the damage is simulated, not what it heals.
 		{17074, "Shadowstrike", 2.2, 21170},
 		{13401, "The Cruel Hand of Timmy", 0.65, 17505},
@@ -143,6 +146,24 @@ func init() {
 			},
 		})
 	}
+
+	// Flurry Axe: chance on hit, 1 extra attack (client 18797). No rate in the client or a beta log;
+	// 1.9 PPM is master's from the Armaments Discord (wowsims/classic 39c7a8071d raised it from 1).
+	itemhelpers.CreateWeaponProcSpell(itemhelpers.WeaponProcSpell{
+		ItemID: 871,
+		Name:   "Flurry Axe",
+		PPM:    1.9,
+		Spell: func(character *core.Character) *core.Spell {
+			return character.GetOrRegisterSpell(core.SpellConfig{
+				ActionID:    core.ActionID{SpellID: 18797},
+				SpellSchool: core.SpellSchoolPhysical,
+				ProcMask:    core.ProcMaskEmpty,
+				ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
+					character.AutoAttacks.ExtraMHAttack(sim)
+				},
+			})
+		},
+	})
 
 	// Chance on hit buffs the client states no rate for either, from their rows: Sword of Zeal's Zeal
 	// (8191: +10 physical damage, +150 armor, 15 sec) and Argent Avenger's (17352: +100 attack power

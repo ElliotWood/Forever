@@ -343,6 +343,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestCombat-AllItems-ElectrifiedDagger-19100"
+ value: {
+  dps: 318.11786
+  tps: 158.10458
+ }
+}
+dps_results: {
  key: "TestCombat-AllItems-EmblemsofVeiledShadows"
  value: {
   dps: 335.02593

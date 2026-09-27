@@ -259,6 +259,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSmitePriest-AllItems-ElectrifiedDagger-19100"
+ value: {
+  dps: 155.64501
+  tps: 113.84808
+ }
+}
+dps_results: {
  key: "TestSmitePriest-AllItems-Enchant2HWeapon-GrandArcanist-7941"
  value: {
   dps: 155.64501

@@ -476,6 +476,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFury-AllItems-ElectrifiedDagger-19100"
+ value: {
+  dps: 310.18009
+  tps: 198.96514
+ }
+}
+dps_results: {
  key: "TestFury-AllItems-Enchant2HWeapon-GrandArcanist-7941"
  value: {
   dps: 310.18009
@@ -604,6 +611,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestFury-AllItems-FlameWalkers-18047"
+ value: {
+  dps: 310.18009
+  tps: 198.96514
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-FlurryAxe-871"
  value: {
   dps: 310.18009
   tps: 198.96514

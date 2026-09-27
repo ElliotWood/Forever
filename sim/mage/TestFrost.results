@@ -294,6 +294,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFrost-AllItems-ElectrifiedDagger-19100"
+ value: {
+  dps: 271.76559
+  tps: 159.22593
+ }
+}
+dps_results: {
  key: "TestFrost-AllItems-Enchant2HWeapon-GrandArcanist-7941"
  value: {
   dps: 271.76559

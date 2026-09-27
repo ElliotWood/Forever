@@ -420,6 +420,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestMarksmanship-AllItems-ElectrifiedDagger-19100"
+ value: {
+  dps: 338.65384
+  tps: 207.48058
+ }
+}
+dps_results: {
  key: "TestMarksmanship-AllItems-Enchant2HWeapon-GrandArcanist-7941"
  value: {
   dps: 335.40796
@@ -561,6 +568,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestMarksmanship-AllItems-FlameWrath-11809"
+ value: {
+  dps: 335.40796
+  tps: 205.20846
+ }
+}
+dps_results: {
+ key: "TestMarksmanship-AllItems-FlurryAxe-871"
  value: {
   dps: 335.40796
   tps: 205.20846
