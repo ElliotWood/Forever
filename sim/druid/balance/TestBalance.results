@@ -826,6 +826,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBalance-AllItems-StingingViper-6472"
+ value: {
+  dps: 175.5457
+  tps: 91.56559
+ }
+}
+dps_results: {
  key: "TestBalance-AllItems-StormrageRaiment"
  value: {
   dps: 181.08723

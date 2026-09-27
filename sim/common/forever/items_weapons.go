@@ -105,6 +105,9 @@ func init() {
 	// Venomstrike, Venom Shot (29653, 28 Nature): 59 procs off 899 landed Auto Shot, Arcane Shot,
 	// Multi-Shot and Aimed Shot hits of 2 hunters over 66 fights (reports 2668, 2674; auto shot
 	// gaps 2.2-2.3 sec, Venomstrike's 2.4 with quiver haste) = 1.6 +- 0.2 PPM.
+	// Stinging Viper, Poison (1291663, 7 Nature every 3 sec for 12 sec): 51 procs off 345 landed
+	// swing, Cleave and Victory Rush hits of a protection warrior over 35 fights (report 2679;
+	// swing gaps 2.77 sec, the mace's 2.8) = 3.2 +- 0.4 PPM.
 	for _, proc := range []struct {
 		itemID  int32
 		name    string
@@ -115,6 +118,7 @@ func init() {
 		{279876, "Plaguefang", 2.4, 1309315},
 		{267369, "Wolfsbane", 2.7, 1282503},
 		{6469, "Venomstrike", 1.6, 29653},
+		{6472, "Stinging Viper", 3.2, 1291663},
 	} {
 		itemhelpers.CreateWeaponProcSpell(itemhelpers.WeaponProcSpell{
 			ItemID: proc.itemID,

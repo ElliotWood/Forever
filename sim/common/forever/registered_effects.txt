@@ -17,6 +17,7 @@
 4696 Lapidis Tankard of Tidesippe
 5443 Gold-plated Buckler
 6469 Venomstrike
+6472 Stinging Viper
 6898 Orb of Soran'ruk
 6907 Tortoise Armor
 6972 Fire Hardened Hauberk
