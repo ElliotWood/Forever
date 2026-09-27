@@ -63,6 +63,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestElemental-AllItems-Alcor'sSunrazor-14555"
+ value: {
+  dps: 122.72718
+  tps: 78.92881
+ }
+}
+dps_results: {
  key: "TestElemental-AllItems-Annihilator-12798"
  value: {
   dps: 122.72718
@@ -140,6 +147,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestElemental-AllItems-Bloodfist-11744"
+ value: {
+  dps: 122.72718
+  tps: 78.92881
+ }
+}
+dps_results: {
  key: "TestElemental-AllItems-BloodmailRegalia"
  value: {
   dps: 135.01465
@@ -168,6 +182,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestElemental-AllItems-BonechillHammer-14487"
+ value: {
+  dps: 122.72718
+  tps: 78.92881
+ }
+}
+dps_results: {
  key: "TestElemental-AllItems-BurstofKnowledge-11832"
  value: {
   dps: 128.72669
@@ -193,6 +214,13 @@ dps_results: {
  value: {
   dps: 161.99556
   tps: 101.84634
+ }
+}
+dps_results: {
+ key: "TestElemental-AllItems-ColdrageDagger-10761"
+ value: {
+  dps: 122.72718
+  tps: 78.92881
  }
 }
 dps_results: {
@@ -225,6 +253,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestElemental-AllItems-DarkmoonCard:Maelstrom-19289"
+ value: {
+  dps: 122.72718
+  tps: 78.92881
+ }
+}
+dps_results: {
+ key: "TestElemental-AllItems-Darrowspike-13984"
  value: {
   dps: 122.72718
   tps: 78.92881
@@ -504,6 +539,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestElemental-AllItems-GlacialBlade-19099"
+ value: {
+  dps: 122.72718
+  tps: 78.92881
+ }
+}
+dps_results: {
  key: "TestElemental-AllItems-GnomishHarmPreventionBelt-10721"
  value: {
   dps: 122.72718
@@ -722,6 +764,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestElemental-AllItems-MarkoftheRedFlight-282778"
+ value: {
+  dps: 122.72718
+  tps: 78.92881
+ }
+}
+dps_results: {
+ key: "TestElemental-AllItems-MasterworkStormhammer-12794"
  value: {
   dps: 122.72718
   tps: 78.92881

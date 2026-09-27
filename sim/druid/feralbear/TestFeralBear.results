@@ -121,6 +121,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralBear-AllItems-Alcor'sSunrazor-14555"
+ value: {
+  dps: 233.27037
+  tps: 582.34133
+  dtps: 1608.2905
+ }
+}
+dps_results: {
  key: "TestFeralBear-AllItems-ArenaGrandMaster-19024"
  value: {
   dps: 228.03164
@@ -177,11 +185,27 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralBear-AllItems-Bloodfist-11744"
+ value: {
+  dps: 233.20231
+  tps: 585.90537
+  dtps: 1612.00257
+ }
+}
+dps_results: {
  key: "TestFeralBear-AllItems-BloodvineGarb"
  value: {
   dps: 240.84558
   tps: 604.78726
   dtps: 1605.54825
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-BonechillHammer-14487"
+ value: {
+  dps: 233.42229
+  tps: 587.1941
+  dtps: 1608.67684
  }
 }
 dps_results: {
@@ -214,6 +238,14 @@ dps_results: {
   dps: 217.17527
   tps: 536.79644
   dtps: 1446.06239
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-ColdrageDagger-10761"
+ value: {
+  dps: 233.22818
+  tps: 584.2985
+  dtps: 1606.55093
  }
 }
 dps_results: {
@@ -254,6 +286,14 @@ dps_results: {
   dps: 236.88605
   tps: 591.83137
   dtps: 1605.89053
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-Darrowspike-13984"
+ value: {
+  dps: 233.54911
+  tps: 584.7157
+  dtps: 1606.55093
  }
 }
 dps_results: {
@@ -529,6 +569,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralBear-AllItems-GlacialBlade-19099"
+ value: {
+  dps: 230.27398
+  tps: 581.80439
+  dtps: 1598.09438
+ }
+}
+dps_results: {
  key: "TestFeralBear-AllItems-GnomishHarmPreventionBelt-10721"
  value: {
   dps: 230.44783
@@ -758,6 +806,14 @@ dps_results: {
   dps: 230.42349
   tps: 583.43003
   dtps: 1605.89053
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-MasterworkStormhammer-12794"
+ value: {
+  dps: 232.5113
+  tps: 583.85499
+  dtps: 1609.20854
  }
 }
 dps_results: {

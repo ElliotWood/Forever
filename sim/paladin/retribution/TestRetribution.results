@@ -534,6 +534,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestRetribution-AllItems-FlameWrath-11809"
+ value: {
+  dps: 424.34535
+  tps: 254.98136
+ }
+}
+dps_results: {
  key: "TestRetribution-AllItems-ForceImbuedGauntlets-18383"
  value: {
   dps: 427.45613

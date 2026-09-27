@@ -64,6 +64,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-Alcor'sSunrazor-14555"
+ value: {
+  dps: 232.02903
+  tps: 580.25704
+  dtps: 1510.60216
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-Annihilator-12798"
  value: {
   dps: 232.02903
@@ -208,6 +216,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-Bloodfist-11744"
+ value: {
+  dps: 232.02903
+  tps: 580.25704
+  dtps: 1510.60216
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-BloodmailRegalia"
  value: {
   dps: 242.29792
@@ -233,6 +249,14 @@ dps_results: {
 }
 dps_results: {
  key: "TestProtectionWarrior-AllItems-BlueDragonMail"
+ value: {
+  dps: 232.02903
+  tps: 580.25704
+  dtps: 1510.60216
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-BonechillHammer-14487"
  value: {
   dps: 232.02903
   tps: 580.25704
@@ -288,6 +312,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-ColdrageDagger-10761"
+ value: {
+  dps: 232.02903
+  tps: 580.25704
+  dtps: 1510.60216
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-Conqueror'sBattlegear"
  value: {
   dps: 257.21064
@@ -340,6 +372,14 @@ dps_results: {
  value: {
   dps: 236.00342
   tps: 585.66537
+  dtps: 1510.60216
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-Darrowspike-13984"
+ value: {
+  dps: 232.02903
+  tps: 580.25704
   dtps: 1510.60216
  }
 }
@@ -681,6 +721,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-GlacialBlade-19099"
+ value: {
+  dps: 232.02903
+  tps: 580.25704
+  dtps: 1510.60216
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-GnomishHarmPreventionBelt-10721"
  value: {
   dps: 231.35446
@@ -962,6 +1010,14 @@ dps_results: {
 }
 dps_results: {
  key: "TestProtectionWarrior-AllItems-MarkoftheRedFlight-282778"
+ value: {
+  dps: 232.02903
+  tps: 580.25704
+  dtps: 1510.60216
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-MasterworkStormhammer-12794"
  value: {
   dps: 232.02903
   tps: 580.25704

@@ -281,6 +281,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtection-AllItems-BonechillHammer-14487"
+ value: {
+  dps: 279.2015
+  tps: 279.74718
+  dtps: 1610.42158
+ }
+}
+dps_results: {
  key: "TestProtection-AllItems-BurstofKnowledge-11832"
  value: {
   dps: 283.98068
@@ -1075,6 +1083,14 @@ dps_results: {
 }
 dps_results: {
  key: "TestProtection-AllItems-MarkoftheRedFlight-282778"
+ value: {
+  dps: 279.2015
+  tps: 279.74718
+  dtps: 1610.42158
+ }
+}
+dps_results: {
+ key: "TestProtection-AllItems-MasterworkStormhammer-12794"
  value: {
   dps: 279.2015
   tps: 279.74718

@@ -63,6 +63,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSurvival-AllItems-Alcor'sSunrazor-14555"
+ value: {
+  dps: 308.54315
+  tps: 185.77129
+ }
+}
+dps_results: {
  key: "TestSurvival-AllItems-Annihilator-12798"
  value: {
   dps: 308.54315
@@ -168,6 +175,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSurvival-AllItems-Bloodfist-11744"
+ value: {
+  dps: 308.54315
+  tps: 185.77129
+ }
+}
+dps_results: {
  key: "TestSurvival-AllItems-BloodmailRegalia"
  value: {
   dps: 338.93461
@@ -231,6 +245,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSurvival-AllItems-ColdrageDagger-10761"
+ value: {
+  dps: 308.54315
+  tps: 185.77129
+ }
+}
+dps_results: {
  key: "TestSurvival-AllItems-CrudeScope-30"
  value: {
   dps: 309.55229
@@ -274,6 +295,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestSurvival-AllItems-DarkmoonCard:Maelstrom-19289"
+ value: {
+  dps: 308.54315
+  tps: 185.77129
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-Darrowspike-13984"
  value: {
   dps: 308.54315
   tps: 185.77129
@@ -511,6 +539,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSurvival-AllItems-FlameWrath-11809"
+ value: {
+  dps: 308.54315
+  tps: 185.77129
+ }
+}
+dps_results: {
  key: "TestSurvival-AllItems-ForceofWill-11810"
  value: {
   dps: 308.54315
@@ -564,6 +599,13 @@ dps_results: {
  value: {
   dps: 308.54315
   tps: 185.77129
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-GlacialBlade-19099"
+ value: {
+  dps: 312.1002
+  tps: 188.26123
  }
 }
 dps_results: {

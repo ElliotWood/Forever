@@ -63,6 +63,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBeastMastery-AllItems-Alcor'sSunrazor-14555"
+ value: {
+  dps: 453.00349
+  tps: 259.37353
+ }
+}
+dps_results: {
  key: "TestBeastMastery-AllItems-Annihilator-12798"
  value: {
   dps: 453.00349
@@ -168,6 +175,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBeastMastery-AllItems-Bloodfist-11744"
+ value: {
+  dps: 453.00349
+  tps: 259.37353
+ }
+}
+dps_results: {
  key: "TestBeastMastery-AllItems-BloodmailRegalia"
  value: {
   dps: 494.17162
@@ -231,6 +245,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBeastMastery-AllItems-ColdrageDagger-10761"
+ value: {
+  dps: 453.00349
+  tps: 259.37353
+ }
+}
+dps_results: {
  key: "TestBeastMastery-AllItems-CrudeScope-30"
  value: {
   dps: 454.1111
@@ -274,6 +295,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestBeastMastery-AllItems-DarkmoonCard:Maelstrom-19289"
+ value: {
+  dps: 453.00349
+  tps: 259.37353
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-AllItems-Darrowspike-13984"
  value: {
   dps: 453.00349
   tps: 259.37353
@@ -511,6 +539,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBeastMastery-AllItems-FlameWrath-11809"
+ value: {
+  dps: 453.00349
+  tps: 259.37353
+ }
+}
+dps_results: {
  key: "TestBeastMastery-AllItems-ForceofWill-11810"
  value: {
   dps: 453.00349
@@ -564,6 +599,13 @@ dps_results: {
  value: {
   dps: 453.00349
   tps: 259.37353
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-AllItems-GlacialBlade-19099"
+ value: {
+  dps: 456.54386
+  tps: 261.85179
  }
 }
 dps_results: {

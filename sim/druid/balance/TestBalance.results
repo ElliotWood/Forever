@@ -63,6 +63,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBalance-AllItems-Alcor'sSunrazor-14555"
+ value: {
+  dps: 175.5457
+  tps: 91.56559
+ }
+}
+dps_results: {
  key: "TestBalance-AllItems-ArenaGrandMaster-19024"
  value: {
   dps: 175.5457
@@ -126,6 +133,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBalance-AllItems-BonechillHammer-14487"
+ value: {
+  dps: 175.5457
+  tps: 91.56559
+ }
+}
+dps_results: {
  key: "TestBalance-AllItems-BurstofKnowledge-11832"
  value: {
   dps: 184.19635
@@ -151,6 +165,13 @@ dps_results: {
  value: {
   dps: 204.57818
   tps: 105.939
+ }
+}
+dps_results: {
+ key: "TestBalance-AllItems-ColdrageDagger-10761"
+ value: {
+  dps: 175.5457
+  tps: 91.56559
  }
 }
 dps_results: {
@@ -183,6 +204,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestBalance-AllItems-DarkmoonCard:Maelstrom-19289"
+ value: {
+  dps: 175.5457
+  tps: 91.56559
+ }
+}
+dps_results: {
+ key: "TestBalance-AllItems-Darrowspike-13984"
  value: {
   dps: 175.5457
   tps: 91.56559
@@ -434,6 +462,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBalance-AllItems-GlacialBlade-19099"
+ value: {
+  dps: 175.5457
+  tps: 91.56559
+ }
+}
+dps_results: {
  key: "TestBalance-AllItems-GnomishHarmPreventionBelt-10721"
  value: {
   dps: 175.5457
@@ -638,6 +673,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestBalance-AllItems-MarkoftheRedFlight-282778"
+ value: {
+  dps: 175.5457
+  tps: 91.56559
+ }
+}
+dps_results: {
+ key: "TestBalance-AllItems-MasterworkStormhammer-12794"
  value: {
   dps: 175.5457
   tps: 91.56559
