@@ -244,7 +244,7 @@ func (mage *Mage) registerMissileBarrage() {
 			switch {
 			case spell.Matches(MageSpellArcaneBlast):
 				procChance = .40
-			case spell.Matches(MageSpellFireball | MageSpellFrostbolt):
+			case spell.Matches(MageSpellFireball | MageSpellFrostbolt | MageSpellFrostfireBolt):
 				procChance = .20
 			default:
 				return
