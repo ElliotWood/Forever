@@ -1091,19 +1091,6 @@ func RegisterAllProcs() {
 	//       This can be ignored if the effect has already been implemented.
 	//       With next db run the item will be removed if implemented.
 	//
-	// Venom Shot the target for 28 Nature damage.
-	// https://www.wowhead.com/forever/spell=29653
-	// unsupported: states no rate
-	// trigger 29653 (0%, core.CallbackEmpty, core.ProcMaskUnknown)
-	// shared.NewSpellDataDamageProc(shared.SpellDataProc{TriggerSpellID: 29653, BuffSpellID: 29653, IsWeaponProc: true},
-	//	[]shared.ItemVariant{
-	//	{ItemID: 6469, ItemName: "Venomstrike"},
-	// })
-
-	// TODO: Manual implementation required
-	//       This can be ignored if the effect has already been implemented.
-	//       With next db run the item will be removed if implemented.
-	//
 	// Poisons target for 7 Nature damage every 3.0 sec for 12s.
 	// https://www.wowhead.com/forever/spell=1291663
 	// shared.NewProcStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
@@ -7690,21 +7677,6 @@ func RegisterAllProcs() {
 	//       This can be ignored if the effect has already been implemented.
 	//       With next db run the item will be removed if implemented.
 	//
-	// Sear the target with a vortex of blazing wind, dealing 49 Holystorm damage. Deals 3 times as much damage
-	// to Wolves and Worgen.
-	//
-	// https://www.wowhead.com/forever/spell=1282503
-	// unsupported: states no rate
-	// trigger 1282503 (0%, core.CallbackEmpty, core.ProcMaskUnknown)
-	// shared.NewSpellDataDamageProc(shared.SpellDataProc{TriggerSpellID: 1282503, BuffSpellID: 1282503, IsWeaponProc: true},
-	//	[]shared.ItemVariant{
-	//	{ItemID: 267369, ItemName: "Wolfsbane"},
-	// })
-
-	// TODO: Manual implementation required
-	//       This can be ignored if the effect has already been implemented.
-	//       With next db run the item will be removed if implemented.
-	//
 	// Sear certain enchanted targets with blazing light causing it to take additional damage from holy attacks
 	// and spells
 	// https://www.wowhead.com/forever/spell=1282482
@@ -8296,19 +8268,6 @@ func RegisterAllProcs() {
 	//	RequireDamageDealt: false
 	// }, []shared.ItemVariant{
 	//	{ItemID: 272824, ItemName: "Premier Lieutenant Commander's Voidcloth Gloves"},
-	// })
-
-	// TODO: Manual implementation required
-	//       This can be ignored if the effect has already been implemented.
-	//       With next db run the item will be removed if implemented.
-	//
-	// Wounds the target for 14 Physical damage.
-	// https://www.wowhead.com/forever/spell=1291551
-	// unsupported: states no rate
-	// trigger 1291551 (0%, core.CallbackEmpty, core.ProcMaskUnknown)
-	// shared.NewSpellDataDamageProc(shared.SpellDataProc{TriggerSpellID: 1291551, BuffSpellID: 1291551, IsWeaponProc: true},
-	//	[]shared.ItemVariant{
-	//	{ItemID: 272999, ItemName: "Barbaric Crossbow"},
 	// })
 
 	// TODO: Manual implementation required
@@ -8942,21 +8901,6 @@ func RegisterAllProcs() {
 	//	RequireDamageDealt: false
 	// }, []shared.ItemVariant{
 	//	{ItemID: 279251, ItemName: "Idol of the Ursine Twins"},
-	// })
-
-	// TODO: Manual implementation required
-	//       This can be ignored if the effect has already been implemented.
-	//       With next db run the item will be removed if implemented.
-	//
-	// Poisons target for 4 Nature damage every 1.0 sec for 10s.
-	// https://www.wowhead.com/forever/spell=1309315
-	// shared.NewProcStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
-	//	Callback:           core.CallbackEmpty,
-	//	ProcMask:           core.ProcMaskUnknown,
-	//	Outcome:            core.OutcomeEmpty,
-	//	RequireDamageDealt: false
-	// }, []shared.ItemVariant{
-	//	{ItemID: 279876, ItemName: "Plaguefang"},
 	// })
 
 	// TODO: Manual implementation required
