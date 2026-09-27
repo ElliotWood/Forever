@@ -1,5 +1,11 @@
 [
 	{
+		"number": 517,
+		"title": "Flurry Axe and Electrified Dagger procs simulated",
+		"mergedAt": "2026-09-27",
+		"url": "https://github.com/ElliotWood/Forever/pull/517"
+	},
+	{
 		"number": 516,
 		"title": "Fiery Weapon and Lifestealing weapon enchants simulated",
 		"mergedAt": "2026-09-27",
