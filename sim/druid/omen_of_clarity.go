@@ -16,16 +16,20 @@ const clearcastingSpells = DruidSpellEntanglingRoots | DruidSpellDemoralizingRoa
 	DruidSpellSwipe | DruidSpellThorns | DruidSpellHealingTouch | DruidSpellRegrowth | DruidSpellLifebloom |
 	DruidSpellRejuvenation | DruidSpellTranquility | DruidSpellSwiftmend
 
-// The client states no rate for 16864 (its chance column of 100 is the "no roll here" convention),
-// so this is the 2 procs a minute upstream's port used.
+// The client states no rate for 16864 (its chance column of 100 is the "no roll here" convention).
+// Beta logs fit 2 procs a minute: 87 procs off ~1,500 landed hits of five level 20 druids outside the
+// 10 s cooldown, 8% a hit in Bear Form (2.5 s swing) and 4% in Cat Form (1.0 s), the same for
+// white hits and specials (foreverlogs reports 32, 2668, 2674).
 const omenOfClarityPPM = 2.0
 
 // Omen of Clarity (16864), a baseline Balance passive in Forever: melee hits and spells can grant
 // Clearcasting (16870), making the next ability that costs something and is in its mask free.
 // Moonkin Form (24858) doubles the chance and halves the 10 s cooldown.
 //
-// ponytail: PPM measured on the paw swing for white hits, the equipped weapon for specials (upstream's
-// rule) and the cast time, at least a GCD, for spells; swap in a stated rate if the client ever gets one.
+// Melee hits, white or special, take the rate off the current swing (the paw's in a form), not the
+// equipped weapon: Maul, Swipe and Claw from druids holding 2.4 to 3.6 s weapons gave 36 procs off
+// 542 hits, where the paw's speed predicts 36 and the weapon's 59.
+// ponytail: spells use the cast time, at least a GCD, which no log has checked yet.
 func (druid *Druid) applyOmenOfClarity() {
 	clearcasting := spellData.OmenOfClarityTriggered.Highest()
 
@@ -60,10 +64,8 @@ func (druid *Druid) applyOmenOfClarity() {
 		switch {
 		case spell.ProcMask.Matches(core.ProcMaskSpellDamage | core.ProcMaskSpellHealing):
 			seconds = max(spell.DefaultCast.CastTime, core.GCDDefault).Seconds()
-		case spell.ProcMask.Matches(core.ProcMaskMeleeWhiteHit) || !druid.HasMHWeapon():
-			seconds = druid.AutoAttacks.MH().SwingSpeed
 		default:
-			seconds = druid.GetMHWeapon().SwingSpeed
+			seconds = druid.AutoAttacks.MH().SwingSpeed
 		}
 
 		chance := omenOfClarityPPM * seconds / 60
