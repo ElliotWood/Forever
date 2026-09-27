@@ -973,6 +973,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBeastMastery-AllItems-Shadowstrike-17074"
+ value: {
+  dps: 453.00349
+  tps: 259.37353
+ }
+}
+dps_results: {
  key: "TestBeastMastery-AllItems-ShardoftheFallenStar-21891"
  value: {
   dps: 454.83627
@@ -981,6 +988,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestBeastMastery-AllItems-ShardoftheGods"
+ value: {
+  dps: 453.00349
+  tps: 259.37353
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-AllItems-SkullforgeReaver-13361"
  value: {
   dps: 453.00349
   tps: 259.37353

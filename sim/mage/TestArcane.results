@@ -728,6 +728,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestArcane-AllItems-SkullforgeReaver-13361"
+ value: {
+  dps: 274.54137
+  tps: 197.92718
+ }
+}
+dps_results: {
  key: "TestArcane-AllItems-Skum'sBucket-273137"
  value: {
   dps: 275.04029

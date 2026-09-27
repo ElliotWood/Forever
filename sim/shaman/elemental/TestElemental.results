@@ -1092,6 +1092,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestElemental-AllItems-TheCruelHandofTimmy-13401"
+ value: {
+  dps: 122.72718
+  tps: 78.92881
+ }
+}
+dps_results: {
  key: "TestElemental-AllItems-TheEarthfury"
  value: {
   dps: 162.90024

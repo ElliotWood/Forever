@@ -1129,6 +1129,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralCat-AllItems-TheCruelHandofTimmy-13401"
+ value: {
+  dps: 310.7271
+  tps: 174.84604
+  dtps: 3.82783
+ }
+}
+dps_results: {
  key: "TestFeralCat-AllItems-TheLionHornofStormwind-14557"
  value: {
   dps: 305.82629

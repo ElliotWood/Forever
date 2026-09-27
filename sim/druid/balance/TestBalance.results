@@ -959,6 +959,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBalance-AllItems-TheCruelHandofTimmy-13401"
+ value: {
+  dps: 175.5457
+  tps: 91.56559
+ }
+}
+dps_results: {
  key: "TestBalance-AllItems-TheLionHornofStormwind-14557"
  value: {
   dps: 175.5457

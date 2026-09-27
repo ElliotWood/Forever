@@ -973,6 +973,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSurvival-AllItems-Shadowstrike-17074"
+ value: {
+  dps: 308.54315
+  tps: 185.77129
+ }
+}
+dps_results: {
  key: "TestSurvival-AllItems-ShardoftheFallenStar-21891"
  value: {
   dps: 310.53312
@@ -981,6 +988,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestSurvival-AllItems-ShardoftheGods"
+ value: {
+  dps: 308.54315
+  tps: 185.77129
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-SkullforgeReaver-13361"
  value: {
   dps: 308.54315
   tps: 185.77129
