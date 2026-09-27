@@ -16,7 +16,22 @@ func init() {
 }
 
 func TestBeastMastery(t *testing.T) {
-	core.RunTestSuite(t, t.Name(), core.FullCharacterTestSuiteGenerator([]core.CharacterSuiteConfig{hunterSuite("bm", BeastMasteryTalents)}))
+	suite := hunterSuite("bm", BeastMasteryTalents)
+	// A Raptor as well, the one pet with Savage Rend.
+	suite.OtherSpecOptions = []core.SpecOptionsCombo{{Label: "Raptor", SpecOptions: &proto.Player_Hunter{
+		Hunter: &proto.Hunter{
+			Options: &proto.Hunter_Options{
+				ClassOptions: &proto.HunterOptions{
+					Ammo:           proto.HunterOptions_Doomshot,
+					QuiverBonus:    proto.HunterOptions_Speed15,
+					PetType:        proto.HunterOptions_Raptor,
+					PetAttackSpeed: proto.HunterOptions_OneTwo,
+					PetUptime:      1,
+				},
+			},
+		},
+	}}}
+	core.RunTestSuite(t, t.Name(), core.FullCharacterTestSuiteGenerator([]core.CharacterSuiteConfig{suite}))
 }
 
 func TestMarksmanship(t *testing.T) {

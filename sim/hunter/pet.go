@@ -19,6 +19,7 @@ type HunterPet struct {
 
 	specialAbility *core.Spell
 	focusDump      *core.Spell
+	extraAbility   *core.Spell
 
 	uptimePercent float64
 }
@@ -119,6 +120,7 @@ func (hp *HunterPet) Initialize() {
 
 	hp.specialAbility = hp.NewPetAbility(hp.config.SpecialAbility)
 	hp.focusDump = hp.NewPetAbility(hp.config.FocusDump)
+	hp.extraAbility = hp.NewPetAbility(hp.config.ExtraAbility)
 }
 
 func (hp *HunterPet) Reset(_ *core.Simulation) {
@@ -159,7 +161,7 @@ func (hp *HunterPet) ExecuteCustomRotation(sim *core.Simulation) {
 		return
 	}
 
-	if !tryCast(hp.specialAbility) && !tryCast(hp.focusDump) && hp.GCD.IsReady(sim) {
+	if !tryCast(hp.extraAbility) && !tryCast(hp.specialAbility) && !tryCast(hp.focusDump) && hp.GCD.IsReady(sim) {
 		hp.WaitUntil(sim, sim.CurrentTime+time.Millisecond*500)
 	}
 }
@@ -176,6 +178,8 @@ type PetConfig struct {
 
 	SpecialAbility PetAbilityType
 	FocusDump      PetAbilityType
+	// Cast first, whenever it is ready: a cooldown the pet would never skip.
+	ExtraAbility PetAbilityType
 
 	Health float64
 	Armor  float64
@@ -241,7 +245,7 @@ var DefaultPetConfigs = [...]PetConfig{
 		Health: 1.00, Armor: 1.05, Damage: 1.00,
 	},
 	proto.HunterOptions_Raptor: {
-		Name: "Raptor", SpecialAbility: Bite, FocusDump: Claw,
+		Name: "Raptor", SpecialAbility: Bite, FocusDump: Claw, ExtraAbility: SavageRend,
 		Health: 0.95, Armor: 1.03, Damage: 1.10,
 	},
 	proto.HunterOptions_Scorpid: {

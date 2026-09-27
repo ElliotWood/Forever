@@ -13,6 +13,13 @@
 		"source": "forever",
 		"tooltip": "30 sec duration\n50% of your Mana regeneration continues while casting."
 	},
+	"1265069": {
+		"ability": "Savage Rend",
+		"file": "sim/hunter/pet_abilities.go",
+		"note": "New in Forever, Raptor only (client SkillLineAbility, skill line 217). Client 70009: rank 5 (level 60) ticks 26 every 3 sec for 18 sec, 50 Focus, 1 min cooldown; ticks can crit. Beta logs (foreverlogs 2650/2669/2673/2674, two hunters' raptors) put rank 1's 5 a tick at 6.4-7.0, the pet's damage multipliers and no attack power share. The 5% more bleed damage taken is left out: nothing else of ours bleeds.",
+		"source": "forever",
+		"tooltip": "50 Focus\nMelee Range\nInstant\n1 min cooldown\nSlash an enemy with razor talons, causing the target to Bleed for 156 damage over 18 sec."
+	},
 	"1293527": {
 		"ability": "Summon Hawk",
 		"assumptions": [
