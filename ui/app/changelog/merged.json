@@ -1,5 +1,17 @@
 [
 	{
+		"number": 532,
+		"title": "evidence: Rip's attack power share checked against beta logs",
+		"mergedAt": "2026-09-28",
+		"url": "https://github.com/ElliotWood/Forever/pull/532"
+	},
+	{
+		"number": 531,
+		"title": "[DB] Update to 1.60.1.70009 with hotfixes as of 2026-09-28",
+		"mergedAt": "2026-09-28",
+		"url": "https://github.com/ElliotWood/Forever/pull/531"
+	},
+	{
 		"number": 530,
 		"title": "Eviscerate's attack power share checked against beta logs (evidence text only)",
 		"mergedAt": "2026-09-28",
