@@ -23,6 +23,8 @@ const (
 	SavageRend
 	Pinch
 	Dismember
+	Mine
+	TendonRip
 )
 
 func (hp *HunterPet) NewPetAbility(abilityType PetAbilityType) *core.Spell {
@@ -38,11 +40,15 @@ func (hp *HunterPet) NewPetAbility(abilityType PetAbilityType) *core.Spell {
 	case ScorpidPoison:
 		return hp.newScorpidPoison()
 	case SavageRend:
-		return hp.newSavageRend()
+		return hp.newPetBleed(spellData.SavageRendTriggered.Highest())
+	case TendonRip:
+		return hp.newPetBleed(spellData.TendonRipTriggered.Highest())
 	case Pinch:
 		return hp.newPetStrike(spellData.PinchTriggered.Highest())
 	case Dismember:
 		return hp.newPetStrike(spellData.DismemberTriggered.Highest())
+	case Mine:
+		return hp.newPetStrike(spellData.MineTriggered.Highest())
 	case Unknown:
 		return nil
 	default:
@@ -266,13 +272,13 @@ func (hp *HunterPet) newScorpidPoison() *core.Spell {
 	})
 }
 
-// Savage Rend is new in Forever and the Raptor's alone (client SkillLineAbility puts it on skill line
-// 217, Raptor): a bleed for 50 focus on a 1 min cooldown, everything read off the client row. Beta
-// logs (Tynman's and Consumer's raptors, foreverlogs 2650/2669/2673/2674) put a tick at 6.4-7.0 at
-// rank 1, which is the 5 base times the pet's happiness and Raptor damage scalars, so no attack power
-// share. The 5% more bleed damage the tooltip adds is left out: nothing else of ours bleeds.
-func (hp *HunterPet) newSavageRend() *core.Spell {
-	rank := spellData.SavageRendTriggered.Highest()
+// Savage Rend (Raptor, skill line 217) and Tendon Rip (Hyena, 654) are new in Forever: a melee hit that
+// lands a bleed, everything read off the client row (rank 5: Savage Rend 26 every 3 sec for 18 sec, 50
+// focus, 1 min; Tendon Rip 20 every 3 sec for 9 sec, 25 focus, 30 sec). Beta logs (Tynman's and
+// Consumer's raptors, foreverlogs 2650/2669/2673/2674) put a Savage Rend tick at 6.4-7.0 at rank 1,
+// which is the 5 base times the pet's happiness and Raptor damage scalars, so no attack power share.
+// The 5% more bleed damage Savage Rend adds and Tendon Rip's snare are left out.
+func (hp *HunterPet) newPetBleed(rank *spelldata.Spell) *core.Spell {
 	tick := rank.PeriodicEffect()
 	tickLength := tick.Period()
 
@@ -304,7 +310,7 @@ func (hp *HunterPet) newSavageRend() *core.Spell {
 
 		Dot: core.DotConfig{
 			Aura: core.Aura{
-				Label: "Savage Rend",
+				Label: rank.Name,
 			},
 			NumberOfTicks: int32(rank.Duration() / tickLength),
 			TickLength:    tickLength,
@@ -330,10 +336,10 @@ func (hp *HunterPet) newSavageRend() *core.Spell {
 	})
 }
 
-// Pinch (Crab, skill line 214) and Dismember (Crocolisk, 212) are new in Forever: a single melee hit
-// with the damage, focus cost and cooldown read off the client row (rank 5: Pinch 95 for 50 focus on
-// 30 sec, Dismember 54 for 35 focus on 6 sec, both +-7%). Pinch's snare and Dismember's healing
-// reduction are left out. Beta logs: Consumer's crab (foreverlogs 2674) landed rank 1 Pinch (20)
+// Pinch (Crab, skill line 214), Dismember (Crocolisk, 212) and Mine! (Owl, 655) are new in Forever: a
+// single melee hit with the damage, focus cost and cooldown read off the client row (rank 5: Pinch 95
+// for 50 focus on 30 sec, Dismember 54 for 35 focus on 6 sec, Mine! 44 for 20 focus on 1 min). Pinch's
+// snare, Dismember's healing reduction and Mine!'s disarm are left out. Beta logs: Consumer's crab (foreverlogs 2674) landed rank 1 Pinch (20)
 // 17 times at ~17 a hit through level 20 mob armor, so no attack power share.
 func (hp *HunterPet) newPetStrike(rank *spelldata.Spell) *core.Spell {
 	damage := rank.DamageEffect()
