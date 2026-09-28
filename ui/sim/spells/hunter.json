@@ -27,6 +27,20 @@
 		"source": "forever",
 		"tooltip": "35 Focus\nMelee Range\nInstant\n6 sec cooldown\nViciously bites enemy appendages for 50 to 58 damage and reduces the effectiveness of any healing by 50% for 10 sec."
 	},
+	"1265042": {
+		"ability": "Tendon Rip",
+		"file": "sim/hunter/pet_abilities.go",
+		"note": "New in Forever, Hyena only (client SkillLineAbility, skill line 654). Client 70009: rank 5 (level 60) bleeds 20 every 3 sec for 9 sec, 25 Focus, 30 sec cooldown; the hyena casts it whenever it is ready, then Bites. Same bleed code as Savage Rend, so no attack power share (Savage Rend's beta logs show none). Rank 1 (level 12) is 4 a tick. The 50% snare is left out. No beta log has a hyena yet.",
+		"source": "forever",
+		"tooltip": "25 Focus\nMelee Range\nInstant\n30 sec cooldown\nTears at an enemy's legs for 60 damage over 9 sec and reduces movement speed by 50% for 9 sec."
+	},
+	"1265058": {
+		"ability": "Mine!",
+		"file": "sim/hunter/pet_abilities.go",
+		"note": "New in Forever, Owl only (client SkillLineAbility, skill line 655, Bird of Prey). Client 70009: rank 5 (level 50) 44 damage +-7%, 20 Focus, 1 min cooldown; the owl casts it whenever it is ready, then Claws. Same strike code as Pinch, so no attack power share (Pinch's beta logs show none). Rank 2 (level 20) is 15. The 4 sec disarm is left out. No beta log has an owl yet.",
+		"source": "forever",
+		"tooltip": "20 Focus\nMelee Range\nInstant\n1 min cooldown\nGrabs an enemy's weapon with its talons, causing 41 to 47 damage and disarming them for 4 sec."
+	},
 	"1265069": {
 		"ability": "Savage Rend",
 		"file": "sim/hunter/pet_abilities.go",

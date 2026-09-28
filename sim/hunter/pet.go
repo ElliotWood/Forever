@@ -217,7 +217,7 @@ var DefaultPetConfigs = [...]PetConfig{
 		Health: 1.08, Armor: 1.05, Damage: 0.91,
 	},
 	proto.HunterOptions_Owl: {
-		Name: "Owl", FocusDump: Claw,
+		Name: "Owl", FocusDump: Claw, ExtraAbility: Mine,
 		Health: 1.00, Armor: 1.00, Damage: 1.07,
 	},
 	proto.HunterOptions_Boar: {
@@ -241,7 +241,7 @@ var DefaultPetConfigs = [...]PetConfig{
 		Health: 1.04, Armor: 1.00, Damage: 1.02,
 	},
 	proto.HunterOptions_Hyena: {
-		Name: "Hyena", FocusDump: Bite,
+		Name: "Hyena", FocusDump: Bite, ExtraAbility: TendonRip,
 		Health: 1.00, Armor: 1.05, Damage: 1.00,
 	},
 	proto.HunterOptions_Raptor: {

@@ -7,8 +7,8 @@ import (
 	"github.com/wowsims/forever/sim/core/proto"
 )
 
-// The Crab casts Pinch and the Crocolisk Dismember (client rows 1264742 / 1264933), both landing
-// inside their rank 5 range.
+// The Crab casts Pinch, the Crocolisk Dismember, the Owl Mine! and the Hyena Tendon Rip (client rows
+// 1264742 / 1264933 / 1265058 / 1265042), each landing inside its rank 5 range.
 func TestPetStrikes(t *testing.T) {
 	for _, c := range []struct {
 		pet      proto.HunterOptions_PetType
@@ -17,6 +17,9 @@ func TestPetStrikes(t *testing.T) {
 	}{
 		{proto.HunterOptions_Crab, spellData.PinchTriggered.Highest().ID, 88, 102},
 		{proto.HunterOptions_Crocolisk, spellData.DismemberTriggered.Highest().ID, 50, 58},
+		{proto.HunterOptions_Owl, spellData.MineTriggered.Highest().ID, 41, 47},
+		// The whole bleed, 3 ticks of 20.
+		{proto.HunterOptions_Hyena, spellData.TendonRipTriggered.Highest().ID, 60, 60},
 	} {
 		player := &proto.Player{
 			Name: "bm", Class: proto.Class_ClassHunter, Race: proto.Race_RaceOrc, TalentsString: BeastMasteryTalents,
