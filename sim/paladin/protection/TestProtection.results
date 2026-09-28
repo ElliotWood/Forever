@@ -1348,9 +1348,9 @@ dps_results: {
 dps_results: {
  key: "TestProtection-AllItems-SkullflameShield-1168"
  value: {
-  dps: 281.40754
-  tps: 281.79427
-  dtps: 1218.55325
+  dps: 282.70341
+  tps: 282.56313
+  dtps: 1219.50755
  }
 }
 dps_results: {
