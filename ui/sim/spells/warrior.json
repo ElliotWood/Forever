@@ -8,7 +8,7 @@
 	"11581": {
 		"ability": "Thunder Clap",
 		"file": "sim/warrior/thunder_clap.go",
-		"note": "Client 1.60.1.70009: 103 damage as in Classic, but the attack speed slow is 20% (Classic 10%, #404), the cooldown 6 sec (Classic 4) and the spell is usable in Battle and Defensive Stance.",
+		"note": "Client 1.60.1.70009: 103 damage as in Classic, but the attack speed slow is 20% (Classic 10%, #404), the cooldown 6 sec (Classic 4) and the spell is usable in Battle and Defensive Stance. Its threat is plain damage, not Classic's 2.5x: rank 2 hitting for ~23 read ~21 threat on a threat meter in game (level 20, Defensive Stance, 2026-09-28).",
 		"source": "forever",
 		"tooltip": "20 Rage\nInstant\n6 sec cooldown\nRequires Battle Stance, Defensive Stance\nBlasts nearby enemies with thunder, increasing the time between their attacks by 20% for 30 sec and doing 103 damage to them. Will affect up to 4 targets."
 	},
