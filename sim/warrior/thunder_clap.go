@@ -58,8 +58,9 @@ func (warrior *Warrior) registerThunderClap() {
 		},
 
 		DamageMultiplier: 1,
-		// Not in the client table; our Classic value until measured in game.
-		ThreatMultiplier: 2.5,
+		// Measured in the level 20 beta (2026-09-28): threat equals damage before the stance modifier,
+		// 17 damage for 14 threat in Battle Stance (x0.8) and ~21 in Defensive (x1.3). Was 2.5.
+		ThreatMultiplier: 1,
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
 			return warrior.StanceMatches(BattleStance | DefensiveStance)

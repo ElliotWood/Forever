@@ -56,9 +56,12 @@ func (warrior *Warrior) registerRevenge() {
 		},
 
 		DamageMultiplier: 1,
-		// Not in the client table; our Classic value until measured in game.
-		ThreatMultiplier: 2.25,
-		FlatThreatBonus:  2.25 * 2 * 60,
+		// Measured in the level 20 beta (2026-09-28): damage x1 plus a flat bonus of ~40 at rank 1
+		// (46 damage, 96 threat in Defensive Stance), before the stance modifier. Was 2.25x damage
+		// plus 270. The flat keeps the 2-per-level shape the old value had, which the rank 1
+		// reading (2 x 20 = 40) fits; rank 6's own bonus has not been measured.
+		ThreatMultiplier: 1,
+		FlatThreatBonus:  2 * 60,
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
 			return warrior.StanceMatches(DefensiveStance) && aura.IsActive()
