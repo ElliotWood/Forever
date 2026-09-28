@@ -1,5 +1,11 @@
 [
 	{
+		"number": 533,
+		"title": "rogue: Rupture's attack power share checked against beta logs",
+		"mergedAt": "2026-09-28",
+		"url": "https://github.com/ElliotWood/Forever/pull/533"
+	},
+	{
 		"number": 532,
 		"title": "evidence: Rip's attack power share checked against beta logs",
 		"mergedAt": "2026-09-28",
