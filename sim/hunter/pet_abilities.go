@@ -25,6 +25,7 @@ const (
 	Dismember
 	Mine
 	TendonRip
+	DustCloud
 )
 
 func (hp *HunterPet) NewPetAbility(abilityType PetAbilityType) *core.Spell {
@@ -49,6 +50,8 @@ func (hp *HunterPet) NewPetAbility(abilityType PetAbilityType) *core.Spell {
 		return hp.newPetStrike(spellData.DismemberTriggered.Highest())
 	case Mine:
 		return hp.newPetStrike(spellData.MineTriggered.Highest())
+	case DustCloud:
+		return hp.newDustCloud()
 	case Unknown:
 		return nil
 	default:
@@ -377,5 +380,56 @@ func (hp *HunterPet) newPetStrike(rank *spelldata.Spell) *core.Spell {
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			spell.CalcAndDealDamage(sim, target, damage.Roll(sim, core.CharacterLevel), spell.OutcomeMeleeSpecialHitAndCrit)
 		},
+	})
+}
+
+// Dust Cloud is new in Forever and the Tallstrider's alone (client SkillLineAbility, skill line 218):
+// the target's armor down by the client row's amount for 30 sec, 10 focus, no cooldown (rank 5 505,
+// rank 1 at level 12 65). The pet recasts it when it falls off. Whether it stacks with Faerie Fire or
+// Sunder Armor is unknown; it bids only against another Dust Cloud.
+func (hp *HunterPet) newDustCloud() *core.Spell {
+	rank := spellData.DustCloudTriggered.Highest()
+	auras := hp.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
+		aura := target.GetOrRegisterAura(core.Aura{
+			Label:    rank.Name,
+			ActionID: core.ActionID{SpellID: rank.ID},
+			Duration: rank.Duration(),
+		})
+		spelldata.ParseEffects(nil, aura, rank, spelldata.Level(core.CharacterLevel), spelldata.IgnoreStacks(),
+			spelldata.Exclusive("DustCloud", true))
+		return aura
+	})
+
+	return hp.RegisterSpell(core.SpellConfig{
+		ActionID:    core.ActionID{SpellID: rank.ID},
+		SpellSchool: rank.SpellSchool(),
+		DefenseType: rank.DefenseTypeCore(),
+		ProcMask:    core.ProcMaskMeleeMHSpecial,
+		Flags:       core.SpellFlagMeleeMetrics,
+		MaxRange:    core.MaxMeleeRange,
+
+		FocusCost: core.FocusCostOptions{
+			Cost: int32(rank.Cost()),
+		},
+		Cast: core.CastConfig{
+			DefaultCast: core.Cast{
+				GCD: PetGCD,
+			},
+			IgnoreHaste: true,
+		},
+
+		ThreatMultiplier: 1,
+
+		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
+			return hp.IsEnabled() && !auras.Get(target).IsActive()
+		},
+
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			if spell.CalcAndDealOutcome(sim, target, spell.OutcomeMeleeSpecialHit).Landed() {
+				auras.Get(target).Activate(sim)
+			}
+		},
+
+		RelatedAuraArrays: auras.ToMap(),
 	})
 }

@@ -270,7 +270,7 @@ var DefaultPetConfigs = [...]PetConfig{
 		Health: 1.00, Armor: 1.00, Damage: 1.07,
 	},
 	proto.HunterOptions_Tallstrider: {
-		Name: "Tallstrider", FocusDump: Bite,
+		Name: "Tallstrider", FocusDump: Bite, ExtraAbility: DustCloud,
 		Health: 1.05, Armor: 1.00, Damage: 1.00,
 	},
 	proto.HunterOptions_Turtle: {
