@@ -112,8 +112,22 @@ const FOREVER_ONLY_SPELLS = new Set([
 	132, // Detect Invisibility (Classic Era: Detect Lesser Invisibility)
 	424, // Earthquake (not in Classic Era)
 	603, // Bane of Doom (Classic Era: Curse of Doom)
-	678, 679, 680, 1866, 2495, 5569, 10332, 10333, // Holy Strike (not in Classic Era)
-	980, 1014, 6217, 11711, 11712, 11713, // Bane of Agony (Classic Era: Curse of Agony)
+	// Holy Strike (not in Classic Era)
+	678,
+	679,
+	680,
+	1866,
+	2495,
+	5569,
+	10332,
+	10333,
+	// Bane of Agony (Classic Era: Curse of Agony)
+	980,
+	1014,
+	6217,
+	11711,
+	11712,
+	11713,
 	11078, // Wake of Fire (Classic Era: Improved Fire Blast)
 	11237, // Improved Channeling (Classic Era: Improved Arcane Missiles)
 	11242, // Arcane Impact (Classic Era: Improved Arcane Explosion)
@@ -130,7 +144,9 @@ const FOREVER_ONLY_SPELLS = new Set([
 	16268, // Spirit Weapons (Classic Era: Parry)
 	16538, // Bastion (Classic Era: One-Handed Weapon Specialization)
 	16578, // Elemental Alacrity (Classic Era: Lightning Mastery)
-	16958, 16959, // Blood Frenzy (Classic Era: Primal Fury)
+	// Blood Frenzy (Classic Era: Primal Fury)
+	16958,
+	16959,
 	16966, // Shredding Attacks (Classic Era: Improved Shred)
 	17002, // Feral Swiftness (Classic Era: Feline Swiftness)
 	17069, // Naturalist (Classic Era: Improved Healing Touch)
@@ -149,13 +165,40 @@ const FOREVER_ONLY_SPELLS = new Set([
 	19376, // Survival Tactics (Classic Era: Trap Mastery)
 	19426, // Lethal Attacks (Classic Era: Lethal Shots)
 	19552, // Deadly Aspects (Classic Era: Improved Aspect of the Hawk)
-	20163, 20231, 20415, 20416, 20417, 20418, 20419, 20421, 20422, 20423, // Seal of Fury (not in Classic Era)
-	20183, 20232, 20411, 20412, 20413, 20414, // Judgement of Fury (not in Classic Era)
+	// Seal of Fury (not in Classic Era)
+	20163,
+	20231,
+	20415,
+	20416,
+	20417,
+	20418,
+	20419,
+	20421,
+	20422,
+	20423,
+	// Judgement of Fury (not in Classic Era)
+	20183,
+	20232,
+	20411,
+	20412,
+	20413,
+	20414,
 	20224, // Improved Seals (Classic Era: Improved Seal of Righteousness)
 	23602, // Master of Defense (Classic Era: Shield Specialization, so its rage row read as a second Shield Specialization)
-	24118, 24119, 24120, // Lacerate (not in Classic Era)
+	// Lacerate (not in Classic Era)
+	24118,
+	24119,
+	24120,
 	24293, // Improved Tracking (Classic Era: Monster Slaying)
-	24423, 24424, 24577, 24578, 24579, 24580, 24581, 24582, // Demoralizing Screech (Classic Era: Screech)
+	// Demoralizing Screech (Classic Era: Screech)
+	24423,
+	24424,
+	24577,
+	24578,
+	24579,
+	24580,
+	24581,
+	24582,
 	28999, // Elemental Reach (Classic Era: Storm Reach)
 	29187, // Natural Grace (Classic Era: Healing Grace)
 	36936, // Totemic Recall (not in Classic Era)
