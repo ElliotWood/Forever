@@ -13,6 +13,13 @@
 		"source": "forever",
 		"tooltip": "30 sec duration\n50% of your Mana regeneration continues while casting."
 	},
+	"1264455": {
+		"ability": "Thunderstomp",
+		"file": "sim/hunter/pet_abilities.go",
+		"note": "Gorilla only. Classic had ranks 1-3 (levels 30/40/50); rank 4 at level 60 is new in Forever. Client 70009: rank 4 132 Nature damage +-7% (122-142) to up to 4 enemies within 8 yards, 60 Focus, 1 min cooldown; Wowhead env 16 agrees. The gorilla casts it whenever it is ready, then Bites. Magic, so it rolls spell hit and crit and has no attack power share. No beta log has a gorilla yet (rank 1 needs level 30).",
+		"source": "forever",
+		"tooltip": "60 Focus\nInstant\n1 min cooldown\nShakes the ground with thundering force, doing 122 to 142 Nature damage to all enemies within 8 yards."
+	},
 	"1264742": {
 		"ability": "Pinch",
 		"file": "sim/hunter/pet_abilities.go",

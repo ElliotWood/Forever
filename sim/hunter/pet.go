@@ -237,7 +237,7 @@ var DefaultPetConfigs = [...]PetConfig{
 		Health: 0.95, Armor: 1.10, Damage: 1.00,
 	},
 	proto.HunterOptions_Gorilla: {
-		Name: "Gorilla", FocusDump: Bite,
+		Name: "Gorilla", FocusDump: Bite, ExtraAbility: Thunderstomp,
 		Health: 1.04, Armor: 1.00, Damage: 1.02,
 	},
 	proto.HunterOptions_Hyena: {
