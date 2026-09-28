@@ -26,6 +26,7 @@ const (
 	Mine
 	TendonRip
 	DustCloud
+	Thunderstomp
 )
 
 func (hp *HunterPet) NewPetAbility(abilityType PetAbilityType) *core.Spell {
@@ -52,6 +53,8 @@ func (hp *HunterPet) NewPetAbility(abilityType PetAbilityType) *core.Spell {
 		return hp.newPetStrike(spellData.MineTriggered.Highest())
 	case DustCloud:
 		return hp.newDustCloud()
+	case Thunderstomp:
+		return hp.newThunderstomp()
 	case Unknown:
 		return nil
 	default:
@@ -431,5 +434,48 @@ func (hp *HunterPet) newDustCloud() *core.Spell {
 		},
 
 		RelatedAuraArrays: auras.ToMap(),
+	})
+}
+
+// Thunderstomp is the Gorilla's (Classic ranks 1-3 at 30/40/50; rank 4 at 60 is new in Forever): Nature
+// damage to up to the row's 4 enemies around the pet, read off the client row (rank 4 132 +-7%, so
+// 122-142, 60 focus, 1 min cooldown). Magic, so it rolls spell hit and crit and no attack power share.
+func (hp *HunterPet) newThunderstomp() *core.Spell {
+	rank := spellData.ThunderstompTriggered.Highest()
+	damage := rank.DamageEffect()
+
+	return hp.RegisterSpell(core.SpellConfig{
+		ActionID:       core.ActionID{SpellID: rank.ID},
+		SpellSchool:    rank.SpellSchool(),
+		DefenseType:    rank.DefenseTypeCore(),
+		ClassSpellMask: HunterPetDamage,
+		ProcMask:       core.ProcMaskSpellDamage,
+		MaxRange:       core.MaxMeleeRange,
+
+		FocusCost: core.FocusCostOptions{
+			Cost: int32(rank.Cost()),
+		},
+		Cast: core.CastConfig{
+			DefaultCast: core.Cast{
+				GCD: PetGCD,
+			},
+			IgnoreHaste: true,
+			CD: core.Cooldown{
+				Timer:    hp.NewTimer(),
+				Duration: rank.Cooldown(),
+			},
+		},
+
+		DamageMultiplier: 1,
+		ThreatMultiplier: 1,
+
+		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
+			return hp.IsEnabled()
+		},
+
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			spell.CalcAndDealCleaveDamageWithVariance(sim, target, int32(rank.MaxTargets), spell.OutcomeMagicHitAndCrit,
+				func(sim *core.Simulation, _ *core.Spell) float64 { return damage.Roll(sim, core.CharacterLevel) })
+		},
 	})
 }
