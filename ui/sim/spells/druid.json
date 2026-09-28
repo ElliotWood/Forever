@@ -222,6 +222,12 @@
 		"source": "forever",
 		"tooltip": "375 Mana\nInstant\nBurns the enemy for 128 to 150 Arcane damage and then an additional 240 Arcane damage over 12 sec."
 	},
+	"9867": {
+		"ability": "Ravage",
+		"file": "sim/druid/ravage.go",
+		"note": "Client 70009: rank 4 deals 350% weapon damage plus 98 (343 after the multiplier) for 60 Energy, from Prowl and behind the target, as in Classic Era. Berserk's crit bonus names it; Savage Fury does not.",
+		"source": "classic"
+	},
 	"9875": {
 		"ability": "Starfire",
 		"file": "sim/druid/starfire.go",
@@ -274,5 +280,11 @@
 		"note": "Client 70009 raised Wrath by about half over 69893, still well under Classic's from rank 3 up (rank 8 248-277 -> 92-102, 62-69 in 69893), with a third less mana (rank 8 180 -> 120) and no downranking penalty (ranks 1-3 .123/.231/.443 -> .429/.486/.571). Cast times are Classic's; #450 registers every rank.",
 		"source": "forever",
 		"tooltip": "120 Mana\n2 sec cast\nCauses 92 to 102 Nature damage to the target."
+	},
+	"9913": {
+		"ability": "Prowl",
+		"file": "sim/druid/prowl.go",
+		"note": "Client 70009: rank 3, 30% slower, as in Classic Era. Cast before the pull only. The first hit or spell ends it; the rotation gets to open before a white swing would.",
+		"source": "classic"
 	}
 }

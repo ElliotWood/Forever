@@ -266,6 +266,8 @@ func (druid *Druid) RegisterFeralCatSpells() {
 	// Forever drops Faerie Fire (Feral); the Balance version is the only one.
 	druid.registerFaerieFireSpell()
 	druid.registerShredSpell()
+	druid.registerProwlSpell()
+	druid.registerRavageSpell()
 	druid.registerTigersFurySpell()
 }
 
