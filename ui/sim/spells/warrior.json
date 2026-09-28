@@ -2,8 +2,8 @@
 	"11574": {
 		"ability": "Rend",
 		"file": "sim/warrior/rend.go",
-		"note": "Client 1.60.1.70009: rank 7 deals 21 every 3 sec for 21 sec (147) for 10 Rage, identical to Classic Era. It is the only rank the sim casts.",
-		"source": "classic"
+		"note": "Client 1.60.1.70009: rank 7 deals 21 every 3 sec for 21 sec (147) for 10 Rage, identical to Classic Era. It is the only rank the sim casts. Beta logs add 2% of attack power to every tick, which the client row doesn't carry: 5 level 20 warriors, about 370 rank 3 ticks (9 each), land 0.018-0.020 of their attack power over the base, read at each tick. Fitted at level 20; whether rank 7's longer bleed keeps the same share per tick is not yet known.",
+		"source": "forever"
 	},
 	"11581": {
 		"ability": "Thunder Clap",
