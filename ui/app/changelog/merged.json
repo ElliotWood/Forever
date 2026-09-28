@@ -1,5 +1,11 @@
 [
 	{
+		"number": 538,
+		"title": "hunter: Crab pets cast Pinch, Crocolisks Dismember (client rows)",
+		"mergedAt": "2026-09-28",
+		"url": "https://github.com/ElliotWood/Forever/pull/538"
+	},
+	{
 		"number": 537,
 		"title": "rogue: beta logs confirm Garrote's 3% attack power a tick",
 		"mergedAt": "2026-09-28",
