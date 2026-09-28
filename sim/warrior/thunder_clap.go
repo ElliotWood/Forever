@@ -35,12 +35,14 @@ func (warrior *Warrior) registerThunderClap() {
 		ActionID:    core.ActionID{SpellID: thunderClapRank.ID},
 		SpellSchool: thunderClapRank.SpellSchool(),
 		// Thunder Clap is Physical but Magic in SpellCategories: it rolls on the spell hit table
-		// (logs show full resists next to armor mitigation) and crits on spell crit chance for
-		// 1.5x. Warriors have no base spell crit, so logs without Totem of Wrath show none
-		// (0 of 799 landed hits from 6 prot warriors on fresh.warcraftlogs.com, 2026-09-14).
+		// (Classic logs show full resists) and crits on spell crit chance for 1.5x. Warriors have
+		// no base spell crit, so logs without Totem of Wrath show none (0 of 799 landed hits from
+		// 6 prot warriors on fresh.warcraftlogs.com, 2026-09-14). In Forever armor doesn't touch it:
+		// in the level 20 beta logs (foreverlogs 2677/2683) Chud and Skeefzy's white hits vary
+		// 2.3-3.6x across mobs while their claps vary 1.1x.
 		DefenseType:    thunderClapRank.DefenseTypeCore(),
 		ProcMask:       core.ProcMaskRangedSpecial,
-		Flags:          core.SpellFlagAPL | core.SpellFlagBinary,
+		Flags:          core.SpellFlagAPL | core.SpellFlagBinary | core.SpellFlagIgnoreResists,
 		ClassSpellMask: SpellMaskThunderClap,
 
 		RageCost: core.RageCostOptions{
