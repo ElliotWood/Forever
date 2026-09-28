@@ -1,5 +1,11 @@
 [
 	{
+		"number": 536,
+		"title": "warlock: beta logs confirm Bane of Agony ramp and low-rank DoT coefficients",
+		"mergedAt": "2026-09-28",
+		"url": "https://github.com/ElliotWood/Forever/pull/536"
+	},
+	{
 		"number": 535,
 		"title": "warlock: Demonic Brand hit is Fire for the Imp, and pet spells spend it",
 		"mergedAt": "2026-09-28",
