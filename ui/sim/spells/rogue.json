@@ -15,7 +15,7 @@
 	"11290": {
 		"ability": "Garrote",
 		"file": "sim/rogue/garrote.go",
-		"note": "Rank 6, the rank the sim casts. Beta client 1.60.1.70009 matches Classic Era: 6 ticks of 92 over 18 sec, 50 Energy.",
+		"note": "Rank 6, the rank the sim casts. Beta client 1.60.1.70009 matches Classic Era: 6 ticks of 92 over 18 sec, 50 Energy. The tooltip says increased by attack power but the client carries no number; the sim adds 3% of attack power a tick. Beta logs agree (foreverlogs report 2683, a level 20 rogue with no Subtlety points, rank 1 703 at 24 a tick, 143 non-crit ticks): about 227 attack power (40 + 63 Strength + 101 Agility - 20, 18 from gear, 25 from Blessing of Might) gives 30.8 a tick against 31.2 seen on undead, and 31.5 with Battle Shout against 31.7. 2% would read 28.5, 4% 33.1. Humanoids read 0.7 to 1.2 higher; the Defias set's 15 attack power against humanoids explains about half of that.",
 		"source": "classic"
 	},
 	"11294": {
