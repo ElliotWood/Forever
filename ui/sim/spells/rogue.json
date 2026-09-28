@@ -8,7 +8,7 @@
 	"11275": {
 		"ability": "Rupture",
 		"file": "sim/rogue/rupture.go",
-		"note": "Rank 6, the rank the sim casts. Beta client 1.60.1.70009: every rank ticks for less (rank 6 60 + 8 a combo point -> 35 + 4.73 a tick). Cost, tick length and duration are Classic's. The attack power share is not in the client, so the sim keeps Classic's.",
+		"note": "Rank 6, the rank the sim casts. Beta client 1.60.1.70009: every rank ticks for less (rank 6 60 + 8 a combo point -> 35 + 4.73 a tick). Cost, tick length and duration are Classic's. The attack power share is not in the client; the sim uses TBC's 1% of attack power a tick per combo point, capped at 3. Beta logs agree (level 20, rank 1, 5 + 1.18 a combo point a tick): Salty's 1/2/3 point ticks 9/12.7/16.2 step about 3.6 each (1.18 + 1% of ~245 AP), and Ray's 3 and 5 point ticks, 17.3 and 19.5, carry the same share (uncapped, 5 points would tick about 25).",
 		"source": "forever",
 		"tooltip": "25 Energy\nMelee Range\nInstant\nFinishing move that causes damage over time, increased by your Attack Power. Lasts longer per combo point:\n1 point: 159 damage over 8 secs\n2 points: 222 damage over 10 secs\n3 points: 295 damage over 12 secs\n4 points: 377 damage over 14 secs\n5 points: 469 damage over 16 secs"
 	},
