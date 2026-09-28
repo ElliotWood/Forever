@@ -17,8 +17,7 @@ func (rogue *Rogue) registerRupture() {
 	baseTickCount := int32(ruptureRank.Duration() / tickLength)
 
 	// The beta client cut the per combo point step with the tick (rank 6: 60 + 8 -> 35 + 4.73).
-	// The table carries the 35; the step sits on a dummy effect the generator reads as 0.
-	const damagePerComboPoint = 4.73
+	damagePerComboPoint := float64(tick.PointsPerResource)
 
 	rogue.Rupture = rogue.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: ruptureRank.ID},
@@ -91,5 +90,6 @@ func (rogue *Rogue) registerRupture() {
 func (rogue *Rogue) ruptureDamage(target *core.Unit, comboPoints int32, baseDamage float64, damagePerComboPoint float64) float64 {
 	return baseDamage +
 		damagePerComboPoint*float64(comboPoints) +
+		// TBC's share, not in the client. Beta logs agree: 1% of AP a tick per combo point, capped at 3.
 		[]float64{0, 0.01, 0.02, 0.03, 0.03, 0.03}[comboPoints]*rogue.Rupture.MeleeAttackPower(target)
 }
