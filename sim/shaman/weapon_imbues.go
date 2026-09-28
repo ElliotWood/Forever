@@ -315,7 +315,9 @@ func (shaman *Shaman) RegisterFrostbrandImbue(procMask core.ProcMask) {
 
 	shaman.setupItemSwapImbue(proto.ShamanImbue_FrostbrandWeapon, frostbrandEnchantID)
 
-	dpm := shaman.NewDynamicLegacyProcForTempEnchant(frostbrandEnchantID, 9.0, func(pm core.ProcMask) float64 { return 0 })
+	// 8 procs a minute, not Classic's 9 (the client stores no rate): a beta log gives 636 procs from 1,601
+	// landed swings of a 3.0 speed axe, 0.397 a hit = 7.95 +- 0.24 PPM (foreverlogs.gg report 2681, Cihan).
+	dpm := shaman.NewDynamicLegacyProcForTempEnchant(frostbrandEnchantID, 8.0, func(pm core.ProcMask) float64 { return 0 })
 
 	fbSpell := shaman.newFrostbrandImbueSpell()
 
