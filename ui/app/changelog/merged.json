@@ -1,5 +1,11 @@
 [
 	{
+		"number": 537,
+		"title": "rogue: beta logs confirm Garrote's 3% attack power a tick",
+		"mergedAt": "2026-09-28",
+		"url": "https://github.com/ElliotWood/Forever/pull/537"
+	},
+	{
 		"number": 536,
 		"title": "warlock: beta logs confirm Bane of Agony ramp and low-rank DoT coefficients",
 		"mergedAt": "2026-09-28",
