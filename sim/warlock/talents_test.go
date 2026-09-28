@@ -45,3 +45,45 @@ func TestDemonicPactKeepsTheSacrifice(t *testing.T) {
 		t.Errorf("no Demonic Pact: got %v, want none", aura)
 	}
 }
+
+// The Imp has no melee, so its Firebolt spends the brand, and the branded hit is Fire (1293698);
+// the other demons' is Shadow (1293697).
+func TestDemonicBrandImpSpendsWithFirebolt(t *testing.T) {
+	for _, tc := range []struct {
+		summon proto.WarlockOptions_Summon
+		school core.SpellSchool
+	}{{proto.WarlockOptions_Imp, core.SpellSchoolFire}, {proto.WarlockOptions_Succubus, core.SpellSchoolShadow}} {
+		player := core.WithSpec(&proto.Player{
+			Race:          proto.Race_RaceOrc,
+			Class:         proto.Class_ClassWarlock,
+			Equipment:     &proto.EquipmentSpec{},
+			Consumables:   &proto.ConsumesSpec{},
+			TalentsString: "-00000000000003",
+			Rotation:      &proto.APLRotation{Type: proto.APLRotation_TypeAPL},
+		}, &proto.Player_Warlock{Warlock: &proto.Warlock{Options: &proto.Warlock_Options{ClassOptions: &proto.WarlockOptions{
+			Summon: tc.summon,
+		}}}})
+		sim := core.NewSim(&proto.RaidSimRequest{
+			SimOptions: &proto.SimOptions{RandomSeed: 100},
+			Raid:       core.SinglePlayerRaidProto(player, &proto.PartyBuffs{}, &proto.RaidBuffs{}, &proto.Debuffs{}),
+			Encounter:  core.MakeSingleTargetEncounter(0),
+		}, simsignals.CreateSignals())
+		sim.Reset()
+
+		pet := sim.Raid.Parties[0].Players[0].(WarlockAgent).GetWarlock().ActivePet
+		brand := pet.DemonicBrandAura
+		brand.Activate(sim)
+		brand.SetStacks(sim, brand.MaxStacks)
+		for _, spell := range pet.AutoCastAbilities {
+			spell.SkipCastAndApplyEffects(sim, pet.CurrentTarget)
+		}
+
+		hit := pet.GetSpell(brand.ActionID)
+		if hit.SpellSchool != tc.school {
+			t.Errorf("%v: branded hit is %v, want %v", tc.summon, hit.SpellSchool, tc.school)
+		}
+		if hit.SpellMetrics[0].Casts == 0 || brand.GetStacks() != brand.MaxStacks-hit.SpellMetrics[0].Casts {
+			t.Errorf("%v: pet spell spent %d of %d charges", tc.summon, brand.MaxStacks-brand.GetStacks(), brand.MaxStacks)
+		}
+	}
+}
