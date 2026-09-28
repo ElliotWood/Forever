@@ -48,6 +48,13 @@
 		"source": "forever",
 		"tooltip": "50 Focus\nMelee Range\nInstant\n1 min cooldown\nSlash an enemy with razor talons, causing the target to Bleed for 156 damage over 18 sec."
 	},
+	"1265904": {
+		"ability": "Dust Cloud",
+		"file": "sim/hunter/pet_abilities.go",
+		"note": "New in Forever, Tallstrider only (client SkillLineAbility, skill line 218). Client 70009: rank 5 (level 60) takes 505 armor off the target for 30 sec, 10 Focus, no cooldown; the tallstrider recasts it when it falls off, then Bites. Rank 1 (level 12) is 65, rank 2 (level 24) 175. Whether it stacks with Faerie Fire or Sunder Armor is unknown: the sim lets it stack with both, one Dust Cloud at a time. No beta log has a tallstrider yet.",
+		"source": "assumed",
+		"tooltip": "10 Focus\nMelee Range\nInstant\nYour tallstrider kicks up an abrasive cloud of dust, reducing the target's Armor by 505 for 30 sec."
+	},
 	"1293527": {
 		"ability": "Summon Hawk",
 		"assumptions": [
