@@ -1,5 +1,11 @@
 [
 	{
+		"number": 529,
+		"title": "warrior: Thunder Clap and Revenge threat measured in the beta",
+		"mergedAt": "2026-09-28",
+		"url": "https://github.com/ElliotWood/Forever/pull/529"
+	},
+	{
 		"number": 528,
 		"title": "Thunder Clap threat is its damage, not Classic's 2.5x (in-game measurement)",
 		"mergedAt": "2026-09-28",
