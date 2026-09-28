@@ -1,5 +1,11 @@
 [
 	{
+		"number": 535,
+		"title": "warlock: Demonic Brand hit is Fire for the Imp, and pet spells spend it",
+		"mergedAt": "2026-09-28",
+		"url": "https://github.com/ElliotWood/Forever/pull/535"
+	},
+	{
 		"number": 534,
 		"title": "warrior: Thunder Clap ignores armor (beta logs)",
 		"mergedAt": "2026-09-28",
