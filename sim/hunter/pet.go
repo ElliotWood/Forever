@@ -229,11 +229,11 @@ var DefaultPetConfigs = [...]PetConfig{
 		Health: 1.00, Armor: 1.05, Damage: 1.00,
 	},
 	proto.HunterOptions_Crab: {
-		Name: "Crab", FocusDump: Claw,
+		Name: "Crab", FocusDump: Claw, ExtraAbility: Pinch,
 		Health: 0.96, Armor: 1.13, Damage: 0.95,
 	},
 	proto.HunterOptions_Crocolisk: {
-		Name: "Crocolisk", FocusDump: Bite,
+		Name: "Crocolisk", SpecialAbility: Bite, FocusDump: Dismember,
 		Health: 0.95, Armor: 1.10, Damage: 1.00,
 	},
 	proto.HunterOptions_Gorilla: {
