@@ -104,7 +104,11 @@ export const WOWHEAD_DOMAIN = WOWHEAD_EXPANSIONS[WOWHEAD_EXPANSION_ENV];
 // 404s on what Forever added (items past 25000, spells past 100000, a few reused Classic ids).
 // So Classic Era for what Classic had, Forever for the rest. Checked 2026-09-23 against every
 // tooltip the 19 spec pages ask for on load: the only 404s left are TBC ids neither one has.
-const FOREVER_ONLY_SPELLS = new Set([14084]); // Improved Distract
+// Classic ids Forever reused for something else: Classic Era names them the old thing.
+const FOREVER_ONLY_SPELLS = new Set([
+	14084, // Improved Distract
+	23602, // Master of Defense (Classic Era: Shield Specialization, so its rage row read as a second Shield Specialization)
+]);
 const wowheadEnvFor = (entity: WowheadEntity, id: number): WowheadExpansionEnv => {
 	if (entity === 'item') return id < 25000 ? 4 : WOWHEAD_EXPANSION_ENV;
 	if (entity === 'spell') return id < 100000 && !FOREVER_ONLY_SPELLS.has(id) ? 4 : WOWHEAD_EXPANSION_ENV;
