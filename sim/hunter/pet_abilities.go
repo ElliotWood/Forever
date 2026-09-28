@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/spelldata"
 )
 
 type PetAbilityType int
@@ -20,6 +21,8 @@ const (
 	Screech
 	ScorpidPoison
 	SavageRend
+	Pinch
+	Dismember
 )
 
 func (hp *HunterPet) NewPetAbility(abilityType PetAbilityType) *core.Spell {
@@ -36,6 +39,10 @@ func (hp *HunterPet) NewPetAbility(abilityType PetAbilityType) *core.Spell {
 		return hp.newScorpidPoison()
 	case SavageRend:
 		return hp.newSavageRend()
+	case Pinch:
+		return hp.newPetStrike(spellData.PinchTriggered.Highest())
+	case Dismember:
+		return hp.newPetStrike(spellData.DismemberTriggered.Highest())
 	case Unknown:
 		return nil
 	default:
@@ -319,6 +326,50 @@ func (hp *HunterPet) newSavageRend() *core.Spell {
 			if result.Landed() {
 				spell.Dot(target).Apply(sim)
 			}
+		},
+	})
+}
+
+// Pinch (Crab, skill line 214) and Dismember (Crocolisk, 212) are new in Forever: a single melee hit
+// with the damage, focus cost and cooldown read off the client row (rank 5: Pinch 95 for 50 focus on
+// 30 sec, Dismember 54 for 35 focus on 6 sec, both +-7%). Pinch's snare and Dismember's healing
+// reduction are left out. Beta logs: Consumer's crab (foreverlogs 2674) landed rank 1 Pinch (20)
+// 17 times at ~17 a hit through level 20 mob armor, so no attack power share.
+func (hp *HunterPet) newPetStrike(rank *spelldata.Spell) *core.Spell {
+	damage := rank.DamageEffect()
+
+	return hp.RegisterSpell(core.SpellConfig{
+		ActionID:       core.ActionID{SpellID: rank.ID},
+		SpellSchool:    rank.SpellSchool(),
+		DefenseType:    rank.DefenseTypeCore(),
+		ClassSpellMask: HunterPetDamage,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		Flags:          core.SpellFlagMeleeMetrics,
+		MaxRange:       core.MaxMeleeRange,
+
+		FocusCost: core.FocusCostOptions{
+			Cost: int32(rank.Cost()),
+		},
+		Cast: core.CastConfig{
+			DefaultCast: core.Cast{
+				GCD: PetGCD,
+			},
+			IgnoreHaste: true,
+			CD: core.Cooldown{
+				Timer:    hp.NewTimer(),
+				Duration: rank.Cooldown(),
+			},
+		},
+
+		DamageMultiplier: 1,
+		ThreatMultiplier: 1,
+
+		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
+			return hp.IsEnabled()
+		},
+
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			spell.CalcAndDealDamage(sim, target, damage.Roll(sim, core.CharacterLevel), spell.OutcomeMeleeSpecialHitAndCrit)
 		},
 	})
 }

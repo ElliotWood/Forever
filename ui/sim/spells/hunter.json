@@ -13,6 +13,20 @@
 		"source": "forever",
 		"tooltip": "30 sec duration\n50% of your Mana regeneration continues while casting."
 	},
+	"1264742": {
+		"ability": "Pinch",
+		"file": "sim/hunter/pet_abilities.go",
+		"note": "New in Forever, Crab only (client SkillLineAbility, skill line 214). Client 70009: rank 5 (level 60) 95 damage +-7%, 50 Focus, 30 sec cooldown; the pet casts it whenever it is ready, then Claws. Beta logs (foreverlogs 2674, Consumer's crab) land rank 1 (20) 17 times at about 17 a hit through level 20 mob armor, so no attack power share. The 50% snare is left out.",
+		"source": "forever",
+		"tooltip": "50 Focus\nMelee Range\nInstant\n30 sec cooldown\nPinches an enemy's legs for 88 to 102 damage and reduces movement speed by 50% for 9 sec."
+	},
+	"1264933": {
+		"ability": "Dismember",
+		"file": "sim/hunter/pet_abilities.go",
+		"note": "New in Forever, Crocolisk only (client SkillLineAbility, skill line 212). Client 70009: rank 5 (level 60) 54 damage +-7%, 35 Focus, 6 sec cooldown; the crocolisk Bites when Bite is ready and Dismembers with the focus left over. The 50% healing reduction is left out.",
+		"source": "forever",
+		"tooltip": "35 Focus\nMelee Range\nInstant\n6 sec cooldown\nViciously bites enemy appendages for 50 to 58 damage and reduces the effectiveness of any healing by 50% for 10 sec."
+	},
 	"1265069": {
 		"ability": "Savage Rend",
 		"file": "sim/hunter/pet_abilities.go",
