@@ -58,8 +58,8 @@ func (warrior *Warrior) registerThunderClap() {
 		},
 
 		DamageMultiplier: 1,
-		// Not in the client table. Classic's 2.5x is gone: in game (level 20, Defensive Stance, threat
-		// meter on a dummy, 2026-09-28) rank 2 hitting for ~23 generated ~21 threat, so no bonus at all.
+		// Measured in the level 20 beta (2026-09-28): threat equals damage before the stance modifier,
+		// 17 damage for 14 threat in Battle Stance (x0.8) and ~21 in Defensive (x1.3). Was 2.5.
 		ThreatMultiplier: 1,
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
