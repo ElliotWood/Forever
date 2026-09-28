@@ -251,7 +251,7 @@
 	"9896": {
 		"ability": "Rip",
 		"file": "sim/druid/rip.go",
-		"note": "Client 70009: less damage per combo point at every rank (rank 6 17 + 28 a point a tick -> 15 + 25.5). The client stores no attack power scaling, so the sim keeps its own.",
+		"note": "Client 70009: less damage per combo point at every rank (rank 6 17 + 28 a point a tick -> 15 + 25.5). The client stores no attack power scaling, so the sim keeps its own: 1% of attack power a tick per combo point, capped at 4 points. The beta's combat logs agree: a level 20 cat (Feet, foreverlogs 2673, 178 non-crit rank 1 ticks) goes up about 6.3 a tick per point from 1 to 4 points (4.4 from the client plus about 1.9 from attack power) but only 4.4 from 4 to 5, landing 8.9 / 15.4 / 21.6 / 27.7 / 32.2 against 9.3 / 15.5 / 21.8 / 28.1 / 32.5 predicted; without the cap, 5 points would land 34.3.",
 		"source": "forever",
 		"tooltip": "30 Energy\nMelee Range\nInstant\nFinishing move that causes damage over time. Damage increases per combo point and by your Attack Power:\n1 point: 243 damage over 12 sec.\n2 points: 396 damage over 12 sec.\n3 points: 549 damage over 12 sec.\n4 points: 702 damage over 12 sec.\n5 points: 855 damage over 12 sec."
 	},
