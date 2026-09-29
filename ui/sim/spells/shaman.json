@@ -213,7 +213,7 @@
 	"25505": {
 		"ability": "Windfury Weapon",
 		"file": "sim/shaman/weapon_imbues.go",
-		"note": "Not a Forever spell id: the Burning Crusade Windfury Attack id, kept as the label for the imbue's extra attacks and absent from the beta client. The numbers are Windfury Weapon rank 4's (16361), identical in beta client 1.60.1.70009 and Classic Era: 333 bonus attack power and 2 extra attacks, on the 20% enchant proc.",
+		"note": "Not a Forever spell id: the Burning Crusade Windfury Attack id, kept as the imbue's label and absent from the beta client. Beta client 1.60.1.70009: every rank's enchant (283/284/525/1669) equips 439431, which rolls 20% on landed melee autos and abilities (ProcTypeMask 20) with a 1.5 sec ProcCategoryRecovery and casts rank 4's 16361: +333 melee attack power for 1.5 sec (SpellDuration 65) and 3 charges spent by landed auto attacks (ProcTypeMask 4), plus 2 extra attacks (SPELL_EFFECT_ADD_EXTRA_ATTACKS). The sim swings the main hand twice as ordinary white attacks (glancing, white hit table, timer reset, the third charge lifts the next swing if it lands within 1.5 sec), not two special hits. An off-hand proc swings the off hand twice; the client may give main-hand attacks there, unmeasured.",
 		"source": "classic"
 	},
 	"26121": {
