@@ -1,5 +1,17 @@
 [
 	{
+		"number": 560,
+		"title": "warrior, warlock: Revenge and Shield Slam roll the client's range, Death Coil reads its coefficient",
+		"mergedAt": "2026-09-29",
+		"url": "https://github.com/ElliotWood/Forever/pull/560"
+	},
+	{
+		"number": 559,
+		"title": "Forever client build 1.60.1.70058",
+		"mergedAt": "2026-09-29",
+		"url": "https://github.com/ElliotWood/Forever/pull/559"
+	},
+	{
 		"number": 558,
 		"title": "shaman: own Windfury Totem spends its attack power charges like the client row says",
 		"mergedAt": "2026-09-29",
