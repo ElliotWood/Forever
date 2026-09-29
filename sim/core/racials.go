@@ -213,12 +213,14 @@ func applyRaceEffects(agent Agent) {
 			},
 		})
 
+		// Client 1.60.1.70058: Read Ley Line has a 2 sec cast (SpellMisc CastingTimeIndex).
 		character.RegisterSpell(SpellConfig{
 			ActionID: ActionID{SpellID: 1259705},
 			Flags:    SpellFlagAPL | SpellFlagNoOnCastComplete,
 			Cast: CastConfig{
 				DefaultCast: Cast{
 					GCD: GCDDefault,
+					CastTime: time.Second * 2,
 				},
 				CD: Cooldown{
 					Timer:    character.NewTimer(),
@@ -246,12 +248,14 @@ func applyRaceEffects(agent Agent) {
 			},
 		})
 
+		// Client 1.60.1.70058: Skysight has a 0.5 sec cast (SpellMisc CastingTimeIndex).
 		character.RegisterSpell(SpellConfig{
 			ActionID: ActionID{SpellID: 1259686},
 			Flags:    SpellFlagAPL | SpellFlagNoOnCastComplete,
 			Cast: CastConfig{
 				DefaultCast: Cast{
 					GCD: GCDDefault,
+					CastTime: time.Millisecond * 500,
 				},
 				CD: Cooldown{
 					Timer:    character.NewTimer(),
