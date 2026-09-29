@@ -45,8 +45,8 @@ func (mage *Mage) registerFrostTalents() {
 
 // registerFrostWarding implements Frost Warding, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// Not modelled: 11189 raises Frost/Ice Armor's armor and resistance and lets Frost Ward reflect
+// Frost spells; neither changes damage dealt.
 func (mage *Mage) registerFrostWarding() {
 	if mage.Talents.FrostWarding == 0 {
 		return
@@ -90,8 +90,8 @@ func (mage *Mage) registerIceShards() {
 
 // registerPermafrost implements Permafrost, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// Not modelled: 11175 lengthens Chill effects 11/22/33% and slows 3/7/10% more; neither changes
+// damage in the sim.
 func (mage *Mage) registerPermafrost() {
 	if mage.Talents.Permafrost == 0 {
 		return
@@ -113,8 +113,7 @@ func (mage *Mage) registerImprovedFrostNova() {
 
 // registerFrostbite implements Frostbite, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// Not modelled: 11071 gives Chill effects a 5/10/15% chance to freeze (12494); bosses are immune.
 func (mage *Mage) registerFrostbite() {
 	if mage.Talents.Frostbite == 0 {
 		return
@@ -155,8 +154,8 @@ func (mage *Mage) registerFrostChanneling() {
 
 // registerArcticReach implements Arctic Reach, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// Not modelled: 16757 adds 10/20% to Frostbolt and Blizzard range and Frost Nova and Cone of Cold
+// radius; the sim has no range.
 func (mage *Mage) registerArcticReach() {
 	if mage.Talents.ArcticReach == 0 {
 		return
@@ -165,8 +164,7 @@ func (mage *Mage) registerArcticReach() {
 
 // registerIceBlock implements Ice Block, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// Not modelled: 11958 is a defensive immunity during which the mage cannot act.
 func (mage *Mage) registerIceBlock() {
 	if !mage.Talents.IceBlock {
 		return
@@ -324,8 +322,7 @@ func (mage *Mage) registerWinterChill() {
 
 // registerIceBarrier implements Ice Barrier, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// Not modelled: 11426 is an absorb shield (rank 1 431); the sim models no damage taken for a mage.
 func (mage *Mage) registerIceBarrier() {
 	if !mage.Talents.IceBarrier {
 		return

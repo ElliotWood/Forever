@@ -122,8 +122,8 @@ func NewMage(character *core.Character, options *proto.Player) *Mage {
 	mage.EnableManaBar()
 	mage.AddStatDependency(stats.Agility, stats.PhysicalCritPercent, core.CritPerAgiMaxLevel[character.Class])
 
-	// TODO: Forever drops Summon Water Elemental; the pet is never created until we know
-	// whether the talent moved elsewhere.
+	// Forever has no Water Elemental: client 70009 carries no Summon Water Elemental (31687) at all,
+	// so the pet is never created.
 
 	return mage
 }

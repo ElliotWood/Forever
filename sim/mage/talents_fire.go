@@ -144,8 +144,7 @@ func (mage *Mage) registerIgnite() {
 
 // registerFlameThrowing implements Flame Throwing, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// Not modelled: 11100 adds 3/6 yards to Fire spell range; the sim has no range to extend.
 func (mage *Mage) registerFlameThrowing() {
 	if mage.Talents.FlameThrowing == 0 {
 		return
@@ -154,8 +153,7 @@ func (mage *Mage) registerFlameThrowing() {
 
 // registerImpact implements Impact, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// Not modelled: 11103 gives Fire spells a chance to stun (12355); bosses are immune.
 func (mage *Mage) registerImpact() {
 	if mage.Talents.Impact == 0 {
 		return
@@ -190,8 +188,7 @@ func (mage *Mage) registerImprovedFlamestrike() {
 
 // registerImprovedFireWard implements Improved Fire Ward, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// Not modelled: 11094 gives Fire Ward a 10/20% chance to reflect Fire spells; the sim casts no wards.
 func (mage *Mage) registerImprovedFireWard() {
 	if mage.Talents.ImprovedFireWard == 0 {
 		return
