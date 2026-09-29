@@ -62,8 +62,8 @@ func (mage *Mage) registerArcaneFocus() {
 
 // registerImprovedChanneling implements Improved Channeling, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// Client 11237 (row values): 20% to keep channeling Arcane Missiles through damage taken, 14% for Arcane
+// Blast. The sim's mage takes no damage, so it changes no number.
 func (mage *Mage) registerImprovedChanneling() {
 	if mage.Talents.ImprovedChanneling == 0 {
 		return
