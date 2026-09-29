@@ -39,3 +39,42 @@ func TestImprovedHealingDiscountsPenance(t *testing.T) {
 		t.Errorf("Penance costs %v with Improved Healing 3, %v without; want 15%% off", discounted, base)
 	}
 }
+
+// Chastise hits humanoids only, and its five ranks share one 2 minute cooldown.
+func TestChastiseHumanoidsAndSharedCooldown(t *testing.T) {
+	player := core.WithSpec(&proto.Player{
+		Race:        proto.Race_RaceUndead,
+		Class:       proto.Class_ClassPriest,
+		Equipment:   &proto.EquipmentSpec{},
+		Consumables: &proto.ConsumesSpec{},
+		Rotation:    &proto.APLRotation{Type: proto.APLRotation_TypeAPL},
+	}, &proto.Player_DpsPriest{DpsPriest: &proto.DpsPriest{Options: &proto.DpsPriest_Options{ClassOptions: &proto.PriestOptions{}}}})
+	encounter := core.MakeSingleTargetEncounter(0)
+	encounter.Targets = []*proto.Target{
+		{Name: "beast", Level: 63, MobType: proto.MobType_MobTypeBeast},
+		{Name: "humanoid", Level: 63, MobType: proto.MobType_MobTypeHumanoid},
+	}
+	sim := core.NewSim(&proto.RaidSimRequest{
+		SimOptions: &proto.SimOptions{RandomSeed: 100},
+		Raid:       core.SinglePlayerRaidProto(player, &proto.PartyBuffs{}, &proto.RaidBuffs{}, &proto.Debuffs{}),
+		Encounter:  encounter,
+	}, simsignals.CreateSignals())
+	sim.Reset()
+
+	priest := sim.Raid.Parties[0].Players[0].(PriestAgent).GetPriest()
+	other, humanoid := sim.Encounter.AllTargetUnits[0], sim.Encounter.AllTargetUnits[1]
+	top := priest.GetSpell(core.ActionID{SpellID: 1277335})
+	low := priest.GetSpell(core.ActionID{SpellID: 1277331})
+	if top.CanCast(sim, other) {
+		t.Fatal("Chastise castable on a non-humanoid")
+	}
+	if !top.Cast(sim, humanoid) {
+		t.Fatal("Chastise not castable on a humanoid")
+	}
+	if low.IsReady(sim) {
+		t.Error("rank 1 ready after rank 5 was cast: the ranks should share the cooldown")
+	}
+	if dealt := top.SpellMetrics[humanoid.UnitIndex].TotalDamage; dealt < 271 {
+		t.Errorf("Chastise dealt %.1f, want at least rank 5's 272", dealt)
+	}
+}
