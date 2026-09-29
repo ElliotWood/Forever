@@ -4,6 +4,7 @@ import (
 	"math"
 	"slices"
 	"testing"
+	"time"
 
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/simsignals"
@@ -214,6 +215,12 @@ func TestSkyborneRacials(t *testing.T) {
 		hasSkysight := fw.GetSpell(ActionID{SpellID: 1259686}) != nil
 		if hasReadLeyLine != (race == proto.Race_RaceHighOrderSkyborne) || hasSkysight != (race == proto.Race_RaceWindshaperSkyborne) {
 			t.Errorf("%s: Read Ley Line is the High Order's and Skysight the Windshapers', got %t / %t", race, hasReadLeyLine, hasSkysight)
+		}
+		// Client 1.60.1.70058 SpellMisc: Read Ley Line casts in 2 sec, Skysight in 0.5 sec.
+		for id, want := range map[int32]time.Duration{1259705: time.Second * 2, 1259686: time.Millisecond * 500} {
+			if spell := fw.GetSpell(ActionID{SpellID: id}); spell != nil && spell.DefaultCast.CastTime != want {
+				t.Errorf("%s: spell %d should cast in %s, got %s", race, id, want, spell.DefaultCast.CastTime)
+			}
 		}
 	}
 }
