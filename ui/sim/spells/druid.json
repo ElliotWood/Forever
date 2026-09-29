@@ -87,7 +87,7 @@
 	"31018": {
 		"ability": "Ferocious Bite",
 		"file": "sim/druid/ferocious_bite.go",
-		"note": "Client 70009: damage, the energy conversion and the 35 Energy are Classic's.",
+		"note": "Client 70009: damage, the energy conversion and the 35 Energy are Classic's. The sim reads 147 per combo point and 2.7 per extra Energy from the client row and rolls its 82 +-30 range each bite (it used the average); the Forever tooltip's 199-259 at one point and 787-847 at five match.",
 		"source": "classic"
 	},
 	"408255": {
