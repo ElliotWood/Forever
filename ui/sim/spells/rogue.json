@@ -223,5 +223,11 @@
 		"file": "sim/rogue/slice_and_dice.go",
 		"note": "Rank 2, the rank the sim casts. Beta client 1.60.1.70009 keeps 30% attack speed, 25 Energy and 6 sec plus 3 sec a combo point; only the aura type number changed.",
 		"source": "classic"
+	},
+	"8643": {
+		"ability": "Kidney Shot",
+		"file": "sim/rogue/kidney_shot.go",
+		"note": "Rank 2, the rank the sim casts. Beta client 1.60.1.70009 matches Classic Era: 25 Energy, 20 sec cooldown, stuns for 1 sec plus 1 sec a combo point (2 to 6 sec), 80% of the energy back on a miss. Its third effect is extra damage taken from the rogue, every school, which is 0 until Improved Kidney Shot (14174, new in Forever) raises it to 5/10% for as long as the stun holds. The stun also stops the target dodging, parrying and blocking. Castable from an APL; no default rotation casts it, and a stun-immune target takes neither the stun nor the bonus.",
+		"source": "classic"
 	}
 }
