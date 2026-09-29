@@ -75,6 +75,14 @@
 		"source": "forever",
 		"tooltip": "160 Mana\nInstant\n12 sec cooldown\nAn instant attack that lashes the target, causing 50 Shadow damage."
 	},
+	"1225228": {
+		"ability": "Bane of Havoc",
+		"assumptions": ["The copied 15% is not modified again: no armor, resistance or damage-taken debuff on the baned target changes it", "Only the warlock's own damage is copied, not the demon's"],
+		"file": "sim/warlock/talents_destruction.go",
+		"note": "Destruction talent, new in Forever (beta client 1.60.1.70009): a 5 min bane, one target at a time, whose A_DUMMY 15 copies 15% of the warlock's damage to other targets onto the baned target. It shares the bane slot with Agony and Doom. The row has no global cooldown category, so the sim casts it off the GCD. Only matters with two or more targets; no default rotation casts it.",
+		"source": "assumed",
+		"tooltip": "5% of base mana\n30 yd range\nInstant\nAfflicts the target for 5 min, causing 15% of all damage done by the Warlock to other targets to also be dealt to the cursed target. Bane of Havoc is limited to 1 target, and only one Bane per Warlock can be active on any one target."
+	},
 	"1293696": {
 		"ability": "Demonic Brand",
 		"assumptions": ["The extra hit carries three times normal threat, rolls spell hit and cannot crit"],

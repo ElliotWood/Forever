@@ -1,6 +1,7 @@
 package warlock
 
 import (
+	"math"
 	"testing"
 
 	"github.com/wowsims/forever/sim/core"
@@ -85,5 +86,50 @@ func TestDemonicBrandImpSpendsWithFirebolt(t *testing.T) {
 		if hit.SpellMetrics[0].Casts == 0 || brand.GetStacks() != brand.MaxStacks-hit.SpellMetrics[0].Casts {
 			t.Errorf("%v: pet spell spent %d of %d charges", tc.summon, brand.MaxStacks-brand.GetStacks(), brand.MaxStacks)
 		}
+	}
+}
+
+// Bane of Havoc copies 15% of the warlock's damage to other targets onto the baned target (client
+// 1225228), and nothing of the damage the baned target takes itself.
+func TestBaneOfHavocCopiesDamage(t *testing.T) {
+	player := core.WithSpec(&proto.Player{
+		Race:          proto.Race_RaceOrc,
+		Class:         proto.Class_ClassWarlock,
+		Equipment:     &proto.EquipmentSpec{},
+		Consumables:   &proto.ConsumesSpec{},
+		TalentsString: "--0000000000001",
+		Rotation:      &proto.APLRotation{Type: proto.APLRotation_TypeAPL},
+	}, &proto.Player_Warlock{Warlock: &proto.Warlock{Options: &proto.Warlock_Options{ClassOptions: &proto.WarlockOptions{
+		Summon: proto.WarlockOptions_NoSummon,
+	}}}})
+	encounter := core.MakeSingleTargetEncounter(0)
+	encounter.Targets = append(encounter.Targets, core.NewDefaultTarget())
+	sim := core.NewSim(&proto.RaidSimRequest{
+		SimOptions: &proto.SimOptions{RandomSeed: 100},
+		Raid:       core.SinglePlayerRaidProto(player, &proto.PartyBuffs{}, &proto.RaidBuffs{}, &proto.Debuffs{}),
+		Encounter:  encounter,
+	}, simsignals.CreateSignals())
+	sim.Reset()
+
+	warlock := sim.Raid.Parties[0].Players[0].(WarlockAgent).GetWarlock()
+	main, havoc := sim.Encounter.AllTargetUnits[0], sim.Encounter.AllTargetUnits[1]
+	bane := warlock.GetSpell(core.ActionID{SpellID: 1225228})
+	copied := warlock.GetSpell(core.ActionID{SpellID: 1225228, Tag: 1})
+	for i := 0; i < 20 && !havoc.HasActiveAura("Bane of Havoc-"+warlock.Label); i++ {
+		bane.SkipCastAndApplyEffects(sim, havoc)
+	}
+
+	for i := 0; i < 20 && warlock.SearingPain.SpellMetrics[main.UnitIndex].TotalDamage == 0; i++ {
+		warlock.SearingPain.SkipCastAndApplyEffects(sim, main)
+	}
+	dealt := warlock.SearingPain.SpellMetrics[main.UnitIndex].TotalDamage
+	got := copied.SpellMetrics[havoc.UnitIndex].TotalDamage
+	if dealt == 0 || math.Abs(got-dealt*0.15) > 1e-6 {
+		t.Fatalf("Searing Pain dealt %.2f to the main target, bane copied %.2f, want %.2f", dealt, got, dealt*0.15)
+	}
+
+	warlock.SearingPain.SkipCastAndApplyEffects(sim, havoc)
+	if again := copied.SpellMetrics[havoc.UnitIndex].TotalDamage; again != got {
+		t.Errorf("damage to the baned target itself copied: %.2f -> %.2f", got, again)
 	}
 }
