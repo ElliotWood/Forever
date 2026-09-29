@@ -220,7 +220,9 @@ func NewRogue(character *core.Character, options *proto.Player, talents string) 
 	rogue.AddStatDependency(stats.Strength, stats.AttackPower, 1)
 	rogue.AddStatDependency(stats.Agility, stats.AttackPower, 1)
 	rogue.AddStatDependency(stats.Agility, stats.PhysicalCritPercent, core.CritPerAgiMaxLevel[character.Class])
-	rogue.AddStatDependency(stats.Agility, stats.DodgeRating, 1/20*core.DodgeRatingPerDodgePercent)
+	// Classic's rogue dodges at twice its crit rate per agility (14.5 agility a dodge at 60). The old
+	// 1/20 was TBC's, and as an integer division it gave no dodge at all.
+	rogue.AddStatDependency(stats.Agility, stats.DodgeRating, 2*core.CritPerAgiMaxLevel[character.Class]*core.DodgeRatingPerDodgePercent)
 
 	return rogue
 }
