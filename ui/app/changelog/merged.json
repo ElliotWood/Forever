@@ -1,5 +1,11 @@
 [
 	{
+		"number": 556,
+		"title": "druid: Ferocious Bite rolls its damage range and reads 147 per combo point from the client",
+		"mergedAt": "2026-09-29",
+		"url": "https://github.com/ElliotWood/Forever/pull/556"
+	},
+	{
 		"number": 555,
 		"title": "talents: mage and druid stub notes read the client instead of \"to be implemented\"",
 		"mergedAt": "2026-09-29",
