@@ -119,11 +119,14 @@ func driveManaTideTotems(char *core.Character, party *proto.PartyBuffs) {
 	})
 }
 
-// The totem's aura is the attack power a windfury proc grants. The totem hands
-// the proc out as a combat enchant on the main hand (SpellItemEnchantment 564:
-// 10610 at 20%), whose chance the store carries in 10610's ProcChance column.
-// The driver keeps the 1.5 second internal cooldown and the extra attack the
-// proc lands, and the totem aura that holds the category.
+// The totem's aura is the attack power a windfury proc grants. Since build
+// 70009 the totem hands the proc out as a party aura (10612, an area
+// A_PROC_TRIGGER_SPELL) rather than Era's main-hand enchant 564, which nothing
+// in the client applies any more; its row states the 20%, the 100 ms internal
+// cooldown and what hears it: every melee auto and special, off-hand included.
+// The extra attack 10610 grants is always a main-hand one.
+var windfuryTotemPartyAura = spelldata.MustFind(10612)
+
 func driveWindfuryTotem(char *core.Character, _ *proto.PartyBuffs) {
 	procAura := WindfuryTotemAura(&char.Unit, false, 0)
 	// The attack power is only there for a moment after a proc, so it is not
@@ -131,8 +134,8 @@ func driveWindfuryTotem(char *core.Character, _ *proto.PartyBuffs) {
 	procAura.BuildPhase = core.CharacterBuildPhaseNone
 
 	// The row's own proc flags say what spends a charge: every auto attack that
-	// lands, since the column's chance is the enchantment's roll. The attack
-	// power stays until the charges are gone or the row's duration runs out.
+	// lands. The attack power stays until the charges are gone or the row's
+	// duration runs out.
 	procAura.MaxStacks = int32(windfuryTotemSpell.ProcCharges)
 	spender := spelldata.ProcTrigger(char, windfuryTotemSpell, func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
 		procAura.RemoveStack(sim)
@@ -141,31 +144,24 @@ func driveWindfuryTotem(char *core.Character, _ *proto.PartyBuffs) {
 	spender.TriggerImmediately = true
 	procAura.AttachProcTriggerCallback(&char.Unit, spender)
 
-	// A combat enchant hears every hit of the weapon it sits on, specials
-	// included. A main-hand auto that procs it has spent the first charge
-	// itself, so the extra attack is the only one buffed; a special hands both
-	// charges to the extra attack and the auto after it.
+	// An auto that procs it has spent the first charge itself, so the extra
+	// attack is the only one buffed; a special hands both charges to the extra
+	// attack and the auto after it.
 	var windfurySpell *core.Spell
-	trigger := core.ProcTrigger{
-		Name:               "Windfury Totem Trigger",
-		MetricsActionID:    core.ActionID{SpellID: 25580, Tag: -1},
-		ProcChance:         windfuryTotemSpell.StatedChance(),
-		Duration:           core.NeverExpires,
-		Outcome:            core.OutcomeLanded,
-		ICD:                time.Millisecond * 1500,
-		TriggerImmediately: true,
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			procAura.Activate(sim)
-			charges := procAura.MaxStacks
-			if spell.ProcMask.Matches(core.ProcMaskMeleeMHAuto) {
-				charges--
-			}
-			procAura.SetStacks(sim, charges)
-			char.AutoAttacks.MaybeReplaceMHSwing(sim, windfurySpell).Cast(sim, result.Target)
-		},
-	}
-	spelldata.WeaponProc()(char, &trigger)
-	trigger.ProcMask = core.ProcMaskMeleeMH
+	trigger := spelldata.ProcTrigger(char, windfuryTotemPartyAura, func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+		procAura.Activate(sim)
+		charges := procAura.MaxStacks
+		if spell.ProcMask.Matches(core.ProcMaskMeleeWhiteHit) {
+			charges--
+		}
+		procAura.SetStacks(sim, charges)
+		char.AutoAttacks.MaybeReplaceMHSwing(sim, windfurySpell).Cast(sim, result.Target)
+	})
+	trigger.Name = "Windfury Totem Trigger"
+	trigger.ActionID = core.ActionID{}
+	trigger.MetricsActionID = core.ActionID{SpellID: 25580, Tag: -1}
+	trigger.Duration = core.NeverExpires
+	trigger.TriggerImmediately = true
 	procTrigger := char.MakeProcTriggerAura(trigger)
 
 	// The totem stands for 10 seconds and the shaman drops a new one every 5,
@@ -198,10 +194,6 @@ func driveWindfuryTotem(char *core.Character, _ *proto.PartyBuffs) {
 			procTrigger.Deactivate(sim)
 			totemAura.Deactivate(sim)
 		},
-	})
-
-	char.RegisterItemSwapCallback([]proto.ItemSlot{proto.ItemSlot_ItemSlotMainHand}, func(sim *core.Simulation, slot proto.ItemSlot) {
-		totemAura.Deactivate(sim)
 	})
 }
 
