@@ -42,31 +42,20 @@ func driveBattleShout(char *core.Character, party *proto.PartyBuffs) {
 
 // A druid innervates a character who is nearly out of mana, so that every other
 // mana cooldown is spent first. The aura forces full spirit regen while it is
-// up and the metrics record what the character gains from it.
+// up. Its mana is regen (29166 has no energize effect), so it lands in the regen
+// metrics and makes no threat.
 func driveInnervates(char *core.Character, individual *proto.IndividualBuffs) {
 	aura := InnervatesAura(&char.Unit, false, 0)
-	manaMetrics := char.NewManaMetrics(aura.ActionID)
 
-	threshold, expectedMana := 0.0, 0.0
+	threshold := 0.0
 	char.Env.RegisterPostFinalizeEffect(func() {
 		threshold = innervateManaThreshold(char)
-		expectedMana = char.SpiritManaRegenPerSecond() * innervateSpiritRegenMultiplier * aura.Duration.Seconds()
 	})
 
-	const ticks = 10
 	aura.ApplyOnGain(func(aura *core.Aura, sim *core.Simulation) {
 		char.PseudoStats.ForceFullSpiritRegen = true
 		char.PseudoStats.SpiritRegenMultiplier *= innervateSpiritRegenMultiplier
 		char.UpdateManaRegenRates()
-
-		perTick := expectedMana / ticks
-		core.StartPeriodicAction(sim, core.PeriodicActionOptions{
-			Period:   aura.Duration / ticks,
-			NumTicks: ticks,
-			OnAction: func(sim *core.Simulation) {
-				manaMetrics.AddEvent(perTick, perTick)
-			},
-		})
 	}).ApplyOnExpire(func(aura *core.Aura, sim *core.Simulation) {
 		char.PseudoStats.ForceFullSpiritRegen = false
 		char.PseudoStats.SpiritRegenMultiplier /= innervateSpiritRegenMultiplier
