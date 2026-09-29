@@ -1,5 +1,11 @@
 [
 	{
+		"number": 547,
+		"title": "talents: replace five stale \"to be implemented\" notes with the client's reading",
+		"mergedAt": "2026-09-29",
+		"url": "https://github.com/ElliotWood/Forever/pull/547"
+	},
+	{
 		"number": 546,
 		"title": "rogue: Kidney Shot castable, Improved Kidney Shot applied (client rows)",
 		"mergedAt": "2026-09-29",
