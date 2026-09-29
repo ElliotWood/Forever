@@ -213,7 +213,7 @@ var DefaultPetConfigs = [...]PetConfig{
 		Health: 1.00, Armor: 1.00, Damage: 1.07,
 	},
 	proto.HunterOptions_Bear: {
-		Name: "Bear", SpecialAbility: Bite, FocusDump: Claw,
+		Name: "Bear", SpecialAbility: Bite, FocusDump: Claw, ExtraAbility: Swipe,
 		Health: 1.08, Armor: 1.05, Damage: 0.91,
 	},
 	proto.HunterOptions_Owl: {
