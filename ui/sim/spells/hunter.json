@@ -20,6 +20,13 @@
 		"source": "forever",
 		"tooltip": "60 Focus\nInstant\n1 min cooldown\nShakes the ground with thundering force, doing 122 to 142 Nature damage to all enemies within 8 yards."
 	},
+	"1264502": {
+		"ability": "Swipe",
+		"file": "sim/hunter/pet_abilities.go",
+		"note": "New in Forever, Bear only. Client 70009: rank 5 (level 60) 21 damage +-7% (20-22) to up to 3 enemies (ChainTargets 3), 20 Focus, 5 sec cooldown; Wowhead env 16 agrees. Rank 1 (level 12) is 4. The bear swipes whenever it is ready with 3 or more enemies up, else Bites and Claws: Claw's 43-59 for 25 Focus does more on one or two targets. No beta log has a bear Swipe yet.",
+		"source": "forever",
+		"tooltip": "20 Focus\nMelee Range\nInstant\n5 sec cooldown\nSwipe 3 nearby enemies, inflicting 20 to 22 damage."
+	},
 	"1264742": {
 		"ability": "Pinch",
 		"file": "sim/hunter/pet_abilities.go",

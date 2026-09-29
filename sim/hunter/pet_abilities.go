@@ -27,6 +27,7 @@ const (
 	TendonRip
 	DustCloud
 	Thunderstomp
+	Swipe
 )
 
 func (hp *HunterPet) NewPetAbility(abilityType PetAbilityType) *core.Spell {
@@ -55,6 +56,8 @@ func (hp *HunterPet) NewPetAbility(abilityType PetAbilityType) *core.Spell {
 		return hp.newDustCloud()
 	case Thunderstomp:
 		return hp.newThunderstomp()
+	case Swipe:
+		return hp.newSwipe()
 	case Unknown:
 		return nil
 	default:
@@ -475,6 +478,51 @@ func (hp *HunterPet) newThunderstomp() *core.Spell {
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			spell.CalcAndDealCleaveDamageWithVariance(sim, target, int32(rank.MaxTargets), spell.OutcomeMagicHitAndCrit,
+				func(sim *core.Simulation, _ *core.Spell) float64 { return damage.Roll(sim, core.CharacterLevel) })
+		},
+	})
+}
+
+// Swipe is new in Forever and the Bear's alone: a melee hit on up to 3 enemies (client row ChainTargets 3;
+// rank 5 1264502 21 +-7%, so 20-22, 20 focus, 5 sec cooldown; Wowhead env 16 agrees). Claw's 43-59 for 25 focus
+// beats it on one or two targets (sim: 2 targets 193.9 -> 193.2 hunter DPS with Swipe, 3 targets 194.8 ->
+// 197.2), so the bear swipes only when 3 or more enemies are up.
+func (hp *HunterPet) newSwipe() *core.Spell {
+	rank := spellData.SwipeTriggered.Highest()
+	damage := rank.DamageEffect()
+
+	return hp.RegisterSpell(core.SpellConfig{
+		ActionID:       core.ActionID{SpellID: rank.ID},
+		SpellSchool:    rank.SpellSchool(),
+		DefenseType:    rank.DefenseTypeCore(),
+		ClassSpellMask: HunterPetDamage,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		Flags:          core.SpellFlagMeleeMetrics,
+		MaxRange:       core.MaxMeleeRange,
+
+		FocusCost: core.FocusCostOptions{
+			Cost: int32(rank.Cost()),
+		},
+		Cast: core.CastConfig{
+			DefaultCast: core.Cast{
+				GCD: PetGCD,
+			},
+			IgnoreHaste: true,
+			CD: core.Cooldown{
+				Timer:    hp.NewTimer(),
+				Duration: rank.Cooldown(),
+			},
+		},
+
+		DamageMultiplier: 1,
+		ThreatMultiplier: 1,
+
+		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
+			return hp.IsEnabled() && sim.Environment.ActiveTargetCount() >= 3
+		},
+
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			spell.CalcAndDealCleaveDamageWithVariance(sim, target, int32(damage.ChainTargets), spell.OutcomeMeleeSpecialHitAndCrit,
 				func(sim *core.Simulation, _ *core.Spell) float64 { return damage.Roll(sim, core.CharacterLevel) })
 		},
 	})
