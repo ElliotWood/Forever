@@ -1,5 +1,11 @@
 [
 	{
+		"number": 558,
+		"title": "shaman: own Windfury Totem spends its attack power charges like the client row says",
+		"mergedAt": "2026-09-29",
+		"url": "https://github.com/ElliotWood/Forever/pull/558"
+	},
+	{
 		"number": 557,
 		"title": "racials: Beast Slaying, Big Game Hunter and Elemental Insight are +5% damage only",
 		"mergedAt": "2026-09-29",
