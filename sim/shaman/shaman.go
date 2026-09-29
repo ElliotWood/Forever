@@ -31,7 +31,8 @@ func NewShaman(character *core.Character, talents string, selfBuffs SelfBuffs) *
 	// Add Shaman stat dependencies
 	shaman.AddStatDependency(stats.BonusArmor, stats.Armor, 1)
 	shaman.AddStatDependency(stats.Agility, stats.PhysicalCritPercent, core.CritPerAgiMaxLevel[shaman.Class])
-	shaman.AddStatDependency(stats.Agility, stats.DodgeRating, 1.0/25*core.DodgeRatingPerDodgePercent)
+	// Dodge per agility equals crit per agility, as in Classic (20 agility at 60, not TBC's 25).
+	shaman.AddStatDependency(stats.Agility, stats.DodgeRating, core.CritPerAgiMaxLevel[shaman.Class]*core.DodgeRatingPerDodgePercent)
 	shaman.EnableManaBarWithModifier()
 
 	shaman.AddStatDependency(stats.Strength, stats.AttackPower, 2.0)
