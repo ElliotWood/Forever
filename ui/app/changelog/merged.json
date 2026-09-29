@@ -1,5 +1,11 @@
 [
 	{
+		"number": 557,
+		"title": "racials: Beast Slaying, Big Game Hunter and Elemental Insight are +5% damage only",
+		"mergedAt": "2026-09-29",
+		"url": "https://github.com/ElliotWood/Forever/pull/557"
+	},
+	{
 		"number": 556,
 		"title": "druid: Ferocious Bite rolls its damage range and reads 147 per combo point from the client",
 		"mergedAt": "2026-09-29",
