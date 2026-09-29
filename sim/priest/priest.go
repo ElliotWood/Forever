@@ -70,6 +70,7 @@ func (priest *Priest) Initialize() {
 	})
 	SmiteRankMap.Each(func(_ int32, rank *spelldata.Spell) { priest.registerSmiteSpell(rank) })
 	HolyFireRankMap.Each(func(_ int32, rank *spelldata.Spell) { priest.registerHolyFireSpell(rank) })
+	ChastiseRankMap.Each(func(_ int32, rank *spelldata.Spell) { priest.registerChastiseSpell(rank) })
 	priest.registerShadowfiendSpell()
 
 	if priest.Race == proto.Race_RaceNightElf {
