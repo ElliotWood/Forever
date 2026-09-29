@@ -72,6 +72,7 @@ func (priest *Priest) Initialize() {
 	HolyFireRankMap.Each(func(_ int32, rank *spelldata.Spell) { priest.registerHolyFireSpell(rank) })
 	ChastiseRankMap.Each(func(_ int32, rank *spelldata.Spell) { priest.registerChastiseSpell(rank) })
 	priest.registerShadowfiendSpell()
+	priest.registerDarkSacrificeSpell()
 
 	if priest.Race == proto.Race_RaceNightElf {
 		starshardsCDTimer := priest.NewTimer()

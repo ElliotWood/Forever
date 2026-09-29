@@ -6,6 +6,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/simsignals"
+	"github.com/wowsims/forever/sim/core/stats"
 )
 
 func penanceCost(t *testing.T, talents string) float64 {
@@ -76,5 +77,39 @@ func TestChastiseHumanoidsAndSharedCooldown(t *testing.T) {
 	}
 	if dealt := top.SpellMetrics[humanoid.UnitIndex].TotalDamage; dealt < 271 {
 		t.Errorf("Chastise dealt %.1f, want at least rank 5's 272", dealt)
+	}
+}
+
+// Dark Sacrifice pays the row's 320 plus a fifth of Spirit on each of its five ticks, as a beta log
+// shows at rank 1 (80 + 72 / 5 = 94.4 a tick).
+func TestDarkSacrificeTicksBasePlusSpirit(t *testing.T) {
+	player := core.WithSpec(&proto.Player{
+		Race:        proto.Race_RaceUndead,
+		Class:       proto.Class_ClassPriest,
+		Equipment:   &proto.EquipmentSpec{},
+		Consumables: &proto.ConsumesSpec{},
+		Rotation:    &proto.APLRotation{Type: proto.APLRotation_TypeAPL},
+	}, &proto.Player_DpsPriest{DpsPriest: &proto.DpsPriest{Options: &proto.DpsPriest_Options{ClassOptions: &proto.PriestOptions{}}}})
+	sim := core.NewSim(&proto.RaidSimRequest{
+		SimOptions: &proto.SimOptions{RandomSeed: 100},
+		Raid:       core.SinglePlayerRaidProto(player, &proto.PartyBuffs{}, &proto.RaidBuffs{}, &proto.Debuffs{}),
+		Encounter:  core.MakeSingleTargetEncounter(0),
+	}, simsignals.CreateSignals())
+	sim.Reset()
+
+	priest := sim.Raid.Parties[0].Players[0].(PriestAgent).GetPriest()
+	spell := priest.GetSpell(core.ActionID{SpellID: 1277328})
+	priest.SpendMana(sim, priest.CurrentMana(), priest.NewManaMetrics(core.ActionID{OtherID: proto.OtherAction_OtherActionNone}))
+	spell.Cast(sim, nil)
+	hot := spell.SelfHot()
+	if hot.BaseTickCount != 5 {
+		t.Fatalf("Dark Sacrifice ticks %d times, want 5", hot.BaseTickCount)
+	}
+	for range 5 {
+		hot.TickOnce(sim)
+	}
+	want := 5 * (320 + priest.GetStat(stats.Spirit)/5)
+	if got := priest.CurrentMana(); !core.WithinToleranceFloat64(want, got, 1e-6) {
+		t.Errorf("Dark Sacrifice restored %.1f mana, want %.1f", got, want)
 	}
 }
