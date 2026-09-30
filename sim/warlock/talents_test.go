@@ -163,3 +163,16 @@ func TestImpGivesBloodPact(t *testing.T) {
 		}
 	}
 }
+
+// The Imp's Firebolt rolls client 11763's row: 45 +-11.4% at 60, and the level scaling stops at 63.
+func TestImpFireboltRollsItsRow(t *testing.T) {
+	if got := impFireboltEffect.Average(60); got != 45 {
+		t.Errorf("average at 60 = %v, want 45", got)
+	}
+	if lo, hi := impFireboltEffect.Min(60), impFireboltEffect.Max(60); math.Abs(lo-42.44) > 0.01 || math.Abs(hi-47.56) > 0.01 {
+		t.Errorf("roll at 60 = %.2f to %.2f, want 42.44 to 47.56", lo, hi)
+	}
+	if got := impFireboltEffect.Average(70); got != 47 {
+		t.Errorf("average at 70 = %v, want 47 (capped at 63)", got)
+	}
+}
