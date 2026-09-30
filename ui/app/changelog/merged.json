@@ -1,5 +1,11 @@
 [
 	{
+		"number": 577,
+		"title": "hunter, warrior: Intimidation and Pummel trigger the global cooldown",
+		"mergedAt": "2026-09-30",
+		"url": "https://github.com/ElliotWood/Forever/pull/577"
+	},
+	{
 		"number": 576,
 		"title": "spells: mana costs read from the client row; Shadowform and Innervate cost mana",
 		"mergedAt": "2026-09-30",
