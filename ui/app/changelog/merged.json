@@ -1,5 +1,11 @@
 [
 	{
+		"number": 563,
+		"title": "talents: shaman totem and Ghost Wolf stub notes read the client instead of \"to be implemented\"",
+		"mergedAt": "2026-09-30",
+		"url": "https://github.com/ElliotWood/Forever/pull/563"
+	},
+	{
 		"number": 562,
 		"title": "core: glancing blows roll their damage (55-75% against a boss)",
 		"mergedAt": "2026-09-29",
