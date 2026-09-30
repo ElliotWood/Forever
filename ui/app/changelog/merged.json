@@ -1,5 +1,17 @@
 [
 	{
+		"number": 584,
+		"title": "warrior: Thunder Clap adds 2.55% of attack power (beta logs)",
+		"mergedAt": "2026-09-30",
+		"url": "https://github.com/ElliotWood/Forever/pull/584"
+	},
+	{
+		"number": 580,
+		"title": "Wowhead Forever data changed (2026-09-30)",
+		"mergedAt": "2026-09-30",
+		"url": "https://github.com/ElliotWood/Forever/pull/580"
+	},
+	{
 		"number": 579,
 		"title": "mage: Fingers of Frost reads its 15% chance from the talent row",
 		"mergedAt": "2026-09-30",
