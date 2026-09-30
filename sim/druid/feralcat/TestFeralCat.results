@@ -1463,7 +1463,8 @@ dps_results: {
 dps_results: {
  key: "TestFeralCat-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 83.15801
-  tps: 41.32953
+  dps: 257.93498
+  tps: 148.72797
+  dtps: 3.80567
  }
 }
