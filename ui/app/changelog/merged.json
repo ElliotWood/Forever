@@ -1,5 +1,11 @@
 [
 	{
+		"number": 565,
+		"title": "shaman: Lightning Shield orbs can't crit",
+		"mergedAt": "2026-09-30",
+		"url": "https://github.com/ElliotWood/Forever/pull/565"
+	},
+	{
 		"number": 564,
 		"title": "druid: cat Claw simulated, and the \"in front of target\" rotation check works",
 		"mergedAt": "2026-09-30",
