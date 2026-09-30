@@ -1,5 +1,11 @@
 [
 	{
+		"number": 585,
+		"title": "warrior: Overpower's second cost is the dodge charge (client + beta logs)",
+		"mergedAt": "2026-09-30",
+		"url": "https://github.com/ElliotWood/Forever/pull/585"
+	},
+	{
 		"number": 584,
 		"title": "warrior: Thunder Clap adds 2.55% of attack power (beta logs)",
 		"mergedAt": "2026-09-30",
