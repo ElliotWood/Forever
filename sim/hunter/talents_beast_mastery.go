@@ -182,8 +182,9 @@ func (hunter *Hunter) registerIntimidation() {
 		ManaCost: rank.ManaCost(),
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
-				NonEmpty: true,
+				GCD: rank.GCD(),
 			},
+			IgnoreHaste: true,
 			CD: core.Cooldown{
 				Timer:    hunter.NewTimer(),
 				Duration: max(rank.Cooldown(), rank.CategoryCooldown()),
