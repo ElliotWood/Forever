@@ -1,5 +1,17 @@
 [
 	{
+		"number": 568,
+		"title": "core: EffectiveCastTime reads the spell's own GCD; beta logs confirm Forever hastes the spell GCD",
+		"mergedAt": "2026-09-30",
+		"url": "https://github.com/ElliotWood/Forever/pull/568"
+	},
+	{
+		"number": 567,
+		"title": "[DB] Update to 1.60.1.70124 with hotfixes as of 2026-09-30",
+		"mergedAt": "2026-09-30",
+		"url": "https://github.com/ElliotWood/Forever/pull/567"
+	},
+	{
 		"number": 566,
 		"title": "hunter: Summon Hawk's dive bomb always hits",
 		"mergedAt": "2026-09-30",
