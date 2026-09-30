@@ -133,3 +133,33 @@ func TestBaneOfHavocCopiesDamage(t *testing.T) {
 		t.Errorf("damage to the baned target itself copied: %.2f -> %.2f", got, again)
 	}
 }
+
+// The warlock's own Imp gives its party Blood Pact (11767); a sacrificed Imp or another demon doesn't.
+func TestImpGivesBloodPact(t *testing.T) {
+	for _, tc := range []struct {
+		summon    proto.WarlockOptions_Summon
+		sacrifice bool
+		want      bool
+	}{{proto.WarlockOptions_Imp, false, true}, {proto.WarlockOptions_Imp, true, false}, {proto.WarlockOptions_Succubus, false, false}} {
+		player := core.WithSpec(&proto.Player{
+			Race:        proto.Race_RaceOrc,
+			Class:       proto.Class_ClassWarlock,
+			Equipment:   &proto.EquipmentSpec{},
+			Consumables: &proto.ConsumesSpec{},
+			Rotation:    &proto.APLRotation{Type: proto.APLRotation_TypeAPL},
+		}, &proto.Player_Warlock{Warlock: &proto.Warlock{Options: &proto.Warlock_Options{ClassOptions: &proto.WarlockOptions{
+			Summon:          tc.summon,
+			SacrificeSummon: tc.sacrifice,
+		}}}})
+		sim := core.NewSim(&proto.RaidSimRequest{
+			SimOptions: &proto.SimOptions{RandomSeed: 100},
+			Raid:       core.SinglePlayerRaidProto(player, &proto.PartyBuffs{}, &proto.RaidBuffs{}, &proto.Debuffs{}),
+			Encounter:  core.MakeSingleTargetEncounter(0),
+		}, simsignals.CreateSignals())
+		sim.Reset()
+		aura := sim.Raid.Parties[0].Players[0].(WarlockAgent).GetWarlock().GetAuraByID(core.ActionID{SpellID: 11767, Tag: -1})
+		if got := aura != nil && aura.IsActive(); got != tc.want {
+			t.Errorf("summon %v, sacrificed %v: Blood Pact up = %v, want %v", tc.summon, tc.sacrifice, got, tc.want)
+		}
+	}
+}
