@@ -215,6 +215,13 @@
 		"source": "forever",
 		"tooltip": "60 Energy\nMelee Range\nInstant\nShred the target, causing 155% weapon damage plus 124 to the target. Must be behind the target. Awards 1 combo point."
 	},
+	"9850": {
+		"ability": "Claw",
+		"file": "sim/druid/claw.go",
+		"note": "Client 70009 (9850, rank 5): 45 Energy, (weapon damage + 115) x 110%, up from Classic's 100%; the flat part is scaled with the weapon, as Shred's (the Forever tooltip prints Shred's 80 as 124). The builder that works from the front, where Shred cannot; the default rotation uses it only there. Beta cats use it most (foreverlogs 2686: 165 Claws from one level 20 druid).",
+		"source": "forever",
+		"tooltip": "45 Energy\nMelee Range\nInstant\nClaw the enemy for 110% normal damage plus 115. Awards 1 combo point."
+	},
 	"9835": {
 		"ability": "Moonfire",
 		"file": "sim/druid/moonfire.go",
