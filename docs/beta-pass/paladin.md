@@ -81,8 +81,8 @@ read as ids). `unreviewedSpellBudget` 762 -> 708, `unresolvedSpellSiteBudget` 19
   the note looked at is `Coefficient`).
 - **Resolved** (melee table) / **Open** (partial resists at 60) `holy_strike.go:17`. Beta logs put Holy Strike on the
   melee table, as modelled: #581 counts 1,121 landed, 127 miss, 124 dodge, 116 parry, 32 blocked across nine
-  public-realm logs, and foreverlogs.gg reports 2678, 2682, 2689 and 2691 (15 paladins) give 773 landed, 42 miss,
-  40 dodge, 45 parry, 23 blocked. #581 saw no partial resist on any Holy damage, melee or spell table, against
+  public-realm logs, and foreverlogs.gg reports 2678, 2682, 2689 and 2691 (17 paladins) give 866 landed, 48 miss,
+  43 dodge, 48 parry, 25 blocked. #581 saw no partial resist on any Holy damage, melee or spell table, against
   level 2-15 targets. The sim only adds level-based partial resists when the target out-levels the attacker, so they
   cannot test the level 63 boss case, and the sim keeps Classic's level-based partial resists on Holy Strike there.
 - **Resolved** `holy_strike.go:29`, Improved Holy Strike: -1000 / -2000 ms, as modelled.
