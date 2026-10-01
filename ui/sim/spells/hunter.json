@@ -195,10 +195,10 @@
 		"source": "forever",
 		"tooltip": "310 Mana\n8-35 yd range\n2 sec cast\n6 sec cooldown\nAn aimed shot that increases ranged damage by 166. Aimed Shot shares its cooldown with Multi-Shot."
 	},
-	"24582": {
+	"24579": {
 		"ability": "Screech",
 		"file": "sim/hunter/pet_abilities.go",
-		"note": "Client 70009: renamed Demoralizing Screech; 26-46 -> 24-42 damage (24579) and a new 10 sec cooldown. The attack power reduction is not modelled.",
+		"note": "Client 70009: renamed Demoralizing Screech; 26-46 -> 24-42 damage and a new 10 sec cooldown, all read off rank 4 (24579, the spell the pet casts; 24582 is the learn spell). The attack power reduction is not modelled.",
 		"source": "forever",
 		"tooltip": "20 Focus\nInstant\n10 sec cooldown\nBlasts a single enemy for 24 to 42 damage and lowers the melee attack power of all enemies in melee range for 30 sec."
 	},
