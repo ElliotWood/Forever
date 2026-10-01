@@ -1,5 +1,17 @@
 [
 	{
+		"number": 598,
+		"title": "rogue, druid: Eviscerate and Rip read their per-combo-point step from the client row",
+		"mergedAt": "2026-10-01",
+		"url": "https://github.com/ElliotWood/Forever/pull/598"
+	},
+	{
+		"number": 597,
+		"title": "[DB] Update to 1.60.1.70124 with hotfixes as of 2026-10-01",
+		"mergedAt": "2026-10-01",
+		"url": "https://github.com/ElliotWood/Forever/pull/597"
+	},
+	{
 		"number": 596,
 		"title": "priest, warlock, druid, shaman: nukes roll their client range instead of dealing the average",
 		"mergedAt": "2026-10-01",
