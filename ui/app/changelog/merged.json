@@ -1,5 +1,11 @@
 [
 	{
+		"number": 589,
+		"title": "hunter: Bat's Demoralizing Screech reads the client row (casts 24579, not the learn spell)",
+		"mergedAt": "2026-10-01",
+		"url": "https://github.com/ElliotWood/Forever/pull/589"
+	},
+	{
 		"number": 588,
 		"title": "shaman: Windfury Totem and Mana Spring read the client (stale docs)",
 		"mergedAt": "2026-09-30",
