@@ -2,6 +2,7 @@ package hunter
 
 import (
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/buffs"
 	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/stats"
@@ -208,8 +209,9 @@ func (hunter *Hunter) registerSurvivalistsDiscipline() {
 	})
 }
 
-// Expose Prey opens the Mongoose Bite window off any landed hit on a marked target, where only a
-// dodge opens it otherwise.
+// Expose Prey opens the Mongoose Bite window off a landed melee or ranged attack on a target with
+// Hunter's Mark (client 1310532 ProcTypeMask 340 = melee/ranged autos and specials; Wowhead Forever:
+// "targets with Hunter's Mark"), where only a dodge opens it otherwise.
 func (hunter *Hunter) registerExposePrey() {
 	if hunter.Talents.ExposePrey == 0 {
 		return
@@ -218,9 +220,10 @@ func (hunter *Hunter) registerExposePrey() {
 	hunter.MakeProcTriggerAura(core.ProcTrigger{
 		Name:       "Expose Prey",
 		Callback:   core.CallbackOnSpellHitDealt,
+		ProcMask:   core.ProcMaskMeleeOrRanged,
 		ProcChance: spellData.ExposePrey.FractionAt(hunter.Talents.ExposePrey),
 		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			if result.Landed() {
+			if result.Landed() && result.Target.HasActiveAuraWithTag(buffs.HuntersMarkCategory) {
 				hunter.DefensiveState.Activate(sim)
 			}
 		},
