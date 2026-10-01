@@ -255,9 +255,7 @@
 	},
 	"5302": {
 		"ability": "Defensive State",
-		"assumptions": [
-			"Forever's Expose Prey grants its own 5 sec aura (1310726); the sim reuses Classic's Defensive State id for it."
-		],
+		"assumptions": ["Forever's Expose Prey grants its own 5 sec aura (1310726); the sim reuses Classic's Defensive State id for it."],
 		"file": "sim/hunter/mongoose_bite.go",
 		"note": "A dodge opens Mongoose Bite for 5 sec: every rank (1495, 14269-14271) carries CasterAuraState 1 in client 1.60.1.70124 SpellAuraRestrictions, and Wowhead Forever's tooltip says \"Can only be performed after you dodge\". Forever's Expose Prey proc opens the same window. The sim's dodge trigger never fired before (it sat on the inactive aura itself); it now has its own permanent watch.",
 		"source": "assumed",
