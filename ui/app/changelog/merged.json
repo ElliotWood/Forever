@@ -1,5 +1,11 @@
 [
 	{
+		"number": 595,
+		"title": "mage: nukes roll their client range instead of dealing the average",
+		"mergedAt": "2026-10-01",
+		"url": "https://github.com/ElliotWood/Forever/pull/595"
+	},
+	{
 		"number": 594,
 		"title": "hunter: Expose Prey procs only on targets with Hunter's Mark",
 		"mergedAt": "2026-10-01",
