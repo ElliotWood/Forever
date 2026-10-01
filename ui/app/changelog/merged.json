@@ -1,5 +1,11 @@
 [
 	{
+		"number": 592,
+		"title": "hunter: aspect swap settles that Arcane Shot and Serpent Sting scale with attack power",
+		"mergedAt": "2026-10-01",
+		"url": "https://github.com/ElliotWood/Forever/pull/592"
+	},
+	{
 		"number": 591,
 		"title": "paladin: two-handed Seal of Righteousness takes 1.2x the spell power share",
 		"mergedAt": "2026-10-01",
