@@ -62,15 +62,14 @@ func (hunter *Hunter) registerSurvivalist() {
 	hunter.MultiplyStat(stats.Health, spellData.Survivalist.MultiplierAt(hunter.Talents.Survivalist))
 }
 
-// Generator gap: effect 3 of spell 19290, the hit bonus, has no rank curve and is left out of the
-// table (see the head of spell_data_auto_gen.go), so the 1% a rank stays from our client-verified
-// sim. The two effects that are generated are the stun and snare duration cuts.
+// 19290's melee hit effect carries the 1/2/3% curve. Its spell hit effect has no curve and sits at
+// rank 3's 3 for every rank, so spell hit reads the melee curve too, as the tooltip's one number does.
 func (hunter *Hunter) registerSurefooted() {
 	if hunter.Talents.Surefooted == 0 {
 		return
 	}
 
-	hit := float64(hunter.Talents.Surefooted)
+	hit := spellData.Surefooted.Effect(dbcenums.A_MOD_HIT_CHANCE, 0).ValueAt(hunter.Talents.Surefooted)
 	hunter.AddStat(stats.PhysicalHitPercent, hit)
 	hunter.AddStat(stats.SpellHitPercent, hit)
 }
