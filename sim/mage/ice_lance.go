@@ -44,7 +44,7 @@ func (mage *Mage) registerIceLanceSpell() {
 		ThreatMultiplier: 1,
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			result := spell.CalcDamage(sim, target, iceLanceRank.DamageEffect().Average(core.CharacterLevel), spell.OutcomeMagicHitAndCrit)
+			result := spell.CalcDamage(sim, target, iceLanceRank.DamageEffect().Roll(sim, core.CharacterLevel), spell.OutcomeMagicHitAndCrit)
 			// A bonus on the whole hit rather than the base roll, so spell power is multiplied too.
 			if mage.IsTargetFrozen() {
 				result.Damage *= IceLanceFrozenMultiplier
