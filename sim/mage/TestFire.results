@@ -73,7 +73,7 @@ dps_results: {
  key: "TestFire-AllItems-ArcaneOrb-7507"
  value: {
   dps: 184.81558
-  tps: 119.23728
+  tps: 119.22312
  }
 }
 dps_results: {
@@ -136,7 +136,7 @@ dps_results: {
  key: "TestFire-AllItems-BurstofKnowledge-11832"
  value: {
   dps: 193.24904
-  tps: 122.94542
+  tps: 122.93125
  }
 }
 dps_results: {
@@ -262,14 +262,14 @@ dps_results: {
  key: "TestFire-AllItems-DreadmistRaiment"
  value: {
   dps: 276.93625
-  tps: 172.6468
+  tps: 172.63263
  }
 }
 dps_results: {
  key: "TestFire-AllItems-EarthenSigil-20525"
  value: {
   dps: 185.94734
-  tps: 120.10922
+  tps: 120.09506
  }
 }
 dps_results: {
@@ -528,7 +528,7 @@ dps_results: {
  key: "TestFire-AllItems-IronweaveBattlesuit"
  value: {
   dps: 227.37548
-  tps: 144.1971
+  tps: 144.1546
  }
 }
 dps_results: {
@@ -549,14 +549,14 @@ dps_results: {
  key: "TestFire-AllItems-LapidisTankardofTidesippe-4696"
  value: {
   dps: 202.10738
-  tps: 128.48107
+  tps: 128.4669
  }
 }
 dps_results: {
  key: "TestFire-AllItems-LeyOrb-7508"
  value: {
   dps: 184.81558
-  tps: 119.23728
+  tps: 119.22312
  }
 }
 dps_results: {
@@ -584,7 +584,7 @@ dps_results: {
  key: "TestFire-AllItems-Magister'sRegalia"
  value: {
   dps: 283.0435
-  tps: 178.19705
+  tps: 178.13163
  }
 }
 dps_results: {
@@ -633,14 +633,14 @@ dps_results: {
  key: "TestFire-AllItems-MindQuickeningGem-19339"
  value: {
   dps: 189.76652
-  tps: 122.72621
+  tps: 122.71204
  }
 }
 dps_results: {
  key: "TestFire-AllItems-MindtapTalisman-18371"
  value: {
   dps: 196.13014
-  tps: 128.46244
+  tps: 128.44827
  }
 }
 dps_results: {
@@ -696,7 +696,7 @@ dps_results: {
  key: "TestFire-AllItems-RegaliaofUndeadCleansing"
  value: {
   dps: 200.7196
-  tps: 127.82239
+  tps: 127.80823
  }
 }
 dps_results: {
@@ -766,7 +766,7 @@ dps_results: {
  key: "TestFire-AllItems-Skum'sBucket-273137"
  value: {
   dps: 192.29252
-  tps: 123.02052
+  tps: 123.00635
  }
 }
 dps_results: {
@@ -920,7 +920,7 @@ dps_results: {
  key: "TestFire-AllItems-VestmentsoftheDevout"
  value: {
   dps: 276.71293
-  tps: 174.75345
+  tps: 174.70095
  }
 }
 dps_results: {
@@ -948,7 +948,7 @@ dps_results: {
  key: "TestFire-Average-Default"
  value: {
   dps: 189.90399
-  tps: 122.21833
+  tps: 122.21406
  }
 }
 dps_results: {
@@ -969,7 +969,7 @@ dps_results: {
  key: "TestFire-Settings-Gnome-Naked-MageArmor-fire-FullBuffs-0.0yards-ShortSingleTarget"
  value: {
   dps: 273.01621
-  tps: 174.13944
+  tps: 174.08819
  }
 }
 dps_results: {
@@ -1011,7 +1011,7 @@ dps_results: {
  key: "TestFire-Settings-Troll-Naked-MageArmor-fire-FullBuffs-0.0yards-ShortSingleTarget"
  value: {
   dps: 273.52398
-  tps: 174.79432
+  tps: 174.70057
  }
 }
 dps_results: {
@@ -1032,7 +1032,7 @@ dps_results: {
  key: "TestFire-Settings-Troll-Naked-MageArmor-fire-NoBuffs-0.0yards-ShortSingleTarget"
  value: {
   dps: 198.26074
-  tps: 173.64644
+  tps: 173.60394
  }
 }
 dps_results: {
