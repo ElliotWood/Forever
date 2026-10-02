@@ -1,5 +1,11 @@
 [
 	{
+		"number": 619,
+		"title": "rotations: optional Destruction rotation with Conflagrate",
+		"mergedAt": "2026-10-02",
+		"url": "https://github.com/ElliotWood/Forever/pull/619"
+	},
+	{
 		"number": 618,
 		"title": "rotations: hunters cast Arcane Shot, Smite gets a Mind Blast variant, feral drops Tiger's Fury",
 		"mergedAt": "2026-10-02",
