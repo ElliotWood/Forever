@@ -161,6 +161,10 @@ func Run(t *testing.T, spec Spec) {
 	}
 	gearSets := filter(namesIn(filepath.Join(uiDir, "gear_sets"), ".gear.json"), spec.GearSets)
 	rotations := filter(namesIn(filepath.Join(uiDir, "apls"), ".apl.json"), spec.Rotations)
+	if rotationAuditOn() && len(gearSets) > 0 && len(rotations) > 0 {
+		auditRotations(t, spec, talents, gearSets, rotations)
+		return
+	}
 	if outDir != "" && os.Getenv(relevanceEnv) != "" {
 		surveyRelevance(t, spec, outDir, talents, gearSets, rotations)
 		return
@@ -462,7 +466,6 @@ func (m *memo) all(runs []run) []Result {
 }
 
 func runAt(spec Spec, talent TalentBuild, gear string, rotation string, iterations int32) (row Result) {
-	uiDir := specDir(spec)
 	environment := consumesFor(spec.Role, spec.ClassImbues)
 	row = Result{
 		Spec:        spec.Dir,
@@ -483,6 +486,37 @@ func runAt(spec Spec, talent TalentBuild, gear string, rotation string, iteratio
 		}
 	}()
 
+	raid := raidFor(spec, talent, gear, rotation, environment)
+
+	result := core.RunRaidSim(&proto.RaidSimRequest{
+		Raid:      raid,
+		Encounter: core.MakeSingleTargetEncounter(0),
+		SimOptions: &proto.SimOptions{
+			Iterations: iterations,
+			RandomSeed: 101,
+		},
+	})
+	if result.Error != nil {
+		row.err = fmt.Sprintf("%.200s", result.Error.Message)
+		return row
+	}
+	if result.RaidMetrics == nil || len(result.RaidMetrics.Parties) == 0 {
+		row.err = "no metrics"
+		return row
+	}
+
+	metrics := result.RaidMetrics.Parties[0].Players[0]
+	row.Dps = metrics.Dps.Avg
+	collect(&row, metrics)
+	for _, pet := range metrics.Pets {
+		collect(&row, pet)
+	}
+	return row
+}
+
+// The one-player raid a build is simulated in.
+func raidFor(spec Spec, talent TalentBuild, gear string, rotation string, environment core.BuffsCombo) *proto.Raid {
+	uiDir := specDir(spec)
 	gearCombo := core.GetGearSet(filepath.Join(uiDir, "gear_sets"), gear)
 	rotationProto := &proto.APLRotation{}
 	if rotation != "" {
@@ -512,31 +546,7 @@ func runAt(spec Spec, talent TalentBuild, gear string, rotation string, iteratio
 	if spec.IsTank {
 		raid.Tanks = append(raid.Tanks, &proto.UnitReference{Type: proto.UnitReference_Player, Index: 0})
 	}
-
-	result := core.RunRaidSim(&proto.RaidSimRequest{
-		Raid:      raid,
-		Encounter: core.MakeSingleTargetEncounter(0),
-		SimOptions: &proto.SimOptions{
-			Iterations: iterations,
-			RandomSeed: 101,
-		},
-	})
-	if result.Error != nil {
-		row.err = fmt.Sprintf("%.200s", result.Error.Message)
-		return row
-	}
-	if result.RaidMetrics == nil || len(result.RaidMetrics.Parties) == 0 {
-		row.err = "no metrics"
-		return row
-	}
-
-	metrics := result.RaidMetrics.Parties[0].Players[0]
-	row.Dps = metrics.Dps.Avg
-	collect(&row, metrics)
-	for _, pet := range metrics.Pets {
-		collect(&row, pet)
-	}
-	return row
+	return raid
 }
 
 // Without ARENA_OUT the arena still runs every build, briefly, to hold the evidence manifest
