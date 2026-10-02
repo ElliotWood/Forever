@@ -884,43 +884,43 @@ dps_results: {
 dps_results: {
  key: "TestDestruction-Settings-Gnome-Naked-Warlock-destruction-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 174.56808
-  tps: 1025.86214
+  dps: 174.2058
+  tps: 1025.65926
  }
 }
 dps_results: {
  key: "TestDestruction-Settings-Gnome-Naked-Warlock-destruction-FullBuffs-0.0yards-LongSingleTarget"
  value: {
-  dps: 174.56808
-  tps: 144.85959
+  dps: 174.2058
+  tps: 144.65671
  }
 }
 dps_results: {
  key: "TestDestruction-Settings-Gnome-Naked-Warlock-destruction-FullBuffs-0.0yards-ShortSingleTarget"
  value: {
-  dps: 179.35517
-  tps: 126.22584
+  dps: 178.71141
+  tps: 125.86533
  }
 }
 dps_results: {
  key: "TestDestruction-Settings-Gnome-Naked-Warlock-destruction-NoBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 140.49275
-  tps: 1189.38137
+  dps: 140.22611
+  tps: 1189.16805
  }
 }
 dps_results: {
  key: "TestDestruction-Settings-Gnome-Naked-Warlock-destruction-NoBuffs-0.0yards-LongSingleTarget"
  value: {
-  dps: 140.49275
-  tps: 166.9882
+  dps: 140.22611
+  tps: 166.77489
  }
 }
 dps_results: {
  key: "TestDestruction-Settings-Gnome-Naked-Warlock-destruction-NoBuffs-0.0yards-ShortSingleTarget"
  value: {
-  dps: 138.46998
-  tps: 153.78318
+  dps: 137.89743
+  tps: 153.32515
  }
 }
 dps_results: {

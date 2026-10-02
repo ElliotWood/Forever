@@ -331,17 +331,17 @@ func applyExpansiveMind(character *Character) {
 }
 
 // Eureka! names the spells it changes with each class's spell family mask. Build 70170 masks, as
-// effect 0 (SPELLMOD_COST) and effect 1 (SPELLMOD_DAMAGE) state them, with effect 2 (SPELLMOD_DOT)
-// folded into the damage set; core cannot import spelldata, so they are mirrored here. 70170 made it
-// "non-periodic damaging abilities": the DoTs (Rend, Rupture, Garrote, Corruption, Shadow Word: Pain,
-// Devouring Plague...) and the utility spells (Sunder Armor, Life Tap...) take no bonus and spend no
-// charge. Drain Life/Drain Soul and Mind Flay keep theirs through effect 2.
-// ponytail: the damage bonus scales a named spell's DoT part too (Immolate, Fireball, Holy Fire), as
-// spelldata reads SPELLMOD_DAMAGE everywhere; split it if SPELLMOD_DAMAGE turns out direct-only.
+// effect 0 (SPELLMOD_COST), effect 1 (SPELLMOD_DAMAGE) and effect 2 (SPELLMOD_DOT) state them; core
+// cannot import spelldata, so they are mirrored here. 70170 made it "non-periodic damaging abilities":
+// the DoTs (Rend, Rupture, Garrote, Corruption, Shadow Word: Pain, Devouring Plague...) and the utility
+// spells (Sunder Armor, Life Tap...) take no bonus and spend no charge. SPELLMOD_DAMAGE is the direct
+// part only: 70094 named Rend, Corruption and Immolate in both effects 1 and 2, which only adds up if
+// effect 1 skips their ticks. So Immolate, Fireball, Pyroblast and Holy Fire get +10% on the hit and
+// none on the DoT, while Drain Life/Drain Soul and Mind Flay keep theirs through effect 2.
 func applyEureka(character *Character) {
 	var spellID int32
 	var resourceType proto.ResourceType
-	var costMask, damageMask [4]uint32
+	var costMask, directMask, dotMask [4]uint32
 	// -10% cost and +10% damage on all five class variants.
 	const costReduction, damageBonus = 0.1, 0.1
 
@@ -349,23 +349,23 @@ func applyEureka(character *Character) {
 	case proto.Class_ClassRogue:
 		spellID, resourceType = 1259812, proto.ResourceType_ResourceTypeEnergy
 		costMask = [4]uint32{100794910, 2097408}
-		damageMask = costMask
+		directMask = costMask
 	case proto.Class_ClassWarrior:
 		spellID, resourceType = 1259813, proto.ResourceType_ResourceTypeRage
 		costMask = [4]uint32{1784679630, 5, 1}
-		damageMask = costMask
+		directMask = costMask
 	case proto.Class_ClassMage:
 		spellID, resourceType = 1259817, proto.ResourceType_ResourceTypeMana
 		costMask = [4]uint32{549591799, 4096}
-		damageMask = [4]uint32{551688947, 4096, 0, 8}
+		directMask = [4]uint32{551688947, 4096, 0, 8}
 	case proto.Class_ClassWarlock:
 		spellID, resourceType = 1259821, proto.ResourceType_ResourceTypeMana
 		costMask = [4]uint32{541165, 8650880}
-		damageMask = [4]uint32{524773 | 16392, 8388736 | 262144}
+		directMask, dotMask = [4]uint32{524773, 8388736}, [4]uint32{16392, 262144}
 	case proto.Class_ClassPriest:
 		spellID, resourceType = 1259823, proto.ResourceType_ResourceTypeMana
 		costMask = [4]uint32{150224528, 8388614}
-		damageMask = [4]uint32{150224528 | 10485760, 8486918 | 98304}
+		directMask, dotMask = [4]uint32{150224528, 8486918}, [4]uint32{10485760, 98304}
 	default:
 		return
 	}
@@ -373,6 +373,25 @@ func applyEureka(character *Character) {
 	family := ClassSpellFamilies[character.Class]
 	names := func(spell *Spell, mask [4]uint32) bool {
 		return ClassFlags{Family: family, Mask: mask}.Matches(ClientClassFlags(spell.ActionID.SpellID))
+	}
+	// Direct hits scale with the direct mask, DoT ticks with the DoT mask; ticks read
+	// DamageMultiplier too, so a direct-only spell's DoTs are scaled back out.
+	scaleDamage := func(spell *Spell, f float64) {
+		direct, periodic := names(spell, directMask), names(spell, dotMask)
+		if direct {
+			spell.DamageMultiplier *= f
+		}
+		if direct == periodic {
+			return
+		}
+		if direct {
+			f = 1 / f
+		}
+		for _, dot := range append(DotArray{spell.aoeDot}, spell.dots...) {
+			if dot != nil {
+				dot.PeriodicDamageMultiplier *= f
+			}
+		}
 	}
 
 	actionID := ActionID{SpellID: spellID}
@@ -397,14 +416,10 @@ func applyEureka(character *Character) {
 		Kind:      SpellMod_Custom,
 		ClassMask: anyClassSpell,
 		ApplyCustom: func(_ *SpellMod, spell *Spell) {
-			if names(spell, damageMask) {
-				spell.DamageMultiplier *= 1 + damageBonus
-			}
+			scaleDamage(spell, 1+damageBonus)
 		},
 		RemoveCustom: func(_ *SpellMod, spell *Spell) {
-			if names(spell, damageMask) {
-				spell.DamageMultiplier /= 1 + damageBonus
-			}
+			scaleDamage(spell, 1/(1+damageBonus))
 		},
 	})
 
@@ -423,7 +438,7 @@ func applyEureka(character *Character) {
 			damageMod.Deactivate()
 		},
 		OnCastComplete: func(aura *Aura, sim *Simulation, spell *Spell) {
-			if spell.Matches(anyClassSpell) && (names(spell, costMask) || names(spell, damageMask)) {
+			if spell.Matches(anyClassSpell) && (names(spell, costMask) || names(spell, directMask) || names(spell, dotMask)) {
 				aura.RemoveStack(sim)
 			}
 		},
