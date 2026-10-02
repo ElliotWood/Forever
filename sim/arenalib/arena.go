@@ -133,6 +133,17 @@ type Spec struct {
 	Talents   string
 	GearSets  []string
 	Rotations []string
+
+	// Rotations that differ by class options rather than by APL: a warlock who sacrifices a demon
+	// before the pull runs the same priority list with another demon out. Each is ranked as a
+	// rotation of its own, under its key, so the arena keeps it only for the builds it wins.
+	Variants map[string]Variant
+}
+
+// A rotation file run with other spec options.
+type Variant struct {
+	Rotation    string
+	SpecOptions interface{}
 }
 
 type TalentBuild struct {
@@ -161,6 +172,9 @@ func Run(t *testing.T, spec Spec) {
 	}
 	gearSets := filter(namesIn(filepath.Join(uiDir, "gear_sets"), ".gear.json"), spec.GearSets)
 	rotations := filter(namesIn(filepath.Join(uiDir, "apls"), ".apl.json"), spec.Rotations)
+	for _, name := range slices.Sorted(maps.Keys(spec.Variants)) {
+		rotations = append(rotations, name)
+	}
 	if rotationAuditOn() && len(gearSets) > 0 && len(rotations) > 0 {
 		auditRotations(t, spec, talents, gearSets, rotations)
 		return
@@ -517,6 +531,10 @@ func runAt(spec Spec, talent TalentBuild, gear string, rotation string, iteratio
 // The one-player raid a build is simulated in.
 func raidFor(spec Spec, talent TalentBuild, gear string, rotation string, environment core.BuffsCombo) *proto.Raid {
 	uiDir := specDir(spec)
+	specOptions := spec.SpecOptions
+	if variant, ok := spec.Variants[rotation]; ok {
+		rotation, specOptions = variant.Rotation, variant.SpecOptions
+	}
 	gearCombo := core.GetGearSet(filepath.Join(uiDir, "gear_sets"), gear)
 	rotationProto := &proto.APLRotation{}
 	if rotation != "" {
@@ -540,7 +558,7 @@ func raidFor(spec Spec, talent TalentBuild, gear string, rotation string, enviro
 		DistanceFromTarget: distance,
 		ReactionTimeMs:     150,
 		ChannelClipDelayMs: 50,
-	}, spec.SpecOptions)
+	}, specOptions)
 
 	raid := core.SinglePlayerRaidProto(player, environment.Party, environment.Raid, environment.Debuffs)
 	if spec.IsTank {
