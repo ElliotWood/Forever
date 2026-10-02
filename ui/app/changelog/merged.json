@@ -1,5 +1,11 @@
 [
 	{
+		"number": 614,
+		"title": "Booming Voice takes 5% a point off the shouts' Rage cost",
+		"mergedAt": "2026-10-02",
+		"url": "https://github.com/ElliotWood/Forever/pull/614"
+	},
+	{
 		"number": 613,
 		"title": "Whirlwind swings both weapons on its own; Raging Blows cuts Whirlwind's Rage too",
 		"mergedAt": "2026-10-02",
