@@ -133,17 +133,29 @@ func TestGnomeWarrior(t *testing.T) {
 		t.Fatalf("Expansive Mind should raise maximum Rage to 105, got %0.1f", fw.MaximumRage())
 	}
 
+	// Client 70170 family masks: Heroic Strike is named, Rend (a DoT) no longer is.
+	defer func(lookup func(int32) ClassFlags) { ClientClassFlags = lookup }(ClientClassFlags)
+	ClientClassFlags = func(id int32) ClassFlags {
+		return map[int32]ClassFlags{78: {Family: 4, Mask: [4]uint32{64}}, 99: {Family: 4, Mask: [4]uint32{64}}, 772: {Family: 4, Mask: [4]uint32{32}}}[id]
+	}
+
+	// A spell with a hit and a DoT; the DoT is attached by hand, as the test sim takes no new auras.
+	hybrid := fw.RegisterSpell(SpellConfig{
+		ActionID:         ActionID{SpellID: 99},
+		ClassSpellMask:   4,
+		ProcMask:         ProcMaskSpellDamage,
+		SpellSchool:      SpellSchoolFire,
+		DamageMultiplier: 1,
+	})
+	hybridDot := &Dot{PeriodicDamageMultiplier: 1}
+	hybrid.dots = DotArray{hybridDot}
+
 	castRacial(t, sim, fw, 1259813)
 	eureka := fw.GetAura("Eureka!")
 	if !eureka.IsActive() || eureka.GetStacks() != 3 {
 		t.Fatalf("Eureka! should start at 3 charges, got %d", eureka.GetStacks())
 	}
 
-	// Client 70170 family masks: Heroic Strike is named, Rend (a DoT) no longer is.
-	defer func(lookup func(int32) ClassFlags) { ClientClassFlags = lookup }(ClientClassFlags)
-	ClientClassFlags = func(id int32) ClassFlags {
-		return map[int32]ClassFlags{78: {Family: 4, Mask: [4]uint32{64}}, 772: {Family: 4, Mask: [4]uint32{32}}}[id]
-	}
 
 	ability := fw.RegisterSpell(SpellConfig{
 		ActionID:         ActionID{SpellID: 78},
@@ -178,6 +190,13 @@ func TestGnomeWarrior(t *testing.T) {
 		t.Fatalf("Eureka! should raise ability damage by 10%%, got x%0.2f", ability.DamageMultiplier)
 	}
 
+	// SPELLMOD_DAMAGE is the direct part: a named spell's DoT ticks (Immolate, Fireball) take nothing.
+	if !WithinToleranceFloat64(1.1, hybrid.DamageMultiplier, 0.0001) ||
+		!WithinToleranceFloat64(1, hybrid.DamageMultiplier*hybridDot.PeriodicDamageMultiplier, 0.0001) {
+		t.Fatalf("Eureka! should raise the hit by 10%% and leave the DoT alone, got x%0.2f / x%0.2f",
+			hybrid.DamageMultiplier, hybrid.DamageMultiplier*hybridDot.PeriodicDamageMultiplier)
+	}
+
 	for range 3 {
 		ability.Cast(sim, fw.CurrentTarget)
 	}
@@ -186,6 +205,9 @@ func TestGnomeWarrior(t *testing.T) {
 	}
 	if !WithinToleranceFloat64(1, ability.DamageMultiplier, 0.0001) {
 		t.Fatalf("Eureka! should drop its damage bonus when it ends, got x%0.2f", ability.DamageMultiplier)
+	}
+	if !WithinToleranceFloat64(1, hybridDot.PeriodicDamageMultiplier, 0.0001) {
+		t.Fatalf("Eureka! should restore the DoT multiplier when it ends, got x%0.2f", hybridDot.PeriodicDamageMultiplier)
 	}
 }
 
