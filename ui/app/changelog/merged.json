@@ -6,6 +6,12 @@
 		"url": "https://github.com/ElliotWood/Forever/pull/623"
 	},
 	{
+		"number": 622,
+		"title": "apl: an aura the character doesn't have reads as absent, not as \"no condition\"",
+		"mergedAt": "2026-10-02",
+		"url": "https://github.com/ElliotWood/Forever/pull/622"
+	},
+	{
 		"number": 621,
 		"title": "Forever client build 1.60.1.70178",
 		"mergedAt": "2026-10-02",
