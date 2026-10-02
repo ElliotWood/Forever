@@ -1,5 +1,17 @@
 [
 	{
+		"number": 623,
+		"title": "rotations: forever_flameshock, an optional enhancement rotation that keeps Flame Shock up",
+		"mergedAt": "2026-10-02",
+		"url": "https://github.com/ElliotWood/Forever/pull/623"
+	},
+	{
+		"number": 621,
+		"title": "Forever client build 1.60.1.70178",
+		"mergedAt": "2026-10-02",
+		"url": "https://github.com/ElliotWood/Forever/pull/621"
+	},
+	{
 		"number": 620,
 		"title": "arena: rank warlock builds with the Imp sacrificed, via option variants",
 		"mergedAt": "2026-10-02",
