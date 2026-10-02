@@ -1,5 +1,23 @@
 [
 	{
+		"number": 605,
+		"title": "Hellfire's area hits crit where the Hellfire Effect row allows (client 70170)",
+		"mergedAt": "2026-10-02",
+		"url": "https://github.com/ElliotWood/Forever/pull/605"
+	},
+	{
+		"number": 604,
+		"title": "Forever client build 1.60.1.70170",
+		"mergedAt": "2026-10-02",
+		"url": "https://github.com/ElliotWood/Forever/pull/604"
+	},
+	{
+		"number": 603,
+		"title": "Wowhead Forever data changed (2026-10-02)",
+		"mergedAt": "2026-10-02",
+		"url": "https://github.com/ElliotWood/Forever/pull/603"
+	},
+	{
 		"number": 602,
 		"title": "Gnome Eureka! only affects the spells the client names (non-periodic since 70170)",
 		"mergedAt": "2026-10-02",
