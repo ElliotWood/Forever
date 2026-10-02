@@ -1,5 +1,17 @@
 [
 	{
+		"number": 617,
+		"title": "arenalib: ARENA_ROTATION_AUDIT lists stale and unused rotation spells",
+		"mergedAt": "2026-10-02",
+		"url": "https://github.com/ElliotWood/Forever/pull/617"
+	},
+	{
+		"number": 616,
+		"title": "gear: launch sets drop Leafre's Ring of Precise Spell Power, gone from the game",
+		"mergedAt": "2026-10-02",
+		"url": "https://github.com/ElliotWood/Forever/pull/616"
+	},
+	{
 		"number": 615,
 		"title": "Piercing Ice gives Frostfire Bolt's DoT a flat 2%",
 		"mergedAt": "2026-10-02",
