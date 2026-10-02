@@ -139,9 +139,22 @@ func TestGnomeWarrior(t *testing.T) {
 		t.Fatalf("Eureka! should start at 3 charges, got %d", eureka.GetStacks())
 	}
 
+	// Client 70170 family masks: Heroic Strike is named, Rend (a DoT) no longer is.
+	defer func(lookup func(int32) ClassFlags) { ClientClassFlags = lookup }(ClientClassFlags)
+	ClientClassFlags = func(id int32) ClassFlags {
+		return map[int32]ClassFlags{78: {Family: 4, Mask: [4]uint32{64}}, 772: {Family: 4, Mask: [4]uint32{32}}}[id]
+	}
+
 	ability := fw.RegisterSpell(SpellConfig{
-		ActionID:         ActionID{SpellID: 1},
+		ActionID:         ActionID{SpellID: 78},
 		ClassSpellMask:   1,
+		ProcMask:         ProcMaskMeleeMHSpecial,
+		SpellSchool:      SpellSchoolPhysical,
+		DamageMultiplier: 1,
+	})
+	rend := fw.RegisterSpell(SpellConfig{
+		ActionID:         ActionID{SpellID: 772},
+		ClassSpellMask:   2,
 		ProcMask:         ProcMaskMeleeMHSpecial,
 		SpellSchool:      SpellSchoolPhysical,
 		DamageMultiplier: 1,
@@ -153,6 +166,10 @@ func TestGnomeWarrior(t *testing.T) {
 		SpellSchool:      SpellSchoolPhysical,
 		DamageMultiplier: 1,
 	})
+	rend.Cast(sim, fw.CurrentTarget)
+	if rend.DamageMultiplier != 1 || eureka.GetStacks() != 3 {
+		t.Fatalf("Eureka! should leave Rend alone since build 70170 (non-periodic abilities only)")
+	}
 	itemSpell.Cast(sim, fw.CurrentTarget)
 	if itemSpell.DamageMultiplier != 1 || eureka.GetStacks() != 3 {
 		t.Fatalf("Eureka! should ignore spells that are not class abilities")

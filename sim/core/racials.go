@@ -330,47 +330,82 @@ func applyExpansiveMind(character *Character) {
 	}
 }
 
-// The client scopes Eureka! to each class's damaging abilities with a spell family mask. Core cannot
-// see those masks, so this takes every class ability that deals damage (or heals, for a priest).
+// Eureka! names the spells it changes with each class's spell family mask. Build 70170 masks, as
+// effect 0 (SPELLMOD_COST) and effect 1 (SPELLMOD_DAMAGE) state them, with effect 2 (SPELLMOD_DOT)
+// folded into the damage set; core cannot import spelldata, so they are mirrored here. 70170 made it
+// "non-periodic damaging abilities": the DoTs (Rend, Rupture, Garrote, Corruption, Shadow Word: Pain,
+// Devouring Plague...) and the utility spells (Sunder Armor, Life Tap...) take no bonus and spend no
+// charge. Drain Life/Drain Soul and Mind Flay keep theirs through effect 2.
+// ponytail: the damage bonus scales a named spell's DoT part too (Immolate, Fireball, Holy Fire), as
+// spelldata reads SPELLMOD_DAMAGE everywhere; split it if SPELLMOD_DAMAGE turns out direct-only.
 func applyEureka(character *Character) {
 	var spellID int32
 	var resourceType proto.ResourceType
-	procMask := ProcMaskSpecial
-	// Build 70009 states -10% cost (effect 0, SPELLMOD_COST) on all five class variants; core
-	// cannot import spelldata, so the value is mirrored here.
-	const costReduction = 0.1
+	var costMask, damageMask [4]uint32
+	// -10% cost and +10% damage on all five class variants.
+	const costReduction, damageBonus = 0.1, 0.1
 
 	switch character.Class {
 	case proto.Class_ClassRogue:
 		spellID, resourceType = 1259812, proto.ResourceType_ResourceTypeEnergy
+		costMask = [4]uint32{100794910, 2097408}
+		damageMask = costMask
 	case proto.Class_ClassWarrior:
 		spellID, resourceType = 1259813, proto.ResourceType_ResourceTypeRage
+		costMask = [4]uint32{1784679630, 5, 1}
+		damageMask = costMask
 	case proto.Class_ClassMage:
 		spellID, resourceType = 1259817, proto.ResourceType_ResourceTypeMana
+		costMask = [4]uint32{549591799, 4096}
+		damageMask = [4]uint32{551688947, 4096, 0, 8}
 	case proto.Class_ClassWarlock:
 		spellID, resourceType = 1259821, proto.ResourceType_ResourceTypeMana
+		costMask = [4]uint32{541165, 8650880}
+		damageMask = [4]uint32{524773 | 16392, 8388736 | 262144}
 	case proto.Class_ClassPriest:
 		spellID, resourceType = 1259823, proto.ResourceType_ResourceTypeMana
-		procMask |= ProcMaskSpellHealing
+		costMask = [4]uint32{150224528, 8388614}
+		damageMask = [4]uint32{150224528 | 10485760, 8486918 | 98304}
 	default:
 		return
+	}
+
+	family := ClassSpellFamilies[character.Class]
+	names := func(spell *Spell, mask [4]uint32) bool {
+		return ClassFlags{Family: family, Mask: mask}.Matches(ClientClassFlags(spell.ActionID.SpellID))
 	}
 
 	actionID := ActionID{SpellID: spellID}
 	const anyClassSpell = math.MaxInt64
 
 	costMod := character.AddDynamicMod(SpellModConfig{
-		Kind:         SpellMod_PowerCost_Pct,
+		Kind:         SpellMod_Custom,
 		ClassMask:    anyClassSpell,
-		ProcMask:     procMask,
 		ResourceType: resourceType,
-		FloatValue:   -costReduction,
+		ApplyCustom: func(_ *SpellMod, spell *Spell) {
+			if names(spell, costMask) {
+				spell.Cost.PercentModifier *= 1 - costReduction
+			}
+		},
+		RemoveCustom: func(_ *SpellMod, spell *Spell) {
+			if names(spell, costMask) {
+				spell.Cost.PercentModifier /= 1 - costReduction
+			}
+		},
 	})
 	damageMod := character.AddDynamicMod(SpellModConfig{
-		Kind:       SpellMod_DamageDone_Pct,
-		ClassMask:  anyClassSpell,
-		ProcMask:   procMask,
-		FloatValue: 0.1,
+		Kind:      SpellMod_Custom,
+		ClassMask: anyClassSpell,
+		ApplyCustom: func(_ *SpellMod, spell *Spell) {
+			if names(spell, damageMask) {
+				spell.DamageMultiplier *= 1 + damageBonus
+			}
+		},
+		RemoveCustom: func(_ *SpellMod, spell *Spell) {
+			if names(spell, damageMask) {
+				spell.DamageMultiplier /= 1 + damageBonus
+			}
+		},
 	})
 
 	aura := character.RegisterAura(Aura{
@@ -388,7 +423,7 @@ func applyEureka(character *Character) {
 			damageMod.Deactivate()
 		},
 		OnCastComplete: func(aura *Aura, sim *Simulation, spell *Spell) {
-			if spell.Matches(anyClassSpell) && spell.ProcMask.Matches(procMask) {
+			if spell.Matches(anyClassSpell) && (names(spell, costMask) || names(spell, damageMask)) {
 				aura.RemoveStack(sim)
 			}
 		},
