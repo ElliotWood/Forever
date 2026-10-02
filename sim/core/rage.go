@@ -10,6 +10,11 @@ const ThreatPerRageGained = 5
 
 // TODO: Ingame test needed at higher levels
 const DamageTakenRageFactor = 10
+// A critical auto attack generates 75% more rage. Server side, so no client table carries it:
+// Blizzard put it back with the beta build of 2026-10-01 for warriors and druids (WoW: Forever
+// Podcast episode 2, "it won't be double rage on crits, it's 75% increase").
+const CritRageMultiplier = 1.75
+
 const (
 	BaseRageHitFactor     = 3.46
 	TwoHandRageHitFactor  = 4.5
@@ -76,6 +81,9 @@ func (unit *Unit) EnableRageBar(options RageBarOptions) {
 
 			// rage is normalized so it only depends on weapon swing speed and some multipliers
 			generatedRage := hitFactor * weapon.SwingSpeed * options.BaseRageMultiplier * handMultiplier
+			if result.DidCrit() {
+				generatedRage *= CritRageMultiplier
+			}
 
 			var metrics *ResourceMetrics
 			if spell.Cost != nil {
