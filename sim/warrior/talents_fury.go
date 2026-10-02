@@ -11,7 +11,7 @@ import (
 
 func (warrior *Warrior) registerFuryTalents() {
 	// Tier 1
-	// Booming Voice (12321) widens the shout radius only, which the sim does not model.
+	warrior.registerBoomingVoice()
 	warrior.registerCruelty()
 
 	// Tier 2
@@ -320,6 +320,21 @@ func (warrior *Warrior) registerBloodCraze() {
 		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 			bloodCraze.SelfHot().Apply(sim)
 		},
+	})
+}
+
+// Booming Voice (12321) widens the shout radius, which the sim does not model. Build 70170 added a
+// second effect the tooltip does not mention yet: -5% a point off the Rage cost of Battle,
+// Demoralizing, Intimidating and Challenging Shout (mask 0xF0000).
+func (warrior *Warrior) registerBoomingVoice() {
+	if warrior.Talents.BoomingVoice == 0 {
+		return
+	}
+
+	warrior.AddStaticMod(core.SpellModConfig{
+		ClassMask:  SpellMaskShouts,
+		Kind:       core.SpellMod_PowerCost_Pct_Add,
+		FloatValue: spellData.BoomingVoice.EffectAt(2).FractionAt(warrior.Talents.BoomingVoice),
 	})
 }
 
