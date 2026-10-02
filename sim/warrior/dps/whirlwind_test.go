@@ -43,3 +43,27 @@ func TestWhirlwindOffHandAndRagingBlows(t *testing.T) {
 		}
 	}
 }
+
+// Build 70170: Booming Voice's second effect takes 5% a point off the shouts' Rage cost.
+func TestBoomingVoiceCutsShoutCost(t *testing.T) {
+	for talents, want := range map[string]float64{
+		FuryTalents: 7.5, // Booming Voice 5/5
+		DpsTalents:  10,  // untaken
+	} {
+		sim := core.NewSim(&proto.RaidSimRequest{
+			Raid: core.SinglePlayerRaidProto(&proto.Player{
+				Race: proto.Race_RaceOrc, Class: proto.Class_ClassWarrior,
+				Equipment: &proto.EquipmentSpec{}, TalentsString: talents, Spec: DefaultOptions,
+			}, &proto.PartyBuffs{}, &proto.RaidBuffs{}, &proto.Debuffs{}),
+			Encounter:  core.MakeSingleTargetEncounter(0),
+			SimOptions: &proto.SimOptions{RandomSeed: 1},
+		}, simsignals.CreateSignals())
+		sim.Reset()
+		warrior := sim.Raid.Parties[0].Players[0].(*DpsWarrior)
+		for _, shout := range []*core.Spell{warrior.BattleShout, warrior.DemoralizingShout} {
+			if got := shout.Cost.GetCurrentCost(); got != want {
+				t.Errorf("%s: %s costs %v Rage, want %v", talents, shout.ActionID, got, want)
+			}
+		}
+	}
+}

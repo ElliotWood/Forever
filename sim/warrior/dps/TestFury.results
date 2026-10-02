@@ -1508,85 +1508,85 @@ dps_results: {
 dps_results: {
  key: "TestFury-Settings-Human-DualWield-Fury-DPS-dps_no_reck-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 396.27269
-  tps: 369.18529
+  dps: 404.49891
+  tps: 376.06696
  }
 }
 dps_results: {
  key: "TestFury-Settings-Human-DualWield-Fury-DPS-dps_no_reck-FullBuffs-0.0yards-LongSingleTarget"
  value: {
-  dps: 284.68937
-  tps: 182.01239
+  dps: 279.99665
+  tps: 179.20135
  }
 }
 dps_results: {
  key: "TestFury-Settings-Human-DualWield-Fury-DPS-dps_no_reck-FullBuffs-0.0yards-ShortSingleTarget"
  value: {
-  dps: 294.92181
-  tps: 187.57691
+  dps: 288.32212
+  tps: 183.83197
  }
 }
 dps_results: {
  key: "TestFury-Settings-Human-DualWield-Fury-DPS-dps_no_reck-NoBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 147.38752
-  tps: 245.83359
+  dps: 146.42302
+  tps: 246.09968
  }
 }
 dps_results: {
  key: "TestFury-Settings-Human-DualWield-Fury-DPS-dps_no_reck-NoBuffs-0.0yards-LongSingleTarget"
  value: {
-  dps: 105.24154
-  tps: 104.69557
+  dps: 104.59823
+  tps: 104.26036
  }
 }
 dps_results: {
  key: "TestFury-Settings-Human-DualWield-Fury-DPS-dps_no_reck-NoBuffs-0.0yards-ShortSingleTarget"
  value: {
-  dps: 112.72968
-  tps: 112.75846
+  dps: 114.49044
+  tps: 114.65074
  }
 }
 dps_results: {
  key: "TestFury-Settings-Human-DualWield-Fury-DPS-dps_reck-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 436.26291
-  tps: 396.83946
+  dps: 432.32168
+  tps: 395.14277
  }
 }
 dps_results: {
  key: "TestFury-Settings-Human-DualWield-Fury-DPS-dps_reck-FullBuffs-0.0yards-LongSingleTarget"
  value: {
-  dps: 308.95098
-  tps: 198.16535
+  dps: 307.82805
+  tps: 197.7611
  }
 }
 dps_results: {
  key: "TestFury-Settings-Human-DualWield-Fury-DPS-dps_reck-FullBuffs-0.0yards-ShortSingleTarget"
  value: {
-  dps: 396.38813
-  tps: 254.60615
+  dps: 379.46498
+  tps: 243.7277
  }
 }
 dps_results: {
  key: "TestFury-Settings-Human-DualWield-Fury-DPS-dps_reck-NoBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 170.1698
-  tps: 268.52205
+  dps: 167.38361
+  tps: 266.54211
  }
 }
 dps_results: {
  key: "TestFury-Settings-Human-DualWield-Fury-DPS-dps_reck-NoBuffs-0.0yards-LongSingleTarget"
  value: {
-  dps: 122.52781
-  tps: 121.44836
+  dps: 124.79369
+  tps: 123.70811
  }
 }
 dps_results: {
  key: "TestFury-Settings-Human-DualWield-Fury-DPS-dps_reck-NoBuffs-0.0yards-ShortSingleTarget"
  value: {
-  dps: 155.63866
-  tps: 154.39409
+  dps: 156.09388
+  tps: 154.68622
  }
 }
 dps_results: {
@@ -1676,85 +1676,85 @@ dps_results: {
 dps_results: {
  key: "TestFury-Settings-Orc-DualWield-Fury-DPS-dps_no_reck-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 415.93884
-  tps: 382.68405
+  dps: 410.97577
+  tps: 379.65655
  }
 }
 dps_results: {
  key: "TestFury-Settings-Orc-DualWield-Fury-DPS-dps_no_reck-FullBuffs-0.0yards-LongSingleTarget"
  value: {
-  dps: 296.43674
-  tps: 188.89923
+  dps: 291.99546
+  tps: 186.19703
  }
 }
 dps_results: {
  key: "TestFury-Settings-Orc-DualWield-Fury-DPS-dps_no_reck-FullBuffs-0.0yards-ShortSingleTarget"
  value: {
-  dps: 306.99962
-  tps: 195.01087
+  dps: 300.10407
+  tps: 191.28972
  }
 }
 dps_results: {
  key: "TestFury-Settings-Orc-DualWield-Fury-DPS-dps_no_reck-NoBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 153.81807
-  tps: 252.09008
+  dps: 154.48451
+  tps: 253.35593
  }
 }
 dps_results: {
  key: "TestFury-Settings-Orc-DualWield-Fury-DPS-dps_no_reck-NoBuffs-0.0yards-LongSingleTarget"
  value: {
-  dps: 109.7819
-  tps: 108.87754
+  dps: 108.92886
+  tps: 107.94054
  }
 }
 dps_results: {
  key: "TestFury-Settings-Orc-DualWield-Fury-DPS-dps_no_reck-NoBuffs-0.0yards-ShortSingleTarget"
  value: {
-  dps: 117.85534
-  tps: 117.66255
+  dps: 118.69551
+  tps: 118.4217
  }
 }
 dps_results: {
  key: "TestFury-Settings-Orc-DualWield-Fury-DPS-dps_reck-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 456.14811
-  tps: 410.15321
+  dps: 445.11719
+  tps: 403.15814
  }
 }
 dps_results: {
  key: "TestFury-Settings-Orc-DualWield-Fury-DPS-dps_reck-FullBuffs-0.0yards-LongSingleTarget"
  value: {
-  dps: 320.04709
-  tps: 204.3988
+  dps: 319.23646
+  tps: 204.3641
  }
 }
 dps_results: {
  key: "TestFury-Settings-Orc-DualWield-Fury-DPS-dps_reck-FullBuffs-0.0yards-ShortSingleTarget"
  value: {
-  dps: 399.91112
-  tps: 256.15367
+  dps: 392.46472
+  tps: 251.72459
  }
 }
 dps_results: {
  key: "TestFury-Settings-Orc-DualWield-Fury-DPS-dps_reck-NoBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 176.18352
-  tps: 274.23094
+  dps: 175.48537
+  tps: 273.88249
  }
 }
 dps_results: {
  key: "TestFury-Settings-Orc-DualWield-Fury-DPS-dps_reck-NoBuffs-0.0yards-LongSingleTarget"
  value: {
-  dps: 128.15406
-  tps: 126.56445
+  dps: 124.41057
+  tps: 122.98907
  }
 }
 dps_results: {
  key: "TestFury-Settings-Orc-DualWield-Fury-DPS-dps_reck-NoBuffs-0.0yards-ShortSingleTarget"
  value: {
-  dps: 163.16111
-  tps: 161.18875
+  dps: 164.26985
+  tps: 162.1493
  }
 }
 dps_results: {
