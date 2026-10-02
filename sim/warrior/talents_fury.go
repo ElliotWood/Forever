@@ -328,8 +328,10 @@ func (warrior *Warrior) registerRagingBlows() {
 		return
 	}
 
+	// Build 70170 + hotfix 112347: "Reduces the Rage cost of your Cleave and Whirlwind abilities",
+	// effect 2's mask names both (Cleave 0x400000, Whirlwind mask_1 0x4).
 	warrior.AddStaticMod(core.SpellModConfig{
-		ClassMask: SpellMaskCleave,
+		ClassMask: SpellMaskCleave | SpellMaskWhirlwind,
 		Kind:      core.SpellMod_PowerCost_Flat,
 		IntValue:  int32(spellData.RagingBlows.EffectAt(2).TenthsAt(1)),
 	})
