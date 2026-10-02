@@ -72,8 +72,8 @@ func TestFeralCat(t *testing.T) {
 }
 
 // Our Forever sim's feral builds.
-const DefaultTalents = "-5521002023132213051-05503"
-const FeralCatTalents = "050022-5500002123032213051-052"
+const DefaultTalents = "-55210032021132212051-05503"
+const FeralCatTalents = "050022-55000032121032212051-052"
 
 var DefaultSpecOptions = &proto.Player_FeralCatDruid{
 	FeralCatDruid: &proto.FeralCatDruid{

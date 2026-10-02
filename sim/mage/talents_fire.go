@@ -195,16 +195,16 @@ func (mage *Mage) registerImprovedFireWard() {
 	}
 }
 
-// Fireball, Fire Blast and Scorch crits each take 25% off Pyroblast's cast time, stacking 3 times,
-// so the stacks are worth holding rather than spending. The buff is 400625: its duration (20 sec since
-// build 70009), stack cap and per-stack cast time cut are read from the row. Frostfire Bolt, which
-// the tooltip also names, builds stacks too.
+// Heating Up (Hot Streak before build 70170, same rows): Fireball, Fire Blast and Scorch crits each
+// take 25% off Pyroblast's cast time, stacking 3 times, so the stacks are worth holding rather than
+// spending. The buff is 400625: its duration (20 sec since build 70009), stack cap and per-stack cast
+// time cut are read from the row. Frostfire Bolt, which the tooltip also names, builds stacks too.
 func (mage *Mage) registerHotStreak() {
-	if !mage.Talents.HotStreak {
+	if !mage.Talents.HeatingUp {
 		return
 	}
 
-	buff := spellData.HotStreakTriggered.Highest()
+	buff := spellData.HeatingUpTriggered.Highest()
 	perStack := buff.Effect(dbcenums.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_CASTING_TIME)).Percent()
 
 	castTimeMod := mage.AddDynamicMod(core.SpellModConfig{

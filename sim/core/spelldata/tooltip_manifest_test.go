@@ -44,6 +44,8 @@ var tooltipAllowed = map[int32][]float64{
 	20922:   {48, 88},                                 // Consecration
 	20923:   {160},                                    // Consecration
 	20924:   {96, 216},                                // Consecration
+	20925:   {20},                                     // Holy Shield: the 20% extra threat is scripted; the 70170 block chance (30) no longer matches it
+	20928:   {20},                                     // Holy Shield: the 20% extra threat is scripted; the 70170 block chance (30) no longer matches it
 	20128:   {2, 6},                                   // Redoubt: per point
 	20178:   {8, 20},                                  // Reckoning: per point
 	24239:   {20},                                     // Hammer of Wrath: the 20% health condition

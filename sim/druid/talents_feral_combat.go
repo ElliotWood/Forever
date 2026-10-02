@@ -20,20 +20,21 @@ func (druid *Druid) registerFeralCombatTalents() {
 	druid.applyThickHide()
 
 	// Tier 3
+	druid.applyShreddingAttacks()
 	druid.applySavageFury()
 	druid.applyFeralCharge()
 	druid.applySharpenedClaws()
 
 	// Tier 4
-	druid.applyShreddingAttacks()
+	// Shifting Power implemented in shifting_power.go
 	// Primal Bite implemented in primal_bite.go
 	druid.applyPredatoryStrikes()
 	druid.applyBloodFrenzy()
 
 	// Tier 5
-	druid.applyPredatoryInstincts()
+	// Improved Shifting Power implemented in shifting_power.go
 	// Leader of the Pack implemented in druid.go
-	druid.applyKingOfTheJungle()
+	druid.applyPredatoryInstincts()
 
 	// Tier 6
 	druid.applyNaturalReaction()
@@ -256,10 +257,6 @@ func (druid *Druid) applyFeralCharge() {
 	if !druid.Talents.FeralCharge {
 		return
 	}
-}
-
-// King of the Jungle grants Energy on Tiger's Fury; applied in tigers_fury.go.
-func (druid *Druid) applyKingOfTheJungle() {
 }
 
 // Natural Reaction, new in Forever: dodge chance, and a chance at Rage on every dodge.

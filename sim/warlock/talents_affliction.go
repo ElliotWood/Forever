@@ -235,13 +235,13 @@ func (warlock *Warlock) registerAmplifyCurse() {
 	})
 }
 
-// applySoulHarvesting implements Soul Harvesting, new in Forever.
+// applySoulHarvesting implements Soul Harvest (Soul Harvesting before build 70170), new in Forever.
 //
 // Client 437032: a kill under Drain Soul grants Soul Harvest (1242853) for 10 sec, +50/100% mana
 // regeneration and 50/100% of it kept while casting. Nothing dies under Drain Soul in the sim's
 // encounters, so there is nothing to model.
 func (warlock *Warlock) applySoulHarvesting() {
-	if warlock.Talents.SoulHarvesting == 0 {
+	if warlock.Talents.SoulHarvest == 0 {
 		return
 	}
 }
