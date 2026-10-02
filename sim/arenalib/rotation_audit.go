@@ -10,6 +10,7 @@ import (
 
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/spelldata"
 )
 
 // ARENA_ROTATION_AUDIT=1 turns a spec's arena test into a check of its rotation files rather than
@@ -53,7 +54,7 @@ func auditRotations(t *testing.T, spec Spec, talents []TalentBuild, gearSets []s
 				}
 				for _, spell := range player.Metadata.GetSpells() {
 					if spell.IsCastable && !spell.IsFriendly {
-						castable[actionKey(spell.Id)] = spell.Id.String()
+						castable[actionKey(spell.Id)] = spellName(spell.Id)
 					}
 				}
 
@@ -75,12 +76,20 @@ func auditRotations(t *testing.T, spec Spec, talents []TalentBuild, gearSets []s
 				}
 			}()
 		}
-		var unused []string
-		for _, key := range slices.Sorted(maps.Keys(castable)) {
-			if !cast[key] {
-				unused = append(unused, castable[key])
+		// By name, so a spell counts as used when any of its ranks was cast.
+		usedNames := map[string]bool{}
+		for key, name := range castable {
+			if cast[key] {
+				usedNames[name] = true
 			}
 		}
+		unusedNames := map[string]bool{}
+		for _, name := range castable {
+			if !usedNames[name] {
+				unusedNames[name] = true
+			}
+		}
+		unused := slices.Sorted(maps.Keys(unusedNames))
 		if len(unused) > 0 {
 			t.Logf("AUDIT %s | %s: never cast by any of %s: %s", spec.Dir, talent.Name, strings.Join(rotations, ", "), strings.Join(unused, "; "))
 		}
@@ -117,6 +126,13 @@ func validations(stats *proto.APLStats) []string {
 // list does not.
 func actionKey(id *proto.ActionID) string {
 	return fmt.Sprintf("%d/%d", id.GetSpellId(), id.GetOtherId())
+}
+
+func spellName(id *proto.ActionID) string {
+	if spell := spelldata.Find(id.GetSpellId()); spell != spelldata.Nil && spell.Name != "" {
+		return spell.Name
+	}
+	return id.String()
 }
 
 func rotationAuditOn() bool { return os.Getenv(rotationAuditEnv) != "" }
