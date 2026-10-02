@@ -982,8 +982,8 @@ dps_results: {
 dps_results: {
  key: "TestMarksmanship-AllItems-SearingDagger-273003"
  value: {
-  dps: 331.78737
-  tps: 202.67473
+  dps: 332.27841
+  tps: 203.06201
  }
 }
 dps_results: {

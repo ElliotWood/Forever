@@ -667,8 +667,8 @@ dps_results: {
 dps_results: {
  key: "TestSmitePriest-AllItems-SearingDagger-273003"
  value: {
-  dps: 175.15875
-  tps: 132.92518
+  dps: 176.89527
+  tps: 134.19436
  }
 }
 dps_results: {

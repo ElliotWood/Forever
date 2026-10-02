@@ -7,6 +7,7 @@
 	],
 	"priorityList": [
 		{"action":{"castSpell":{"spellId":{"spellId":5217}}}},
+		{"action":{"condition":{"and":{"vals":[{"spellIsKnown":{"spellId":{"spellId":1322605}}},{"cmp":{"op":"OpLe","lhs":{"currentEnergy":{}},"rhs":{"const":{"val":"60"}}}}]}},"castSpell":{"spellId":{"spellId":1322605}}}},
 		{"action":{"condition":{"auraIsActive":{"auraId":{"spellId":9913}}},"autocastOtherCooldowns":{}}},
 		{"action":{"condition":{"auraIsActive":{"auraId":{"spellId":9913}}},"castSpell":{"spellId":{"spellId":9867}}}},
 		{"action":{"condition":{"auraShouldRefresh":{"sourceUnit":{"type":"CurrentTarget"},"auraId":{"spellId":9907},"maxOverlap":{"const":{"val":"1.0s"}}}},"castSpell":{"spellId":{"spellId":9907}}}},

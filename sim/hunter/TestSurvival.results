@@ -50,7 +50,7 @@ character_stats_results: {
   final_stats: 0
   final_stats: 0
   final_stats: 6.5772
-  final_stats: 10
+  final_stats: 5
   final_stats: 0
   final_stats: 0
  }
@@ -983,7 +983,7 @@ dps_results: {
  key: "TestSurvival-AllItems-SearingDagger-273003"
  value: {
   dps: 306.52669
-  tps: 184.36384
+  tps: 184.35847
  }
 }
 dps_results: {

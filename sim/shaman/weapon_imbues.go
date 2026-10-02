@@ -147,7 +147,9 @@ func (shaman *Shaman) RegisterWindfuryImbue(procMask core.ProcMask) {
 }
 
 var windfuryImbue = spellData.WindfuryWeaponTriggered.Highest()
-var flametongueImbue = spellData.FlametongueWeaponTriggered.Highest()
+// Rank 6's proc dummy. Since the 70170 hotfixes the triggered ladder also lists the Flametongue Attack
+// damage spells (10444, 29469, 29470), so Highest() would be the attack rather than the dummy.
+var flametongueImbue = spellData.FlametongueWeaponTriggered.ByID(16344)
 var frostbrandImbue = spellData.FrostbrandWeaponTriggered.Highest()
 
 func (shaman *Shaman) newFlametongueImbueSpell(weapon *core.Item) *core.Spell {

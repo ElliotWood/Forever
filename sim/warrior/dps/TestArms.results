@@ -969,8 +969,8 @@ dps_results: {
 dps_results: {
  key: "TestArms-AllItems-Plaguefang-279876"
  value: {
-  dps: 308.52453
-  tps: 191.85827
+  dps: 306.94726
+  tps: 190.975
  }
 }
 dps_results: {
