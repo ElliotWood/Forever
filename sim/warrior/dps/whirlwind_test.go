@@ -6,6 +6,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/simsignals"
+	warrior_pkg "github.com/wowsims/forever/sim/warrior"
 )
 
 // Build 70170 + hotfix 112347: Whirlwind strikes with both weapons on its own, and Raging Blows
@@ -66,4 +67,37 @@ func TestBoomingVoiceCutsShoutCost(t *testing.T) {
 			}
 		}
 	}
+}
+
+// Client SpellShapeshift: Spearing Strike (1310222) is Battle Stance only.
+func TestSpearingStrikeNeedsBattleStance(t *testing.T) {
+	for _, talents := range []string{DpsTalents, FuryTalents, ArmsTalents} {
+		sim := core.NewSim(&proto.RaidSimRequest{
+			Raid: core.SinglePlayerRaidProto(&proto.Player{
+				Race: proto.Race_RaceOrc, Class: proto.Class_ClassWarrior,
+				Equipment: TwoHandGear.GearSet, TalentsString: talents, Spec: DefaultOptions,
+			}, &proto.PartyBuffs{}, &proto.RaidBuffs{}, &proto.Debuffs{}),
+			Encounter:  core.MakeSingleTargetEncounter(0),
+			SimOptions: &proto.SimOptions{RandomSeed: 1},
+		}, simsignals.CreateSignals())
+		sim.Reset()
+		warrior := sim.Raid.Parties[0].Players[0].(*DpsWarrior)
+		if !warrior.Talents.SpearingStrike {
+			continue
+		}
+		ss := warrior.GetSpell(core.ActionID{SpellID: 1310222})
+		target := warrior.CurrentTarget
+		for stance, want := range map[warrior_pkg.Stance]bool{
+			warrior_pkg.BattleStance:    true,
+			warrior_pkg.BerserkerStance: false,
+			warrior_pkg.DefensiveStance: false,
+		} {
+			warrior.Stance = stance
+			if got := ss.ExtraCastCondition(sim, target); got != want {
+				t.Errorf("%s: Spearing Strike castable in stance %d = %v, want %v", talents, stance, got, want)
+			}
+		}
+		return
+	}
+	t.Fatal("no test build takes Spearing Strike")
 }
