@@ -1,5 +1,11 @@
 [
 	{
+		"number": 643,
+		"title": "mage: Arcane Concentration skips triggered spells; Blizzard rolls on its cast",
+		"mergedAt": "2026-10-03",
+		"url": "https://github.com/ElliotWood/Forever/pull/643"
+	},
+	{
 		"number": 642,
 		"title": "evidence: Deep Wounds' top rank checked on a level 30 beta log",
 		"mergedAt": "2026-10-03",
