@@ -127,12 +127,14 @@ func (warrior *Warrior) registerDeepWounds() {
 	// Beta logs (foreverlogs reports 33/35, two level 20 warriors with 1 point) fit a tick of share x the main hand's average
 	// weapon damage / 4, attack power left out, and a crit that lands on a running bleed adds what it still owed to the new one.
 	// Report 2705 confirms the top rank at level 30: 3 points on a 102-154 axe tick 19.25 against 60% x 128 / 4 = 19.2.
+	// The tick spell 412613 carries Attributes[6] 0x20000000 (ignore caster damage modifiers), and reports 2705/2708 agree:
+	// the same warrior's ticks hold ~19.3 in Defensive Stance while Thunder Clap and Rend lose their 10% there.
 	warrior.DeepWounds = warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: deepWoundsBleed.ID},
 		SpellSchool:    core.SpellSchoolPhysical,
 		ProcMask:       core.ProcMaskEmpty,
 		ClassSpellMask: SpellMaskDeepWounds,
-		Flags:          core.SpellFlagNoOnCastComplete | core.SpellFlagIgnoreResists | core.SpellFlagProc, // 12162 and 412609 lack Not a Proc.
+		Flags:          core.SpellFlagNoOnCastComplete | core.SpellFlagIgnoreResists | core.SpellFlagProc | core.SpellFlagIgnoreAttackerModifiers, // 12162 and 412609 lack Not a Proc.
 
 		DamageMultiplier: 1,
 		ThreatMultiplier: 1,
