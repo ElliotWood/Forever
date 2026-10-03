@@ -7,7 +7,6 @@ import (
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/buffs"
 	"github.com/wowsims/forever/sim/core/proto"
-	"github.com/wowsims/forever/sim/core/stats"
 )
 
 const (
@@ -50,33 +49,36 @@ func (shaman *Shaman) setupItemSwapImbue(imbue proto.ShamanImbue, imbueID int32)
 	}
 }
 
-// newWindfuryAttackPowerAura is Windfury Weapon rank 4's triggered spell (16361): +333 melee attack
-// power for 1.5 sec, held for 3 charges spent by landed melee auto attacks (ProcTypeMask 4), so the
-// two extra attacks use two and the third lifts the next swing if it comes in time.
-func (shaman *Shaman) newWindfuryAttackPowerAura() *core.Aura {
+// newWindfuryAttackSpell is the Windfury attack: 439440 (main hand) or 439441 (Attributes[3] 0x1000000,
+// off hand), a SPELL_EFFECT_WEAPON_DAMAGE special hit carrying the rank's extra attack power (16361:
+// 333 at 60). Beta log 2708 (foreverlogs.gg, Toma, 22 Enhancement, level 30) bears this out: 62 procs,
+// each two 439440 hits in the same instant that miss, dodge and parry on their own; the next auto
+// still lands one weapon speed after the last (0.2 sec after a Stormstrike proc), so the swing timer
+// is untouched; and no 16361 buff is ever applied, so there is no third, lifted swing.
+func (shaman *Shaman) newWindfuryAttackSpell(isMH bool) *core.Spell {
 	apBonus := shaman.WindfuryAPBonus * (1 + spellData.ElementalWeapons.EffectAt(3).FractionAt(shaman.Talents.ElementalWeapons))
-	aura := shaman.NewTemporaryStatsAura("Windfury Weapon Attack Power", core.ActionID{SpellID: windfuryImbue.ID}, stats.Stats{stats.AttackPower: apBonus}, windfuryImbue.Duration())
-	aura.MaxStacks = int32(windfuryImbue.ProcCharges)
-	aura.AttachProcTrigger(core.ProcTrigger{
-		Name:     "Windfury Weapon Attack Power Charges",
-		Callback: core.CallbackOnSpellHitDealt,
-		ProcMask: core.ProcMaskMeleeMHAuto | core.ProcMaskMeleeOHAuto,
-		Outcome:  core.OutcomeLanded,
-		Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
-			aura.RemoveStack(sim)
-			if aura.GetStacks() == 0 {
-				aura.Deactivate(sim)
-			}
+	return shaman.RegisterSpell(core.SpellConfig{
+		ActionID:         core.ActionID{SpellID: core.TernaryInt32(isMH, 439440, 439441)},
+		SpellSchool:      core.SpellSchoolPhysical,
+		DefenseType:      core.DefenseTypeMelee,
+		ProcMask:         core.Ternary(isMH, core.ProcMaskMeleeMHSpecial, core.ProcMaskMeleeOHSpecial),
+		Flags:            core.SpellFlagMeleeMetrics | core.SpellFlagPassiveSpell | core.SpellFlagNoOnCastComplete,
+		DamageMultiplier: 1,
+		ThreatMultiplier: 1,
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			weaponDamage := core.Ternary(isMH, spell.Unit.MHWeaponDamage, spell.Unit.OHWeaponDamage)
+			baseDamage := weaponDamage(sim, spell.MeleeAttackPower(target)+apBonus)
+			spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
 		},
 	})
-	return aura.Aura
 }
 
 // The enchant's equip aura (439431 in every rank's SpellItemEnchantment) rolls 20% on landed melee
-// autos and abilities (ProcTypeMask 20) with a 1.5 sec ProcCategoryRecovery, then casts 16361:
-// A_MOD_ATTACK_POWER plus SPELL_EFFECT_ADD_EXTRA_ATTACKS 2. The extra attacks are ordinary white
-// swings (white hit table, glancing blows, other weapon procs), not two special hits.
-func (shaman *Shaman) makeWFProcTriggerAura(dpm *core.DynamicProcManager, procMask *core.ProcMask, apAura *core.Aura) *core.Aura {
+// autos and abilities (ProcTypeMask 20) with a 1.5 sec ProcCategoryRecovery and strikes twice with
+// the proc's weapon.
+func (shaman *Shaman) makeWFProcTriggerAura(dpm *core.DynamicProcManager, procMask *core.ProcMask) *core.Aura {
+	mhAttack := shaman.newWindfuryAttackSpell(true)
+	ohAttack := shaman.newWindfuryAttackSpell(false)
 	aura := shaman.MakeProcTriggerAura(core.ProcTrigger{
 		Name:               "Windfury Imbue",
 		Callback:           core.CallbackOnSpellHitDealt,
@@ -87,17 +89,9 @@ func (shaman *Shaman) makeWFProcTriggerAura(dpm *core.DynamicProcManager, procMa
 		DPM:                dpm,
 		TriggerImmediately: true,
 		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			apAura.Activate(sim)
-			apAura.SetStacks(sim, apAura.MaxStacks)
-			if spell.IsMH() {
-				// Classic extra attacks: the main-hand swing is pulled to now (resets the timer).
-				shaman.AutoAttacks.ExtraMHAttacks(sim, 2)
-			} else {
-				// ponytail: an off-hand proc swings the off hand twice; whether the client gives
-				// main-hand attacks instead is unmeasured.
-				shaman.AutoAttacks.OHAuto().Cast(sim, result.Target)
-				shaman.AutoAttacks.OHAuto().Cast(sim, result.Target)
-			}
+			attack := core.Ternary(spell.IsMH(), mhAttack, ohAttack)
+			attack.Cast(sim, result.Target)
+			attack.Cast(sim, result.Target)
 		},
 	})
 	return aura
@@ -135,7 +129,7 @@ func (shaman *Shaman) RegisterWindfuryImbue(procMask core.ProcMask) {
 
 	dpm := shaman.NewDynamicLegacyProcForTempEnchant(windfuryEnchantID, 0, shaman.getWindfuryFixedProcChance)
 
-	aura := shaman.makeWFProcTriggerAura(dpm, &mask, shaman.newWindfuryAttackPowerAura())
+	aura := shaman.makeWFProcTriggerAura(dpm, &mask)
 
 	if mask.Matches(core.ProcMaskMeleeMH) {
 		aura.NewExclusiveEffect(buffs.WindfuryTotemCategory, false, core.ExclusiveEffect{
@@ -147,6 +141,7 @@ func (shaman *Shaman) RegisterWindfuryImbue(procMask core.ProcMask) {
 }
 
 var windfuryImbue = spellData.WindfuryWeaponTriggered.Highest()
+
 // Rank 6's proc dummy. Since the 70170 hotfixes the triggered ladder also lists the Flametongue Attack
 // damage spells (10444, 29469, 29470), so Highest() would be the attack rather than the dummy.
 var flametongueImbue = spellData.FlametongueWeaponTriggered.ByID(16344)

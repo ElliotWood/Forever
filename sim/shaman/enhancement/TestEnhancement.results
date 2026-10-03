@@ -65,15 +65,15 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-AllItems-Alcor'sSunrazor-14555"
  value: {
-  dps: 266.76378
-  tps: 147.39162
+  dps: 270.44908
+  tps: 149.52839
  }
 }
 dps_results: {
  key: "TestEnhancement-AllItems-Annihilator-12798"
  value: {
-  dps: 285.54238
-  tps: 153.07896
+  dps: 292.53448
+  tps: 156.49518
  }
 }
 dps_results: {
@@ -107,8 +107,8 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-AllItems-Bashguuder-13204"
  value: {
-  dps: 273.1643
-  tps: 148.30302
+  dps: 276.98509
+  tps: 150.39171
  }
 }
 dps_results: {
@@ -156,8 +156,8 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-AllItems-Bloodfist-11744"
  value: {
-  dps: 264.48059
-  tps: 145.47519
+  dps: 264.30549
+  tps: 145.21483
  }
 }
 dps_results: {
@@ -191,8 +191,8 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-AllItems-BonechillHammer-14487"
  value: {
-  dps: 279.66796
-  tps: 150.20581
+  dps: 283.98197
+  tps: 152.27888
  }
 }
 dps_results: {
@@ -226,8 +226,8 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-AllItems-ColdrageDagger-10761"
  value: {
-  dps: 250.5108
-  tps: 138.51473
+  dps: 252.3825
+  tps: 139.44469
  }
 }
 dps_results: {
@@ -268,8 +268,8 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-AllItems-Darrowspike-13984"
  value: {
-  dps: 268.03862
-  tps: 147.16892
+  dps: 269.92143
+  tps: 148.07956
  }
 }
 dps_results: {
@@ -366,8 +366,8 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-AllItems-ElectrifiedDagger-19100"
  value: {
-  dps: 272.43578
-  tps: 148.04999
+  dps: 274.88627
+  tps: 149.29113
  }
 }
 dps_results: {
@@ -506,8 +506,8 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-AllItems-FlurryAxe-871"
  value: {
-  dps: 265.22401
-  tps: 146.24561
+  dps: 267.52986
+  tps: 147.40345
  }
 }
 dps_results: {
@@ -555,8 +555,8 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-AllItems-GiftoftheGatheringStorm"
  value: {
-  dps: 294.1369
-  tps: 157.29317
+  dps: 299.80268
+  tps: 159.97332
  }
 }
 dps_results: {
@@ -569,8 +569,8 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-AllItems-GlacialBlade-19099"
  value: {
-  dps: 272.3434
-  tps: 148.00621
+  dps: 274.99307
+  tps: 149.286
  }
 }
 dps_results: {
@@ -639,8 +639,8 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-AllItems-IcebladeHacker-13952"
  value: {
-  dps: 302.84456
-  tps: 162.43137
+  dps: 314.86926
+  tps: 168.42199
  }
 }
 dps_results: {
@@ -660,8 +660,8 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-AllItems-Ironfoe-11684"
  value: {
-  dps: 299.20361
-  tps: 160.39523
+  dps: 308.03085
+  tps: 164.96651
  }
 }
 dps_results: {
@@ -716,8 +716,8 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-AllItems-ManualCrowdPummeler-9449"
  value: {
-  dps: 271.71458
-  tps: 148.06506
+  dps: 276.35954
+  tps: 150.54413
  }
 }
 dps_results: {
@@ -765,8 +765,8 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-AllItems-MasterworkStormhammer-12794"
  value: {
-  dps: 266.95304
-  tps: 146.42274
+  dps: 268.90609
+  tps: 147.25649
  }
 }
 dps_results: {
@@ -863,15 +863,15 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-AllItems-Rivenspike-13286"
  value: {
-  dps: 281.75803
-  tps: 149.98151
+  dps: 291.36423
+  tps: 154.79186
  }
 }
 dps_results: {
  key: "TestEnhancement-AllItems-SearingDagger-273003"
  value: {
-  dps: 227.54657
-  tps: 127.03749
+  dps: 227.51724
+  tps: 126.92366
  }
 }
 dps_results: {
@@ -947,15 +947,15 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-AllItems-Spider'sKiss"
  value: {
-  dps: 294.42298
-  tps: 163.74954
+  dps: 306.99705
+  tps: 169.91103
  }
 }
 dps_results: {
  key: "TestEnhancement-AllItems-SpiritofEskhandar"
  value: {
-  dps: 312.20026
-  tps: 172.93017
+  dps: 321.28432
+  tps: 177.23373
  }
 }
 dps_results: {
@@ -968,8 +968,8 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-AllItems-StingingViper-6472"
  value: {
-  dps: 243.91343
-  tps: 131.52122
+  dps: 247.4247
+  tps: 133.36684
  }
 }
 dps_results: {
@@ -996,8 +996,8 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-AllItems-Sulfuras,HandofRagnaros-17182"
  value: {
-  dps: 376.78959
-  tps: 195.32908
+  dps: 379.77374
+  tps: 196.82712
  }
 }
 dps_results: {
@@ -1059,8 +1059,8 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-AllItems-TheCruelHandofTimmy-13401"
  value: {
-  dps: 268.04445
-  tps: 145.8302
+  dps: 271.67579
+  tps: 147.8084
  }
 }
 dps_results: {
@@ -1101,8 +1101,8 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-AllItems-TheLobotomizer-19324"
  value: {
-  dps: 281.10871
-  tps: 152.28371
+  dps: 284.19475
+  tps: 153.93762
  }
 }
 dps_results: {
