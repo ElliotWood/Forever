@@ -134,10 +134,18 @@ func (mage *Mage) registerArcaneConcentration() {
 	// Forever states a flat SpellAuraOptions.ProcChance of 100 on the talent spell and puts the
 	// real per-rank chance on the effect, so ProcChanceAt would read 100% at every rank. 11213's
 	// ProcCategoryRecovery holds it to one proc a second.
+	//
+	// Spells another spell triggers do not proc it: Arcane Missiles' missiles and Blizzard's ticks.
+	// Blizzard rolls once per enemy when cast instead. Beta log 2706 (Jamal, 18 Arcane, level 26):
+	// 70 procs on 246 Arcane Explosions (722 targets hit, 11% a target), 12 on 37 Blizzard casts,
+	// 0 on 642 Blizzard tick hits (62 if they rolled) and 0 on 32 missiles.
 	mage.MakeProcTriggerAura(core.ProcTrigger{
-		Name:               "Arcane Concentration",
-		Callback:           core.CallbackOnSpellHitDealt,
-		ClassSpellMask:     MageSpellsAllDamaging,
+		Name:           "Arcane Concentration",
+		Callback:       core.CallbackOnSpellHitDealt,
+		ClassSpellMask: MageSpellsAllDamaging &^ MageSpellArcaneMissilesTick,
+		ExtraCondition: func(_ *core.Simulation, spell *core.Spell, _ *core.SpellResult) bool {
+			return !spell.Matches(MageSpellBlizzard) || spell.Flags.Matches(core.SpellFlagChanneled)
+		},
 		Outcome:            core.OutcomeLanded,
 		ProcChance:         spellData.ArcaneConcentration.EffectAt(1).FractionAt(mage.Talents.ArcaneConcentration),
 		ICD:                spellData.ArcaneConcentration.Highest().ICD(),

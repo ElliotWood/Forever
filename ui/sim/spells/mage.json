@@ -196,7 +196,7 @@
 	"12536": {
 		"ability": "Clearcasting",
 		"file": "sim/mage/talents_arcane.go",
-		"note": "Arcane Concentration's Clearcasting buff, the id the sim registers. 2% chance per point (11213's curve 2/4/6/8/10 in beta client 1.60.1.70009) that the next spell costs no mana, 15 sec, the same as Classic.",
+		"note": "Arcane Concentration's Clearcasting buff, the id the sim registers. 2% chance per point (11213's curve 2/4/6/8/10 in beta client 1.60.1.70009) that the next spell costs no mana, 15 sec, the same as Classic. It rolls on each enemy a spell hits, not on spells another spell triggers: beta log 2706 (Jamal, 18 Arcane, level 26) has 70 procs from 246 Arcane Explosions (11% an enemy hit), 12 from 37 Blizzard casts, none from 642 Blizzard tick hits (62 if they rolled) and none from 32 Arcane Missiles missiles. The sim rolls Blizzard once an enemy on the cast and skips its ticks and the missiles.",
 		"source": "classic"
 	},
 	"13021": {

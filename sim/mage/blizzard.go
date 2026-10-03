@@ -86,6 +86,11 @@ func (mage *Mage) registerBlizzardSpell() {
 		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			// The cast's own E_DUMMY lands on every enemy in the area, so it can proc what a spell hit
+			// procs (Arcane Concentration); the ticks are triggered by the area trigger and cannot.
+			for _, aoeTarget := range sim.Encounter.ActiveTargetUnits {
+				spell.CalcAndDealOutcome(sim, aoeTarget, spell.OutcomeMagicHitNoHitCounter)
+			}
 			spell.AOEDot().Apply(sim)
 		},
 	})
