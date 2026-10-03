@@ -103,7 +103,7 @@
 	"1310222": {
 		"ability": "Spearing Strike",
 		"file": "sim/warrior/talents_arms.go",
-		"note": "Client 1.60.1.70009: a new Arms talent with no Classic spell. 15 Rage, 20 sec cooldown, 40% normalized weapon damage and another 80% against Giants and Dragonkin.",
+		"note": "Client 1.60.1.70009: a new Arms talent with no Classic spell. 15 Rage, 20 sec cooldown, 40% normalized weapon damage and another 80% against Giants and Dragonkin. Battle Stance only (client 1.60.1.70178 SpellShapeshift), so the default Berserker Stance rotation no longer casts it.",
 		"source": "forever",
 		"tooltip": "15 Rage\nMelee Range\nInstant\n20 sec cooldown\nA brutal attack that deals 40% weapon damage. Deals an additional 80% weapon damage against Giants, Dragonkin, and mounted targets. Mounted targets are dismounted."
 	},

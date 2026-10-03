@@ -297,6 +297,11 @@ func (warrior *Warrior) registerSpearingStrike() {
 		DamageMultiplier: 1,
 		ThreatMultiplier: 1,
 
+		// Client SpellShapeshift 1310222: Battle Stance only (Wowhead: "Requires Battle Stance").
+		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
+			return warrior.StanceMatches(BattleStance)
+		},
+
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			baseDamage := spearingStrikeWeaponShare * spell.Unit.MHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
 			if target.MobType == proto.MobType_MobTypeGiant || target.MobType == proto.MobType_MobTypeDragonkin {
