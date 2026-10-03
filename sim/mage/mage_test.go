@@ -312,3 +312,56 @@ func TestPiercingIceDotBonusStaysAtBasePoints(t *testing.T) {
 		t.Errorf("Frostfire Bolt hit - DoT multiplier = %.4f, want %.4f (Piercing Ice %.2f on the hit, %.2f on the DoT)", got, hit-dot, hit, dot)
 	}
 }
+
+// Arcane Concentration (11213) does not proc off spells another spell triggers: Blizzard rolls once
+// an enemy on its cast, never on its ticks, and Arcane Missiles' missiles never roll (beta log 2706).
+func TestArcaneConcentrationSkipsTriggeredSpells(t *testing.T) {
+	encounter := core.MakeSingleTargetEncounter(0)
+	encounter.Duration = 600
+	encounter.Targets = append(encounter.Targets, core.NewDefaultTarget(), core.NewDefaultTarget())
+	sim := core.NewSim(&proto.RaidSimRequest{
+		SimOptions: &proto.SimOptions{RandomSeed: 1},
+		Raid: &proto.Raid{Parties: []*proto.Party{{Buffs: &proto.PartyBuffs{}, Players: []*proto.Player{{
+			Name: "Mage", Class: proto.Class_ClassMage, Race: proto.Race_RaceGnome, TalentsString: ArcaneTalents,
+			Equipment: &proto.EquipmentSpec{}, Buffs: &proto.IndividualBuffs{},
+			Spec:     &proto.Player_Mage{Mage: &proto.Mage{Options: &proto.Mage_Options{ClassOptions: &proto.MageOptions{}}}},
+			Rotation: &proto.APLRotation{Type: proto.APLRotation_TypeAPL},
+		}}}}},
+		Encounter: encounter,
+	}, simsignals.CreateSignals())
+	sim.Reset()
+
+	mage := sim.Raid.Parties[0].Players[0].(MageAgent).GetMage()
+	if mage.Talents.ArcaneConcentration == 0 {
+		t.Fatal("ArcaneTalents no longer take Arcane Concentration; pick a build that does")
+	}
+	var castAt time.Duration
+	onCast, later := 0, 0
+	mage.ClearcastingAura.ApplyOnGain(func(_ *core.Aura, sim *core.Simulation) {
+		if sim.CurrentTime == castAt {
+			onCast++
+		} else {
+			later++
+		}
+	})
+	for _, spell := range []*core.Spell{
+		mage.GetSpell(core.ActionID{SpellID: spellData.Blizzard.Highest().ID}),
+		mage.GetSpell(core.ActionID{SpellID: spellData.ArcaneMissiles.Highest().ID}),
+	} {
+		onCast, later = 0, 0
+		for i := 0; i < 30; i++ {
+			mage.ClearcastingAura.Deactivate(sim)
+			castAt = sim.CurrentTime
+			spell.SkipCastAndApplyEffects(sim, mage.CurrentTarget)
+			for sim.CurrentTime < castAt+9*time.Second {
+				sim.Step()
+			}
+		}
+		if later != 0 {
+			t.Errorf("%v: Clearcasting procced %d times after the cast (ticks or missiles)", spell.ActionID, later)
+		}
+		if blizzard := spell.Matches(MageSpellBlizzard); blizzard != (onCast > 0) {
+			t.Errorf("%v: Clearcasting procced %d times on the cast", spell.ActionID, onCast)
+		}
+	}
+}
