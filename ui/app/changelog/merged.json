@@ -1,5 +1,11 @@
 [
 	{
+		"number": 641,
+		"title": "warrior: offer Stance Dance and Battle Stance rotations; Auto picks them",
+		"mergedAt": "2026-10-03",
+		"url": "https://github.com/ElliotWood/Forever/pull/641"
+	},
+	{
 		"number": 640,
 		"title": "rotations: dps_dance, warriors swap to Battle Stance for Overpower after a dodge",
 		"mergedAt": "2026-10-03",
