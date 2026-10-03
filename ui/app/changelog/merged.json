@@ -1,5 +1,11 @@
 [
 	{
+		"number": 646,
+		"title": "Ignite, Elemental Devastation, Flurry: read Can Proc From Procs from the Forever client",
+		"mergedAt": "2026-10-03",
+		"url": "https://github.com/ElliotWood/Forever/pull/646"
+	},
+	{
 		"number": 645,
 		"title": "warrior: Deep Wounds ticks ignore caster damage modifiers (client flag + beta logs)",
 		"mergedAt": "2026-10-03",
