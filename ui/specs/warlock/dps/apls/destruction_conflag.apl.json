@@ -197,21 +197,60 @@
 			"action": {
 				"condition": {
 					"cmp": {
-						"op": "OpLe",
+						"op": "OpGe",
 						"lhs": {
-							"dotRemainingTime": {
-								"spellId": {
-									"spellId": 11713
-								}
-							}
+							"remainingTime": {}
 						},
 						"rhs": {
-							"spellCastTime": {
-								"spellId": {
-									"spellId": 11713
-								}
+							"const": {
+								"val": "60s"
 							}
 						}
+					}
+				},
+				"castSpell": {
+					"spellId": {
+						"spellId": 603
+					}
+				}
+			}
+		},
+		{
+			"action": {
+				"condition": {
+					"and": {
+						"vals": [
+							{
+								"not": {
+									"val": {
+										"dotIsActive": {
+											"spellId": {
+												"spellId": 603
+											}
+										}
+									}
+								}
+							},
+							{
+								"cmp": {
+									"op": "OpLe",
+									"lhs": {
+										"dotRemainingTime": {
+											"spellId": {
+												"spellId": 11713
+											}
+										}
+									},
+									"rhs": {
+										"spellCastTime": {
+											"spellId": {
+												"spellId": 11713
+											}
+										}
+									}
+								}
+							}
+						]
 					}
 				},
 				"castSpell": {
@@ -279,8 +318,18 @@
 		},
 		{
 			"action": {
-				"condition": { "dotIsActive": { "spellId": { "spellId": 25309 } } },
-				"castSpell": { "spellId": { "spellId": 18932 } }
+				"condition": {
+					"dotIsActive": {
+						"spellId": {
+							"spellId": 25309
+						}
+					}
+				},
+				"castSpell": {
+					"spellId": {
+						"spellId": 18932
+					}
+				}
 			}
 		},
 		{
