@@ -1,5 +1,11 @@
 [
 	{
+		"number": 633,
+		"title": "arena: rogues carry Deadly Poison in the off hand, so Mutilate's poison bonus counts",
+		"mergedAt": "2026-10-03",
+		"url": "https://github.com/ElliotWood/Forever/pull/633"
+	},
+	{
 		"number": 632,
 		"title": "rogue: Mutilate's hand strikes no longer roll miss, dodge or parry again",
 		"mergedAt": "2026-10-03",
