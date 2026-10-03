@@ -1,5 +1,11 @@
 [
 	{
+		"number": 639,
+		"title": "rotations: warlocks keep Bane of Doom up while a minute of the fight remains",
+		"mergedAt": "2026-10-03",
+		"url": "https://github.com/ElliotWood/Forever/pull/639"
+	},
+	{
 		"number": 638,
 		"title": "evidence: beta logs check Sanctified Judgement (rank 3 returns ~2/3, not 60%)",
 		"mergedAt": "2026-10-03",
