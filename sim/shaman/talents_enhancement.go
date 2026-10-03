@@ -92,7 +92,7 @@ func (shaman *Shaman) applyFlurry() {
 		Name:             "Flurry Trigger",
 		Callback:         core.CallbackOnSpellHitDealt,
 		ProcMask:         core.ProcMaskMelee,
-		CanProcFromProcs: true, // 16256, 16281-16284 carry the bit.
+		CanProcFromProcs: spellData.Flurry.Highest().CanProcFromProcs(), // Forever's 16256 lacks the bit (Era's 16281-16284 carry it).
 		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 			if result.Outcome.Matches(core.OutcomeCrit) {
 				flurryAura.Activate(sim)
