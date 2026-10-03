@@ -1,5 +1,11 @@
 [
 	{
+		"number": 644,
+		"title": "shaman: Windfury Weapon strikes twice with special hits, swing timer untouched (beta log)",
+		"mergedAt": "2026-10-03",
+		"url": "https://github.com/ElliotWood/Forever/pull/644"
+	},
+	{
 		"number": 643,
 		"title": "mage: Arcane Concentration skips triggered spells; Blizzard rolls on its cast",
 		"mergedAt": "2026-10-03",
