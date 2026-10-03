@@ -121,7 +121,7 @@ func (mage *Mage) registerIgnite() {
 
 	mage.MakeProcTriggerAura(core.ProcTrigger{
 		Name:               "Ignite Talent",
-		CanProcFromProcs:   true, // 11119 carries the bit.
+		CanProcFromProcs:   spellData.Ignite.Highest().CanProcFromProcs(), // Forever's 11119 lacks the bit (Era's ranks carry it).
 		Callback:           core.CallbackOnSpellHitDealt,
 		ProcMask:           core.ProcMaskSpellDamage,
 		Outcome:            core.OutcomeCrit,
