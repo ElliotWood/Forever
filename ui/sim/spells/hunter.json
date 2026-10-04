@@ -145,21 +145,21 @@
 	"14305": {
 		"ability": "Immolation Trap",
 		"file": "sim/hunter/traps.go",
-		"note": "Client 70009: damage, cost and level are Classic's, and the burn ticks every 3 sec; the cooldown shared by all traps is 30 sec, up from 15. Every effect rank (13797, 14298-14301) carries Periodic Can Crit (client 70205), so the burn ticks crit.",
+		"note": "Client 70009: damage, cost and level are Classic's, and the burn ticks every 3 sec; the 30 sec cooldown (up from 15) is category 411, shared by the two fire traps only; Freezing Trap has its own (client 1.60.1.70205). Every effect rank (13797, 14298-14301) carries Periodic Can Crit (client 70205), so the burn ticks crit.",
 		"source": "forever",
 		"tooltip": "245 Mana\nInstant\n30 sec cooldown\nPlace a Fire trap that will burn the first enemy to approach for 690 Fire damage over 15 sec. Trap will exist for 1 min. Only one Fire trap can be active at a time."
 	},
 	"14317": {
 		"ability": "Explosive Trap",
 		"file": "sim/hunter/traps.go",
-		"note": "Client 70009: 208 to 265 at level 60 and 330 over 20 sec, cost and level are Classic's; the cooldown shared by all traps is 30 sec, up from 15. The effect ranks (13812, 14314, 14315) carry Periodic Can Crit (client 70205), so the burn ticks crit.",
+		"note": "Client 70009: 208 to 265 at level 60 and 330 over 20 sec, cost and level are Classic's; the 30 sec cooldown (up from 15) is category 411, shared by the two fire traps only; Freezing Trap has its own (client 1.60.1.70205). The effect ranks (13812, 14314, 14315) carry Periodic Can Crit (client 70205), so the burn ticks crit.",
 		"source": "forever",
 		"tooltip": "520 Mana\nInstant\n30 sec cooldown\nPlace a Fire trap that explodes when an enemy approaches, causing 208 to 265 Fire damage and 330 additional Fire damage over 20 sec to all within 10 yards. Trap will exist for 1 min. Only one Fire trap can be active at a time."
 	},
 	"1499": {
 		"ability": "Freezing Trap",
 		"file": "sim/hunter/traps.go",
-		"note": "Client 70009: the shared trap cooldown is 30 sec, up from 15. The sim registers it with an empty effect since a raid boss cannot be trapped.",
+		"note": "Client 70009: the trap cooldown is 30 sec, up from 15; client 1.60.1.70205 moves Freezing Trap from the shared trap category 411 to 2183 (with Frost Trap), so it no longer locks the fire traps. The sim registers it with an empty effect since a raid boss cannot be trapped.",
 		"source": "forever",
 		"tooltip": "50 Mana\nInstant\n30 sec cooldown\nPlace a Frost trap that freezes the first enemy that approaches, preventing all action for up to 10 sec. Any damage caused will break the ice. Trap will exist for 1 min. Only one Frost trap can be active at a time."
 	},
