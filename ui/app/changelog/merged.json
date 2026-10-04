@@ -1,5 +1,11 @@
 [
 	{
+		"number": 667,
+		"title": "warrior: audit fixes; the arena pulls at 0 rage",
+		"mergedAt": "2026-10-04",
+		"url": "https://github.com/ElliotWood/Forever/pull/667"
+	},
+	{
 		"number": 666,
 		"title": "evidence: Hack and Slash gives both halves, one per hand (beta log 2710)",
 		"mergedAt": "2026-10-04",
