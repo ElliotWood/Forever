@@ -1,5 +1,11 @@
 [
 	{
+		"number": 672,
+		"title": "warlock: register Rain of Fire",
+		"mergedAt": "2026-10-04",
+		"url": "https://github.com/ElliotWood/Forever/pull/672"
+	},
+	{
 		"number": 671,
 		"title": "buffs: Faerie Fire and Curse of Recklessness share their armor reduction",
 		"mergedAt": "2026-10-04",
