@@ -55,12 +55,8 @@ func (shaman *Shaman) applyElementalWeapons() {
 		return
 	}
 
+	// Effect 1 (Rockbiter's attack power) is read in RegisterRockbiterImbue.
 	points := shaman.Talents.ElementalWeapons
-	shaman.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: spellData.ElementalWeapons.EffectAt(1).FractionAt(points),
-		ClassMask:  SpellMaskRockbiterWeapon,
-	})
 	shaman.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_DamageDone_Flat,
 		FloatValue: spellData.ElementalWeapons.EffectAt(2).FractionAt(points),
@@ -149,7 +145,7 @@ func (shaman *Shaman) applySpiritWeapons() {
 		return
 	}
 
-	// Client 16268: parry and -30% threat; its Rockbiter half (eff 1) has nothing to act on, the sim has no Rockbiter.
+	// Client 16268: parry and -30% threat; its Rockbiter half (eff 1) is in RegisterRockbiterImbue.
 	shaman.PseudoStats.CanParry = true
 	shaman.PseudoStats.ThreatMultiplier *= spellData.SpiritWeapons.Effect(dbcenums.A_MOD_THREAT, 127).MultiplierAt(1)
 }

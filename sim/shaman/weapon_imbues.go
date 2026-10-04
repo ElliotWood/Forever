@@ -6,7 +6,9 @@ import (
 
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/buffs"
+	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/stats"
 )
 
 const (
@@ -146,6 +148,7 @@ var windfuryImbue = spellData.WindfuryWeaponTriggered.Highest()
 // damage spells (10444, 29469, 29470), so Highest() would be the attack rather than the dummy.
 var flametongueImbue = spellData.FlametongueWeaponTriggered.ByID(16344)
 var frostbrandImbue = spellData.FrostbrandWeaponTriggered.Highest()
+var rockbiterImbue = spellData.RockbiterWeaponTriggered.Highest()
 
 func (shaman *Shaman) newFlametongueImbueSpell(weapon *core.Item) *core.Spell {
 	return shaman.RegisterSpell(core.SpellConfig{
@@ -323,4 +326,49 @@ func (shaman *Shaman) RegisterFrostbrandImbue(procMask core.ProcMask) {
 	})
 
 	shaman.RegisterOnItemSwapWithImbue(frostbrandEnchantID, &procMask, aura)
+}
+
+// Rockbiter Weapon's passive (16313, rank 7) is a standing melee attack power aura, 554 + 16.5 a level
+// = 653 at 60 (Wowhead env 16 prints 686, its MaxLevel 62), not Classic's per-hit damage. Elemental
+// Weapons' first effect adds 7/13/20% to it (SPELLMOD_EFFECT1 on the passive's mask). Spirit Weapons'
+// second effect (+86% to the passive's threat aura) turns the talent's -30% threat into +30% (0.7 x
+// 1.86) while Rockbiter is up, as its tooltip says. One passive whatever the hands, so a second
+// Rockbiter weapon adds nothing. Ported from MythicSim patch 19 (sage3648).
+func (shaman *Shaman) RegisterRockbiterImbue(procMask core.ProcMask) {
+	if procMask == core.ProcMaskUnknown && !shaman.ItemSwap.IsEnabled() {
+		return
+	}
+
+	imbued := false
+	mH := shaman.MainHand()
+	if mH != nil && shaman.SelfBuffs.ImbueMH == proto.ShamanImbue_RockbiterWeapon {
+		mH.TempEnchant = rockbiterEnchantID
+		if shaman.ItemSwap.IsEnabled() {
+			shaman.ItemSwap.AddTempEnchant(rockbiterEnchantID, proto.ItemSlot_ItemSlotMainHand, false)
+		}
+		imbued = true
+	}
+	oH := shaman.OffHand()
+	if oH != nil && shaman.SelfBuffs.ImbueOH == proto.ShamanImbue_RockbiterWeapon {
+		oH.TempEnchant = rockbiterEnchantID
+		if shaman.ItemSwap.IsEnabled() {
+			shaman.ItemSwap.AddTempEnchant(rockbiterEnchantID, proto.ItemSlot_ItemSlotOffHand, false)
+		}
+		imbued = true
+	}
+
+	shaman.setupItemSwapImbue(proto.ShamanImbue_RockbiterWeapon, rockbiterEnchantID)
+
+	if !imbued {
+		return
+	}
+
+	attackPower := rockbiterImbue.Effect(dbcenums.A_MOD_ATTACK_POWER, 0).Average(core.CharacterLevel) *
+		(1 + spellData.ElementalWeapons.EffectAt(1).FractionAt(shaman.Talents.ElementalWeapons))
+	core.MakePermanent(shaman.NewTemporaryStatsAura("Rockbiter Weapon", core.ActionID{SpellID: rockbiterImbue.ID},
+		stats.Stats{stats.AttackPower: attackPower}, core.NeverExpires).Aura)
+
+	if shaman.Talents.SpiritWeapons {
+		shaman.PseudoStats.ThreatMultiplier *= spellData.SpiritWeapons.EffectAt(2).MultiplierAt(1)
+	}
 }
