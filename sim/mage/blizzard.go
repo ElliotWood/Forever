@@ -32,12 +32,14 @@ func (mage *Mage) registerBlizzardSpell() {
 		})
 	}
 
+	// The tick rows lack Not a Proc (1.60.1.70205), so only listeners that can proc from procs hear
+	// them: no Arcane Concentration (log 2706: 0 of 642 tick hits) or Winter's Chill off ticks.
 	blizzardTickCast := mage.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: blizzardTickSpell.ID},
 		SpellSchool:    blizzardRank.SpellSchool(),
 		DefenseType:    blizzardRank.DefenseTypeCore(),
 		ProcMask:       core.ProcMaskSpellDamage,
-		Flags:          core.SpellFlagNoOnCastComplete,
+		Flags:          core.SpellFlagNoOnCastComplete | core.SpellFlagProc,
 		ClassSpellMask: MageSpellBlizzard,
 
 		DamageMultiplier: 1,

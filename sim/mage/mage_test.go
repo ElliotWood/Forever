@@ -316,22 +316,7 @@ func TestPiercingIceDotBonusStaysAtBasePoints(t *testing.T) {
 // Arcane Concentration (11213) does not proc off spells another spell triggers: Blizzard rolls once
 // an enemy on its cast, never on its ticks, and Arcane Missiles' missiles never roll (beta log 2706).
 func TestArcaneConcentrationSkipsTriggeredSpells(t *testing.T) {
-	encounter := core.MakeSingleTargetEncounter(0)
-	encounter.Duration = 600
-	encounter.Targets = append(encounter.Targets, core.NewDefaultTarget(), core.NewDefaultTarget())
-	sim := core.NewSim(&proto.RaidSimRequest{
-		SimOptions: &proto.SimOptions{RandomSeed: 1},
-		Raid: &proto.Raid{Parties: []*proto.Party{{Buffs: &proto.PartyBuffs{}, Players: []*proto.Player{{
-			Name: "Mage", Class: proto.Class_ClassMage, Race: proto.Race_RaceGnome, TalentsString: ArcaneTalents,
-			Equipment: &proto.EquipmentSpec{}, Buffs: &proto.IndividualBuffs{},
-			Spec:     &proto.Player_Mage{Mage: &proto.Mage{Options: &proto.Mage_Options{ClassOptions: &proto.MageOptions{}}}},
-			Rotation: &proto.APLRotation{Type: proto.APLRotation_TypeAPL},
-		}}}}},
-		Encounter: encounter,
-	}, simsignals.CreateSignals())
-	sim.Reset()
-
-	mage := sim.Raid.Parties[0].Players[0].(MageAgent).GetMage()
+	sim, mage := newThreeTargetMage(ArcaneTalents)
 	if mage.Talents.ArcaneConcentration == 0 {
 		t.Fatal("ArcaneTalents no longer take Arcane Concentration; pick a build that does")
 	}
@@ -363,5 +348,57 @@ func TestArcaneConcentrationSkipsTriggeredSpells(t *testing.T) {
 		if blizzard := spell.Matches(MageSpellBlizzard); blizzard != (onCast > 0) {
 			t.Errorf("%v: Clearcasting procced %d times on the cast", spell.ActionID, onCast)
 		}
+	}
+}
+
+// A naked gnome mage facing three targets, reset and ready for hand-cast spells.
+func newThreeTargetMage(talents string) (*core.Simulation, *Mage) {
+	encounter := core.MakeSingleTargetEncounter(0)
+	encounter.Duration = 600
+	encounter.Targets = append(encounter.Targets, core.NewDefaultTarget(), core.NewDefaultTarget())
+	sim := core.NewSim(&proto.RaidSimRequest{
+		SimOptions: &proto.SimOptions{RandomSeed: 1},
+		Raid: &proto.Raid{Parties: []*proto.Party{{Buffs: &proto.PartyBuffs{}, Players: []*proto.Player{{
+			Name: "Mage", Class: proto.Class_ClassMage, Race: proto.Race_RaceGnome, TalentsString: talents,
+			Equipment: &proto.EquipmentSpec{}, Buffs: &proto.IndividualBuffs{},
+			Spec:     &proto.Player_Mage{Mage: &proto.Mage{Options: &proto.Mage_Options{ClassOptions: &proto.MageOptions{}}}},
+			Rotation: &proto.APLRotation{Type: proto.APLRotation_TypeAPL},
+		}}}}},
+		Encounter: encounter,
+	}, simsignals.CreateSignals())
+	sim.Reset()
+	return sim, sim.Raid.Parties[0].Players[0].(MageAgent).GetMage()
+}
+
+// Blizzard's tick rows (1279976...) lack Not a Proc and Winter's Chill (11180) cannot proc from procs,
+// so the debuff only rolls on the cast's own hit on each enemy, never on a tick.
+func TestWintersChillSkipsBlizzardTicks(t *testing.T) {
+	sim, mage := newThreeTargetMage(FrostTalents)
+	if mage.Talents.WintersChill == 0 {
+		t.Fatal("FrostTalents no longer take Winter's Chill; pick a build that does")
+	}
+	blizzard := mage.GetSpell(core.ActionID{SpellID: spellData.Blizzard.Highest().ID})
+	var castAt time.Duration
+	onCast, later := 0, 0
+	mage.WintersChillAura.ApplyOnStacksChange(func(_ *core.Aura, sim *core.Simulation, oldStacks, newStacks int32) {
+		if newStacks <= oldStacks {
+			return
+		}
+		if sim.CurrentTime == castAt {
+			onCast++
+		} else {
+			later++
+		}
+	})
+	for i := 0; i < 30; i++ {
+		mage.WintersChillAura.Deactivate(sim)
+		castAt = sim.CurrentTime
+		blizzard.SkipCastAndApplyEffects(sim, mage.CurrentTarget)
+		for sim.CurrentTime < castAt+9*time.Second {
+			sim.Step()
+		}
+	}
+	if later != 0 || onCast == 0 {
+		t.Errorf("Winter's Chill stacked %d times on Blizzard casts and %d times on its ticks; want some and 0", onCast, later)
 	}
 }

@@ -143,9 +143,6 @@ func (mage *Mage) registerArcaneConcentration() {
 		Name:           "Arcane Concentration",
 		Callback:       core.CallbackOnSpellHitDealt,
 		ClassSpellMask: MageSpellsAllDamaging &^ MageSpellArcaneMissilesTick,
-		ExtraCondition: func(_ *core.Simulation, spell *core.Spell, _ *core.SpellResult) bool {
-			return !spell.Matches(MageSpellBlizzard) || spell.Flags.Matches(core.SpellFlagChanneled)
-		},
 		Outcome:            core.OutcomeLanded,
 		ProcChance:         spellData.ArcaneConcentration.EffectAt(1).FractionAt(mage.Talents.ArcaneConcentration),
 		ICD:                spellData.ArcaneConcentration.Highest().ICD(),
