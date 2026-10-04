@@ -91,7 +91,8 @@ func (warlock *Warlock) applyFelVitality() {
 	}
 }
 
-// 10% more Lash of Pain damage a point (18754, second effect).
+// 10% more Lash of Pain damage a point: 18754 effect 0 (the tooltip's $s1, SPELLMOD_ALL_EFFECTS);
+// effect 1 (SPELLMOD_DURATION) is Seduction's duration.
 func (warlock *Warlock) applyImprovedSayaad() {
 	if warlock.Talents.ImprovedSayaad == 0 || warlock.Options.SacrificeSummon {
 		return
@@ -99,7 +100,7 @@ func (warlock *Warlock) applyImprovedSayaad() {
 
 	warlock.Succubus.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: spellData.ImprovedSayaad.EffectAt(2).FractionAt(warlock.Talents.ImprovedSayaad),
+		FloatValue: spellData.ImprovedSayaad.EffectAt(1).FractionAt(warlock.Talents.ImprovedSayaad),
 		ClassMask:  WarlockSpellSuccubusLashOfPain,
 	})
 }
