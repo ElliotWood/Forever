@@ -264,7 +264,7 @@ func (mage *Mage) registerMasterOfElements() {
 		ICD:                spellData.MasterOfElements.Highest().ICD(),
 		TriggerImmediately: true,
 		ExtraCondition: func(_ *core.Simulation, spell *core.Spell, _ *core.SpellResult) bool {
-			return spell.SpellSchool.Matches(core.SpellSchoolFire|core.SpellSchoolFrost) && spell.Cost != nil && spell.CurCast.Cost > 0
+			return spell.SpellSchool.Matches(core.SpellSchoolFire|core.SpellSchoolFrost) && spell.Cost != nil && spell.Cost.BaseCost > 0
 		},
 		Handler: func(sim *core.Simulation, spell *core.Spell, _ *core.SpellResult) {
 			mage.AddMana(sim, float64(spell.Cost.BaseCost)*refundCoeff, manaMetrics)

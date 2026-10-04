@@ -434,3 +434,32 @@ func TestPresenceOfMindAndCombustionShareACooldown(t *testing.T) {
 		t.Errorf("Combustion ready in %v after Presence of Mind, want 3m0s", got)
 	}
 }
+
+// Blizzard's ticks crit: the tick row (1279949) has no Cannot Crit bit, and beta logs show crits
+// (foreverlogs 2668: 27 of 301; 2706: 24 of 649).
+func TestBlizzardTicksCrit(t *testing.T) {
+	result := core.RunRaidSim(&proto.RaidSimRequest{
+		SimOptions: &proto.SimOptions{RandomSeed: 1, Iterations: 50},
+		Raid: &proto.Raid{Parties: []*proto.Party{{Buffs: &proto.PartyBuffs{}, Players: []*proto.Player{{
+			Name: "Mage", Class: proto.Class_ClassMage, Race: proto.Race_RaceGnome, TalentsString: FrostTalents,
+			Equipment: &proto.EquipmentSpec{}, Buffs: &proto.IndividualBuffs{},
+			Spec: &proto.Player_Mage{Mage: &proto.Mage{Options: &proto.Mage_Options{ClassOptions: &proto.MageOptions{}}}},
+			Rotation: &proto.APLRotation{Type: proto.APLRotation_TypeAPL, PriorityList: []*proto.APLListItem{{Action: &proto.APLAction{
+				Action: &proto.APLAction_CastSpell{CastSpell: &proto.APLActionCastSpell{SpellId: &proto.ActionID{RawId: &proto.ActionID_SpellId{SpellId: spellData.Blizzard.Highest().ID}}}},
+			}}}},
+		}}}}},
+		Encounter: core.MakeSingleTargetEncounter(0),
+	})
+	if result.Error != nil {
+		t.Fatal(result.Error.Message)
+	}
+	crits := int32(0)
+	for _, action := range result.RaidMetrics.Parties[0].Players[0].Actions {
+		for _, target := range action.Targets {
+			crits += target.Crits
+		}
+	}
+	if crits == 0 {
+		t.Error("no Blizzard tick crit in 50 iterations")
+	}
+}

@@ -5,8 +5,8 @@ import (
 	"github.com/wowsims/forever/sim/core/dbcenums"
 )
 
-// Each fire hit adds a stack of crit until the row's charges of fire crits (4 in Forever, 3 in
-// Classic) are spent.
+// Each fire hit adds a stack of crit until the row's charges of fire crits are spent: 3 in client
+// 1.60.1.70205 (it was 4 in 70009), as in Classic.
 func (mage *Mage) registerCombustionSpell() {
 	if !mage.Talents.Combustion {
 		return
