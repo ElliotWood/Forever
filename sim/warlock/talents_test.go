@@ -48,7 +48,8 @@ func TestDemonicPactKeepsTheSacrifice(t *testing.T) {
 }
 
 // The Imp has no melee, so its Firebolt spends the brand, and the branded hit is Fire (1293698);
-// the other demons' is Shadow (1293697).
+// the other demons' is Shadow (1293697). Both rows are Always Hit without Cannot Crit, so the hit
+// never misses and can crit.
 func TestDemonicBrandImpSpendsWithFirebolt(t *testing.T) {
 	for _, tc := range []struct {
 		summon proto.WarlockOptions_Summon
@@ -85,6 +86,14 @@ func TestDemonicBrandImpSpendsWithFirebolt(t *testing.T) {
 		}
 		if hit.SpellMetrics[0].Casts == 0 || brand.GetStacks() != brand.MaxStacks-hit.SpellMetrics[0].Casts {
 			t.Errorf("%v: pet spell spent %d of %d charges", tc.summon, brand.MaxStacks-brand.GetStacks(), brand.MaxStacks)
+		}
+
+		for i := 0; i < 2000; i++ {
+			hit.SkipCastAndApplyEffects(sim, pet.CurrentTarget)
+		}
+		// The Succubus has no spell crit to roll, so only the Imp's hits show the crits.
+		if m := hit.SpellMetrics[0]; m.Misses != 0 || (tc.summon == proto.WarlockOptions_Imp && m.Crits == 0) {
+			t.Errorf("%v: branded hit missed %d and crit %d times in 2000, want 0 misses and some crits", tc.summon, m.Misses, m.Crits)
 		}
 	}
 }
