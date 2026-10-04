@@ -1,5 +1,11 @@
 [
 	{
+		"number": 668,
+		"title": "core: dots tick on the caster's current spell power, attack power and damage multipliers",
+		"mergedAt": "2026-10-04",
+		"url": "https://github.com/ElliotWood/Forever/pull/668"
+	},
+	{
 		"number": 667,
 		"title": "warrior: audit fixes; the arena pulls at 0 rage",
 		"mergedAt": "2026-10-04",
