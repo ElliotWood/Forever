@@ -61,9 +61,6 @@ func (rogue *Rogue) registerRupture() {
 
 			OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
 				damage := rogue.ruptureDamage(target, rogue.ComboPoints(), tickDamage, damagePerComboPoint)
-				if rogue.isHemorrhaging(target) {
-					damage *= HemorrhageRuptureMultiplier
-				}
 				dot.SnapshotPhysical(target, damage)
 			},
 			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
