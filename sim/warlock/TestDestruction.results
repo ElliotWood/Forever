@@ -380,8 +380,8 @@ dps_results: {
 dps_results: {
  key: "TestDestruction-AllItems-EverlookPathcarver-274759"
  value: {
-  dps: 183.84025
-  tps: 109.54549
+  dps: 183.63436
+  tps: 109.40136
  }
 }
 dps_results: {

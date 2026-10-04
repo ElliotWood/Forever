@@ -415,8 +415,8 @@ dps_results: {
 dps_results: {
  key: "TestBalance-AllItems-EverlookPathcarver-274759"
  value: {
-  dps: 180.32279
-  tps: 94.63813
+  dps: 180.08753
+  tps: 94.47345
  }
 }
 dps_results: {
