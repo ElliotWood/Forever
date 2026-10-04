@@ -268,8 +268,8 @@ dps_results: {
 dps_results: {
  key: "TestBalance-AllItems-DraconicInfusedEmblem-22268"
  value: {
-  dps: 190.57113
-  tps: 98.91111
+  dps: 190.76568
+  tps: 99.00643
  }
 }
 dps_results: {
@@ -422,8 +422,8 @@ dps_results: {
 dps_results: {
  key: "TestBalance-AllItems-EyeofMoam-21473"
  value: {
-  dps: 179.51739
-  tps: 93.49477
+  dps: 179.32699
+  tps: 93.40147
  }
 }
 dps_results: {
@@ -954,15 +954,15 @@ dps_results: {
 dps_results: {
  key: "TestBalance-AllItems-TalismanofAscendance-22678"
  value: {
-  dps: 193.6347
-  tps: 100.41225
+  dps: 194.16656
+  tps: 100.67286
  }
 }
 dps_results: {
  key: "TestBalance-AllItems-TalismanofEphemeralPower-18820"
  value: {
-  dps: 188.29731
-  tps: 97.79693
+  dps: 187.8002
+  tps: 97.55335
  }
 }
 dps_results: {
@@ -1003,8 +1003,8 @@ dps_results: {
 dps_results: {
  key: "TestBalance-AllItems-TheRestrainedEssenceofSapphiron-23046"
  value: {
-  dps: 207.15864
-  tps: 107.03898
+  dps: 205.21017
+  tps: 106.08423
  }
 }
 dps_results: {
@@ -1087,8 +1087,8 @@ dps_results: {
 dps_results: {
  key: "TestBalance-AllItems-WrathofCenarius-21190"
  value: {
-  dps: 185.61933
-  tps: 96.48472
+  dps: 186.22499
+  tps: 96.78149
  }
 }
 dps_results: {
