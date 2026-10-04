@@ -1,5 +1,17 @@
 [
 	{
+		"number": 665,
+		"title": "rogue: talent/ability audit fixes, main-hand poison in the arena",
+		"mergedAt": "2026-10-04",
+		"url": "https://github.com/ElliotWood/Forever/pull/665"
+	},
+	{
+		"number": 664,
+		"title": "[DB] Update to 1.60.1.70205 with hotfixes as of 2026-10-04",
+		"mergedAt": "2026-10-04",
+		"url": "https://github.com/ElliotWood/Forever/pull/664"
+	},
+	{
 		"number": 663,
 		"title": "[DB] 70205 hotfixes of 2026-10-04: list two new no-rate item procs (fixes #662)",
 		"mergedAt": "2026-10-04",
