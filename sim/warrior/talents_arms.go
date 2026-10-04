@@ -6,7 +6,6 @@ import (
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
-	"github.com/wowsims/forever/sim/core/stats"
 )
 
 func (warrior *Warrior) registerArmsTalents() {
@@ -361,23 +360,34 @@ func (warrior *Warrior) registerWeaponmaster() {
 	mainHandIs := func(weaponTypes ...proto.WeaponType) bool {
 		return warrior.GetProcMaskForTypes(weaponTypes...).Matches(core.ProcMaskMeleeMH)
 	}
-	var critOn, armorIgnoreOn bool
+	var critMask core.ProcMask
+	var armorIgnoreOn bool
 	var swordMask core.ProcMask
 	readWeapons := func() {
-		critOn = mainHandIs(proto.WeaponType_WeaponTypeAxe, proto.WeaponType_WeaponTypePolearm)
+		critMask = warrior.GetProcMaskForTypes(proto.WeaponType_WeaponTypeAxe, proto.WeaponType_WeaponTypePolearm)
 		armorIgnoreOn = mainHandIs(proto.WeaponType_WeaponTypeMace, proto.WeaponType_WeaponTypeStaff)
 		swordMask = warrior.GetProcMaskForTypes(proto.WeaponType_WeaponTypeSword)
 	}
 	readWeapons()
 
-	critAura := warrior.RegisterAura(core.Aura{
-		Label:    "Weaponmaster (Axe/Polearm)",
-		ActionID: actionID.WithTag(1),
-		Duration: core.NeverExpires,
-	}).AttachStatBuff(stats.PhysicalCritPercent, spellData.Weaponmaster.EffectAt(1).ValueAt(rank))
-	if critOn {
-		core.MakePermanent(critAura)
+	// The crit goes with the weapon, as rogue Hack and Slash does (#654): an axe in one hand crits
+	// more with that hand only. (The client effects are dummies; the tooltip and Classic's Axe
+	// Specialization both scope it to the weapon.)
+	crit := spellData.Weaponmaster.EffectAt(1).ValueAt(rank)
+	critMods := map[core.ProcMask]*core.SpellMod{
+		core.ProcMaskMeleeMH: warrior.AddDynamicMod(core.SpellModConfig{Kind: core.SpellMod_BonusCrit_Percent, ProcMask: core.ProcMaskMeleeMH, FloatValue: crit}),
+		core.ProcMaskMeleeOH: warrior.AddDynamicMod(core.SpellModConfig{Kind: core.SpellMod_BonusCrit_Percent, ProcMask: core.ProcMaskMeleeOH, FloatValue: crit}),
 	}
+	setCritMods := func() {
+		for hand, mod := range critMods {
+			if critMask.Matches(hand) {
+				mod.Activate()
+			} else {
+				mod.Deactivate()
+			}
+		}
+	}
+	setCritMods()
 
 	armorIgnore := spellData.Weaponmaster.EffectAt(2).FractionAt(rank)
 	addArmorIgnore := func(delta float64) {
@@ -431,7 +441,7 @@ func (warrior *Warrior) registerWeaponmaster() {
 	}
 	warrior.RegisterItemSwapCallback(core.AllMeleeWeaponSlots(), func(sim *core.Simulation, slot proto.ItemSlot) {
 		readWeapons()
-		setActive(sim, critAura, critOn)
+		setCritMods()
 		setActive(sim, armorIgnoreAura, armorIgnoreOn)
 	})
 }
@@ -591,5 +601,9 @@ func (warrior *Warrior) registerSweepingStrikes() {
 	warrior.AddMajorCooldown(core.MajorCooldown{
 		Spell: ssCD,
 		Type:  core.CooldownTypeDPS,
+		// It only strikes "an additional nearby opponent": 30 rage for nothing on one target.
+		ShouldActivate: func(sim *core.Simulation, _ *core.Character) bool {
+			return sim.Environment.ActiveTargetCount() >= 2
+		},
 	})
 }
