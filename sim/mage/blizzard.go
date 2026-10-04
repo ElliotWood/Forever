@@ -47,7 +47,9 @@ func (mage *Mage) registerBlizzardSpell() {
 		ThreatMultiplier: 1,
 
 		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
-			results := spell.CalcAndDealAoeDamage(sim, blizzardTick.Average(core.CharacterLevel), spell.OutcomeMagicHit)
+			// The tick row (1279949) carries no Cannot Crit bit, and beta logs show the ticks crit (foreverlogs
+			// 2668: 27 of 301; 2706: 24 of 649).
+			results := spell.CalcAndDealAoeDamage(sim, blizzardTick.Average(core.CharacterLevel), spell.OutcomeMagicHitAndCrit)
 			if improvedBlizzard == nil {
 				return
 			}
