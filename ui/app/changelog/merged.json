@@ -1,5 +1,11 @@
 [
 	{
+		"number": 661,
+		"title": "mage: Arcane Missiles spends Arcane Blast stacks as the channel starts",
+		"mergedAt": "2026-10-04",
+		"url": "https://github.com/ElliotWood/Forever/pull/661"
+	},
+	{
 		"number": 660,
 		"title": "mage: talent/spell audit fixes and stronger rotations",
 		"mergedAt": "2026-10-04",
