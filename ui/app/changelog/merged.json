@@ -1,5 +1,11 @@
 [
 	{
+		"number": 663,
+		"title": "[DB] 70205 hotfixes of 2026-10-04: list two new no-rate item procs (fixes #662)",
+		"mergedAt": "2026-10-04",
+		"url": "https://github.com/ElliotWood/Forever/pull/663"
+	},
+	{
 		"number": 661,
 		"title": "mage: Arcane Missiles spends Arcane Blast stacks as the channel starts",
 		"mergedAt": "2026-10-04",
