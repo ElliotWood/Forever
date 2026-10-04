@@ -1,5 +1,11 @@
 [
 	{
+		"number": 669,
+		"title": "druid: Windfury Totem procs in Cat and Bear Form",
+		"mergedAt": "2026-10-04",
+		"url": "https://github.com/ElliotWood/Forever/pull/669"
+	},
+	{
 		"number": 668,
 		"title": "core: dots tick on the caster's current spell power, attack power and damage multipliers",
 		"mergedAt": "2026-10-04",
