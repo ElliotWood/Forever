@@ -1,5 +1,11 @@
 [
 	{
+		"number": 652,
+		"title": "Life Tap and Dark Sacrifice mana adds no threat (client No Threat flag)",
+		"mergedAt": "2026-10-04",
+		"url": "https://github.com/ElliotWood/Forever/pull/652"
+	},
+	{
 		"number": 651,
 		"title": "druid: Ravage can't be dodged",
 		"mergedAt": "2026-10-04",
