@@ -1,5 +1,11 @@
 [
 	{
+		"number": 675,
+		"title": "shaman: one air totem per party",
+		"mergedAt": "2026-10-04",
+		"url": "https://github.com/ElliotWood/Forever/pull/675"
+	},
+	{
 		"number": 674,
 		"title": "shaman: a main-hand Flametongue Weapon keeps Windfury Totem",
 		"mergedAt": "2026-10-04",
