@@ -1,5 +1,11 @@
 [
 	{
+		"number": 676,
+		"title": "feral: show the Windfury Totem party buff in Cat and Bear",
+		"mergedAt": "2026-10-04",
+		"url": "https://github.com/ElliotWood/Forever/pull/676"
+	},
+	{
 		"number": 675,
 		"title": "shaman: one air totem per party",
 		"mergedAt": "2026-10-04",
