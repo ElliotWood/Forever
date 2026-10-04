@@ -67,7 +67,7 @@ func (hunter *Hunter) registerExplosiveTrapSpell(timer *core.Timer) {
 				for _, aoeTarget := range sim.Encounter.ActiveTargetUnits {
 					// The Explosive Trap dot only ticks where no Immolation Trap is already burning.
 					if !aoeTarget.HasActiveAuraWithTag("ImmolationTrap") {
-						dot.CalcAndDealPeriodicSnapshotDamage(sim, aoeTarget, dot.OutcomeTick)
+						dot.CalcAndDealPeriodicSnapshotDamage(sim, aoeTarget, effect.TickOutcomeHitRolled(dot))
 					}
 				}
 			},
@@ -129,8 +129,9 @@ func (hunter *Hunter) registerImmolationTrapSpell(timer *core.Timer) {
 			OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
 				dot.Snapshot(target, tick.Average(core.CharacterLevel))
 			},
+			// Every effect rank carries Periodic Can Crit (client 1.60.1.70205), as Explosive Trap's do.
 			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-				dot.CalcAndDealPeriodicSnapshotDamage(sim, target, dot.OutcomeTick)
+				dot.CalcAndDealPeriodicSnapshotDamage(sim, target, effect.TickOutcomeHitRolled(dot))
 			},
 		},
 
