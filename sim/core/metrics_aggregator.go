@@ -281,8 +281,8 @@ type ResourceMetrics struct {
 	ActionID ActionID
 	Type     proto.ResourceType
 
-	// Set for a gain from a spell the client flags No Threat (Life Tap, Dark Sacrifice): its mana
-	// adds no threat at the end of the iteration.
+	// Set for a gain from a spell the client flags No Threat (Life Tap, Dark Sacrifice, Charge): its
+	// mana or rage adds no threat at the end of the iteration.
 	NoThreat bool
 
 	Events     int32
