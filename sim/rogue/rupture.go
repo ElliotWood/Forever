@@ -60,8 +60,10 @@ func (rogue *Rogue) registerRupture() {
 			TickLength:    tickLength,
 
 			OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-				damage := rogue.ruptureDamage(target, rogue.ComboPoints(), tickDamage, damagePerComboPoint)
-				dot.SnapshotPhysical(target, damage)
+				share := ruptureAttackPowerShare(rogue.ComboPoints())
+				flat := tickDamage + damagePerComboPoint*float64(rogue.ComboPoints())
+				dot.SnapshotPhysical(target, flat+share*rogue.Rupture.MeleeAttackPower(target))
+				dot.SnapshotAttackPowerShare(target, share, false)
 			},
 			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
 				dot.CalcAndDealPeriodicSnapshotDamage(sim, target, ruptureRank.TickOutcome(dot))
@@ -84,9 +86,8 @@ func (rogue *Rogue) registerRupture() {
 	})
 }
 
-func (rogue *Rogue) ruptureDamage(target *core.Unit, comboPoints int32, baseDamage float64, damagePerComboPoint float64) float64 {
-	return baseDamage +
-		damagePerComboPoint*float64(comboPoints) +
-		// TBC's share, not in the client. Beta logs agree: 1% of AP a tick per combo point, capped at 3.
-		[]float64{0, 0.01, 0.02, 0.03, 0.03, 0.03}[comboPoints]*rogue.Rupture.MeleeAttackPower(target)
+// The share of attack power a tick adds, read at the tick. TBC's share, not in the client.
+// Beta logs agree: 1% of AP a tick per combo point, capped at 3.
+func ruptureAttackPowerShare(comboPoints int32) float64 {
+	return []float64{0, 0.01, 0.02, 0.03, 0.03, 0.03}[comboPoints]
 }
