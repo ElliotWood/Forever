@@ -7,7 +7,7 @@ import (
 
 // Forever's Arcane Blast buff (400573): each stack raises the damage of the mage's other spells and
 // the cost of Arcane Blast itself. The next other damaging spell spends every stack; Arcane Missiles
-// holds them for the whole channel and spends them when it ends (arcane_missiles.go).
+// spends them as its channel starts (arcane_missiles.go).
 func (mage *Mage) registerArcaneCharges() {
 	if !mage.Talents.ArcaneBlast {
 		return
