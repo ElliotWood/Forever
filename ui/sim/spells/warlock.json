@@ -34,6 +34,13 @@
 		"source": "forever",
 		"tooltip": "370 Mana\n3 sec cast\nSends a shadowy bolt at the enemy, causing 237 to 265 Shadow damage."
 	},
+	"11678": {
+		"ability": "Rain of Fire",
+		"file": "sim/warlock/rain_of_fire.go",
+		"note": "Beta client 1.60.1.70205: an area trigger casts a damage spell every 2 seconds on every enemy in the area, 1282385 at rank 4, which the sim registers for the ticks; the sim casts rank 4 only. 221 a tick (Era's 226) at .083 per tick. Beta log 2695 (rank 1): 4 ticks 2 s apart on up to 5 targets, ticks crit. The parent spell's dummy effect carries .03, which the sim does not read.",
+		"source": "forever",
+		"tooltip": "1185 Mana\nChanneled\nCalls down a fiery rain to burn enemies in the area of effect for 884 Fire damage over 8 sec."
+	},
 	"11689": {
 		"ability": "Life Tap",
 		"file": "sim/warlock/lifetap.go",
