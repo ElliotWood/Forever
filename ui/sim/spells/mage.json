@@ -120,7 +120,7 @@
 	"11129": {
 		"ability": "Combustion",
 		"file": "sim/mage/combustion.go",
-		"note": "combustion.go reads 4 fire crits from 11129's charges and 10% a stack from 28682 in beta client 1.60.1.70009, where Classic's 11129 tooltip says 3 crits; the 3 minute cooldown is on the client row too.",
+		"note": "combustion.go reads 4 fire crits from 11129's charges and 10% a stack from 28682 in beta client 1.60.1.70009, where Classic's 11129 tooltip says 3 crits; the 3 minute cooldown is on the client row too, in category 1151, which it shares with Presence of Mind (client 1.60.1.70205 and Classic Era alike), so casting either locks both.",
 		"source": "forever",
 		"tooltip": "Instant\n3 min cooldown\nWhen activated, each of your Fire damage spell hits increases your critical strike chance with Fire spells by 10%.\nLasts until you have dealt 4 non-periodic critical strikes with Fire spells."
 	},
@@ -140,7 +140,7 @@
 	"12043": {
 		"ability": "Presence of Mind",
 		"file": "sim/mage/presence_of_mind.go",
-		"note": "presence_of_mind.go reads 12043 from beta client 1.60.1.70009: a 3 min cooldown, and the next spell with a cast time is instant, the same as Classic.",
+		"note": "presence_of_mind.go reads 12043 from beta client 1.60.1.70009: a 3 min cooldown, and the next spell with a cast time is instant, the same as Classic. The cooldown is category 1151 (client 1.60.1.70205), shared with Combustion.",
 		"source": "classic"
 	},
 	"12051": {

@@ -402,3 +402,35 @@ func TestWintersChillSkipsBlizzardTicks(t *testing.T) {
 		t.Errorf("Winter's Chill stacked %d times on Blizzard casts and %d times on its ticks; want some and 0", onCast, later)
 	}
 }
+
+// Presence of Mind and Combustion share client category 1151's 3 min cooldown, so casting one locks
+// the other.
+func TestPresenceOfMindAndCombustionShareACooldown(t *testing.T) {
+	sim := core.NewSim(&proto.RaidSimRequest{
+		SimOptions: &proto.SimOptions{RandomSeed: 1},
+		Raid: &proto.Raid{Parties: []*proto.Party{{Buffs: &proto.PartyBuffs{}, Players: []*proto.Player{{
+			Name: "Mage", Class: proto.Class_ClassMage, Race: proto.Race_RaceGnome, TalentsString: "000000000000001-00000000000000001",
+			Equipment: &proto.EquipmentSpec{}, Buffs: &proto.IndividualBuffs{},
+			Spec:     &proto.Player_Mage{Mage: &proto.Mage{Options: &proto.Mage_Options{ClassOptions: &proto.MageOptions{}}}},
+			Rotation: &proto.APLRotation{Type: proto.APLRotation_TypeAPL},
+		}}}}},
+		Encounter: core.MakeSingleTargetEncounter(0),
+	}, simsignals.CreateSignals())
+	sim.Reset()
+
+	mage := sim.Raid.Parties[0].Players[0].(MageAgent).GetMage()
+	pom := mage.GetSpell(core.ActionID{SpellID: spellData.PresenceOfMind.Highest().ID})
+	combustion := mage.GetSpell(core.ActionID{SpellID: spellData.Combustion.Highest().ID})
+	if pom == nil || combustion == nil {
+		t.Fatal("talents did not register Presence of Mind and Combustion")
+	}
+	if !combustion.CD.IsReady(sim) {
+		t.Fatal("Combustion on cooldown before anything was cast")
+	}
+	if !pom.Cast(sim, mage.CurrentTarget) {
+		t.Fatal("Presence of Mind did not cast")
+	}
+	if got := combustion.CD.TimeToReady(sim); got != 3*time.Minute {
+		t.Errorf("Combustion ready in %v after Presence of Mind, want 3m0s", got)
+	}
+}
