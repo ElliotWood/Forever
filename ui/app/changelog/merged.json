@@ -1,5 +1,11 @@
 [
 	{
+		"number": 656,
+		"title": "mage: Presence of Mind and Combustion share one 3 min cooldown",
+		"mergedAt": "2026-10-04",
+		"url": "https://github.com/ElliotWood/Forever/pull/656"
+	},
+	{
 		"number": 655,
 		"title": "Furor and Improved Sayaad read the effects their tooltips name",
 		"mergedAt": "2026-10-04",
