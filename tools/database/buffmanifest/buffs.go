@@ -427,10 +427,13 @@ var Debuffs = []BuffSpec{
 			proto.Stat_StatSpellDamage,
 		},
 	},
+	// Forever's Curse of Recklessness and Faerie Fire take the same 505 armor and no longer stack it
+	// (Wowhead's Forever class guides; the client rows carry no category that says so). Both are
+	// armor-only at these ranks, so one shared category is enough. Ported from MythicSim patch 16.
 	{
 		Field:      "curse_of_recklessness",
 		SpellID:    11717,
-		Category:   "CurseOfRecklessness",
+		Category:   "MinorArmorReduction",
 		SingleAura: true,
 		Stats: []proto.Stat{
 			proto.Stat_StatAttackPower,
@@ -439,7 +442,7 @@ var Debuffs = []BuffSpec{
 	{
 		Field:      "faerie_fire",
 		SpellID:    9907,
-		Category:   "FaerieFireAura",
+		Category:   "MinorArmorReduction",
 		SingleAura: true,
 		Stats: []proto.Stat{
 			proto.Stat_StatAttackPower,

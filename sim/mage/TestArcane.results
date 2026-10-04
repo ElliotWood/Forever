@@ -408,8 +408,8 @@ dps_results: {
 dps_results: {
  key: "TestArcane-AllItems-EverlookPathcarver-274759"
  value: {
-  dps: 274.77262
-  tps: 197.01562
+  dps: 274.53039
+  tps: 196.84606
  }
 }
 dps_results: {
