@@ -1,5 +1,11 @@
 [
 	{
+		"number": 674,
+		"title": "shaman: a main-hand Flametongue Weapon keeps Windfury Totem",
+		"mergedAt": "2026-10-04",
+		"url": "https://github.com/ElliotWood/Forever/pull/674"
+	},
+	{
 		"number": 673,
 		"title": "shaman: register Rockbiter Weapon",
 		"mergedAt": "2026-10-04",
