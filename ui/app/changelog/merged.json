@@ -1,5 +1,11 @@
 [
 	{
+		"number": 647,
+		"title": "mage: Blizzard ticks are procs, so Winter's Chill no longer stacks off them",
+		"mergedAt": "2026-10-04",
+		"url": "https://github.com/ElliotWood/Forever/pull/647"
+	},
+	{
 		"number": 646,
 		"title": "Ignite, Elemental Devastation, Flurry: read Can Proc From Procs from the Forever client",
 		"mergedAt": "2026-10-03",
