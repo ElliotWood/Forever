@@ -266,7 +266,9 @@ func (warlock *Warlock) applyDemonicBrand() {
 				levelBonus := float64(core.CharacterLevel-26) * 1.5
 				spellPower := warlock.GetStat(stats.SpellDamage) + warlock.GetStat(schoolPower)
 				damage := sim.Roll(levelBonus+14, levelBonus+17) + 0.078*spellPower
-				spell.CalcAndDealDamage(sim, target, damage, spell.OutcomeMagicHit)
+				// 1293697/1293698 (client 1.60.1.70205) carry Always Hit (Attributes[3] 0x40000) and
+				// no Cannot Crit, so the hit never misses and crits on the pet's spell crit.
+				spell.CalcAndDealDamage(sim, target, damage, spell.OutcomeMagicCrit)
 			},
 		})
 
