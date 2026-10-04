@@ -37,7 +37,7 @@
 	"11689": {
 		"ability": "Life Tap",
 		"file": "sim/warlock/lifetap.go",
-		"note": "Forever makes Life Tap a plain mana gain that grows with Spirit: 424 plus Spirit, raised by Improved Life Tap, with no spell power or damage modifier on it (#432), and #441 made the health cost equal the mana it returns. Beta client 1.60.1.70009.",
+		"note": "Forever makes Life Tap a plain mana gain that grows with Spirit: 424 plus Spirit, raised by Improved Life Tap, with no spell power or damage modifier on it (#432), and #441 made the health cost equal the mana it returns. Beta client 1.60.1.70009. Every rank is flagged No Threat (client 1.60.1.70205 Attributes[1] 0x400), so the mana it returns adds no threat.",
 		"source": "forever",
 		"tooltip": "Instant\nConverts health equal to 424 plus your Spirit into as much Mana."
 	},
