@@ -1,5 +1,17 @@
 [
 	{
+		"number": 684,
+		"title": "shaman: a hard-cast Lava Burst restarts the swing timer too",
+		"mergedAt": "2026-10-05",
+		"url": "https://github.com/ElliotWood/Forever/pull/684"
+	},
+	{
+		"number": 683,
+		"title": "[DB] Update to 1.60.1.70205 with hotfixes as of 2026-10-05",
+		"mergedAt": "2026-10-05",
+		"url": "https://github.com/ElliotWood/Forever/pull/683"
+	},
+	{
 		"number": 682,
 		"title": "shaman: Flametongue Totem's hit has no spell power coefficient and no imbue talents",
 		"mergedAt": "2026-10-05",
