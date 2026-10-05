@@ -205,7 +205,7 @@
 	"24587": {
 		"ability": "Scorpid Poison",
 		"file": "sim/hunter/pet_abilities.go",
-		"note": "Client 70009: 8 -> 5 a tick. The poison carries Periodic Can Crit (client 70205): ticks roll the pet's melee crit.",
+		"note": "Client 70009: 8 -> 5 a tick. The poison carries Periodic Can Crit (client 70205): ticks roll the pet's melee crit. It stacks to 5 (24587 MaxStack 5, client 70205): each landed cast adds a stack and restarts the 10 sec, and the ticks read the pet's current damage multipliers like every Forever dot.",
 		"source": "forever",
 		"tooltip": "30 Focus\nInstant\n4 sec cooldown\nAn attack that poisons the target for 25 Nature damage over 10 sec. Stacks up to 5 times."
 	},
