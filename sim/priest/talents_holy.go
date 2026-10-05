@@ -141,14 +141,15 @@ func (priest *Priest) registerHolyNovaSpell(rank *spelldata.Spell) {
 	})
 
 	priest.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: rank.ID},
-		SpellSchool:    rank.SpellSchool(),
-		DefenseType:    rank.DefenseTypeCore(),
-		ProcMask:       core.ProcMaskSpellDamage,
-		Flags:          core.SpellFlagAPL,
-		ClassSpellMask: PriestSpellHolyNova,
-		Rank:           rank.RankNumber(),
-		MaxRange:       float64(rank.MaxRange),
+		ActionID:        core.ActionID{SpellID: rank.ID},
+		SpellSchool:     rank.SpellSchool(),
+		DefenseType:     rank.DefenseTypeCore(),
+		ProcMask:        core.ProcMaskSpellDamage,
+		Flags:           core.SpellFlagAPL,
+		ClassSpellMask:  PriestSpellHolyNova,
+		Rank:            rank.RankNumber(),
+		MaxRange:        float64(rank.MaxRange),
+		CastRequirement: rank.CastRequirement(), // not in Shadowform
 
 		ManaCost: core.ManaCostOptions{
 			FlatCost: int32(rank.Cost()),

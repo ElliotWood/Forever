@@ -176,3 +176,50 @@ func TestHolyTalentsSkipChastise(t *testing.T) {
 		t.Errorf("Chastise hit %v crit %v, Holy school hit %v; want none", chastise.BonusHitPercent, chastise.BonusCritPercent, priest.PseudoStats.SchoolBonusHitChance[stats.SchoolIndexHoly])
 	}
 }
+
+// Client 1.60.1.70205 SpellShapeshift: Holy Nova and Chastise exclude form 28, which Shadowform puts
+// the priest in. Smite, Holy Fire and Penance do not.
+func TestShadowformRefusesHolyNovaAndChastise(t *testing.T) {
+	newPriest := func(talents string) (*core.Simulation, *Priest) {
+		player := core.WithSpec(&proto.Player{
+			Race:          proto.Race_RaceUndead,
+			Class:         proto.Class_ClassPriest,
+			Equipment:     &proto.EquipmentSpec{},
+			Consumables:   &proto.ConsumesSpec{},
+			TalentsString: talents,
+			Rotation:      &proto.APLRotation{Type: proto.APLRotation_TypeAPL},
+		}, &proto.Player_DpsPriest{DpsPriest: &proto.DpsPriest{Options: &proto.DpsPriest_Options{ClassOptions: &proto.PriestOptions{}}}})
+		encounter := core.MakeSingleTargetEncounter(0)
+		encounter.Targets[0].MobType = proto.MobType_MobTypeHumanoid
+		sim := core.NewSim(&proto.RaidSimRequest{
+			SimOptions: &proto.SimOptions{RandomSeed: 100},
+			Raid:       core.SinglePlayerRaidProto(player, &proto.PartyBuffs{}, &proto.RaidBuffs{}, &proto.Debuffs{}),
+			Encounter:  encounter,
+		}, simsignals.CreateSignals())
+		sim.Reset()
+		return sim, sim.Raid.Parties[0].Players[0].(PriestAgent).GetPriest()
+	}
+
+	sim, priest := newPriest(ShadowTalents)
+	target := sim.Encounter.AllTargetUnits[0]
+	chastise := priest.GetSpell(core.ActionID{SpellID: spellData.Chastise.Highest().ID})
+	smite := priest.GetSpell(core.ActionID{SpellID: spellData.Smite.Highest().ID})
+	priest.ShadowformAura.Activate(sim)
+	if chastise.CanCast(sim, target) {
+		t.Error("Chastise castable in Shadowform")
+	}
+	if !smite.CanCast(sim, target) {
+		t.Error("Smite refused in Shadowform; the client does not exclude it")
+	}
+	priest.ShadowformAura.Deactivate(sim)
+	if !chastise.CanCast(sim, target) {
+		t.Error("Chastise still refused after Shadowform dropped")
+	}
+
+	sim, priest = newPriest("-000001") // Holy Nova only
+	priest.ShapeshiftForm = spellData.Shadowform.Highest().ShapeshiftForm()
+	holyNova := priest.GetSpell(core.ActionID{SpellID: spellData.HolyNova.Highest().ID})
+	if holyNova.CanCast(sim, sim.Encounter.AllTargetUnits[0]) {
+		t.Error("Holy Nova castable in Shadowform")
+	}
+}
