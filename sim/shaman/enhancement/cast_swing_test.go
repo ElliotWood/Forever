@@ -13,12 +13,14 @@ import (
 // A hard-cast Lightning Bolt restarts the swing timer when it completes, even when the next swing
 // was not due until after it: beta logs 2701 and 2712 (foreverlogs.gg) show the next swing one
 // weapon speed after every completed hard cast. An instant bolt (5 Maelstrom stacks) leaves it alone.
+// Lava Burst is a hard cast too.
 func TestHardCastRestartsTheSwingTimer(t *testing.T) {
-	nextSwingAfterBolt := func(maelstrom int32) (next, speed time.Duration) {
+	// The next swing, counted from the end of the cast.
+	nextSwingAfterCast := func(spellID int32, maelstrom int32) (next, speed time.Duration) {
 		sim := core.NewSim(&proto.RaidSimRequest{
 			SimOptions: &proto.SimOptions{RandomSeed: 1},
 			Raid: core.SinglePlayerRaidProto(&proto.Player{
-				Name: "enh", Class: proto.Class_ClassShaman, Race: proto.Race_RaceOrc, TalentsString: DefaultTalents,
+				Name: "enh", Class: proto.Class_ClassShaman, Race: proto.Race_RaceOrc, TalentsString: "5505301000000001-053030031005112251", // DefaultTalents + Lava Burst
 				Equipment: &proto.EquipmentSpec{Items: []*proto.ItemSpec{
 					{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
 					{Id: 17182}, // Sulfuras, Hand of Ragnaros
@@ -37,16 +39,21 @@ func TestHardCastRestartsTheSwingTimer(t *testing.T) {
 			mw.Activate(sim)
 			mw.SetStacks(sim, maelstrom)
 		}
-		if !sham.GetSpell(core.ActionID{SpellID: 403}).Cast(sim, sham.CurrentTarget) { // rank 1, 1.5 sec
-			t.Fatal("Lightning Bolt did not cast")
+		spell := sham.GetSpell(core.ActionID{SpellID: spellID})
+		if !spell.Cast(sim, sham.CurrentTarget) {
+			t.Fatalf("%d did not cast", spellID)
 		}
-		return sham.AutoAttacks.NextAttackAt() - sim.CurrentTime, sham.AutoAttacks.MainhandSwingSpeed()
+		castEnd := sim.CurrentTime + spell.CurCast.CastTime
+		return sham.AutoAttacks.NextAttackAt() - castEnd, sham.AutoAttacks.MainhandSwingSpeed()
 	}
 
-	if got, speed := nextSwingAfterBolt(0); got != 1500*time.Millisecond+speed {
-		t.Errorf("hard cast: next swing %s from the cast start, want %s (cast end + a full swing)", got, 1500*time.Millisecond+speed)
+	if got, speed := nextSwingAfterCast(403, 0); got != speed { // Lightning Bolt rank 1
+		t.Errorf("hard cast: next swing %s after the cast ends, want %s (a full swing)", got, speed)
 	}
-	if got, speed := nextSwingAfterBolt(5); got != speed {
+	if got, speed := nextSwingAfterCast(1238300, 0); got != speed { // Lava Burst rank 3
+		t.Errorf("Lava Burst: next swing %s after the cast ends, want %s (a full swing)", got, speed)
+	}
+	if got, speed := nextSwingAfterCast(403, 5); got != speed {
 		t.Errorf("instant bolt: next swing %s from the cast, want %s (untouched)", got, speed)
 	}
 }
