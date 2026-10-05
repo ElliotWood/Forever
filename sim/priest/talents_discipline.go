@@ -4,6 +4,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/buffs"
 	"github.com/wowsims/forever/sim/core/dbcenums"
+	"github.com/wowsims/forever/sim/core/spelldata"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
@@ -265,7 +266,7 @@ func (priest *Priest) applyPenance() {
 		return
 	}
 
-	priest.registerPenanceSpell()
+	spellData.Penance.Each(func(_ int32, rank *spelldata.Spell) { priest.registerPenanceSpell(rank) })
 }
 
 // applyRenewedHope implements Renewed Hope, new in Forever.

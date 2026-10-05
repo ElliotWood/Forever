@@ -1,11 +1,15 @@
 package priest
 
 import (
+	"fmt"
+	"os"
+	"strings"
 	"testing"
 
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/simsignals"
+	"github.com/wowsims/forever/sim/core/spelldata"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
@@ -38,6 +42,28 @@ func TestImprovedHealingDiscountsPenance(t *testing.T) {
 	discounted := penanceCost(t, "504020031305001-13505100032-50002")
 	if !core.WithinToleranceFloat64(base*0.85, discounted, 1e-6) {
 		t.Errorf("Penance costs %v with Improved Healing 3, %v without; want 15%% off", discounted, base)
+	}
+}
+
+// The Smite rotations cast the Penance rank whose bolt is largest: rank 3 in client 1.60.1.70205
+// (180 against rank 4's 131, same coefficient, less mana). A client update that reorders the bolts
+// fails here, and the rotations' Penance id wants changing with it.
+func TestSmiteRotationsCastTheLargestPenanceRank(t *testing.T) {
+	var best *spelldata.Spell
+	spellData.Penance.Each(func(_ int32, rank *spelldata.Spell) {
+		if best == nil || rank.Refs()[0].DamageEffect().Average(core.CharacterLevel) > best.Refs()[0].DamageEffect().Average(core.CharacterLevel) {
+			best = rank
+		}
+	})
+	want := fmt.Sprintf(`"spellId": %d,`, best.ID)
+	for _, name := range []string{"smite", "smite_lowrank", "smite_lowrank_mindblast"} {
+		apl, err := os.ReadFile("../../ui/specs/priest/dps/apls/" + name + ".apl.json")
+		if err != nil {
+			t.Fatal(err)
+		}
+		if !strings.Contains(string(apl), want) {
+			t.Errorf("%s does not cast Penance %d (rank %d), the largest bolt", name, best.ID, best.RankNumber())
+		}
 	}
 }
 
