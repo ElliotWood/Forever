@@ -8,6 +8,7 @@ import (
 	"github.com/wowsims/forever/sim/core/buffs"
 	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/spelldata"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
@@ -151,8 +152,13 @@ var frostbrandImbue = spellData.FrostbrandWeaponTriggered.Highest()
 var rockbiterImbue = spellData.RockbiterWeaponTriggered.Highest()
 
 func (shaman *Shaman) newFlametongueImbueSpell(weapon *core.Item) *core.Spell {
+	return shaman.newFlametongueAttackSpell(flametongueImbue, func() *core.Item { return weapon })
+}
+
+// The hit a Flametongue dummy (the imbue's 16344, the totem's 16389) feeds, scaled by its weapon's speed.
+func (shaman *Shaman) newFlametongueAttackSpell(dummy *spelldata.Spell, weapon func() *core.Item) *core.Spell {
 	return shaman.RegisterSpell(core.SpellConfig{
-		ActionID:    core.ActionID{SpellID: flametongueImbue.ID},
+		ActionID:    core.ActionID{SpellID: dummy.ID},
 		SpellSchool: core.SpellSchoolFire,
 		// The damage logs as Flametongue Attack (10444), Magic in SpellCategories; it crits for 1.5x
 		// (2.0x with Elemental Fury, see talents_elemental.go).
@@ -165,13 +171,13 @@ func (shaman *Shaman) newFlametongueImbueSpell(weapon *core.Item) *core.Spell {
 		BonusCoefficient: 0.10000000149,
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			if weapon.SwingSpeed != 0 {
+			if weapon := weapon(); weapon != nil && weapon.SwingSpeed != 0 {
 				// The proc's dummy value is hundredths of damage per second of weapon speed, speed held
 				// to 1.3-4.0 (the tooltip's "(X / 77 - 1) to (X / 25)"): 16344's 2810 is 35 to 112 at 60.
 				// A beta log bears the scale out at rank 1 (8026, 4.4 a second): 100 hits from a 2.5
 				// speed weapon with no spell power averaged 11.2 (foreverlogs.gg report 2671).
 				speed := min(max(weapon.SwingSpeed, 1.3), 4)
-				baseDamage := speed * flametongueImbue.EffectN(1).Average(core.CharacterLevel) / 100
+				baseDamage := speed * dummy.EffectN(1).Average(core.CharacterLevel) / 100
 				spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMagicHitAndCrit)
 			}
 		},
@@ -258,7 +264,10 @@ func (shaman *Shaman) RegisterFlametongueImbue(procMask core.ProcMask) {
 		// Classic's Windfury Totem enchanted the weapon, so a main-hand imbue displaced it. Forever's is a
 		// party aura, and a main-hand Flametongue disables Flametongue Totem instead (tooltips 8024/16342);
 		// only Windfury Weapon names Windfury Totem. Ported from MythicSim patch 20 (sage3648).
-		shaman.makeFTProcTriggerAura(itemSlot, triggerProcMask, flameTongueSpell)
+		aura := shaman.makeFTProcTriggerAura(itemSlot, triggerProcMask, flameTongueSpell)
+		if itemSlot == proto.ItemSlot_ItemSlotMainHand {
+			aura.NewExclusiveEffect(buffs.FlametongueTotemCategory, false, core.ExclusiveEffect{Priority: buffs.FlametongueTotemMainHandImbue})
+		}
 	}
 
 	shaman.setupItemSwapImbue(proto.ShamanImbue_FlametongueWeapon, flametongueEnchantID)

@@ -129,6 +129,17 @@ const (
 	AirTotemCastWindfury
 )
 
+// Flametongue Totem no longer stacks with Flametongue Weapon or Windfury Totem (the same notes), and a
+// main-hand Flametongue Weapon "disables any benefit you personally receive from Flametongue Totem"
+// (tooltips 8024/16342). Neither text says which of the two totems holds; Windfury, the stronger, does.
+var FlametongueTotemCategory = "FlametongueTotem"
+
+const (
+	FlametongueTotemCast = iota + 1
+	FlametongueTotemWindfuryTotem
+	FlametongueTotemMainHandImbue
+)
+
 func driveWindfuryTotem(char *core.Character, _ *proto.PartyBuffs) {
 	procAura := WindfuryTotemAura(&char.Unit, false, 0)
 	// The attack power is only there for a moment after a proc, so it is not
@@ -189,6 +200,7 @@ func driveWindfuryTotem(char *core.Character, _ *proto.PartyBuffs) {
 
 	// Joined first, so a cast air totem refuses the aura before it arms the proc.
 	totemAura.NewExclusiveEffect(AirTotemCategory, true, core.ExclusiveEffect{Priority: AirTotemPartyWindfury})
+	totemAura.NewExclusiveEffect(FlametongueTotemCategory, false, core.ExclusiveEffect{Priority: FlametongueTotemWindfuryTotem})
 	totemAura.NewExclusiveEffect(WindfuryTotemCategory, false, core.ExclusiveEffect{
 		Priority: WindfuryTotemValue(0),
 		OnGain: func(_ *core.ExclusiveEffect, sim *core.Simulation) {
