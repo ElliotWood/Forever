@@ -86,12 +86,12 @@ func (shaman *Shaman) registerSearingTotemSpell() {
 	})
 }
 
-// Neither dummy deals damage itself; the totem's hit is taken to be Flametongue Attack, as the imbue's
-// (talents_elemental.go notes the totem's attack critting for 1.5x on other players). Ported from
-// MythicSim patch 70 (sage3648).
+// Neither dummy deals damage itself; the totem's hit lands as Flametongue Attack 16368 (beta log 2713,
+// foreverlogs.gg), whose client row has no spell power coefficient and a class mask (bit 25) that
+// Elemental Fury and Elemental Weapons don't name. Ported from MythicSim patch 70 (sage3648).
 func (shaman *Shaman) registerFlametongueTotemSpell() {
 	duration := flametongueTotemRank.Duration()
-	hit := shaman.newFlametongueAttackSpell(flametongueTotemProc, shaman.MainHand)
+	hit := shaman.newFlametongueAttackSpell(flametongueTotemProc, shaman.MainHand, SpellMaskNone, 0)
 	// "Each main hand hit": the aura's row hears melee autos only, so specials and off-hand swings add nothing.
 	trigger := shaman.MakeProcTriggerAura(core.ProcTrigger{
 		Name:               "Flametongue Totem Trigger",
