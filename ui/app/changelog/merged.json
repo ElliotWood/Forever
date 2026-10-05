@@ -1,5 +1,11 @@
 [
 	{
+		"number": 690,
+		"title": "rogue: Cold Blood crits both Mutilate hands and isn't spent by them",
+		"mergedAt": "2026-10-05",
+		"url": "https://github.com/ElliotWood/Forever/pull/690"
+	},
+	{
 		"number": 689,
 		"title": "balance druid: real gear sets (launch 585 -> 606, P1 545 -> 623)",
 		"mergedAt": "2026-10-05",
