@@ -1,5 +1,11 @@
 [
 	{
+		"number": 678,
+		"title": "priest: Smite casts Penance rank 3, whose bolt is larger than rank 4's",
+		"mergedAt": "2026-10-05",
+		"url": "https://github.com/ElliotWood/Forever/pull/678"
+	},
+	{
 		"number": 677,
 		"title": "shaman: register Flametongue Totem (no stacking with Windfury Totem or Flametongue Weapon)",
 		"mergedAt": "2026-10-05",
