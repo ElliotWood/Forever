@@ -152,11 +152,13 @@ var frostbrandImbue = spellData.FrostbrandWeaponTriggered.Highest()
 var rockbiterImbue = spellData.RockbiterWeaponTriggered.Highest()
 
 func (shaman *Shaman) newFlametongueImbueSpell(weapon *core.Item) *core.Spell {
-	return shaman.newFlametongueAttackSpell(flametongueImbue, func() *core.Item { return weapon })
+	return shaman.newFlametongueAttackSpell(flametongueImbue, func() *core.Item { return weapon }, SpellMaskFlametongueWeapon, 0.10000000149)
 }
 
 // The hit a Flametongue dummy (the imbue's 16344, the totem's 16389) feeds, scaled by its weapon's speed.
-func (shaman *Shaman) newFlametongueAttackSpell(dummy *spelldata.Spell, weapon func() *core.Item) *core.Spell {
+// The imbue's hit (29469) carries a 0.1 coefficient and the class mask its talents name; the totem's
+// (16368) carries neither.
+func (shaman *Shaman) newFlametongueAttackSpell(dummy *spelldata.Spell, weapon func() *core.Item, classMask int64, coefficient float64) *core.Spell {
 	return shaman.RegisterSpell(core.SpellConfig{
 		ActionID:    core.ActionID{SpellID: dummy.ID},
 		SpellSchool: core.SpellSchoolFire,
@@ -164,11 +166,11 @@ func (shaman *Shaman) newFlametongueAttackSpell(dummy *spelldata.Spell, weapon f
 		// (2.0x with Elemental Fury, see talents_elemental.go).
 		DefenseType:      core.DefenseTypeMagic,
 		ProcMask:         core.ProcMaskSpellDamageProc,
-		ClassSpellMask:   SpellMaskFlametongueWeapon,
+		ClassSpellMask:   classMask,
 		Flags:            core.SpellFlagPassiveSpell | core.SpellFlagProc | SpellFlagShamanSpell,
 		DamageMultiplier: 1,
 		ThreatMultiplier: 1,
-		BonusCoefficient: 0.10000000149,
+		BonusCoefficient: coefficient,
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			if weapon := weapon(); weapon != nil && weapon.SwingSpeed != 0 {
