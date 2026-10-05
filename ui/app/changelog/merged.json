@@ -1,5 +1,11 @@
 [
 	{
+		"number": 680,
+		"title": "warlock: Malediction no longer raises Hellfire's area hits",
+		"mergedAt": "2026-10-05",
+		"url": "https://github.com/ElliotWood/Forever/pull/680"
+	},
+	{
 		"number": 679,
 		"title": "priest: Holy Precision and Holy Specialization leave Chastise out",
 		"mergedAt": "2026-10-05",
