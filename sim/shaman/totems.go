@@ -98,6 +98,7 @@ func (shaman *Shaman) registerWindfuryTotemSpell() {
 		Duration: duration,
 	})
 	wfAura.NewExclusiveEffect(buffs.AirTotemCategory, true, core.ExclusiveEffect{Priority: buffs.AirTotemCastWindfury})
+	wfAura.NewExclusiveEffect(buffs.FlametongueTotemCategory, false, core.ExclusiveEffect{Priority: buffs.FlametongueTotemWindfuryTotem})
 	wfAura.ApplyOnInit(func(aura *core.Aura, sim *core.Simulation) {
 		mhConfig := *shaman.AutoAttacks.MHConfig()
 		mhConfig.ActionID = mhConfig.ActionID.WithTag(windfuryTotemBuff.ID)
