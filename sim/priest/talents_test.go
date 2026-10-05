@@ -144,3 +144,35 @@ func TestDarkSacrificeTicksBasePlusSpirit(t *testing.T) {
 		t.Errorf("Dark Sacrifice's mana added %.1f threat, want 0", got)
 	}
 }
+
+// Holy Precision (1309957) and Holy Specialization (14889) are class-mask mods: Smite gets the hit and
+// crit, Chastise (1277335) is outside both masks in client 1.60.1.70205 and gets neither.
+func TestHolyTalentsSkipChastise(t *testing.T) {
+	player := core.WithSpec(&proto.Player{
+		Race:          proto.Race_RaceUndead,
+		Class:         proto.Class_ClassPriest,
+		Equipment:     &proto.EquipmentSpec{},
+		Consumables:   &proto.ConsumesSpec{},
+		TalentsString: SmiteTalents,
+		Rotation:      &proto.APLRotation{Type: proto.APLRotation_TypeAPL},
+	}, &proto.Player_DpsPriest{DpsPriest: &proto.DpsPriest{Options: &proto.DpsPriest_Options{ClassOptions: &proto.PriestOptions{}}}})
+	sim := core.NewSim(&proto.RaidSimRequest{
+		SimOptions: &proto.SimOptions{RandomSeed: 100},
+		Raid:       core.SinglePlayerRaidProto(player, &proto.PartyBuffs{}, &proto.RaidBuffs{}, &proto.Debuffs{}),
+		Encounter:  core.MakeSingleTargetEncounter(0),
+	}, simsignals.CreateSignals())
+	sim.Reset()
+
+	priest := sim.Raid.Parties[0].Players[0].(PriestAgent).GetPriest()
+	if priest.Talents.HolyPrecision == 0 || priest.Talents.HolySpecialization == 0 {
+		t.Fatalf("SmiteTalents take Holy Precision %d, Holy Specialization %d; want both", priest.Talents.HolyPrecision, priest.Talents.HolySpecialization)
+	}
+	smite := priest.GetSpell(core.ActionID{SpellID: spellData.Smite.Highest().ID})
+	chastise := priest.GetSpell(core.ActionID{SpellID: 1277335})
+	if smite.BonusHitPercent == 0 || smite.BonusCritPercent == 0 {
+		t.Errorf("Smite hit %v crit %v, want both raised", smite.BonusHitPercent, smite.BonusCritPercent)
+	}
+	if chastise.BonusHitPercent != 0 || chastise.BonusCritPercent != 0 || priest.PseudoStats.SchoolBonusHitChance[stats.SchoolIndexHoly] != 0 {
+		t.Errorf("Chastise hit %v crit %v, Holy school hit %v; want none", chastise.BonusHitPercent, chastise.BonusCritPercent, priest.PseudoStats.SchoolBonusHitChance[stats.SchoolIndexHoly])
+	}
+}

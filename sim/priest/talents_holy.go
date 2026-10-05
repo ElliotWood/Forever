@@ -72,15 +72,15 @@ func (priest *Priest) applyImprovedRenew() {
 	}
 }
 
-// Holy Specialization is new in Forever: +1% critical strike per point on Holy spells.
+// Holy Specialization is new in Forever: +1% critical strike per point on Smite, Holy Fire, Holy Nova
+// and the Penance bolts. 14889's class mask leaves Chastise (1277335) out (client 1.60.1.70205).
 func (priest *Priest) applyHolySpecialization() {
 	if priest.Talents.HolySpecialization == 0 {
 		return
 	}
 
 	priest.AddStaticMod(core.SpellModConfig{
-		ClassMask:  PriestSpellsAll,
-		School:     core.SpellSchoolHoly,
+		ClassMask:  PriestHolySpells,
 		FloatValue: spellData.HolySpecialization.ValueAt(priest.Talents.HolySpecialization),
 		Kind:       core.SpellMod_BonusCrit_Percent,
 	})
