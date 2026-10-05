@@ -53,8 +53,9 @@ func (shaman *Shaman) newElectricSpellConfig(config ShamSpellConfig) core.SpellC
 				GCD:      core.GCDDefault,
 			},
 			ModifyCast: func(sim *core.Simulation, spell *core.Spell, cast *core.Cast) {
-				castTime := shaman.ApplyCastSpeedForSpell(cast.CastTime, spell)
-				if sim.CurrentTime+castTime > shaman.AutoAttacks.NextAttackAt() {
+				// A hard cast holds the swing and restarts it when the cast completes, even when
+				// no swing was due before then (beta logs 2701, 2712). An instant bolt leaves it alone.
+				if castTime := shaman.ApplyCastSpeedForSpell(cast.CastTime, spell); castTime > 0 {
 					shaman.AutoAttacks.StopMeleeUntil(sim, sim.CurrentTime+castTime)
 				}
 			},
