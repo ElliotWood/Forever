@@ -1,5 +1,11 @@
 [
 	{
+		"number": 682,
+		"title": "shaman: Flametongue Totem's hit has no spell power coefficient and no imbue talents",
+		"mergedAt": "2026-10-05",
+		"url": "https://github.com/ElliotWood/Forever/pull/682"
+	},
+	{
 		"number": 681,
 		"title": "shaman: a hard-cast bolt restarts the swing timer when it completes",
 		"mergedAt": "2026-10-05",
