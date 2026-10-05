@@ -1,5 +1,11 @@
 [
 	{
+		"number": 689,
+		"title": "balance druid: real gear sets (launch 585 -> 606, P1 545 -> 623)",
+		"mergedAt": "2026-10-05",
+		"url": "https://github.com/ElliotWood/Forever/pull/689"
+	},
+	{
 		"number": 688,
 		"title": "balance druid: audit fixes and a better launch rotation",
 		"mergedAt": "2026-10-05",
