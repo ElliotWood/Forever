@@ -41,7 +41,7 @@
 	"1310703": {
 		"ability": "Venom",
 		"assumptions": [
-			"Venom's 30% reaches a Deadly Poison already ticking only when the next stack lands, because the sim snapshots the dot on each application (the client stores a percent modifier and cannot say when it is read)"
+			"Venom's 30% reaches a Deadly Poison already ticking from its next tick, because the sim reads the caster's current modifiers at every tick, as for every Forever dot (#668: logs show dots ticking on current spell power); the client stores a percent modifier and cannot say whether a modifier, rather than spell power, is read per tick"
 		],
 		"file": "sim/rogue/talents_assassination.go",
 		"note": "Beta client 1.60.1.70009: Venom is spell 1310703, 25 Energy plus combo points, 30% poison damage and 10% poison chance, 6 sec plus 3 sec a combo point.",
