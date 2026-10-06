@@ -1,5 +1,17 @@
 [
 	{
+		"number": 697,
+		"title": "shaman: Searing Totem attacks every 2.43 s, not 2.2 s",
+		"mergedAt": "2026-10-06",
+		"url": "https://github.com/ElliotWood/Forever/pull/697"
+	},
+	{
+		"number": 696,
+		"title": "Forever client build 1.60.1.70235",
+		"mergedAt": "2026-10-06",
+		"url": "https://github.com/ElliotWood/Forever/pull/696"
+	},
+	{
 		"number": 695,
 		"title": "evidence: Venom note matches the per-tick dot model",
 		"mergedAt": "2026-10-05",
