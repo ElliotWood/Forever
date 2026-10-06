@@ -79,7 +79,7 @@
 	"1293527": {
 		"ability": "Summon Hawk",
 		"assumptions": [
-			"The hawk is a guardian whose swings the client does not describe; the assault is modelled as the rank's dive bomb base damage every 3 sec. Its scaling aura (1293586, Hunter Guardian Hawk Pet Scaling 01) passes on the hunter's haste, damage done and crit but no attack power, so the swings themselves should not grow with ranged attack power.",
+			"The hawk is a guardian whose swings the client does not describe, so they come from beta logs (foreverlogs reports 2695 and 2701, two hunters at level 25 and 30, 534 landed swings at rank 1): a swing on arrival, then one every 2.5 sec sped up by the hunter's ranged haste (its scaling aura 1293586 passes haste, damage done and crit, no attack power), each about 0.35 of the rank's dive bomb base (11.5 vs 32, compared target by target with the dive bomb so armor cancels), crits about 1% of the time and can miss or be dodged (~10% in the logs). That the swings grow with the dive bomb's rank (85 and 108 at 48 and 60) is a guess until a level 36+ log shows rank 2.",
 			"Two hawks at once, the client's cap; a cast past it replaces the hawk closest to leaving, which the client does not specify."
 		],
 		"file": "sim/hunter/summon_hawk.go",

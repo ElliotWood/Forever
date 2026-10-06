@@ -81,7 +81,7 @@ func (hunter *Hunter) registerUnleashedFury() {
 	}
 }
 
-// 19598's mask names the pet passive and Summon Hawk, so the hawks take it too.
+// 19598's mask names the pet passive and Summon Hawk; only the dive bomb rolls crit (the swings don't).
 func (hunter *Hunter) registerFerocity() {
 	if hunter.Talents.Ferocity == 0 {
 		return
