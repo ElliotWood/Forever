@@ -1,5 +1,11 @@
 [
 	{
+		"number": 710,
+		"title": "priest: shadow casts Devouring Plague on its 1 min cooldown, not only with Inner Focus",
+		"mergedAt": "2026-10-06",
+		"url": "https://github.com/ElliotWood/Forever/pull/710"
+	},
+	{
 		"number": 709,
 		"title": "core: energy refills smoothly at 10 a second, not 20 every 2.02 s (beta logs)",
 		"mergedAt": "2026-10-06",
