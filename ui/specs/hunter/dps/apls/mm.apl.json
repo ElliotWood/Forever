@@ -143,7 +143,8 @@
 									"lhs": { "spellTimeToReady": { "spellId": { "spellId": 2643 } } },
 									"rhs": { "const": { "val": "1" } }
 								}
-							}
+							},
+							{ "cmp": { "op": "OpGe", "lhs": { "currentManaPercent": {} }, "rhs": { "remainingTimePercent": {} } } }
 						]
 					}
 				},
