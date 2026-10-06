@@ -1,5 +1,11 @@
 [
 	{
+		"number": 703,
+		"title": "hunter: Summon Hawk's hawks swing every 2.5 s (hasted) for ~0.35 of the dive bomb, no crits",
+		"mergedAt": "2026-10-06",
+		"url": "https://github.com/ElliotWood/Forever/pull/703"
+	},
+	{
 		"number": 702,
 		"title": "mage: Ignite ignores a Goblin Sapper Charge's hit on the Mage",
 		"mergedAt": "2026-10-06",
