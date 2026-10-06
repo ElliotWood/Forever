@@ -1,5 +1,11 @@
 [
 	{
+		"number": 702,
+		"title": "mage: Ignite ignores a Goblin Sapper Charge's hit on the Mage",
+		"mergedAt": "2026-10-06",
+		"url": "https://github.com/ElliotWood/Forever/pull/702"
+	},
+	{
 		"number": 701,
 		"title": "core: a cast that completed in the batch window isn't pushed back again",
 		"mergedAt": "2026-10-06",
