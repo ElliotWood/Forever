@@ -433,6 +433,12 @@ func (character *Character) Finalize() {
 			},
 
 			Handler: func(sim *Simulation, spell *Spell, result *SpellResult) {
+				// The handler runs a spell batch window after the hit; a cast that
+				// completed in between is over and must not be pushed back (and
+				// completed) again.
+				if character.Hardcast.Expires <= sim.CurrentTime {
+					return
+				}
 				if !sim.Proc(character.PseudoStats.PushbackChance-character.Hardcast.Spell.PushbackResist, "Pushback") {
 					return
 				}
