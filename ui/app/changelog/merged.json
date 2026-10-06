@@ -1,5 +1,11 @@
 [
 	{
+		"number": 705,
+		"title": "Sanctified Judgement returns 22/44/67% of the seal's cost (beta logs)",
+		"mergedAt": "2026-10-06",
+		"url": "https://github.com/ElliotWood/Forever/pull/705"
+	},
+	{
 		"number": 704,
 		"title": "core: hunter pets regenerate 10 focus a second (client PowerType + beta logs)",
 		"mergedAt": "2026-10-06",
