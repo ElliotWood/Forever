@@ -463,3 +463,41 @@ func TestBlizzardTicksCrit(t *testing.T) {
 		t.Error("no Blizzard tick crit in 50 iterations")
 	}
 }
+
+// A Goblin Sapper Charge also hits the Mage, and that hit is a fire spell crit
+// Ignite hears. Ignite burns enemies only; the self hit must not reach for a
+// dot the Mage doesn't have (issue #699).
+func TestIgniteIgnoresTheSapperHitOnTheMage(t *testing.T) {
+	sim := core.NewSim(&proto.RaidSimRequest{
+		SimOptions: &proto.SimOptions{RandomSeed: 1},
+		Raid: &proto.Raid{Parties: []*proto.Party{{Buffs: &proto.PartyBuffs{}, Players: []*proto.Player{{
+			Name: "Mage", Class: proto.Class_ClassMage, Race: proto.Race_RaceGnome, TalentsString: FireTalents,
+			Profession1: proto.Profession_Engineering, Consumables: &proto.ConsumesSpec{GoblinSapper: true},
+			Equipment: &proto.EquipmentSpec{}, Buffs: &proto.IndividualBuffs{},
+			Spec:     &proto.Player_Mage{Mage: &proto.Mage{Options: &proto.Mage_Options{ClassOptions: &proto.MageOptions{}}}},
+			Rotation: &proto.APLRotation{Type: proto.APLRotation_TypeAPL},
+		}}}}},
+		Encounter: core.MakeSingleTargetEncounter(0),
+	}, simsignals.CreateSignals())
+	sim.Reset()
+
+	mage := sim.Raid.Parties[0].Players[0].(MageAgent).GetMage()
+	if mage.Talents.Ignite == 0 {
+		t.Fatal("FireTalents no longer take Ignite; pick a build that does")
+	}
+	mage.AddStatDynamic(sim, stats.SpellCritPercent, 100)
+
+	sapper := mage.GetSpell(core.GoblinSapperActionID)
+	if sapper == nil {
+		t.Fatal("Goblin Sapper Charge is not registered")
+	}
+	if !sapper.Cast(sim, mage.CurrentTarget) {
+		t.Fatal("Goblin Sapper Charge did not cast")
+	}
+	for sim.CurrentTime < 2*time.Second && !sim.Step() {
+	}
+	self := mage.GetSpell(core.GoblinSapperActionID.WithTag(1))
+	if self == nil || self.SpellMetrics[mage.UnitIndex].Crits == 0 {
+		t.Fatal("the sapper's hit on the Mage did not crit; the test proves nothing")
+	}
+}
