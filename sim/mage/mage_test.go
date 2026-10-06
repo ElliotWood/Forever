@@ -524,3 +524,50 @@ func TestArcaneWithoutArcaneBlastStillCasts(t *testing.T) {
 		t.Errorf("arcane mage without Arcane Blast did %.1f DPS", dps)
 	}
 }
+
+// Arcane Missiles spends the Arcane Blast stacks as the channel starts, but its missiles keep 15% a
+// stack (beta log 2721: 1 stack 99-101 a missile, 2 stacks 112-114).
+func TestArcaneMissilesKeepTheArcaneBlastStacks(t *testing.T) {
+	sim, mage := newThreeTargetMage(ArcaneTalents)
+	if mage.ArcaneBlastAura == nil {
+		t.Fatal("ArcaneTalents no longer take Arcane Blast; pick a build that does")
+	}
+	missiles := mage.GetSpell(core.ActionID{SpellID: spellData.ArcaneMissiles.Highest().ID})
+	missile := mage.GetSpell(core.ActionID{SpellID: spellData.ArcaneMissilesTriggered.Highest().ID})
+	metrics := &missile.SpellMetrics[mage.CurrentTarget.UnitIndex]
+
+	// A missile has no damage range, so every plain hit (no crit, no partial resist) deals the same.
+	plain := func() (float64, int32) {
+		return metrics.TotalDamage - metrics.TotalCritDamage - (metrics.TotalResistedDamage - metrics.TotalResistedCritDamage),
+			metrics.Hits - metrics.ResistedHits
+	}
+	perMissile := make([]float64, 3)
+	for stacks := range perMissile {
+		damage, hits := plain()
+		for i := 0; i < 10; i++ {
+			mage.ArcaneBlastAura.Deactivate(sim)
+			if stacks > 0 {
+				mage.ArcaneBlastAura.Activate(sim)
+				mage.ArcaneBlastAura.SetStacks(sim, int32(stacks))
+			}
+			start := sim.CurrentTime
+			missiles.SkipCastAndApplyEffects(sim, mage.CurrentTarget)
+			if mage.ArcaneBlastAura.IsActive() {
+				t.Fatal("Arcane Missiles left the Arcane Blast stacks up")
+			}
+			for sim.CurrentTime < start+6*time.Second {
+				sim.Step()
+			}
+		}
+		newDamage, newHits := plain()
+		perMissile[stacks] = (newDamage - damage) / float64(newHits-hits)
+	}
+	// The stacks join the missile's other additive bonuses (Arcane Instability and the like).
+	base := missile.DamageMultiplierAdditive
+	for stacks := range perMissile {
+		want := (base + 0.15*float64(stacks)) / base
+		if got := perMissile[stacks] / perMissile[0]; math.Abs(got-want) > 1e-9 {
+			t.Errorf("missiles after %d Arcane Blast stacks = %.4f x those after none, want %.4f", stacks, got, want)
+		}
+	}
+}
