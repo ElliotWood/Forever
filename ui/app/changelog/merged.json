@@ -1,5 +1,17 @@
 [
 	{
+		"number": 707,
+		"title": "hunter: Arcane Shot / Serpent Sting attack power shares rechecked at levels 24-30 (beta logs)",
+		"mergedAt": "2026-10-06",
+		"url": "https://github.com/ElliotWood/Forever/pull/707"
+	},
+	{
+		"number": 706,
+		"title": "[DB] Update to 1.60.1.70235 with hotfixes as of 2026-10-06",
+		"mergedAt": "2026-10-06",
+		"url": "https://github.com/ElliotWood/Forever/pull/706"
+	},
+	{
 		"number": 705,
 		"title": "Sanctified Judgement returns 22/44/67% of the seal's cost (beta logs)",
 		"mergedAt": "2026-10-06",
