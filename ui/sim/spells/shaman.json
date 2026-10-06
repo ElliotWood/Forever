@@ -139,7 +139,7 @@
 	"10438": {
 		"ability": "Searing Totem",
 		"file": "sim/shaman/fire_totems.go",
-		"note": "Rank 6, the only rank the sim casts. The beta client keeps the summon's cost, duration and attack damage, so the Classic tooltip reads right; only the 1 sec totem global cooldown and the attack's coefficient (see 10436) changed.",
+		"note": "Rank 6, the only rank the sim casts. The beta client keeps the summon's cost, duration and attack damage, so the Classic tooltip reads right; only the 1 sec totem global cooldown and the attack's coefficient (see 10436) changed. The totem hard casts its 2.2 sec attack and waits about 0.23 sec before the next, so it attacks every 2.43 sec: beta logs time 1,267 attacks a median 2.435 sec apart (ranks 1 and 2, foreverlogs.gg reports up to 2717).",
 		"source": "classic"
 	},
 	"10473": {

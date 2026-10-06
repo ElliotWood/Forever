@@ -2,6 +2,7 @@ package enhancement
 
 import (
 	"testing"
+	"time"
 
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
@@ -96,5 +97,27 @@ func TestFlametongueTotemHitIsNotTheImbuesHit(t *testing.T) {
 	}
 	if imbue.BonusCoefficient == 0 || imbue.DamageMultiplierAdditive == 1 {
 		t.Errorf("imbue hit: coefficient %v, additive multiplier %v, want 0.1 and Elemental Weapons", imbue.BonusCoefficient, imbue.DamageMultiplierAdditive)
+	}
+}
+
+// Searing Totem attacks every 2.435 sec on beta logs (2.2 sec cast plus ~0.23 sec between casts, 1,267
+// attacks), so rank 6's 55 sec totem lands 22 attacks, not the 25 a bare 2.2 sec cast gives.
+func TestSearingTotemAttackInterval(t *testing.T) {
+	sim := core.NewSim(&proto.RaidSimRequest{
+		SimOptions: &proto.SimOptions{RandomSeed: 1},
+		Raid: core.SinglePlayerRaidProto(&proto.Player{
+			Name: "enh", Class: proto.Class_ClassShaman, Race: proto.Race_RaceOrc, TalentsString: DefaultTalents,
+			Equipment: &proto.EquipmentSpec{},
+			Spec:      &proto.Player_EnhancementShaman{EnhancementShaman: &proto.EnhancementShaman{Options: &proto.EnhancementShaman_Options{ClassOptions: &proto.ShamanOptions{}}}},
+			Rotation:  &proto.APLRotation{Type: proto.APLRotation_TypeAPL},
+		}, &proto.PartyBuffs{}, &proto.RaidBuffs{}, &proto.Debuffs{}),
+		Encounter: core.MakeSingleTargetEncounter(0),
+	}, simsignals.CreateSignals())
+	sim.Reset()
+
+	enh := sim.Raid.Parties[0].Players[0].(*EnhancementShaman)
+	dot := enh.SearingTotem.Dot(enh.CurrentTarget)
+	if dot.BaseTickLength != 2430*time.Millisecond || dot.BaseTickCount != 22 {
+		t.Fatalf("Searing Totem attacks every %v, %d times, want 2.43s and 22", dot.BaseTickLength, dot.BaseTickCount)
 	}
 }
