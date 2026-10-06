@@ -1,5 +1,11 @@
 [
 	{
+		"number": 717,
+		"title": "hunter: Marksmanship paces Sniper Shot on mana",
+		"mergedAt": "2026-10-06",
+		"url": "https://github.com/ElliotWood/Forever/pull/717"
+	},
+	{
 		"number": 716,
 		"title": "warlock: Shadow and Flame build casts Conflagrate",
 		"mergedAt": "2026-10-06",
