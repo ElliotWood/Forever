@@ -1,5 +1,11 @@
 [
 	{
+		"number": 713,
+		"title": "hunter: Intimidation is no longer an auto-cast DPS cooldown",
+		"mergedAt": "2026-10-06",
+		"url": "https://github.com/ElliotWood/Forever/pull/713"
+	},
+	{
 		"number": 712,
 		"title": "warrior: no Heroic Strike / Cleave queued in execute below 40 rage",
 		"mergedAt": "2026-10-06",
