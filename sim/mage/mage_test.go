@@ -501,3 +501,26 @@ func TestIgniteIgnoresTheSapperHitOnTheMage(t *testing.T) {
 		t.Fatal("the sapper's hit on the Mage did not crit; the test proves nothing")
 	}
 }
+
+// Arcane Blast is a talent (MageTalents.arcane_blast): without it the arcane APL falls back to Frostbolt
+// instead of standing idle.
+func TestArcaneWithoutArcaneBlastStillCasts(t *testing.T) {
+	player := core.WithSpec(&proto.Player{
+		Race:          proto.Race_RaceGnome,
+		Class:         proto.Class_ClassMage,
+		Equipment:     &proto.EquipmentSpec{},
+		TalentsString: "055005023000311531--005500033",
+		Rotation:      core.GetAplRotation("../../ui/specs/mage/dps/apls", "arcane").Rotation,
+	}, &proto.Player_Mage{Mage: &proto.Mage{Options: &proto.Mage_Options{ClassOptions: &proto.MageOptions{}}}})
+	result := core.RunRaidSim(&proto.RaidSimRequest{
+		SimOptions: &proto.SimOptions{RandomSeed: 101, Iterations: 1},
+		Raid:       core.SinglePlayerRaidProto(player, &proto.PartyBuffs{}, &proto.RaidBuffs{}, &proto.Debuffs{}),
+		Encounter:  core.MakeSingleTargetEncounter(0),
+	})
+	if result.Error != nil {
+		t.Fatal(result.Error.Message)
+	}
+	if dps := result.RaidMetrics.Dps.Avg; dps <= 0 {
+		t.Errorf("arcane mage without Arcane Blast did %.1f DPS", dps)
+	}
+}
