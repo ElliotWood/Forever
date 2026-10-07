@@ -1,5 +1,17 @@
 [
 	{
+		"number": 721,
+		"title": "warrior: TestArms runs the Battle Stance rotation the site picks for it",
+		"mergedAt": "2026-10-07",
+		"url": "https://github.com/ElliotWood/Forever/pull/721"
+	},
+	{
+		"number": 720,
+		"title": "Forever client build 1.60.1.70245",
+		"mergedAt": "2026-10-07",
+		"url": "https://github.com/ElliotWood/Forever/pull/720"
+	},
+	{
 		"number": 719,
 		"title": "priest: Power Infusion no longer drops Shadowform",
 		"mergedAt": "2026-10-07",
