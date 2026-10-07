@@ -1312,8 +1312,8 @@ dps_results: {
 dps_results: {
  key: "TestSurvival-Settings-NightElf-Weapons-Cat-sv_melee-FullBuffs-30.0yards-LongMultiTarget"
  value: {
-  dps: 291.21741
-  tps: 270.72456
+  dps: 667.4966
+  tps: 593.18497
  }
 }
 dps_results: {
@@ -1333,8 +1333,8 @@ dps_results: {
 dps_results: {
  key: "TestSurvival-Settings-NightElf-Weapons-Cat-sv_melee-NoBuffs-30.0yards-LongMultiTarget"
  value: {
-  dps: 117.80619
-  tps: 78.94705
+  dps: 224.71483
+  tps: 185.95624
  }
 }
 dps_results: {
@@ -1354,8 +1354,8 @@ dps_results: {
 dps_results: {
  key: "TestSurvival-Settings-Orc-Weapons-Cat-sv_melee-FullBuffs-30.0yards-LongMultiTarget"
  value: {
-  dps: 291.27579
-  tps: 270.72709
+  dps: 667.30928
+  tps: 593.01468
  }
 }
 dps_results: {
@@ -1375,8 +1375,8 @@ dps_results: {
 dps_results: {
  key: "TestSurvival-Settings-Orc-Weapons-Cat-sv_melee-NoBuffs-30.0yards-LongMultiTarget"
  value: {
-  dps: 116.86452
-  tps: 77.95227
+  dps: 223.93361
+  tps: 185.1314
  }
 }
 dps_results: {
