@@ -411,11 +411,6 @@ func (priest *Priest) applyShadowform() {
 		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
 			priest.ShapeshiftForm = 0
 		},
-		OnCastComplete: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell) {
-			if spell.SpellSchool.Matches(core.SpellSchoolHoly) && spell.Flags.Matches(core.SpellFlagHelpful) {
-				aura.Deactivate(sim)
-			}
-		},
 	}).AttachSpellMod(core.SpellModConfig{
 		ClassMask:  PriestSpellsAll,
 		School:     core.SpellSchoolShadow,
