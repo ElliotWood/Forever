@@ -27,6 +27,7 @@ func (mage *Mage) registerFrostfireBoltRank(rank *spelldata.Spell) {
 		ProcMask:       core.ProcMaskSpellDamage,
 		Flags:          core.SpellFlagAPL,
 		ClassSpellMask: MageSpellFrostfireBolt,
+		MaxRange:       float64(rank.MaxRange),
 		Rank:           rank.RankNumber(),
 		MissileSpeed:   float64(rank.Speed),
 

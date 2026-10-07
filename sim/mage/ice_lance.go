@@ -30,6 +30,7 @@ func (mage *Mage) registerIceLanceSpell() {
 		ProcMask:       core.ProcMaskSpellDamage,
 		Flags:          core.SpellFlagAPL | core.SpellFlagBinary,
 		ClassSpellMask: MageSpellIceLance,
+		MaxRange:       float64(iceLanceRank.MaxRange),
 		MissileSpeed:   float64(iceLanceRank.Speed),
 
 		ManaCost: core.ManaCostOptions{
