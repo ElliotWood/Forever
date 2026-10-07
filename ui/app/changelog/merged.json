@@ -1,5 +1,11 @@
 [
 	{
+		"number": 734,
+		"title": "hunter: Survival melee rotation (beta logs); TestSurvival runs it",
+		"mergedAt": "2026-10-07",
+		"url": "https://github.com/ElliotWood/Forever/pull/734"
+	},
+	{
 		"number": 733,
 		"title": "druid: Nature's Reach extends Balance spell range",
 		"mergedAt": "2026-10-07",
