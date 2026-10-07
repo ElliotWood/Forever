@@ -1,5 +1,11 @@
 [
 	{
+		"number": 725,
+		"title": "mage: arcane and frost AoE on 3+ targets; point-blank AoE only within 10 yd",
+		"mergedAt": "2026-10-07",
+		"url": "https://github.com/ElliotWood/Forever/pull/725"
+	},
+	{
 		"number": 724,
 		"title": "mage: fire rotation casts Blast Wave and Flamestrike on 3+ targets",
 		"mergedAt": "2026-10-07",
