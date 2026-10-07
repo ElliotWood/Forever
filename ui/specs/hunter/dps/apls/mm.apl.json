@@ -157,7 +157,14 @@
 					"and": {
 						"vals": [
 							{ "cmp": { "op": "OpGt", "lhs": { "autoTimeToNext": { "autoType": "RangedAuto" } }, "rhs": { "const": { "val": "0.5s" } } } },
-							{ "cmp": { "op": "OpGe", "lhs": { "currentManaPercent": {} }, "rhs": { "const": { "val": "30%" } } } }
+							{ "cmp": { "op": "OpGe", "lhs": { "currentManaPercent": {} }, "rhs": { "const": { "val": "30%" } } } },
+							{
+								"cmp": {
+									"op": "OpGe",
+									"lhs": { "spellTimeToReady": { "spellId": { "spellId": 20904 } } },
+									"rhs": { "const": { "val": "2" } }
+								}
+							}
 						]
 					}
 				},
