@@ -1,5 +1,11 @@
 [
 	{
+		"number": 740,
+		"title": "Warrior rotations cast Sweeping Strikes on cooldown with 2+ targets",
+		"mergedAt": "2026-10-07",
+		"url": "https://github.com/ElliotWood/Forever/pull/740"
+	},
+	{
 		"number": 739,
 		"title": "hunter: rotations channel Volley on 3+ targets (4+ for Beast Mastery)",
 		"mergedAt": "2026-10-07",
