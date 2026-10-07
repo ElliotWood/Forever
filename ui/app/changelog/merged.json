@@ -1,5 +1,11 @@
 [
 	{
+		"number": 742,
+		"title": "Survival melee rotation drops Explosive Trap on 2+ targets",
+		"mergedAt": "2026-10-07",
+		"url": "https://github.com/ElliotWood/Forever/pull/742"
+	},
+	{
 		"number": 741,
 		"title": "Bear rotation swipes on 3+ targets",
 		"mergedAt": "2026-10-07",
