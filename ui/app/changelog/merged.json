@@ -1,5 +1,11 @@
 [
 	{
+		"number": 737,
+		"title": "shaman: enhancement rotation casts Fire Nova",
+		"mergedAt": "2026-10-07",
+		"url": "https://github.com/ElliotWood/Forever/pull/737"
+	},
+	{
 		"number": 736,
 		"title": "buffs: Retribution Aura scales with the holder's spell power, not the paladin's",
 		"mergedAt": "2026-10-07",
