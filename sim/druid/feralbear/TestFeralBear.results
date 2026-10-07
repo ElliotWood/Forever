@@ -1275,8 +1275,8 @@ dps_results: {
 dps_results: {
  key: "TestFeralBear-Settings-NightElf-Naked-Standard-default-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 786.66658
-  tps: 1578.88427
+  dps: 907.98513
+  tps: 1821.02279
   dtps: 29456.12987
  }
 }
@@ -1299,8 +1299,8 @@ dps_results: {
 dps_results: {
  key: "TestFeralBear-Settings-NightElf-Naked-Standard-default-NoBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 109.67428
-  tps: 523.98766
+  dps: 159.75008
+  tps: 624.06745
   dtps: 44232.00584
  }
 }
@@ -1323,8 +1323,8 @@ dps_results: {
 dps_results: {
  key: "TestFeralBear-Settings-Tauren-Naked-Standard-default-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 798.43643
-  tps: 1572.58275
+  dps: 918.83119
+  tps: 1811.41608
   dtps: 29948.47267
  }
 }
@@ -1347,8 +1347,8 @@ dps_results: {
 dps_results: {
  key: "TestFeralBear-Settings-Tauren-Naked-Standard-default-NoBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 109.44691
-  tps: 510.3067
+  dps: 159.14972
+  tps: 607.83424
   dtps: 45027.63053
  }
 }
