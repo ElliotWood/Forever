@@ -1,5 +1,17 @@
 [
 	{
+		"number": 728,
+		"title": "mage: spells use their client range; point-blank AoE needs 10 yd; range talents modelled",
+		"mergedAt": "2026-10-07",
+		"url": "https://github.com/ElliotWood/Forever/pull/728"
+	},
+	{
+		"number": 727,
+		"title": "[DB] Update to 1.60.1.70245 with hotfixes as of 2026-10-07",
+		"mergedAt": "2026-10-07",
+		"url": "https://github.com/ElliotWood/Forever/pull/727"
+	},
+	{
 		"number": 726,
 		"title": "Ice Lance spell power coefficient .143 -> .1, fitted from beta logs",
 		"mergedAt": "2026-10-07",
