@@ -1311,8 +1311,8 @@ dps_results: {
 dps_results: {
  key: "TestMarksmanship-Settings-NightElf-Weapons-Cat-mm-FullBuffs-30.0yards-LongMultiTarget"
  value: {
-  dps: 344.50693
-  tps: 407.72954
+  dps: 1830.66299
+  tps: 1349.74706
  }
 }
 dps_results: {
@@ -1332,8 +1332,8 @@ dps_results: {
 dps_results: {
  key: "TestMarksmanship-Settings-NightElf-Weapons-Cat-mm-NoBuffs-30.0yards-LongMultiTarget"
  value: {
-  dps: 165.26905
-  tps: 126.43185
+  dps: 533.85129
+  tps: 495.3274
  }
 }
 dps_results: {
@@ -1353,8 +1353,8 @@ dps_results: {
 dps_results: {
  key: "TestMarksmanship-Settings-Orc-Weapons-Cat-mm-FullBuffs-30.0yards-LongMultiTarget"
  value: {
-  dps: 344.58229
-  tps: 411.66357
+  dps: 1787.94579
+  tps: 1320.72507
  }
 }
 dps_results: {
@@ -1374,8 +1374,8 @@ dps_results: {
 dps_results: {
  key: "TestMarksmanship-Settings-Orc-Weapons-Cat-mm-NoBuffs-30.0yards-LongMultiTarget"
  value: {
-  dps: 164.09985
-  tps: 125.20526
+  dps: 514.96892
+  tps: 476.50367
  }
 }
 dps_results: {
