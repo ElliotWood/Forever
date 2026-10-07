@@ -1101,8 +1101,8 @@ dps_results: {
 dps_results: {
  key: "TestBalance-Settings-NightElf-Naked-Standard-launch-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 186.69889
-  tps: 217.6769
+  dps: 1941.87904
+  tps: 1012.97906
  }
 }
 dps_results: {
@@ -1122,8 +1122,8 @@ dps_results: {
 dps_results: {
  key: "TestBalance-Settings-NightElf-Naked-Standard-launch-NoBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 67.55721
-  tps: 47.29005
+  dps: 867.05727
+  tps: 606.94009
  }
 }
 dps_results: {
@@ -1143,8 +1143,8 @@ dps_results: {
 dps_results: {
  key: "TestBalance-Settings-Tauren-Naked-Standard-launch-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 184.83817
-  tps: 217.91237
+  dps: 1912.73385
+  tps: 1001.81181
  }
 }
 dps_results: {
@@ -1164,8 +1164,8 @@ dps_results: {
 dps_results: {
  key: "TestBalance-Settings-Tauren-Naked-Standard-launch-NoBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 65.02732
-  tps: 45.51912
+  dps: 861.08259
+  tps: 602.75781
  }
 }
 dps_results: {
