@@ -884,8 +884,8 @@ dps_results: {
 dps_results: {
  key: "TestAffliction-Settings-Gnome-Naked-Warlock-affliction-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 232.14795
-  tps: 198.74134
+  dps: 2152.17274
+  tps: 1243.19439
  }
 }
 dps_results: {
@@ -905,8 +905,8 @@ dps_results: {
 dps_results: {
  key: "TestAffliction-Settings-Gnome-Naked-Warlock-affliction-NoBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 163.74923
-  tps: 103.3029
+  dps: 735.85206
+  tps: 560.9326
  }
 }
 dps_results: {
@@ -926,8 +926,8 @@ dps_results: {
 dps_results: {
  key: "TestAffliction-Settings-Orc-Naked-Warlock-affliction-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 230.58051
-  tps: 195.40594
+  dps: 1734.50452
+  tps: 1002.49232
  }
 }
 dps_results: {
@@ -947,8 +947,8 @@ dps_results: {
 dps_results: {
  key: "TestAffliction-Settings-Orc-Naked-Warlock-affliction-NoBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 148.0035
-  tps: 90.71187
+  dps: 723.10029
+  tps: 550.66691
  }
 }
 dps_results: {
