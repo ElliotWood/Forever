@@ -1424,8 +1424,8 @@ dps_results: {
 dps_results: {
  key: "TestArms-Settings-Human-TwoHand-DPS-dps_battle-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 360.67846
-  tps: 278.71561
+  dps: 383.80658
+  tps: 292.26104
  }
 }
 dps_results: {
@@ -1445,8 +1445,8 @@ dps_results: {
 dps_results: {
  key: "TestArms-Settings-Human-TwoHand-DPS-dps_battle-NoBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 147.52461
-  tps: 198.149
+  dps: 157.07799
+  tps: 205.73979
  }
 }
 dps_results: {
@@ -1508,8 +1508,8 @@ dps_results: {
 dps_results: {
  key: "TestArms-Settings-Orc-TwoHand-DPS-dps_battle-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 367.48948
-  tps: 283.09317
+  dps: 390.87485
+  tps: 296.16407
  }
 }
 dps_results: {
@@ -1529,8 +1529,8 @@ dps_results: {
 dps_results: {
  key: "TestArms-Settings-Orc-TwoHand-DPS-dps_battle-NoBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 150.69859
-  tps: 201.06509
+  dps: 159.98449
+  tps: 207.89183
  }
 }
 dps_results: {
