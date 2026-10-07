@@ -249,3 +249,34 @@ func TestPowerInfusionKeepsShadowform(t *testing.T) {
 		t.Error("Power Infusion dropped Shadowform")
 	}
 }
+
+// Shadow Reach (17322) and Holy Reach (27789) add 10/20% to the range of the spells their client
+// class masks reach; both were empty stubs, so the priest cast from as far as without them.
+func TestReachTalentsExtendRange(t *testing.T) {
+	for _, c := range []struct {
+		talents string
+		spell   int32
+		want    float64
+	}{
+		{"", spellData.MindBlast.Highest().ID, 30},
+		{"--000002", spellData.MindBlast.Highest().ID, 36}, // Shadow Reach 2/2
+		{"--000002", spellData.Smite.Highest().ID, 30},
+		{"-000000002", spellData.Smite.Highest().ID, 36}, // Holy Reach 2/2
+		{"-000000002", spellData.MindBlast.Highest().ID, 30},
+	} {
+		player := core.WithSpec(&proto.Player{
+			Race: proto.Race_RaceUndead, Class: proto.Class_ClassPriest, Equipment: &proto.EquipmentSpec{},
+			Consumables: &proto.ConsumesSpec{}, TalentsString: c.talents, Rotation: &proto.APLRotation{Type: proto.APLRotation_TypeAPL},
+		}, &proto.Player_DpsPriest{DpsPriest: &proto.DpsPriest{Options: &proto.DpsPriest_Options{ClassOptions: &proto.PriestOptions{}}}})
+		sim := core.NewSim(&proto.RaidSimRequest{
+			SimOptions: &proto.SimOptions{RandomSeed: 100},
+			Raid:       core.SinglePlayerRaidProto(player, &proto.PartyBuffs{}, &proto.RaidBuffs{}, &proto.Debuffs{}),
+			Encounter:  core.MakeSingleTargetEncounter(0),
+		}, simsignals.CreateSignals())
+		sim.Reset()
+		priest := sim.Raid.Parties[0].Players[0].(PriestAgent).GetPriest()
+		if got := priest.GetSpell(core.ActionID{SpellID: c.spell}).MaxRange; got != c.want {
+			t.Errorf("%q: spell %d reaches %.1f yd, want %.1f", c.talents, c.spell, got, c.want)
+		}
+	}
+}
