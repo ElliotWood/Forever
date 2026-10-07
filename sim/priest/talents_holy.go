@@ -193,13 +193,16 @@ func (priest *Priest) applyInspiration() {
 	}
 }
 
-// applyHolyReach implements Holy Reach, new in Forever.
-//
-// TODO: To be implemented. It is range and radius only (27789), which a single-target sim never reads.
+// applyHolyReach implements Holy Reach, new in Forever: 27789 adds 10/20% to Smite and Holy Fire range
+// (its first class mask). The second adds as much to Holy Nova and Prayer of Healing radius; the sim
+// gives Holy Nova no radius, so that half reaches nothing.
 func (priest *Priest) applyHolyReach() {
 	if priest.Talents.HolyReach == 0 {
 		return
 	}
+
+	priest.extendRange(PriestSpellSmite|PriestSpellHolyFire,
+		spellData.HolyReach.Effect(dbcenums.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_RANGE)).FractionAt(priest.Talents.HolyReach))
 }
 
 // applyImprovedHealing implements Improved Healing, new in Forever. It discounts Lesser Heal, Heal,
