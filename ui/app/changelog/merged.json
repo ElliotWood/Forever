@@ -1,5 +1,17 @@
 [
 	{
+		"number": 746,
+		"title": "Protection paladin judges on cooldown",
+		"mergedAt": "2026-10-08",
+		"url": "https://github.com/ElliotWood/Forever/pull/746"
+	},
+	{
+		"number": 745,
+		"title": "Wowhead Forever data changed (2026-10-08)",
+		"mergedAt": "2026-10-08",
+		"url": "https://github.com/ElliotWood/Forever/pull/745"
+	},
+	{
 		"number": 744,
 		"title": "Retribution rotation consecrates on 2+ targets",
 		"mergedAt": "2026-10-08",
