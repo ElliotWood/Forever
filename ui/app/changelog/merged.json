@@ -1,5 +1,11 @@
 [
 	{
+		"number": 747,
+		"title": "Frost rotation casts Cone of Cold on 3+ targets in melee, Blizzard from 4",
+		"mergedAt": "2026-10-08",
+		"url": "https://github.com/ElliotWood/Forever/pull/747"
+	},
+	{
 		"number": 746,
 		"title": "Protection paladin judges on cooldown",
 		"mergedAt": "2026-10-08",
