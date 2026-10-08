@@ -1,5 +1,23 @@
 [
 	{
+		"number": 754,
+		"title": "paladin: Hammer of the Righteous hits 4 targets, cast on 2+ targets",
+		"mergedAt": "2026-10-08",
+		"url": "https://github.com/ElliotWood/Forever/pull/754"
+	},
+	{
+		"number": 753,
+		"title": "Wowhead Forever data changed (2026-10-08)",
+		"mergedAt": "2026-10-08",
+		"url": "https://github.com/ElliotWood/Forever/pull/753"
+	},
+	{
+		"number": 752,
+		"title": "[DB] Update to 1.60.1.70245 with hotfixes as of 2026-10-08",
+		"mergedAt": "2026-10-08",
+		"url": "https://github.com/ElliotWood/Forever/pull/752"
+	},
+	{
 		"number": 751,
 		"title": "Holy Nova no longer crashes the sim when its heal crits",
 		"mergedAt": "2026-10-08",
