@@ -1692,8 +1692,8 @@ dps_results: {
 dps_results: {
  key: "TestProtectionWarrior-Settings-Human-AxeAndShield-DefaultTalents-Protection-protection-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 1055.72415
-  tps: 1964.29521
+  dps: 1184.96806
+  tps: 2300.19998
   dtps: 28312.22659
  }
 }
@@ -1716,8 +1716,8 @@ dps_results: {
 dps_results: {
  key: "TestProtectionWarrior-Settings-Human-AxeAndShield-DefaultTalents-Protection-protection-NoBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 473.91648
-  tps: 1089.04214
+  dps: 492.19101
+  tps: 1143.03166
   dtps: 45151.68584
  }
 }
@@ -1740,8 +1740,8 @@ dps_results: {
 dps_results: {
  key: "TestProtectionWarrior-Settings-Human-AxeAndShield-Protection-Protection-protection-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 1050.26809
-  tps: 1943.42487
+  dps: 1180.06357
+  tps: 2277.32369
   dtps: 28653.97076
  }
 }
@@ -1764,8 +1764,8 @@ dps_results: {
 dps_results: {
  key: "TestProtectionWarrior-Settings-Human-AxeAndShield-Protection-Protection-protection-NoBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 468.83015
-  tps: 1066.37152
+  dps: 487.39902
+  tps: 1119.88071
   dtps: 45578.8212
  }
 }
@@ -1788,8 +1788,8 @@ dps_results: {
 dps_results: {
  key: "TestProtectionWarrior-Settings-Orc-AxeAndShield-DefaultTalents-Protection-protection-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 1063.39463
-  tps: 1972.11547
+  dps: 1197.68622
+  tps: 2320.0642
   dtps: 28397.33204
  }
 }
@@ -1812,8 +1812,8 @@ dps_results: {
 dps_results: {
  key: "TestProtectionWarrior-Settings-Orc-AxeAndShield-DefaultTalents-Protection-protection-NoBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 476.24268
-  tps: 1090.57438
+  dps: 496.15188
+  tps: 1149.30041
   dtps: 45281.47846
  }
 }
@@ -1836,8 +1836,8 @@ dps_results: {
 dps_results: {
  key: "TestProtectionWarrior-Settings-Orc-AxeAndShield-Protection-Protection-protection-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 1059.05554
-  tps: 1956.18145
+  dps: 1190.31417
+  tps: 2292.98881
   dtps: 28722.54666
  }
 }
@@ -1860,8 +1860,8 @@ dps_results: {
 dps_results: {
  key: "TestProtectionWarrior-Settings-Orc-AxeAndShield-Protection-Protection-protection-NoBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 472.18169
-  tps: 1071.38598
+  dps: 492.5479
+  tps: 1128.4138
   dtps: 45691.85714
  }
 }
