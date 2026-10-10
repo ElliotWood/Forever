@@ -241,8 +241,8 @@ dps_results: {
 dps_results: {
  key: "TestFeralCat-AllItems-CursedMurlocEye-273840"
  value: {
-  dps: 279.15991
-  tps: 158.28949
+  dps: 270.57513
+  tps: 154.02286
  }
 }
 dps_results: {

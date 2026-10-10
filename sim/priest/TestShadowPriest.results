@@ -156,8 +156,8 @@ dps_results: {
 dps_results: {
  key: "TestShadowPriest-AllItems-CursedMurlocEye-273840"
  value: {
-  dps: 354.67211
-  tps: 253.03125
+  dps: 352.51107
+  tps: 251.51852
  }
 }
 dps_results: {
