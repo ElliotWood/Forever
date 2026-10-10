@@ -275,8 +275,8 @@ dps_results: {
 dps_results: {
  key: "TestMarksmanship-AllItems-CursedMurlocEye-273840"
  value: {
-  dps: 337.502
-  tps: 202.21333
+  dps: 333.98795
+  tps: 199.7535
  }
 }
 dps_results: {
@@ -669,6 +669,13 @@ dps_results: {
  value: {
   dps: 345.46002
   tps: 208.31672
+ }
+}
+dps_results: {
+ key: "TestMarksmanship-AllItems-Guardian'sDualblade-273046"
+ value: {
+  dps: 332.76972
+  tps: 198.90074
  }
 }
 dps_results: {

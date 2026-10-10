@@ -142,8 +142,8 @@ dps_results: {
 dps_results: {
  key: "TestAffliction-AllItems-CursedMurlocEye-273840"
  value: {
-  dps: 235.27323
-  tps: 108.41377
+  dps: 233.35616
+  tps: 107.07182
  }
 }
 dps_results: {
