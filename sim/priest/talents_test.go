@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
@@ -374,5 +375,45 @@ func TestInnerFocusSkipsPeriodicCrit(t *testing.T) {
 	}
 	if rate := float64(crits) / 4000; rate > withIF-0.2 {
 		t.Errorf("ticks crit %.3f with Inner Focus up (spell %.3f), want its 25%% left out", rate, withIF)
+	}
+}
+
+// Dark Inspiration 5/5 (1326159, 16 Oct beta notes): a fully channeled Mind Flay and a Mind Blast each
+// give the party 15% Spirit for 10 sec (1326168).
+func TestDarkInspirationRaisesSpirit(t *testing.T) {
+	player := core.WithSpec(&proto.Player{
+		Race: proto.Race_RaceUndead, Class: proto.Class_ClassPriest, Equipment: &proto.EquipmentSpec{},
+		Consumables: &proto.ConsumesSpec{}, TalentsString: "--55052201251302251", Rotation: &proto.APLRotation{Type: proto.APLRotation_TypeAPL},
+	}, &proto.Player_DpsPriest{DpsPriest: &proto.DpsPriest{Options: &proto.DpsPriest_Options{ClassOptions: &proto.PriestOptions{}}}})
+	sim := core.NewSim(&proto.RaidSimRequest{
+		SimOptions: &proto.SimOptions{RandomSeed: 100},
+		Raid:       core.SinglePlayerRaidProto(player, &proto.PartyBuffs{}, &proto.RaidBuffs{}, &proto.Debuffs{}),
+		Encounter:  core.MakeSingleTargetEncounter(0),
+	}, simsignals.CreateSignals())
+	sim.Reset()
+	priest := sim.Raid.Parties[0].Players[0].(PriestAgent).GetPriest()
+	target := sim.Encounter.AllTargetUnits[0]
+	aura := priest.GetAura("Dark Inspiration-" + priest.Label)
+	spirit := priest.GetStat(stats.Spirit)
+
+	castAndWait := func(spellID int32, wait time.Duration) {
+		priest.GetSpell(core.ActionID{SpellID: spellID}).Cast(sim, target)
+		for end := sim.CurrentTime + wait; sim.CurrentTime < end && !aura.IsActive(); {
+			sim.Step()
+		}
+	}
+
+	castAndWait(spellData.MindFlay.Highest().ID, 4*time.Second)
+	if !aura.IsActive() {
+		t.Fatal("a full Mind Flay channel did not give Dark Inspiration")
+	}
+	if got, want := priest.GetStat(stats.Spirit), spirit*1.15; !core.WithinToleranceFloat64(want, got, 0.5) {
+		t.Errorf("Spirit under Dark Inspiration %.1f, want %.1f", got, want)
+	}
+
+	aura.Deactivate(sim)
+	castAndWait(spellData.MindBlast.Highest().ID, 3*time.Second)
+	if !aura.IsActive() {
+		t.Fatal("Mind Blast did not give Dark Inspiration")
 	}
 }

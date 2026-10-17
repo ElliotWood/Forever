@@ -32,6 +32,8 @@ type Priest struct {
 	SearingLightAura   *core.Aura
 	ShadowformAura     *core.Aura
 	ShadowWeavingAuras core.AuraArray
+	// One Dark Inspiration buff per party member, empty without the talent.
+	DarkInspirationAuras []*core.Aura
 
 	// Every Holy Fire and Shadow Word: Pain rank the priest knows, so Power in Light can ask whether a dot is running.
 	HolyFire       []*core.Spell
