@@ -50,11 +50,16 @@ func (mage *Mage) registerIceLanceSpell() {
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			result := spell.CalcDamage(sim, target, iceLanceRank.DamageEffect().Roll(sim, core.CharacterLevel), spell.OutcomeMagicHitAndCrit)
 			// A bonus on the whole hit rather than the base roll, so spell power is multiplied too.
-			if mage.IsTargetFrozen() {
+			// The Fingers of Frost charge is spent at cast, so remember it for Winter's Chill on impact.
+			empowered := mage.IsTargetFrozen()
+			if empowered {
 				result.Damage *= IceLanceFrozenMultiplier
 			}
 			spell.WaitTravelTime(sim, func(sim *core.Simulation) {
 				spell.DealDamage(sim, result)
+				if empowered && result.Landed() && mage.procWintersChill != nil {
+					mage.procWintersChill(sim)
+				}
 			})
 		},
 	})

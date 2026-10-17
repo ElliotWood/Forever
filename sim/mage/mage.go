@@ -29,6 +29,8 @@ type Mage struct {
 
 	// procFingersOfFrost rolls Fingers of Frost for a chilling bolt at launch; nil without the talent.
 	procFingersOfFrost func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult)
+	// procWintersChill rolls Winter's Chill for a landed Fingers of Frost Ice Lance; nil without the talent.
+	procWintersChill func(sim *core.Simulation)
 
 	ArcaneBlast *core.Spell
 	Ignite      *core.Spell
