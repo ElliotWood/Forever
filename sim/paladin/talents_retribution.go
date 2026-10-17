@@ -156,6 +156,10 @@ func (paladin *Paladin) applyVindication() {
 // 223 Judgements at rank 1, 3-point paladins every one). Two paladins land on exactly 40% (Inco,
 // rank 2) and 60% (Tristram, rank 3): 10/9 of a seal 10% cheaper, five points of Benediction, so
 // the share applies to the cost paid.
+//
+// The mana is restored by 1311077, which client 70450 flags No Threat (beta notes 16 Oct: "Sanctified
+// Judgement's Mana restore effect no longer generates threat"); that spell isn't in the store, so the
+// flag is set here.
 const sanctifiedJudgementLogScale = 10.0 / 9
 
 func (paladin *Paladin) applySanctifiedJudgement() {
@@ -164,6 +168,7 @@ func (paladin *Paladin) applySanctifiedJudgement() {
 	}
 
 	manaMetrics := paladin.NewManaMetrics(core.ActionID{SpellID: spellData.SanctifiedJudgement.Highest().ID})
+	manaMetrics.NoThreat = true
 	refund := spellData.SanctifiedJudgement.EffectAt(2).FractionAt(paladin.Talents.SanctifiedJudgement) * sanctifiedJudgementLogScale
 
 	paladin.MakeProcTriggerAura(core.ProcTrigger{
