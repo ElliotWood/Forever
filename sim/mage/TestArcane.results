@@ -969,7 +969,7 @@ dps_results: {
  key: "TestArcane-Settings-Gnome-Naked-MageArmor-arcane-FullBuffs-0.0yards-LongMultiTarget"
  value: {
   dps: 4159.25074
-  tps: 3527.52819
+  tps: 5461.65111
  }
 }
 dps_results: {
@@ -989,8 +989,8 @@ dps_results: {
 dps_results: {
  key: "TestArcane-Settings-Gnome-Naked-MageArmor-arcane-NoBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 3484.78039
-  tps: 3799.13902
+  dps: 828.50512
+  tps: 1015.46906
  }
 }
 dps_results: {
@@ -1011,7 +1011,7 @@ dps_results: {
  key: "TestArcane-Settings-Troll-Naked-MageArmor-arcane-FullBuffs-0.0yards-LongMultiTarget"
  value: {
   dps: 4104.12844
-  tps: 3495.65994
+  tps: 5464.28605
  }
 }
 dps_results: {
@@ -1031,8 +1031,8 @@ dps_results: {
 dps_results: {
  key: "TestArcane-Settings-Troll-Naked-MageArmor-arcane-NoBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 3437.05793
-  tps: 3745.27314
+  dps: 781.04155
+  tps: 964.83252
  }
 }
 dps_results: {

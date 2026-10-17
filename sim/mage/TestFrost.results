@@ -968,8 +968,8 @@ dps_results: {
 dps_results: {
  key: "TestFrost-Settings-Gnome-Naked-MageArmor-frost-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 3409.3928
-  tps: 2634.41594
+  dps: 3116.49469
+  tps: 3087.71421
  }
 }
 dps_results: {
@@ -989,8 +989,8 @@ dps_results: {
 dps_results: {
  key: "TestFrost-Settings-Gnome-Naked-MageArmor-frost-NoBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 2864.85755
-  tps: 2948.22418
+  dps: 895.90531
+  tps: 978.64376
  }
 }
 dps_results: {
@@ -1010,8 +1010,8 @@ dps_results: {
 dps_results: {
  key: "TestFrost-Settings-Troll-Naked-MageArmor-frost-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 3373.31302
-  tps: 2614.46633
+  dps: 3007.29899
+  tps: 2993.63032
  }
 }
 dps_results: {
@@ -1031,8 +1031,8 @@ dps_results: {
 dps_results: {
  key: "TestFrost-Settings-Troll-Naked-MageArmor-frost-NoBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 2788.52868
-  tps: 2874.38404
+  dps: 795.0602
+  tps: 877.81559
  }
 }
 dps_results: {
