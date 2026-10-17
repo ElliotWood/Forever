@@ -1,5 +1,17 @@
 [
 	{
+		"number": 819,
+		"title": "Missile Barrage procs from Arcane Missiles hits (client 70450)",
+		"mergedAt": "2026-10-17",
+		"url": "https://github.com/ElliotWood/Forever/pull/819"
+	},
+	{
+		"number": 818,
+		"title": "Forever client build 1.60.1.70450",
+		"mergedAt": "2026-10-17",
+		"url": "https://github.com/ElliotWood/Forever/pull/818"
+	},
+	{
 		"number": 817,
 		"title": "[DB] Update to 1.60.1.70450 with hotfixes as of 2026-10-17",
 		"mergedAt": "2026-10-17",
