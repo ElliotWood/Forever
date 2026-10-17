@@ -393,6 +393,36 @@ func TestArcaneConcentrationSkipsTriggeredSpells(t *testing.T) {
 	}
 }
 
+// Arcane Concentration rolls once a cast, not once a target struck (dev notes t/2360696 post 6):
+// Arcane Explosion on three targets procs at the talent's chance, not 1-(1-p)^3.
+func TestArcaneConcentrationRollsOncePerCast(t *testing.T) {
+	sim, mage := newThreeTargetMage(ArcaneTalents)
+	chance := spellData.ArcaneConcentration.EffectAt(1).FractionAt(mage.Talents.ArcaneConcentration)
+	explosion := mage.GetSpell(core.ActionID{SpellID: spellData.ArcaneExplosion.Highest().ID})
+	var castAt time.Duration
+	procs := 0
+	mage.ClearcastingAura.ApplyOnGain(func(_ *core.Aura, sim *core.Simulation) {
+		if sim.CurrentTime == castAt {
+			procs++
+		}
+	})
+	const casts = 400
+	for i := 0; i < casts; i++ {
+		mage.ClearcastingAura.Deactivate(sim)
+		castAt = sim.CurrentTime
+		explosion.SkipCastAndApplyEffects(sim, mage.CurrentTarget)
+		// Nothing else is pending: wake the sim past the talent's 1 s ICD.
+		sim.AddPendingAction(core.NewDelayedAction(core.DelayedActionOptions{DoAt: castAt + 1100*time.Millisecond, OnAction: func(*core.Simulation) {}}))
+		for sim.CurrentTime < castAt+1100*time.Millisecond {
+			sim.Step()
+		}
+	}
+	perTarget := 1 - math.Pow(1-chance, 3)
+	if got := float64(procs) / casts; got > (chance+perTarget)/2 {
+		t.Errorf("Clearcasting on %.1f%% of 3-target Arcane Explosions, want ~%.0f%% (one roll a cast), not ~%.0f%% (a roll a target)", 100*got, 100*chance, 100*perTarget)
+	}
+}
+
 // Since client 70450 a landed Arcane Missiles missile can proc Missile Barrage: a quarter of Arcane
 // Blast's chance, 5/10% a missile at rank 1/2. Five missiles a cast, ~83% landing on a naked mage, give
 // a proc in ~19% of casts at rank 1 (old code: never; a bolt's half chance: ~35%).

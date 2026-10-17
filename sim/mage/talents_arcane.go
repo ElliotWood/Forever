@@ -139,6 +139,11 @@ func (mage *Mage) registerArcaneConcentration() {
 	// Blizzard rolls once per enemy when cast instead. Beta log 2706 (Jamal, 18 Arcane, level 26):
 	// 70 procs on 246 Arcane Explosions (722 targets hit, 11% a target), 12 on 37 Blizzard casts,
 	// 0 on 642 Blizzard tick hits (62 if they rolled) and 0 on 32 missiles.
+	//
+	// Blizzard dev notes (t/2360696 post 6, 16 Oct): "Clearcasting now correctly does not roll for
+	// every target struck by a spell", so a cast rolls once, on its first landed target.
+	var lastSpell *core.Spell
+	var lastTime time.Duration = -1
 	mage.MakeProcTriggerAura(core.ProcTrigger{
 		Name:               "Arcane Concentration",
 		Callback:           core.CallbackOnSpellHitDealt,
@@ -147,6 +152,13 @@ func (mage *Mage) registerArcaneConcentration() {
 		ProcChance:         spellData.ArcaneConcentration.EffectAt(1).FractionAt(mage.Talents.ArcaneConcentration),
 		ICD:                spellData.ArcaneConcentration.Highest().ICD(),
 		TriggerImmediately: true,
+		ExtraCondition: func(sim *core.Simulation, spell *core.Spell, _ *core.SpellResult) bool {
+			if spell == lastSpell && sim.CurrentTime == lastTime {
+				return false
+			}
+			lastSpell, lastTime = spell, sim.CurrentTime
+			return true
+		},
 		Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
 			mage.ClearcastingAura.Activate(sim)
 		},
