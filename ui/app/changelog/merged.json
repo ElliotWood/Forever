@@ -1,5 +1,23 @@
 [
 	{
+		"number": 815,
+		"title": "Land client build 1.60.1.70450: reshaped mage, priest, shaman and warlock talents",
+		"mergedAt": "2026-10-17",
+		"url": "https://github.com/ElliotWood/Forever/pull/815"
+	},
+	{
+		"number": 814,
+		"title": "Forever client build 1.60.1.70425",
+		"mergedAt": "2026-10-16",
+		"url": "https://github.com/ElliotWood/Forever/pull/814"
+	},
+	{
+		"number": 813,
+		"title": "Wowhead Forever data changed (2026-10-16)",
+		"mergedAt": "2026-10-16",
+		"url": "https://github.com/ElliotWood/Forever/pull/813"
+	},
+	{
 		"number": 811,
 		"title": "priest: Twin Disciplines, Power in Light and Silent Resolve (beta notes 16 Oct)",
 		"mergedAt": "2026-10-16",
