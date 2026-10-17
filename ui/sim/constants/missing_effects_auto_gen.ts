@@ -268,6 +268,12 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
+		2824, // Hurricane
+		[
+			"All ranged auto-attacks conjure an icy bolt to blast your current target, inflicting 8 Frost damage.", // 29502 - https://www.wowhead.com/forever/spell=29502
+		]
+	],
+	[
 		2825, // Bow of Searing Arrows
 		[
 			"Fires a Searing Arrow at the target for 28 Fire damage.", // 29638 - https://www.wowhead.com/forever/spell=29638
