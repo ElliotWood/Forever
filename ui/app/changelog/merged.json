@@ -1,5 +1,11 @@
 [
 	{
+		"number": 820,
+		"title": "Elemental Mastery: faster Lightning Bolt / Lava Burst, no Chain Lightning cooldown",
+		"mergedAt": "2026-10-17",
+		"url": "https://github.com/ElliotWood/Forever/pull/820"
+	},
+	{
 		"number": 819,
 		"title": "Missile Barrage procs from Arcane Missiles hits (client 70450)",
 		"mergedAt": "2026-10-17",
