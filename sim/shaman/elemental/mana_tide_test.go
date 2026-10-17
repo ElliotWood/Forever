@@ -68,3 +68,29 @@ func TestElementalReachExtendsRange(t *testing.T) {
 		}
 	}
 }
+
+// Call of Flame 3/3 (in DefaultTalents) adds 9 sec to Flame Shock's 12, three more 3 second ticks.
+func TestCallOfFlameExtendsFlameShock(t *testing.T) {
+	for _, c := range []struct {
+		talents string
+		want    int32
+	}{
+		{"", 4},
+		{DefaultTalents, 7},
+	} {
+		player := core.WithSpec(&proto.Player{
+			Race: proto.Race_RaceTroll, Class: proto.Class_ClassShaman, Equipment: &proto.EquipmentSpec{},
+			Consumables: &proto.ConsumesSpec{}, TalentsString: c.talents, Rotation: &proto.APLRotation{Type: proto.APLRotation_TypeAPL},
+		}, &proto.Player_ElementalShaman{ElementalShaman: &proto.ElementalShaman{Options: &proto.ElementalShaman_Options{ClassOptions: &proto.ShamanOptions{}}}})
+		sim := core.NewSim(&proto.RaidSimRequest{
+			SimOptions: &proto.SimOptions{RandomSeed: 100},
+			Raid:       core.SinglePlayerRaidProto(player, &proto.PartyBuffs{}, &proto.RaidBuffs{}, &proto.Debuffs{}),
+			Encounter:  core.MakeSingleTargetEncounter(0),
+		}, simsignals.CreateSignals())
+		sim.Reset()
+		dot := sim.Raid.Parties[0].Players[0].GetCharacter().GetSpell(core.ActionID{SpellID: 29228, Tag: 1}).Dot(sim.Encounter.AllTargetUnits[0])
+		if dot.BaseTickCount != c.want {
+			t.Errorf("%q: Flame Shock ticks %d times, want %d", c.talents, dot.BaseTickCount, c.want)
+		}
+	}
+}
