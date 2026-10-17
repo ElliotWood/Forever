@@ -1,5 +1,11 @@
 [
 	{
+		"number": 817,
+		"title": "[DB] Update to 1.60.1.70450 with hotfixes as of 2026-10-17",
+		"mergedAt": "2026-10-17",
+		"url": "https://github.com/ElliotWood/Forever/pull/817"
+	},
+	{
 		"number": 816,
 		"title": "Update DB: skip a generated item proc whose spells a hotfix removed",
 		"mergedAt": "2026-10-17",
