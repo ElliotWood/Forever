@@ -84,6 +84,8 @@ func (shaman *Shaman) applyElementalMastery() {
 	shaman.AddMajorCooldown(core.MajorCooldown{Spell: spell, Type: core.CooldownTypeDPS})
 }
 
+// Call of Flame: client 70450 adds a third effect, +3/6/9 sec of Flame Shock duration (16 Oct beta
+// notes), one more 3 second tick a point.
 func (shaman *Shaman) applyCallOfFlame() {
 	if shaman.Talents.CallOfFlame == 0 {
 		return
@@ -93,6 +95,13 @@ func (shaman *Shaman) applyCallOfFlame() {
 		Kind:       core.SpellMod_DamageDone_Flat,
 		FloatValue: spellData.CallOfFlame.Effect(dbcenums.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_DAMAGE)).FractionAt(shaman.Talents.CallOfFlame),
 		ClassMask:  SpellMaskFireTotem | SpellMaskFlameShock | SpellMaskFireNova | SpellMaskLavaBurst,
+	})
+
+	added := time.Millisecond * time.Duration(spellData.CallOfFlame.Effect(dbcenums.A_ADD_FLAT_MODIFIER, int32(dbcenums.SPELLMOD_DURATION)).ValueAt(shaman.Talents.CallOfFlame))
+	shaman.AddStaticMod(core.SpellModConfig{
+		Kind:      core.SpellMod_DotNumberOfTicks_Flat,
+		IntValue:  int32(added / flameShockRank.PeriodicEffect().Period()),
+		ClassMask: SpellMaskFlameShockDot,
 	})
 }
 func (shaman *Shaman) applyConcussion() {
