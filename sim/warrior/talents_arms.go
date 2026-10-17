@@ -324,9 +324,9 @@ func (warrior *Warrior) registerBloodthrill() {
 		return
 	}
 
-	// The tooltip's "Lasts $1289681d": the Bloodthrill aura's 6s, not the 5s Overpower window
-	// (1282733) the talent's effect now triggers.
-	bloodthrillProc := spellData.BloodthrillTriggered.ByID(1289681)
+	// Client 70425 dropped the 6 sec Bloodthrill aura (1289681): a proc opens the Overpower window the
+	// talent triggers (1282733) for that spell's own duration.
+	bloodthrillProc := spellData.BloodthrillTriggered.Highest()
 
 	// The proc makes Overpower usable for the buff's duration; the cast consumes it like a dodge
 	// would.

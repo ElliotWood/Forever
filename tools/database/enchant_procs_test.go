@@ -141,7 +141,8 @@ func TestEnchantProcRoutingTakesAPPMOverride(t *testing.T) {
 }
 
 // Insight's effect entry resolves no flat stats, so the slot applies its buff 1299796 as auras, whose
-// row multiplies Spirit by 2.
+// row multiplies Spirit by 2. Since client 70425 the row is A_MOD_TOTAL_STAT_PERCENTAGE naming Spirit
+// in its stat mask (misc 2 = 1<<4).
 func TestEnchantPercentStatBuffIsTheAppliedSpell(t *testing.T) {
 	withDBCInputs(t)
 	instance := dbc.GetDBC()
@@ -156,8 +157,8 @@ func TestEnchantPercentStatBuffIsTheAppliedSpell(t *testing.T) {
 	}
 
 	buff := spelldata.Find(1299796)
-	if e := buff.FirstAura(dbcenums.A_MOD_PERCENT_STAT); e == spelldata.NilEffect || e.Misc != 4 || e.BasePoints != 100 {
-		t.Errorf("1299796 states %+v, want A_MOD_PERCENT_STAT on client stat 4 (Spirit) at 100%%", e)
+	if e := buff.FirstAura(dbcenums.A_MOD_TOTAL_STAT_PERCENTAGE); e == spelldata.NilEffect || e.Misc2 != 1<<4 || e.BasePoints != 100 {
+		t.Errorf("1299796 states %+v, want A_MOD_TOTAL_STAT_PERCENTAGE on the Spirit mask (16) at 100%%", e)
 	}
 }
 

@@ -1248,6 +1248,7 @@ var itemAuraKinds = []dbcenums.EffectAuraType{
 	dbcenums.A_MOD_DAMAGE_TAKEN,
 	dbcenums.A_MOD_BASE_RESISTANCE_PCT,
 	dbcenums.A_MOD_PERCENT_STAT,
+	dbcenums.A_MOD_TOTAL_STAT_PERCENTAGE, // Insight 1299796 since client 70425
 }
 
 func appliesAnItemAura(s *spelldata.Spell) bool {

@@ -288,19 +288,27 @@ func (mage *Mage) IsTargetFrozen() bool {
 	return mage.FingersOfFrostAura != nil && mage.FingersOfFrostAura.IsActive()
 }
 
-// In Forever Winter's Chill only helps the mage's own Frostbolt and Ice Lance, where Classic and TBC
-// made it a raid debuff: 2% crit a stack, one stack per talent point.
+// Winter's Chill, redesigned in client 70425 (16 Oct beta notes): Frostbolt rolls 20/40/60/80/100%
+// for a stack, up to 5, and each stack makes the mage's next Cone of Cold deal 5% more and gain 7% of
+// spell damage; that Cone of Cold spends them. No crit any more.
+// ponytail: Fingers of Frost's Ice Lance also applies a stack in the client; the charge is spent before
+// the lance lands, so it is left out until Ice Lance can say it was empowered.
 func (mage *Mage) registerWinterChill() {
 	if mage.Talents.WintersChill == 0 {
 		return
 	}
 
 	chillRank := spellData.WintersChillTriggered.Highest()
-	critPerStack := chillRank.EffectN(1).Average(core.CharacterLevel)
+	damagePerStack := chillRank.EffectN(1).Average(core.CharacterLevel) / 100
+	coeffPerStack := chillRank.EffectN(2).Average(core.CharacterLevel) / 100
 
-	critMod := mage.AddDynamicMod(core.SpellModConfig{
-		ClassMask: MageSpellFrostbolt | MageSpellIceLance,
-		Kind:      core.SpellMod_BonusCrit_Percent,
+	damageMod := mage.AddDynamicMod(core.SpellModConfig{
+		ClassMask: MageSpellConeOfCold,
+		Kind:      core.SpellMod_DamageDone_Pct,
+	})
+	coeffMod := mage.AddDynamicMod(core.SpellModConfig{
+		ClassMask: MageSpellConeOfCold,
+		Kind:      core.SpellMod_BonusCoeffecient_Flat,
 	})
 
 	mage.WintersChillAura = mage.RegisterAura(core.Aura{
@@ -309,13 +317,22 @@ func (mage *Mage) registerWinterChill() {
 		Duration:  chillRank.Duration(),
 		MaxStacks: int32(spellData.WintersChill.EffectAt(1).ValueAt(mage.Talents.WintersChill)),
 		OnGain: func(_ *core.Aura, _ *core.Simulation) {
-			critMod.Activate()
+			damageMod.Activate()
+			coeffMod.Activate()
 		},
 		OnExpire: func(_ *core.Aura, _ *core.Simulation) {
-			critMod.Deactivate()
+			damageMod.Deactivate()
+			coeffMod.Deactivate()
 		},
 		OnStacksChange: func(_ *core.Aura, _ *core.Simulation, _ int32, newStacks int32) {
-			critMod.UpdateFloatValue(critPerStack * float64(newStacks))
+			damageMod.UpdateFloatValue(damagePerStack * float64(newStacks))
+			coeffMod.UpdateFloatValue(coeffPerStack * float64(newStacks))
+		},
+		OnCastComplete: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell) {
+			// After the damage is rolled, so the Cone of Cold that spends the stacks keeps them.
+			if spell.Matches(MageSpellConeOfCold) {
+				aura.Deactivate(sim)
+			}
 		},
 	})
 
@@ -324,13 +341,10 @@ func (mage *Mage) registerWinterChill() {
 	mage.MakeProcTriggerAura(core.ProcTrigger{
 		Name:               "Winters Chill Talent",
 		Callback:           core.CallbackOnSpellHitDealt,
-		ProcMask:           core.ProcMaskSpellDamage,
+		ClassSpellMask:     MageSpellFrostbolt,
 		Outcome:            core.OutcomeLanded,
 		ProcChance:         spellData.WintersChill.EffectAt(2).FractionAt(mage.Talents.WintersChill),
 		TriggerImmediately: true,
-		ExtraCondition: func(_ *core.Simulation, spell *core.Spell, _ *core.SpellResult) bool {
-			return spell.SpellSchool.Matches(core.SpellSchoolFrost)
-		},
 		Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
 			mage.WintersChillAura.Activate(sim)
 			mage.WintersChillAura.AddStack(sim)

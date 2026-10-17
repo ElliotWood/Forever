@@ -9,7 +9,7 @@ import (
 
 func (mage *Mage) registerFireTalents() {
 	// Tier 1
-	mage.registerWakeOfFire()
+	mage.registerImprovedFireBlast()
 	mage.registerIncineration()
 	mage.registerImprovedFireball()
 
@@ -40,16 +40,15 @@ func (mage *Mage) registerFireTalents() {
 	// Combustion: combustion.go
 }
 
-// The Fire Blast cooldown half only. The other half, 1312934 (+50% Fire Blast crit for 30 sec), is
-// granted by killing a non-trivial target, which the sim's targets never do.
-func (mage *Mage) registerWakeOfFire() {
-	if mage.Talents.WakeOfFire == 0 {
+// Client 70425 reverted Wake of Fire to Improved Fire Blast: the cooldown cut plus range, no kill bonus.
+func (mage *Mage) registerImprovedFireBlast() {
+	if mage.Talents.ImprovedFireBlast == 0 {
 		return
 	}
 
 	mage.AddStaticMod(core.SpellModConfig{
 		ClassMask: MageSpellFireBlast,
-		TimeValue: time.Millisecond * time.Duration(spellData.WakeOfFire.Effect(dbcenums.A_ADD_FLAT_MODIFIER, int32(dbcenums.SPELLMOD_COOLDOWN)).ValueAt(mage.Talents.WakeOfFire)),
+		TimeValue: time.Millisecond * time.Duration(spellData.ImprovedFireBlast.Effect(dbcenums.A_ADD_FLAT_MODIFIER, int32(dbcenums.SPELLMOD_COOLDOWN)).ValueAt(mage.Talents.ImprovedFireBlast)),
 		Kind:      core.SpellMod_Cooldown_Flat,
 	})
 }
@@ -259,7 +258,7 @@ func (mage *Mage) registerHotStreak() {
 	})
 
 	mage.MakeProcTriggerAura(core.ProcTrigger{
-		Name:           "Hot Streak Fire Blast Trigger",
+		Name:               "Hot Streak Fire Blast Trigger",
 		Callback:           core.CallbackOnCastComplete,
 		ClassSpellMask:     MageSpellFireBlast,
 		TriggerImmediately: true,
@@ -308,16 +307,49 @@ func (mage *Mage) registerCriticalMass() {
 	})
 }
 
-// Ignite is left out by its NoSpellMods flag.
+// Fire Power, redesigned in client 70425 (16 Oct beta notes): the mage's Fire spells deal 1/2/3% more
+// for each of its Fire effects on the target, four at most. The notes name Ignite, Improved Scorch,
+// Fireball, Pyroblast and Impact; Impact is a stun the sim's bosses never take, so it counts nothing
+// here. Frostfire Bolt mixes schools: it takes the bonus but its dot is not a Fire effect. Ignite
+// itself stays out, as it did of the old flat bonus (NoSpellMods).
 func (mage *Mage) registerFirePower() {
 	if mage.Talents.FirePower == 0 {
 		return
 	}
 
-	mage.AddStaticMod(core.SpellModConfig{
-		ClassMask:  MageSpellsAll,
-		School:     core.SpellSchoolFire,
-		FloatValue: spellData.FirePower.Effect(dbcenums.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_DAMAGE)).FractionAt(mage.Talents.FirePower),
-		Kind:       core.SpellMod_DamageDone_Flat,
+	perEffect := spellData.FirePower.EffectAt(1).FractionAt(mage.Talents.FirePower)
+
+	var fireDots []*core.Spell
+	mage.OnSpellRegistered(func(spell *core.Spell) {
+		if spell.Matches(MageSpellFireball|MageSpellPyroblast) && spell.Dot(mage.CurrentTarget) != nil {
+			fireDots = append(fireDots, spell)
+		}
 	})
+
+	fireEffects := func(target *core.Unit) int {
+		count := 0
+		if mage.Ignite != nil && mage.Ignite.Dot(target).IsActive() {
+			count++
+		}
+		if mage.ImprovedScorchAura.IsActive() {
+			count++
+		}
+		for _, mask := range []int64{MageSpellFireball, MageSpellPyroblast} {
+			for _, spell := range fireDots {
+				if spell.Matches(mask) && spell.Dot(target).IsActive() {
+					count++
+					break
+				}
+			}
+		}
+		return min(count, 4)
+	}
+
+	for _, target := range mage.Env.Encounter.AllTargetUnits {
+		target.AddDynamicDamageTakenModifier(func(_ *core.Simulation, spell *core.Spell, result *core.SpellResult, _ bool) {
+			if spell.Unit == &mage.Unit && spell != mage.Ignite && spell.SpellSchool.Matches(core.SpellSchoolFire) && spell.Matches(MageSpellsAll) {
+				result.Damage *= 1 + perEffect*float64(fireEffects(result.Target))
+			}
+		})
+	}
 }

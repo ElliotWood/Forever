@@ -24,9 +24,8 @@ func (shaman *Shaman) registerElementalTalents() {
 	shaman.applyElementalAlacrity()
 
 	// Tier 4
-	shaman.applyImprovedFireNova()
+	shaman.applyTrialByFire()
 	shaman.applyEyeOfTheStorm()
-	shaman.applyCallOfThunder()
 
 	// Tier 5
 	shaman.applyElementalReach()
@@ -51,19 +50,6 @@ func (shaman *Shaman) applyCallOfFlame() {
 		ClassMask:  SpellMaskFireTotem | SpellMaskFlameShock | SpellMaskFireNova | SpellMaskLavaBurst,
 	})
 }
-
-func (shaman *Shaman) applyCallOfThunder() {
-	if !shaman.Talents.CallOfThunder {
-		return
-	}
-
-	shaman.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_BonusCrit_Percent,
-		FloatValue: spellData.CallOfThunder.Effect(dbcenums.A_ADD_FLAT_MODIFIER, int32(dbcenums.SPELLMOD_CRITICAL_CHANCE)).ValueAt(1),
-		ClassMask:  SpellMaskLightningBolt | SpellMaskChainLightning | SpellMaskOverload,
-	})
-}
-
 func (shaman *Shaman) applyConcussion() {
 	if shaman.Talents.Concussion == 0 {
 		return
@@ -266,21 +252,21 @@ func (shaman *Shaman) applyEyeOfTheStorm() {
 	}
 }
 
-// applyImprovedFireNova implements Improved Fire Nova, new in Forever: more Fire Nova damage and a
-// shorter cooldown on it.
-func (shaman *Shaman) applyImprovedFireNova() {
-	if shaman.Talents.ImprovedFireNova == 0 {
+// applyTrialByFire implements Trial by Fire (Improved Fire Nova before client 70425): more Fire Nova
+// damage and a shorter cooldown on it. Its longer Magma Totem changes no number here.
+func (shaman *Shaman) applyTrialByFire() {
+	if shaman.Talents.TrialByFire == 0 {
 		return
 	}
 
 	shaman.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: spellData.ImprovedFireNova.Effect(dbcenums.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_DAMAGE)).FractionAt(shaman.Talents.ImprovedFireNova),
+		FloatValue: spellData.TrialByFire.Effect(dbcenums.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_DAMAGE)).FractionAt(shaman.Talents.TrialByFire),
 		ClassMask:  SpellMaskFireNova,
 	})
 	shaman.AddStaticMod(core.SpellModConfig{
 		Kind:      core.SpellMod_Cooldown_Flat,
-		TimeValue: time.Millisecond * time.Duration(spellData.ImprovedFireNova.Effect(dbcenums.A_ADD_FLAT_MODIFIER, int32(dbcenums.SPELLMOD_COOLDOWN)).ValueAt(shaman.Talents.ImprovedFireNova)),
+		TimeValue: time.Millisecond * time.Duration(spellData.TrialByFire.Effect(dbcenums.A_ADD_FLAT_MODIFIER, int32(dbcenums.SPELLMOD_COOLDOWN)).ValueAt(shaman.Talents.TrialByFire)),
 		ClassMask: SpellMaskFireNova,
 	})
 }

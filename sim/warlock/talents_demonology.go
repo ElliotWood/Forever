@@ -56,15 +56,13 @@ func (warlock *Warlock) applyImprovedImp() {
 	})
 }
 
-// 18697 raises stamina 3% a rank. The tooltip no longer names Classic's spirit penalty, but the client
-// keeps it as a second effect with no rank curve: -1% spirit at every rank.
+// 18697 raises stamina 3% a rank. Client 70425 dropped the spirit penalty it still carried.
 func (warlock *Warlock) applyDemonicEmbrace() {
 	if warlock.Talents.DemonicEmbrace == 0 {
 		return
 	}
 
 	warlock.MultiplyStat(stats.Stamina, spellData.DemonicEmbrace.EffectAt(1).MultiplierAt(warlock.Talents.DemonicEmbrace))
-	warlock.MultiplyStat(stats.Spirit, spellData.DemonicEmbrace.EffectAt(2).MultiplierAt(warlock.Talents.DemonicEmbrace))
 }
 
 // 2% more pet damage a point (18769).

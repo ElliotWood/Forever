@@ -33,14 +33,14 @@
 	"enhancement_shaman": [
 		{
 			"name": "MythicSim Enh 17/34/0",
-			"talents": "2505131-055030031005112251",
+			"talents": "2535011-055030031005112251",
 			"source": "https://mythicsim.com/wow-forever/tier-list"
 		}
 	],
 	"shadow_priest": [
 		{
 			"name": "MythicSim Shadow 18/0/33",
-			"talents": "025300011303--500222501201302251",
+			"talents": "02530301103--50052201221302251",
 			"source": "https://mythicsim.com/wow-forever/tier-list"
 		}
 	],
@@ -74,24 +74,24 @@
 		},
 		{
 			"name": "MythicSim Affliction 35/0/16",
-			"talents": "2535002013521105--05000551",
+			"talents": "2552012013521105--05000551",
 			"source": "https://mythicsim.com/wow-forever/tier-list"
 		}
 	],
 	"mage": [
 		{
 			"name": "MythicSim Frost 10/3/38",
-			"talents": "050005-03-0555000331001331251",
+			"talents": "0500005-03-0555000331001331251",
 			"source": "https://mythicsim.com/wow-forever/tier-list"
 		},
 		{
 			"name": "MythicSim Arcane 35/11/5",
-			"talents": "055205003100311531-230500001-005",
+			"talents": "0551205003100301531-230500001-005",
 			"source": "https://mythicsim.com/wow-forever/tier-list"
 		},
 		{
 			"name": "MythicSim Fire 12/34/5",
-			"talents": "230205-03552020130133051-005",
+			"talents": "2300205-03552020130135031-005",
 			"source": "https://mythicsim.com/wow-forever/tier-list"
 		}
 	],
@@ -112,7 +112,7 @@
 	"elemental_shaman": [
 		{
 			"name": "MythicSim Ele 31/7/13",
-			"talents": "5500301320123051-050002-50305",
+			"talents": "550133102002135-050002-553",
 			"source": "https://mythicsim.com/wow-forever/tier-list"
 		}
 	],

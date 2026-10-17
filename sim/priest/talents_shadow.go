@@ -2,6 +2,7 @@ package priest
 
 import (
 	"fmt"
+	"math"
 	"time"
 
 	"github.com/wowsims/forever/sim/core"
@@ -17,7 +18,6 @@ func (priest *Priest) registerShadowTalents() {
 	priest.applySpiritTap()
 
 	// Tier 2
-	priest.applyShadowAffinity()
 	priest.applyImprovedShadowWordPain()
 	priest.applyShadowReach()
 
@@ -25,10 +25,9 @@ func (priest *Priest) registerShadowTalents() {
 	priest.applyImprovedMindBlast()
 	priest.applyImprovedPsychicScream()
 	priest.applyMindFlay()
-	priest.applyImprovedMindFlay()
+	// Improved Mind Flay: registerMindFlaySpell
 
 	// Tier 4
-	priest.applyImprovedFade()
 	priest.applyVampiricEmbrace()
 	priest.applyShadowWeaving()
 
@@ -71,19 +70,6 @@ func (priest *Priest) applySpiritTap() {
 	if priest.Talents.SpiritTap == 0 {
 		return
 	}
-}
-
-func (priest *Priest) applyShadowAffinity() {
-	if priest.Talents.ShadowAffinity == 0 {
-		return
-	}
-
-	priest.AddStaticMod(core.SpellModConfig{
-		ClassMask:  PriestSpellsAll,
-		School:     core.SpellSchoolShadow,
-		FloatValue: spellData.ShadowAffinity.FractionAt(priest.Talents.ShadowAffinity),
-		Kind:       core.SpellMod_ThreatMultiplier_Pct,
-	})
 }
 
 // +3 sec of duration per point, which is one more tick at Shadow Word: Pain's 3 second cadence.
@@ -159,6 +145,13 @@ func (priest *Priest) registerMindFlaySpell(rank *spelldata.Spell) {
 	tick := rank.PeriodicEffect()
 	tickLength := tick.Period()
 
+	// Improved Mind Flay since client 70425 (16 Oct beta notes): each tick deals 10/20% more than
+	// the one before it, read as compounding (1, 1.2, 1.44 at 2 points).
+	growth := 0.0
+	if priest.Talents.ImprovedMindFlay > 0 {
+		growth = spellData.ImprovedMindFlay.EffectAt(1).FractionAt(priest.Talents.ImprovedMindFlay)
+	}
+
 	priest.RegisterSpell(core.SpellConfig{
 		ActionID:    core.ActionID{SpellID: rank.ID},
 		SpellSchool: rank.SpellSchool(),
@@ -195,7 +188,9 @@ func (priest *Priest) registerMindFlaySpell(rank *spelldata.Spell) {
 				dot.Snapshot(target, tick.Average(core.CharacterLevel))
 			},
 			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-				dot.CalcAndDealPeriodicSnapshotDamage(sim, target, priest.tickOutcome(rank.PeriodicCanCrit(), dot))
+				result := dot.CalcSnapshotDamage(sim, target, priest.tickOutcome(rank.PeriodicCanCrit(), dot))
+				result.Damage *= math.Pow(1+growth, float64(dot.TickCount()-1))
+				dot.Spell.DealPeriodicDamage(sim, result)
 			},
 		},
 
@@ -214,28 +209,6 @@ func (priest *Priest) registerMindFlaySpell(rank *spelldata.Spell) {
 			return spell.CalcPeriodicDamage(sim, target, tick.Average(core.CharacterLevel), spell.OutcomeExpectedMagicHit)
 		},
 	})
-}
-
-// Improved Mind Flay is new in Forever: +10% damage per point, plus range and slow the sim ignores.
-func (priest *Priest) applyImprovedMindFlay() {
-	if priest.Talents.ImprovedMindFlay == 0 {
-		return
-	}
-
-	priest.AddStaticMod(core.SpellModConfig{
-		ClassMask:  PriestSpellMindFlay,
-		FloatValue: spellData.ImprovedMindFlay.Effect(dbcenums.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_DOT)).FractionAt(priest.Talents.ImprovedMindFlay),
-		Kind:       core.SpellMod_DamageDone_Flat,
-	})
-}
-
-// applyImprovedFade implements Improved Fade.
-//
-// TODO: To be implemented. Fade sheds threat, and the sim never needs the priest to drop aggro.
-func (priest *Priest) applyImprovedFade() {
-	if priest.Talents.ImprovedFade == 0 {
-		return
-	}
 }
 
 // The Forever client heals the priest's whole party for a share of the Shadow damage it deals, where
