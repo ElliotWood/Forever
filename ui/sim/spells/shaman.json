@@ -268,9 +268,9 @@
 	"408510": {
 		"ability": "Water Shield",
 		"file": "sim/shaman/shields.go",
-		"note": "Beta client 1.60.1.70009 408510: no mana cost, 15 sec cooldown, 3 charges, 3.5 sec proc recovery, 2% of maximum mana per globe (408511).",
+		"note": "Beta client 1.60.1.70450 408510: no mana cost, no cooldown (beta notes 8 Oct), 3 charges, 3.5 sec proc recovery shared by hits taken and the shaman's own spell crits (beta notes 16 Oct, proc mask 0x362a8 with a crit tooltip), 2% of maximum mana per globe (408511).",
 		"source": "forever",
-		"tooltip": "Instant\nThe caster is surrounded by 3 globes of water. When a spell, melee, or ranged attack hits the caster or when one of the caster's healing spells gets a critical result, 2% of maximum mana is restored to the caster, expending one water globe. Only one globe will activate every few seconds. Lasts 10 min. Only one Elemental Shield can be active on the Shaman at any one time."
+		"tooltip": "Instant\nThe caster is surrounded by 3 globes of water. When a spell, melee, or ranged attack hits the caster or when one of the caster's spells gets a critical result, 2% of maximum mana is restored to the caster, expending one water globe. Only one globe will activate every few seconds. Lasts 10 min. Only one Elemental Shield can be active on the Shaman at any one time."
 	},
 	"425336": {
 		"ability": "Rage of the Farseer",

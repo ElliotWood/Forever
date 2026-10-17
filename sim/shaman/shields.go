@@ -46,7 +46,13 @@ func (shaman *Shaman) startShieldProcPeriodicAction(sim *core.Simulation) {
 
 // Water Shield (408510) sits on the Restoration talent line with no rank subtext, so gen_spelldata
 // makes no table for it and the ids and values are pinned from the client: three globes of 2% maximum
-// mana, one every 3.5 sec at most, no mana cost, 15 sec cooldown.
+// mana, one every 3.5 sec at most, no mana cost and no cooldown (the 8 Oct beta notes drop the
+// tooltip's 15 sec: "it didn't have one").
+//
+// A globe goes when the shaman is hit or, since the 16 Oct build, when one of the shaman's own
+// spells crits (beta notes post 6: "Can now trigger from any critical spell cast by the Shaman (was
+// only critical heals)"; 408510's proc mask carries the harmful-spell-dealt bit with a crit
+// tooltip). The 3.5 sec is one timer for both, so it is kept here rather than per trigger.
 const waterShieldSpellID = 408510
 const waterShieldGlobes = 3
 const waterShieldManaFraction = 0.02
@@ -58,6 +64,16 @@ func (shaman *Shaman) registerWaterShieldSpell() {
 
 	actionID := core.ActionID{SpellID: waterShieldSpellID}
 	waterShieldManaMetrics := shaman.NewManaMetrics(actionID)
+	icd := core.Cooldown{Timer: shaman.NewTimer(), Duration: 3500 * time.Millisecond}
+
+	expendGlobe := func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
+		if !icd.IsReady(sim) {
+			return
+		}
+		icd.Use(sim)
+		shaman.WaterShieldAura.RemoveStack(sim)
+		shaman.AddMana(sim, shaman.MaxMana()*waterShieldManaFraction, waterShieldManaMetrics)
+	}
 
 	shaman.WaterShieldAura = shaman.RegisterAura(core.Aura{
 		Label:     "Water Shield",
@@ -67,12 +83,14 @@ func (shaman *Shaman) registerWaterShieldSpell() {
 	}).AttachProcTrigger(core.ProcTrigger{
 		Name:           "Water Shield Trigger",
 		Callback:       core.CallbackOnSpellHitTaken,
-		ICD:            3500 * time.Millisecond,
 		ClassSpellMask: SpellMaskShieldSelfProc,
-		Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
-			shaman.WaterShieldAura.RemoveStack(sim)
-			shaman.AddMana(sim, shaman.MaxMana()*waterShieldManaFraction, waterShieldManaMetrics)
-		},
+		Handler:        expendGlobe,
+	}).AttachProcTrigger(core.ProcTrigger{
+		Name:     "Water Shield Crit Trigger",
+		Callback: core.CallbackOnSpellHitDealt,
+		ProcMask: core.ProcMaskSpellDamage,
+		Outcome:  core.OutcomeCrit,
+		Handler:  expendGlobe,
 	})
 
 	shaman.RegisterSpell(core.SpellConfig{
@@ -83,10 +101,6 @@ func (shaman *Shaman) registerWaterShieldSpell() {
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
 				GCD: core.GCDDefault,
-			},
-			CD: core.Cooldown{
-				Timer:    shaman.NewTimer(),
-				Duration: time.Second * 15,
 			},
 		},
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
