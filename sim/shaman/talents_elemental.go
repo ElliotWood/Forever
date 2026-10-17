@@ -37,6 +37,51 @@ func (shaman *Shaman) registerElementalTalents() {
 
 	// Tier 7
 	shaman.applyLavaBurst()
+	shaman.applyElementalMastery()
+}
+
+// applyElementalMastery implements Forever's Elemental Mastery (16166): for 15 s, Lightning Bolt and
+// Lava Burst cast 0.5 s faster and Chain Lightning has no cooldown. The client row still carries
+// classic's one proc charge, but the tooltip and buff say it lasts the 15 s, so no charge is spent.
+func (shaman *Shaman) applyElementalMastery() {
+	if !shaman.Talents.ElementalMastery {
+		return
+	}
+
+	rank := spellData.ElementalMastery.Highest()
+	chainLightning := spellData.ChainLightning.Highest()
+	aura := shaman.RegisterAura(core.Aura{
+		ActionID: core.ActionID{SpellID: rank.ID},
+		Label:    "Elemental Mastery",
+		Duration: rank.Duration(),
+	}).AttachSpellMod(core.SpellModConfig{
+		Kind:      core.SpellMod_CastTime_Flat,
+		TimeValue: time.Millisecond * time.Duration(spellData.ElementalMastery.Effect(dbcenums.A_ADD_FLAT_MODIFIER, int32(dbcenums.SPELLMOD_CASTING_TIME)).ValueAt(1)),
+		ClassMask: SpellMaskLightningBolt | SpellMaskLavaBurst,
+	}).AttachSpellMod(core.SpellModConfig{
+		// The client's -100% cooldown; a 0 multiplier can't be divided back out, so cut it flat.
+		Kind:      core.SpellMod_Cooldown_Flat,
+		TimeValue: -max(chainLightning.Cooldown(), chainLightning.CategoryCooldown()),
+		ClassMask: SpellMaskChainLightning,
+	})
+
+	spell := shaman.RegisterSpell(core.SpellConfig{
+		ActionID:       core.ActionID{SpellID: rank.ID},
+		ClassSpellMask: SpellMaskElementalMastery,
+		Flags:          core.SpellFlagNoOnCastComplete | core.SpellFlagAPL,
+		Cast: core.CastConfig{
+			CD: core.Cooldown{
+				Timer:    shaman.NewTimer(),
+				Duration: rank.Cooldown(),
+			},
+		},
+		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
+			aura.Activate(sim)
+		},
+		RelatedSelfBuff: aura,
+	})
+
+	shaman.AddMajorCooldown(core.MajorCooldown{Spell: spell, Type: core.CooldownTypeDPS})
 }
 
 func (shaman *Shaman) applyCallOfFlame() {
