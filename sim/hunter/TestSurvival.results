@@ -729,13 +729,6 @@ dps_results: {
  }
 }
 dps_results: {
- key: "TestSurvival-AllItems-Hurricane-2824"
- value: {
-  dps: 292.92113
-  tps: 161.53659
- }
-}
-dps_results: {
  key: "TestSurvival-AllItems-IcebladeHacker-13952"
  value: {
   dps: 278.32096

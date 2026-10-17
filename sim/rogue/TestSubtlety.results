@@ -561,13 +561,6 @@ dps_results: {
  }
 }
 dps_results: {
- key: "TestSubtlety-AllItems-Hurricane-2824"
- value: {
-  dps: 297.13544
-  tps: 147.67631
- }
-}
-dps_results: {
  key: "TestSubtlety-AllItems-InfernalLasso-219345"
  value: {
   dps: 298.75545

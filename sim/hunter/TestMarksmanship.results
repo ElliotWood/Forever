@@ -728,13 +728,6 @@ dps_results: {
  }
 }
 dps_results: {
- key: "TestMarksmanship-AllItems-Hurricane-2824"
- value: {
-  dps: 319.01294
-  tps: 191.26595
- }
-}
-dps_results: {
  key: "TestMarksmanship-AllItems-IcebladeHacker-13952"
  value: {
   dps: 339.14739

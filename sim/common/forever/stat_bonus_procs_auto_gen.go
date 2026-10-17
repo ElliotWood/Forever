@@ -690,6 +690,19 @@ func RegisterAllProcs() {
 	//       This can be ignored if the effect has already been implemented.
 	//       With next db run the item will be removed if implemented.
 	//
+	// All ranged auto-attacks conjure an icy bolt to blast your current target, inflicting 8 Frost damage.
+	// https://www.wowhead.com/forever/spell=29502
+	// unsupported: no row in the store; the damage spell has no row in the store
+	// trigger 1316319 is not in the store
+	// shared.NewSpellDataDamageProc(shared.SpellDataProc{TriggerSpellID: 1316319, BuffSpellID: 29502},
+	//	[]shared.ItemVariant{
+	//	{ItemID: 2824, ItemName: "Hurricane"},
+	// })
+
+	// TODO: Manual implementation required
+	//       This can be ignored if the effect has already been implemented.
+	//       With next db run the item will be removed if implemented.
+	//
 	// Fires a Searing Arrow at the target for 28 Fire damage.
 	// https://www.wowhead.com/forever/spell=29638
 	// unsupported: states no rate
@@ -9177,14 +9190,6 @@ func RegisterAllProcs() {
 	shared.NewSpellDataDamageProc(shared.SpellDataProc{TriggerSpellID: 1325535, BuffSpellID: 1325508},
 		[]shared.ItemVariant{
 			{ItemID: 2801, ItemName: "Blade of Hanna"},
-		})
-
-	// All ranged auto-attacks conjure an icy bolt to blast your current target, inflicting 8 Frost damage.
-	// https://www.wowhead.com/forever/spell=29502
-	// trigger 1316319 (every time, core.CallbackOnSpellHitDealt, core.ProcMaskRangedAuto) -> buff 29502
-	shared.NewSpellDataDamageProc(shared.SpellDataProc{TriggerSpellID: 1316319, BuffSpellID: 29502},
-		[]shared.ItemVariant{
-			{ItemID: 2824, ItemName: "Hurricane"},
 		})
 
 	// Smite your target with the power of the holy spring, inflicting 56 Holy damage.
