@@ -393,6 +393,33 @@ func TestArcaneConcentrationSkipsTriggeredSpells(t *testing.T) {
 	}
 }
 
+// Since client 70450 a landed Arcane Missiles missile can proc Missile Barrage: a quarter of Arcane
+// Blast's chance, 5/10% a missile at rank 1/2. Five missiles a cast, ~83% landing on a naked mage, give
+// a proc in ~19% of casts at rank 1 (old code: never; a bolt's half chance: ~35%).
+func TestMissileBarrageProcsFromArcaneMissiles(t *testing.T) {
+	sim, mage := newThreeTargetMage(ArcaneTalents)
+	if mage.Talents.MissileBarrage == 0 {
+		t.Fatal("ArcaneTalents no longer take Missile Barrage; pick a build that does")
+	}
+	perMissile := 0.83 * 0.05 * float64(mage.Talents.MissileBarrage)
+	want := 1 - math.Pow(1-perMissile, 5)
+	gains := 0
+	mage.MissileBarrageAura.ApplyOnGain(func(_ *core.Aura, _ *core.Simulation) { gains++ })
+	arcaneMissiles := mage.GetSpell(core.ActionID{SpellID: spellData.ArcaneMissiles.Highest().ID})
+	const casts = 80 // 80 x 7 s fits the 600 s encounter
+	for i := 0; i < casts; i++ {
+		mage.MissileBarrageAura.Deactivate(sim)
+		castAt := sim.CurrentTime
+		arcaneMissiles.SkipCastAndApplyEffects(sim, mage.CurrentTarget)
+		for sim.CurrentTime < castAt+7*time.Second {
+			sim.Step()
+		}
+	}
+	if rate := float64(gains) / casts; math.Abs(rate-want) > 0.08 {
+		t.Errorf("Missile Barrage procced on %.0f%% of Arcane Missiles casts, want ~%.0f%%", rate*100, want*100)
+	}
+}
+
 // A naked gnome mage facing three targets, reset and ready for hand-cast spells.
 func newThreeTargetMage(talents string) (*core.Simulation, *Mage) {
 	encounter := core.MakeSingleTargetEncounter(0)

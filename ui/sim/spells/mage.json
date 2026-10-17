@@ -360,9 +360,9 @@
 		"ability": "Missile Barrage",
 		"file": "sim/mage/talents_arcane.go",
 		"foreverId": 400589,
-		"note": "Missile Barrage is a later expansion spell; the sim keeps 44404 as its action id, which the Forever client store does not carry. Beta client 1.60.1.70009 (400588, 400589): 40% on Arcane Blast, 15 sec, -50% channel with a missile every 0.5 sec, -100% cost. The 20% for Fireball, Frostbolt and Frostfire Bolt is from the 69893 read; 400588's second effect holds 5, which the sim does not read.",
+		"note": "Missile Barrage is a later expansion spell; the sim keeps 44404 as its action id, which the Forever client store does not carry. Beta client 1.60.1.70009 (400588, 400589): 40% on Arcane Blast, 15 sec, -50% channel with a missile every 0.5 sec, -100% cost. The 20% for Fireball, Frostbolt and Frostfire Bolt is from the 69893 read. Client 70450 makes it 2 ranks (20/40%) and adds Arcane Missiles hits (Wowhead env 16 rank 2: 10%, a quarter of Arcane Blast's; 400588's second effect holds rank 1's 5) and Arcane Wrath (20%, not simulated yet).",
 		"source": "forever",
-		"tooltip": "Your Arcane Blast has a 40% chance, and your Fireball, Frostbolt and Frostfire Bolt a 20% chance, to grant Missile Barrage.\nYour next Arcane Missiles costs no mana and fires a missile every 0.5 sec instead of every second, halving the channel. Lasts 15 sec."
+		"tooltip": "Your Arcane Blast has a 40% chance, your Arcane Missile hits a 10% chance, and your Fireball, Frostbolt and Frostfire Bolt a 20% chance, to grant Missile Barrage.\nYour next Arcane Missiles costs no mana and fires a missile every 0.5 sec instead of every second, halving the channel. Lasts 15 sec."
 	},
 	"5143": {
 		"ability": "Arcane Missiles",
