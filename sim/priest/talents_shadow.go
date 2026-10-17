@@ -28,6 +28,7 @@ func (priest *Priest) registerShadowTalents() {
 	// Improved Mind Flay: registerMindFlaySpell
 
 	// Tier 4
+	priest.applyDarkInspiration()
 	priest.applyVampiricEmbrace()
 	priest.applyShadowWeaving()
 
@@ -191,6 +192,9 @@ func (priest *Priest) registerMindFlaySpell(rank *spelldata.Spell) {
 				result := dot.CalcSnapshotDamage(sim, target, priest.tickOutcome(rank.PeriodicCanCrit(), dot))
 				result.Damage *= math.Pow(1+growth, float64(dot.TickCount()-1))
 				dot.Spell.DealPeriodicDamage(sim, result)
+				if dot.RemainingTicks() == 0 {
+					priest.inspireParty(sim) // Dark Inspiration: only a fully channeled Mind Flay
+				}
 			},
 		},
 
@@ -209,6 +213,41 @@ func (priest *Priest) registerMindFlaySpell(rank *spelldata.Spell) {
 			return spell.CalcPeriodicDamage(sim, target, tick.Average(core.CharacterLevel), spell.OutcomeExpectedMagicHit)
 		},
 	})
+}
+
+// Dark Inspiration is new in Forever (16 Oct beta notes): Mind Blast and a fully channeled Mind Flay
+// raise the Spirit of the priest's party by 3/6/9/12/15% for 10 sec. Client 1326168 is the party
+// aura, A_MOD_TOTAL_STAT_PERCENTAGE on Spirit; the talent 1326159's curve carries the percentage.
+func (priest *Priest) applyDarkInspiration() {
+	if priest.Talents.DarkInspiration == 0 {
+		return
+	}
+
+	buff := spellData.DarkInspirationTriggered.Highest()
+	multiplier := 1 + spellData.DarkInspiration.FractionAt(priest.Talents.DarkInspiration)
+	for _, player := range priest.Party.Players {
+		character := player.GetCharacter()
+		priest.DarkInspirationAuras = append(priest.DarkInspirationAuras, character.RegisterAura(core.Aura{
+			Label:    "Dark Inspiration-" + priest.Label,
+			ActionID: core.ActionID{SpellID: buff.ID},
+			Duration: buff.Duration(),
+		}).AttachStatDependency(character.NewDynamicMultiplyStat(stats.Spirit, multiplier)))
+	}
+
+	priest.MakeProcTriggerAura(core.ProcTrigger{
+		Name:           "Dark Inspiration Trigger",
+		Callback:       core.CallbackOnCastComplete,
+		ClassSpellMask: PriestSpellMindBlast,
+		Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
+			priest.inspireParty(sim)
+		},
+	})
+}
+
+func (priest *Priest) inspireParty(sim *core.Simulation) {
+	for _, aura := range priest.DarkInspirationAuras {
+		aura.Activate(sim)
+	}
 }
 
 // The Forever client heals the priest's whole party for a share of the Shadow damage it deals, where
