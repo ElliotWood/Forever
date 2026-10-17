@@ -75,13 +75,12 @@ func DevotionAuraAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.
 }
 
 // Leader of the Pack
-var LeaderOfThePackCategory = "DruidCritAura"
+var LeaderOfThePackCategory = "LeaderOfThePack"
 var leaderOfThePackSpell = spelldata.MustFind(24932)
 var leaderOfThePackMeta = &Meta{
-	Label:      "Leader of the Pack",
-	Spell:      leaderOfThePackSpell,
-	Category:   LeaderOfThePackCategory,
-	SingleAura: true,
+	Label:    "Leader of the Pack",
+	Spell:    leaderOfThePackSpell,
+	Category: LeaderOfThePackCategory,
 }
 
 func LeaderOfThePackValue(talentPoints int32) float64 {
@@ -117,11 +116,11 @@ func ManaSpringTotemAura(unit *core.Unit, isPlayer bool, talentPoints int32) *co
 
 // Mana Tide Totem
 var ManaTideTotemsCategory = "ManaTideTotem"
-var manaTideTotemsSpell = spelldata.MustFind(17360)
+var manaTideTotemsSpell = spelldata.MustFind(1325257)
 var manaTideTotemsMeta = &Meta{
 	Label:    "Mana Tide Totem",
 	Spell:    manaTideTotemsSpell,
-	Cast:     spelldata.MustFind(17359),
+	Cast:     spelldata.MustFind(1325256),
 	Category: ManaTideTotemsCategory,
 }
 
@@ -139,13 +138,12 @@ func ManaTideTotemsAura(unit *core.Unit, isPlayer bool, talentPoints int32) *cor
 }
 
 // Moonkin Aura
-var MoonkinAuraCategory = "DruidCritAura"
+var MoonkinAuraCategory = "MoonkinAura"
 var moonkinAuraSpell = spelldata.MustFind(24907)
 var moonkinAuraMeta = &Meta{
-	Label:      "Moonkin Aura",
-	Spell:      moonkinAuraSpell,
-	Category:   MoonkinAuraCategory,
-	SingleAura: true,
+	Label:    "Moonkin Aura",
+	Spell:    moonkinAuraSpell,
+	Category: MoonkinAuraCategory,
 }
 
 func MoonkinAuraValue(talentPoints int32) float64 {
@@ -645,10 +643,10 @@ func GreaterBlessingOfWisdomAura(unit *core.Unit, isPlayer bool, talentPoints in
 	return newBuff(unit, greaterBlessingOfWisdomMeta, isPlayer, talentPoints)
 }
 
-// Greater Blessing of Salvation
+// Mass Salvation
 var greaterBlessingOfSalvationSpell = spelldata.MustFind(25895)
 var greaterBlessingOfSalvationMeta = &Meta{
-	Label: "Greater Blessing of Salvation",
+	Label: "Mass Salvation",
 	Spell: greaterBlessingOfSalvationSpell,
 }
 

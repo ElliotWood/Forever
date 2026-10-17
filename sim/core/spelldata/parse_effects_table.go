@@ -416,7 +416,18 @@ func skipRow(_ *parser, _ *Effect, _ float64) *attachment {
 }
 
 func percentStatRow(p *parser, e *Effect, v float64) *attachment {
-	return p.statMultiplier(clientStatList(e.Misc), percentMultiplier(v))
+	statList := clientStatList(e.Misc)
+	// A_MOD_TOTAL_STAT_PERCENTAGE can name its stats as a bit mask in the second misc value instead
+	// (Insight's 1299796 since client 70425: misc 0, mask 16 = Spirit).
+	if e.Aura == dbcenums.A_MOD_TOTAL_STAT_PERCENTAGE && e.Misc2 != 0 {
+		statList = nil
+		for i, stat := range clientStats {
+			if e.Misc2&(1<<i) != 0 {
+				statList = append(statList, stat)
+			}
+		}
+	}
+	return p.statMultiplier(statList, percentMultiplier(v))
 }
 
 // The spells a modifier effect names. The client leaves the mask empty on an effect that means the

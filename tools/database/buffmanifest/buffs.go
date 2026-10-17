@@ -155,17 +155,15 @@ var Party = []BuffSpec{
 			proto.Stat_StatArmor,
 		},
 	},
-	// A_MOD_CRIT_PCT names no school, so the 3 goes on every kind of crit. 17007 calls the aura
-	// exclusive with Moonkin Aura, which is the category the two share.
+	// Client 70425 made it melee and ranged crit only (A_MOD_CRIT_PERCENT) and dropped the
+	// exclusivity with Moonkin Aura, which now gives spell crit only.
 	{
-		Field:      "leader_of_the_pack",
-		SpellID:    24932,
-		CastID:     17007,
-		Category:   "DruidCritAura",
-		SingleAura: true,
+		Field:    "leader_of_the_pack",
+		SpellID:  24932,
+		CastID:   17007,
+		Category: "LeaderOfThePack",
 		Stats: []proto.Stat{
 			proto.Stat_StatMeleeCritRating,
-			proto.Stat_StatSpellCritRating,
 		},
 	},
 	{
@@ -178,11 +176,12 @@ var Party = []BuffSpec{
 			proto.Stat_StatMP5,
 		},
 	},
-	// The cast states the totem's 13 s life and the 5 min cooldown, the aura the mana.
+	// The cast states the totem's 13 s life and the 5 min cooldown, the aura the mana. Top rank since
+	// client 70425, which added a rank at 38 and moved the 290 mana one to 58.
 	{
 		Field:    "mana_tide_totems",
-		SpellID:  17360,
-		CastID:   17359,
+		SpellID:  1325257,
+		CastID:   1325256,
 		Kind:     KindExternalCD,
 		Category: "ManaTideTotem",
 		Stats: []proto.Stat{
@@ -192,12 +191,10 @@ var Party = []BuffSpec{
 	},
 	// See leader_of_the_pack.
 	{
-		Field:      "moonkin_aura",
-		SpellID:    24907,
-		Category:   "DruidCritAura",
-		SingleAura: true,
+		Field:    "moonkin_aura",
+		SpellID:  24907,
+		Category: "MoonkinAura",
 		Stats: []proto.Stat{
-			proto.Stat_StatMeleeCritRating,
 			proto.Stat_StatSpellCritRating,
 		},
 	},

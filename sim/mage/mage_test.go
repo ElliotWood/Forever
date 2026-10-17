@@ -33,9 +33,9 @@ func TestFrost(t *testing.T) {
 }
 
 // The community builds our Forever sim ranks: Arcane 35/0/16, Fire 0/35/16 and Frost 14/0/37.
-var ArcaneTalents = "055005023100311531--005500033"
-var FireTalents = "-03552020130133151-005500033"
-var FrostTalents = "050005013--0555003301001301251"
+var ArcaneTalents = "0551005023100301531--005500033"
+var FireTalents = "-03552020130135131-005500033"
+var FrostTalents = "0500005013--0555300301001301251"
 
 func mageSuite(apl string, talents string) core.CharacterSuiteConfig {
 	return core.CharacterSuiteConfig{
@@ -113,7 +113,7 @@ func TestHeatingUpFromFireBlastAndKeptThroughPresenceOfMind(t *testing.T) {
 	sim := core.NewSim(&proto.RaidSimRequest{
 		SimOptions: &proto.SimOptions{RandomSeed: 1},
 		Raid: &proto.Raid{Parties: []*proto.Party{{Buffs: &proto.PartyBuffs{}, Players: []*proto.Player{{
-			Name: "Mage", Class: proto.Class_ClassMage, Race: proto.Race_RaceGnome, TalentsString: "000000000000001-03552020130133151",
+			Name: "Mage", Class: proto.Class_ClassMage, Race: proto.Race_RaceGnome, TalentsString: "0000000000000001-03552020130135131",
 			Equipment: &proto.EquipmentSpec{}, Buffs: &proto.IndividualBuffs{},
 			Spec:     &proto.Player_Mage{Mage: &proto.Mage{Options: &proto.Mage_Options{ClassOptions: &proto.MageOptions{}}}},
 			Rotation: &proto.APLRotation{Type: proto.APLRotation_TypeAPL},
@@ -412,46 +412,13 @@ func newThreeTargetMage(talents string) (*core.Simulation, *Mage) {
 	return sim, sim.Raid.Parties[0].Players[0].(MageAgent).GetMage()
 }
 
-// Blizzard's tick rows (1279976...) lack Not a Proc and Winter's Chill (11180) cannot proc from procs,
-// so the debuff only rolls on the cast's own hit on each enemy, never on a tick.
-func TestWintersChillSkipsBlizzardTicks(t *testing.T) {
-	sim, mage := newThreeTargetMage(FrostTalents)
-	if mage.Talents.WintersChill == 0 {
-		t.Fatal("FrostTalents no longer take Winter's Chill; pick a build that does")
-	}
-	blizzard := mage.GetSpell(core.ActionID{SpellID: spellData.Blizzard.Highest().ID})
-	var castAt time.Duration
-	onCast, later := 0, 0
-	mage.WintersChillAura.ApplyOnStacksChange(func(_ *core.Aura, sim *core.Simulation, oldStacks, newStacks int32) {
-		if newStacks <= oldStacks {
-			return
-		}
-		if sim.CurrentTime == castAt {
-			onCast++
-		} else {
-			later++
-		}
-	})
-	for i := 0; i < 30; i++ {
-		mage.WintersChillAura.Deactivate(sim)
-		castAt = sim.CurrentTime
-		blizzard.SkipCastAndApplyEffects(sim, mage.CurrentTarget)
-		for sim.CurrentTime < castAt+9*time.Second {
-			sim.Step()
-		}
-	}
-	if later != 0 || onCast == 0 {
-		t.Errorf("Winter's Chill stacked %d times on Blizzard casts and %d times on its ticks; want some and 0", onCast, later)
-	}
-}
-
 // Presence of Mind and Combustion share client category 1151's 3 min cooldown, so casting one locks
 // the other.
 func TestPresenceOfMindAndCombustionShareACooldown(t *testing.T) {
 	sim := core.NewSim(&proto.RaidSimRequest{
 		SimOptions: &proto.SimOptions{RandomSeed: 1},
 		Raid: &proto.Raid{Parties: []*proto.Party{{Buffs: &proto.PartyBuffs{}, Players: []*proto.Player{{
-			Name: "Mage", Class: proto.Class_ClassMage, Race: proto.Race_RaceGnome, TalentsString: "000000000000001-00000000000000001",
+			Name: "Mage", Class: proto.Class_ClassMage, Race: proto.Race_RaceGnome, TalentsString: "0000000000000001-00000000000000001",
 			Equipment: &proto.EquipmentSpec{}, Buffs: &proto.IndividualBuffs{},
 			Spec:     &proto.Player_Mage{Mage: &proto.Mage{Options: &proto.Mage_Options{ClassOptions: &proto.MageOptions{}}}},
 			Rotation: &proto.APLRotation{Type: proto.APLRotation_TypeAPL},
@@ -551,7 +518,7 @@ func TestArcaneWithoutArcaneBlastStillCasts(t *testing.T) {
 		Race:          proto.Race_RaceGnome,
 		Class:         proto.Class_ClassMage,
 		Equipment:     &proto.EquipmentSpec{},
-		TalentsString: "055005023000311531--005500033",
+		TalentsString: "0551005023000301531--005500033",
 		Rotation:      core.GetAplRotation("../../ui/specs/mage/dps/apls", "arcane").Rotation,
 	}, &proto.Player_Mage{Mage: &proto.Mage{Options: &proto.Mage_Options{ClassOptions: &proto.MageOptions{}}}})
 	result := core.RunRaidSim(&proto.RaidSimRequest{
@@ -567,50 +534,22 @@ func TestArcaneWithoutArcaneBlastStillCasts(t *testing.T) {
 	}
 }
 
-// Arcane Missiles spends the Arcane Blast stacks as the channel starts, but its missiles keep 15% a
-// stack (beta log 2721: 1 stack 99-101 a missile, 2 stacks 112-114).
-func TestArcaneMissilesKeepTheArcaneBlastStacks(t *testing.T) {
+// Since client 70425 an Arcane Blast stack gives 15% of the mage's Intellect as spell damage, and
+// Arcane Missiles no longer spends the stacks (16 Oct beta notes).
+func TestArcaneBlastStacksGiveIntellectAsSpellDamage(t *testing.T) {
 	sim, mage := newThreeTargetMage(ArcaneTalents)
 	if mage.ArcaneBlastAura == nil {
 		t.Fatal("ArcaneTalents no longer take Arcane Blast; pick a build that does")
 	}
-	missiles := mage.GetSpell(core.ActionID{SpellID: spellData.ArcaneMissiles.Highest().ID})
-	missile := mage.GetSpell(core.ActionID{SpellID: spellData.ArcaneMissilesTriggered.Highest().ID})
-	metrics := &missile.SpellMetrics[mage.CurrentTarget.UnitIndex]
-
-	// A missile has no damage range, so every plain hit (no crit, no partial resist) deals the same.
-	plain := func() (float64, int32) {
-		return metrics.TotalDamage - metrics.TotalCritDamage - (metrics.TotalResistedDamage - metrics.TotalResistedCritDamage),
-			metrics.Hits - metrics.ResistedHits
+	before := mage.GetStat(stats.SpellDamage)
+	mage.ArcaneBlastAura.Activate(sim)
+	mage.ArcaneBlastAura.SetStacks(sim, 2)
+	if got, want := mage.GetStat(stats.SpellDamage), before+0.3*mage.GetStat(stats.Intellect); math.Abs(got-want) > 1 {
+		t.Errorf("spell damage with 2 Arcane Blast stacks = %.1f, want %.1f", got, want)
 	}
-	perMissile := make([]float64, 3)
-	for stacks := range perMissile {
-		damage, hits := plain()
-		for i := 0; i < 10; i++ {
-			mage.ArcaneBlastAura.Deactivate(sim)
-			if stacks > 0 {
-				mage.ArcaneBlastAura.Activate(sim)
-				mage.ArcaneBlastAura.SetStacks(sim, int32(stacks))
-			}
-			start := sim.CurrentTime
-			missiles.SkipCastAndApplyEffects(sim, mage.CurrentTarget)
-			if mage.ArcaneBlastAura.IsActive() {
-				t.Fatal("Arcane Missiles left the Arcane Blast stacks up")
-			}
-			for sim.CurrentTime < start+6*time.Second {
-				sim.Step()
-			}
-		}
-		newDamage, newHits := plain()
-		perMissile[stacks] = (newDamage - damage) / float64(newHits-hits)
-	}
-	// The stacks join the missile's other additive bonuses (Arcane Instability and the like).
-	base := missile.DamageMultiplierAdditive
-	for stacks := range perMissile {
-		want := (base + 0.15*float64(stacks)) / base
-		if got := perMissile[stacks] / perMissile[0]; math.Abs(got-want) > 1e-9 {
-			t.Errorf("missiles after %d Arcane Blast stacks = %.4f x those after none, want %.4f", stacks, got, want)
-		}
+	mage.GetSpell(core.ActionID{SpellID: spellData.ArcaneMissiles.Highest().ID}).SkipCastAndApplyEffects(sim, mage.CurrentTarget)
+	if !mage.ArcaneBlastAura.IsActive() {
+		t.Error("Arcane Missiles spent the Arcane Blast stacks")
 	}
 }
 

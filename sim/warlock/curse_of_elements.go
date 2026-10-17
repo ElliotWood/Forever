@@ -7,8 +7,8 @@ import (
 
 // Forever folded Curse of Shadow into Curse of the Elements: its top rank (1311680) drops every
 // magic resistance and raises all magic damage taken by 10%, which is what core's aura already
-// does. Malediction is no longer a bonus on the curse - the beta client makes it a flat damage
-// modifier on the warlock's own spells - so no ranks are passed in.
+// does. No talent adds to the curse (Malediction became Grim Reach, a range talent, in client 70425),
+// so no ranks are passed in.
 func (warlock *Warlock) registerCurseOfElements() {
 	rank := spellData.CurseOfTheElements.Highest()
 
