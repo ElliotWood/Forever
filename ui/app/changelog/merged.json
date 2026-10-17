@@ -1,5 +1,11 @@
 [
 	{
+		"number": 827,
+		"title": "Fingers of Frost Ice Lance applies Winter's Chill",
+		"mergedAt": "2026-10-17",
+		"url": "https://github.com/ElliotWood/Forever/pull/827"
+	},
+	{
 		"number": 826,
 		"title": "Dark Inspiration gives the party Spirit after Mind Blast and full Mind Flay",
 		"mergedAt": "2026-10-17",
