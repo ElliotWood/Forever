@@ -94,3 +94,28 @@ func TestCallOfFlameExtendsFlameShock(t *testing.T) {
 		}
 	}
 }
+
+// Trial by Fire 2/2 adds 20 sec to Magma Totem's 20, ten more 2 second pulses.
+func TestTrialByFireExtendsMagmaTotem(t *testing.T) {
+	for _, c := range []struct {
+		talents string
+		want    int32
+	}{
+		{DefaultTalents, 10},
+		{"3505331020001351--553302001", 20}, // DefaultTalents with Trial by Fire 2/2 for two Convection
+	} {
+		player := core.WithSpec(&proto.Player{
+			Race: proto.Race_RaceTroll, Class: proto.Class_ClassShaman, Equipment: &proto.EquipmentSpec{},
+			Consumables: &proto.ConsumesSpec{}, TalentsString: c.talents, Rotation: &proto.APLRotation{Type: proto.APLRotation_TypeAPL},
+		}, &proto.Player_ElementalShaman{ElementalShaman: &proto.ElementalShaman{Options: &proto.ElementalShaman_Options{ClassOptions: &proto.ShamanOptions{}}}})
+		sim := core.NewSim(&proto.RaidSimRequest{
+			SimOptions: &proto.SimOptions{RandomSeed: 100},
+			Raid:       core.SinglePlayerRaidProto(player, &proto.PartyBuffs{}, &proto.RaidBuffs{}, &proto.Debuffs{}),
+			Encounter:  core.MakeSingleTargetEncounter(0),
+		}, simsignals.CreateSignals())
+		sim.Reset()
+		if got := sim.Raid.Parties[0].Players[0].GetCharacter().GetSpell(core.ActionID{SpellID: 10587}).AOEDot().BaseTickCount; got != c.want {
+			t.Errorf("%q: Magma Totem pulses %d times, want %d", c.talents, got, c.want)
+		}
+	}
+}

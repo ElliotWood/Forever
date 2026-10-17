@@ -307,7 +307,8 @@ func (shaman *Shaman) applyEyeOfTheStorm() {
 }
 
 // applyTrialByFire implements Trial by Fire (Improved Fire Nova before client 70425): more Fire Nova
-// damage and a shorter cooldown on it. Its longer Magma Totem changes no number here.
+// damage and a shorter cooldown on it, and since client 70450 +10/20 sec of Magma Totem (16 Oct beta
+// notes), five more 2 second pulses a point.
 func (shaman *Shaman) applyTrialByFire() {
 	if shaman.Talents.TrialByFire == 0 {
 		return
@@ -322,6 +323,12 @@ func (shaman *Shaman) applyTrialByFire() {
 		Kind:      core.SpellMod_Cooldown_Flat,
 		TimeValue: time.Millisecond * time.Duration(spellData.TrialByFire.Effect(dbcenums.A_ADD_FLAT_MODIFIER, int32(dbcenums.SPELLMOD_COOLDOWN)).ValueAt(shaman.Talents.TrialByFire)),
 		ClassMask: SpellMaskFireNova,
+	})
+	added := time.Millisecond * time.Duration(spellData.TrialByFire.Effect(dbcenums.A_ADD_FLAT_MODIFIER, int32(dbcenums.SPELLMOD_DURATION)).ValueAt(shaman.Talents.TrialByFire))
+	shaman.AddStaticMod(core.SpellModConfig{
+		Kind:      core.SpellMod_DotNumberOfTicks_Flat,
+		IntValue:  int32(added / magmaTotemTick),
+		ClassMask: SpellMaskMagmaTotem,
 	})
 }
 

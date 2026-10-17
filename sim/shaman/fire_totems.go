@@ -12,6 +12,7 @@ import (
 var searingTotemRank = spellData.SearingTotem.Highest()
 var searingTotemAttack = spellData.SearingTotemTriggered.Highest()
 var magmaTotemRank = spellData.MagmaTotem.Highest()
+var magmaTotemTick = 2 * time.Second
 var magmaTotemPulse = spellData.MagmaTotemTriggered.ByID(10581)
 
 // Flametongue Totem has no pulse spell: its party aura (15036, procs on a landed melee auto) triggers
@@ -136,7 +137,6 @@ func (shaman *Shaman) registerFlametongueTotemSpell() {
 
 func (shaman *Shaman) registerMagmaTotemSpell() {
 	duration := magmaTotemRank.Duration()
-	tickLength := core.DurationFromSeconds(2)
 
 	shaman.MagmaTotem = shaman.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: magmaTotemRank.ID},
@@ -163,8 +163,8 @@ func (shaman *Shaman) registerMagmaTotemSpell() {
 			Aura: core.Aura{
 				Label: "Magma Totem",
 			},
-			NumberOfTicks:    int32(duration / tickLength),
-			TickLength:       tickLength,
+			NumberOfTicks:    int32(duration / magmaTotemTick),
+			TickLength:       magmaTotemTick,
 			BonusCoefficient: magmaTotemPulse.DamageEffect().Coeff(),
 
 			OnTick: func(sim *core.Simulation, _ *core.Unit, dot *core.Dot) {
@@ -176,7 +176,7 @@ func (shaman *Shaman) registerMagmaTotemSpell() {
 		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
 			shaman.cancelFireTotems(sim)
 			spell.AOEDot().Apply(sim)
-			shaman.TotemExpirations[FireTotem] = sim.CurrentTime + duration
+			shaman.TotemExpirations[FireTotem] = spell.AOEDot().ExpiresAt()
 		},
 	})
 }
