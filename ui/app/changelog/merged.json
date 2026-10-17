@@ -1,5 +1,23 @@
 [
 	{
+		"number": 823,
+		"title": "Arcane Concentration rolls once per cast, not once per target struck",
+		"mergedAt": "2026-10-17",
+		"url": "https://github.com/ElliotWood/Forever/pull/823"
+	},
+	{
+		"number": 822,
+		"title": "Wowhead Forever data changed (2026-10-17)",
+		"mergedAt": "2026-10-17",
+		"url": "https://github.com/ElliotWood/Forever/pull/822"
+	},
+	{
+		"number": 821,
+		"title": "[DB] Update to 1.60.1.70450 with hotfixes as of 2026-10-17",
+		"mergedAt": "2026-10-17",
+		"url": "https://github.com/ElliotWood/Forever/pull/821"
+	},
+	{
 		"number": 820,
 		"title": "Elemental Mastery: faster Lightning Bolt / Lava Burst, no Chain Lightning cooldown",
 		"mergedAt": "2026-10-17",
