@@ -1,5 +1,11 @@
 [
 	{
+		"number": 824,
+		"title": "Water Shield: globes also spent on the shaman's own spell crits, no cooldown",
+		"mergedAt": "2026-10-17",
+		"url": "https://github.com/ElliotWood/Forever/pull/824"
+	},
+	{
 		"number": 823,
 		"title": "Arcane Concentration rolls once per cast, not once per target struck",
 		"mergedAt": "2026-10-17",
