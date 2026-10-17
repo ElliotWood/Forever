@@ -290,9 +290,8 @@ func (mage *Mage) IsTargetFrozen() bool {
 
 // Winter's Chill, redesigned in client 70425 (16 Oct beta notes): Frostbolt rolls 20/40/60/80/100%
 // for a stack, up to 5, and each stack makes the mage's next Cone of Cold deal 5% more and gain 7% of
-// spell damage; that Cone of Cold spends them. No crit any more.
-// ponytail: Fingers of Frost's Ice Lance also applies a stack in the client; the charge is spent before
-// the lance lands, so it is left out until Ice Lance can say it was empowered.
+// spell damage; that Cone of Cold spends them. No crit any more. An Ice Lance cast under Fingers of
+// Frost rolls it too (ice_lance.go).
 func (mage *Mage) registerWinterChill() {
 	if mage.Talents.WintersChill == 0 {
 		return
@@ -338,16 +337,21 @@ func (mage *Mage) registerWinterChill() {
 
 	// Forever states a flat SpellAuraOptions.ProcChance of 100 on the talent spell and puts the
 	// real per-rank chance on effect 2 (by position); effect 1 is the stack count.
+	procChance := spellData.WintersChill.EffectAt(2).FractionAt(mage.Talents.WintersChill)
+	mage.procWintersChill = func(sim *core.Simulation) {
+		if sim.Proc(procChance, "Winter's Chill") {
+			mage.WintersChillAura.Activate(sim)
+			mage.WintersChillAura.AddStack(sim)
+		}
+	}
 	mage.MakeProcTriggerAura(core.ProcTrigger{
 		Name:               "Winters Chill Talent",
 		Callback:           core.CallbackOnSpellHitDealt,
 		ClassSpellMask:     MageSpellFrostbolt,
 		Outcome:            core.OutcomeLanded,
-		ProcChance:         spellData.WintersChill.EffectAt(2).FractionAt(mage.Talents.WintersChill),
 		TriggerImmediately: true,
 		Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
-			mage.WintersChillAura.Activate(sim)
-			mage.WintersChillAura.AddStack(sim)
+			mage.procWintersChill(sim)
 		},
 	})
 }

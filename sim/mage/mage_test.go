@@ -638,3 +638,33 @@ func TestSpellRangesFollowTheClient(t *testing.T) {
 		}
 	}
 }
+
+// Winter's Chill (16 Oct beta notes): an Ice Lance empowered by Fingers of Frost applies a stack, as
+// Frostbolt does (100% at 5/5); a plain Ice Lance doesn't.
+func TestFingersOfFrostIceLanceAppliesWintersChill(t *testing.T) {
+	sim, mage := newThreeTargetMage(FrostTalents)
+	iceLance := mage.GetSpell(core.ActionID{SpellID: spellData.IceLance.Highest().ID})
+	lance := func(empowered bool) int32 {
+		mage.WintersChillAura.Deactivate(sim)
+		if empowered {
+			mage.FingersOfFrostAura.Activate(sim)
+			mage.FingersOfFrostAura.SetStacks(sim, 1)
+		}
+		castAt := sim.CurrentTime
+		iceLance.SkipCastAndApplyEffects(sim, mage.CurrentTarget)
+		for sim.CurrentTime < castAt+2*time.Second {
+			sim.Step()
+		}
+		return mage.WintersChillAura.GetStacks()
+	}
+	if got := lance(false); got != 0 {
+		t.Errorf("a plain Ice Lance left %d Winter's Chill stacks, want 0", got)
+	}
+	landed := 0
+	for range 10 {
+		landed += int(lance(true))
+	}
+	if landed < 8 { // 100% chance; only a miss skips it
+		t.Errorf("%d of 10 Fingers of Frost Ice Lances applied Winter's Chill, want ~10", landed)
+	}
+}
