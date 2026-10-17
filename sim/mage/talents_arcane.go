@@ -220,7 +220,9 @@ func (mage *Mage) registerArcaneMeditation() {
 // Missiles free and fire its missiles every 0.5 sec instead of every second: the same count in half
 // the channel. 400588 procs on a landed harmful spell (ProcFlags 0x10000), so a miss can't, and a bolt
 // procs when it arrives. Its trigger effect holds Arcane Blast's 40; the tooltip's 20 for the bolts
-// is half of it, which the row doesn't state. The buff (400589) holds the duration, cost and tick
+// is half of it, which the row doesn't state. Since client 70450 each Arcane Missiles missile that
+// hits rolls a quarter of it (tooltip: 40% / 10% / 20% at rank 2; effect 1's A_DUMMY 5 is rank 1's
+// missile chance). Arcane Wrath (20%) has no sim spell yet. The buff (400589) holds the duration, cost and tick
 // changes. 44404 stays the aura id because saved rotations key on it.
 func (mage *Mage) registerMissileBarrage() {
 	if mage.Talents.MissileBarrage == 0 {
@@ -253,12 +255,14 @@ func (mage *Mage) registerMissileBarrage() {
 	mage.MakeProcTriggerAura(core.ProcTrigger{
 		Name:               "Missile Barrage Trigger",
 		Callback:           core.CallbackOnSpellHitDealt,
-		ClassSpellMask:     MageSpellArcaneBlast | MageSpellFireball | MageSpellFrostbolt | MageSpellFrostfireBolt,
+		ClassSpellMask:     MageSpellArcaneBlast | MageSpellArcaneMissilesTick | MageSpellFireball | MageSpellFrostbolt | MageSpellFrostfireBolt,
 		Outcome:            core.OutcomeLanded,
 		TriggerImmediately: true,
 		Handler: func(sim *core.Simulation, spell *core.Spell, _ *core.SpellResult) {
 			procChance := arcaneBlastChance
-			if !spell.Matches(MageSpellArcaneBlast) {
+			if spell.Matches(MageSpellArcaneMissilesTick) {
+				procChance /= 4
+			} else if !spell.Matches(MageSpellArcaneBlast) {
 				procChance /= 2
 			}
 			if sim.Proc(procChance, "Missile Barrage") {
