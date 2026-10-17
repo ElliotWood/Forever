@@ -206,6 +206,13 @@
 		"source": "forever",
 		"tooltip": "545 Mana\nInstant\n45 sec cooldown\nA wave of flame radiates outward from the caster, damaging all enemies caught within the blast for 453 to 533 Fire damage, and Dazing them for 50% reduced movement speed for 6 sec."
 	},
+	"1326082": {
+		"ability": "Arcane Wrath",
+		"file": "sim/mage/arcane_wrath.go",
+		"note": "Rank 4, level 60, the new 16-point Arcane talent (landed with client 1.60.1.70450) (16 Oct beta notes: 'deals base damage similar to Fireball, with a 3.5 second cast, but also deals damage as if the Mage had additional Spell Power equal to 5% of the Mage's maximum Mana. 6 second cooldown'). Damage 406-496 at level 60 (Wowhead env 16 prints 439-529, the level-71 cap of its 3 points per level). Coefficient 1.0; effect index 1's E_DUMMY 5 is the 5% of maximum mana added as spell power. A landed Arcane Wrath rolls Missile Barrage like the bolts (half of Arcane Blast's chance), and the Arcane rotation casts it on cooldown ahead of the Arcane Blast filler.",
+		"source": "forever",
+		"tooltip": "395 Mana\n30 yd range\n3.5 sec cast\n6 sec cooldown\nLaunches a projectile of pure Arcane energy at the enemy target, causing 406 to 496 Arcane damage. This spell gains additional Spell Damage equal to 5% of your maximum Mana."
+	},
 	"133": {
 		"ability": "Fireball",
 		"file": "sim/mage/fireball.go",

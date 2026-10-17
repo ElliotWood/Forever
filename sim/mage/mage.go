@@ -82,6 +82,7 @@ func (mage *Mage) registerSpells() {
 	mage.registerArcaneBlastSpell()
 	mage.registerArcaneExplosionSpell()
 	mage.registerArcaneMissilesSpell()
+	mage.registerArcaneWrathSpell()
 	mage.registerArmorSpells()
 	mage.registerBlizzardSpell()
 	mage.registerConeOfColdSpell()
@@ -173,6 +174,7 @@ const (
 	MageSpellCombustion
 	MageSpellImprovedBlizzard
 	MageSpellFrostfireBolt
+	MageSpellArcaneWrath
 
 	MageSpellLast
 	MageSpellsAll  = MageSpellLast<<1 - 1
@@ -182,7 +184,7 @@ const (
 	MageSpellsAllDamaging = MageSpellArcaneBlast | MageSpellArcaneExplosion | MageSpellArcaneMissilesTick | MageSpellBlizzard |
 		MageSpellFireBlast | MageSpellFireball | MageSpellFlamestrike | MageSpellFrostbolt |
 		MageSpellIceLance | MageSpellPyroblast | MageSpellPyroblastDot | MageSpellScorch |
-		MageSpellBlastWave | MageSpellConeOfCold | MageSpellFrostNova | MageSpellFrostfireBolt
+		MageSpellBlastWave | MageSpellConeOfCold | MageSpellFrostNova | MageSpellFrostfireBolt | MageSpellArcaneWrath
 	MageSpellInstantCast = MageSpellArcaneMissilesCast | MageSpellArcaneMissilesTick | MageSpellFireBlast | MageSpellArcaneExplosion | MageSpellPyroblastDot |
 		MageSpellCombustion | MageSpellConeOfCold | MageSpellIceLance | MageSpellManaGems | MageSpellPresenceOfMind
 	MageSpellExtraResult    = MageSpellArcaneMissilesTick | MageSpellBlizzard

@@ -668,3 +668,28 @@ func TestFingersOfFrostIceLanceAppliesWintersChill(t *testing.T) {
 		t.Errorf("%d of 10 Fingers of Frost Ice Lances applied Winter's Chill, want ~10", landed)
 	}
 }
+
+// Arcane Wrath hits as if the mage had extra spell power equal to 5% of maximum mana, so 10000 more
+// mana should add about 500 to each hit (less resists, more crits).
+func TestArcaneWrathScalesWithMaxMana(t *testing.T) {
+	sim, mage := newThreeTargetMage("000000000000001")
+	arcaneWrath := mage.GetSpell(core.ActionID{SpellID: spellData.ArcaneWrath.Highest().ID})
+	if arcaneWrath == nil {
+		t.Fatal("Arcane Wrath isn't registered for a mage with the talent")
+	}
+	averageHit := func() float64 {
+		before := arcaneWrath.SpellMetrics[0]
+		for i := 0; i < 120; i++ { // 2 x 120 x 2 s fits the 600 s encounter
+			arcaneWrath.SkipCastAndApplyEffects(sim, mage.CurrentTarget)
+			for until := sim.CurrentTime + 2*time.Second; sim.CurrentTime < until && !sim.Step(); {
+			}
+		}
+		after := arcaneWrath.SpellMetrics[0]
+		return (after.TotalDamage - before.TotalDamage) / float64(after.Hits+after.Crits-before.Hits-before.Crits)
+	}
+	base := averageHit()
+	mage.AddStatDynamic(sim, stats.Mana, 10000)
+	if gain := averageHit() - base; gain < 350 || gain > 650 {
+		t.Errorf("10000 more max mana added %.0f to the average Arcane Wrath hit, want ~500", gain)
+	}
+}
